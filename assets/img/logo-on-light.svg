@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 48" width="200" height="48">
+  <!-- Logo mark: outer amber ring -->
+  <circle cx="24" cy="24" r="22" fill="#E8A33D"/>
+  <!-- Middle ring: paper color -->
+  <circle cx="24" cy="24" r="15" fill="#FAF6EE"/>
+  <!-- Inner circle: navy -->
+  <circle cx="24" cy="24" r="9" fill="#274156"/>
+  <!-- Drop of water from center -->
+  <ellipse cx="24" cy="16" rx="3" ry="4.5" fill="#274156" opacity="0.25"/>
+  <!-- Chinese name -->
+  <text x="56" y="20" font-family="'Noto Serif TC','Noto Sans TC','PingFang TC',serif" font-weight="600" font-size="17" fill="#274156" letter-spacing="2">隱哈歌利</text>
+  <!-- English name -->
+  <text x="56" y="38" font-family="Georgia,'Times New Roman',serif" font-style="italic" font-weight="400" font-size="11" fill="#5D5853" letter-spacing="1">En-hakkore</text>
+</svg>

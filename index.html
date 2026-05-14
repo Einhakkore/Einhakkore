@@ -1,244 +1,258 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
+<!doctype html>
+<html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>隱哈歌利 En-hakkore</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>首頁 · 隱哈歌利 En-hakkore</title>
+  <meta name="description" content="隱哈歌利 — 為宣教士提供支持與關懷的網絡">
+  <link rel="icon" href="assets/img/logo-on-light.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Noto+Serif+TC:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
 </head>
-<body>
+<body data-page="home">
 
-  <!-- Navigation -->
-  <header class="navbar">
-    <a href="index.html" class="logo-link">
-      <div class="logo">
-        <span class="logo-icon">⛲</span>
-        <div class="logo-text">
-          <span class="logo-tc">隱哈歌利</span>
-          <span class="logo-en">En-hakkore</span>
-        </div>
-      </div>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="logo" href="index.html">
+      <img src="assets/img/logo-on-light.svg" alt="隱哈歌利 En-hakkore">
     </a>
-    <nav class="nav-menu">
-      <a href="index.html" class="nav-link active">首頁</a>
-      <a href="about.html" class="nav-link">關於我們</a>
-      <a href="#serve" class="nav-link">參與服事</a>
-      <a href="#contact" class="nav-link">聯絡我們</a>
-      <a href="#donate" class="btn btn-dark">奉獻支持</a>
+    <button class="menu-toggle" id="menuToggle" aria-label="menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 6h18M3 12h18M3 18h18"/>
+      </svg>
+    </button>
+    <nav class="nav" id="nav">
+      <a href="index.html"     data-page="home">首頁</a>
+      <a href="about.html"     data-page="about">關於我們</a>
+      <a href="volunteer.html" data-page="volunteer">參與服事</a>
+      <a href="contact.html"   data-page="contact">聯絡我們</a>
+      <a href="donate.html" class="btn btn-accent btn-sm">
+        奉獻支持
+        <svg width="14" height="12" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M1 6h12m-5-5 5 5-5 5"/>
+        </svg>
+      </a>
     </nav>
-    <button class="hamburger" id="hamburger" aria-label="選單">&#9776;</button>
-  </header>
+  </div>
+</header>
 
-  <!-- Mobile Nav -->
-  <nav class="mobile-nav" id="mobileNav">
-    <a href="index.html" class="nav-link">首頁</a>
-    <a href="about.html" class="nav-link">關於我們</a>
-    <a href="#serve" class="nav-link">參與服事</a>
-    <a href="#contact" class="nav-link">聯絡我們</a>
-    <a href="#donate" class="btn btn-dark">奉獻支持</a>
-  </nav>
 
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="hero-content">
-      <div class="hero-text">
-        <h1>支持神國工人</h1>
-        <p>與我們一起築起宣教士的支持網絡</p>
-        <div class="hero-buttons">
-          <a href="#donate" class="btn btn-dark">立即支持</a>
-          <a href="about.html" class="btn btn-outline">了解更多</a>
-        </div>
-      </div>
-      <div class="hero-image">
-        <div class="placeholder-img large"></div>
+<main>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow">En-hakkore · 求告者之泉</div>
+      <h1>築起宣教士的支持網絡，<br>讓服事的路<span class="accent">不再孤單</span>。</h1>
+      <p class="hero-sub">回應大使命不僅是前線的奔跑，更是後方細心的守護。我們致力於宣教士關顧，建立一個讓神國工人可以安心倚靠的支持生態。</p>
+      <div class="hero-ctas">
+        <a class="btn btn-accent" href="donate.html">立即支持 <svg class="arr" width="14" height="12" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg></a>
+        <a class="btn btn-outline-dark" href="about.html">瞭解更多</a>
       </div>
     </div>
-  </section>
-
-  <!-- News Section -->
-  <section class="news-section section-white">
-    <div class="container">
-      <div class="news-layout">
-        <div class="news-label">
-          <h2>News</h2>
-          <h3>最新文章</h3>
-        </div>
-        <div class="news-card">
-          <p class="news-subtitle">小標題</p>
-          <p class="news-body">深入研究宣教士的需求與挑戰，提供數據驅動的支持方案，確保每一份資源都能精準觸及需要的人。深入研究宣教士的需求與挑戰，提供數據驅動的支持方案，確保每一份資源都能精準觸及需要的人。</p>
-        </div>
+    <div class="hero-visual">
+      <div class="hero-visual-bg">
+        <img src="assets/img/logo-on-dark.svg" alt="">
+      </div>
+      <div class="hero-card hero-card-1">
+        <div class="label">From the field</div>
+        <div class="text"><strong>「謝謝你們的代禱信，</strong>讓我們在這個月看見孩子們重新回到聚會。」</div>
+      </div>
+      <div class="hero-card hero-card-2">
+        <div class="label">Coffee Connection</div>
+        <div class="text">本月已有 <strong>34 杯</strong> 咖啡，送到 12 個宣教家庭手中。</div>
+      </div>
+      <div class="hero-card hero-card-3">
+        <div class="label">Prayer Network</div>
+        <div class="text">每週三晚間 <strong>線上代禱會</strong>，與宣教士同心仰望。</div>
       </div>
     </div>
-  </section>
+  </div>
+  <div class="hero-wave">
+    <svg viewBox="0 0 1440 70" preserveAspectRatio="none">
+      <path d="M0,40 C240,70 480,10 720,30 C960,50 1200,20 1440,40 L1440,70 L0,70 Z" fill="#FAF6EE"/>
+    </svg>
+  </div>
+</section>
 
-  <!-- About Section -->
-  <section class="about-section section-gray">
-    <div class="container">
-      <div class="about-top">
-        <div class="about-label">
-          <h2>About US</h2>
-          <h3>關於我們</h3>
-          <p>「我們是一群關心宣教士的志工夥伴組成的支持網絡。透過穩定的陪伴與資源整合，與你一起在宣教路上走得更遠、更穩健。</p>
+<!-- STAT STRIP -->
+<div class="stat-strip">
+  <div class="stat-strip-inner">
+    <div class="stat"><div class="num"><em>12</em></div><div class="label">支持的宣教家庭</div></div>
+    <div class="stat"><div class="num"><em>67.7</em><span style="font-size:24px">萬</span></div><div class="label">2026 年度預算</div></div>
+    <div class="stat"><div class="num"><em>3</em></div><div class="label">核心實踐方向</div></div>
+    <div class="stat"><div class="num"><em>∞</em></div><div class="label">代禱與陪伴</div></div>
+  </div>
+</div>
+
+<!-- THREE VALUES -->
+<section style="background:var(--paper)">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Our Practice · 三大實踐</div>
+      <h2>我們的<em>核心服務</em></h2>
+      <p>透過具體行動，為宣教士帶來實質的支持與關懷。</p>
+    </div>
+    <div class="value-grid">
+      <article class="value-card reveal">
+        <div class="value-num">01</div>
+        <div class="value-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
         </div>
-        <div class="about-quote">
-          <p>「我們是一群關心宣教士的志工夥伴組成的支持網絡。透過穩定的陪伴與資源整合，與你一起在宣教路上走得更遠、更穩健。</p>
+        <h3>調研與倡議</h3>
+        <p>透過訪談與實際陪伴，讓更多人看見宣教士關顧的重要性。
+
+深入研究宣教士的需求與挑戰，提供數據驅動的支持方案。</p>
+      </article>
+      <article class="value-card reveal">
+        <div class="value-num">02</div>
+        <div class="value-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 9 5-9 5-9-5 9-5z"/><path d="m3 17 9 5 9-5"/><path d="m3 12 9 5 9-5"/></svg>
+        </div>
+        <h3>資源整合平台</h3>
+        <p>盤點現有資源，培力具備宣教關顧理解的專業基督徒。
+
+連結教會、機構與個人，讓支持更有效率，讓關懷更加及時。</p>
+      </article>
+      <article class="value-card reveal">
+        <div class="value-num">03</div>
+        <div class="value-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21.2l9-9.1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+        </div>
+        <h3>關顧支持網絡</h3>
+        <p>連結差會、教會與家庭，建立三方的關顧支持系統。
+
+定期聚會、線上交流與實體支持，讓每位宣教士都能感受到陪伴。</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURE STORIES -->
+<section style="background:var(--white)">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Highlights · 事工亮點</div>
+      <h2>我們的<em>事工亮點</em></h2>
+      <p>跨文化挑戰與資源分配不均，常使宣教士逐漸失落熱忱。隱哈歌利立志成為橋樑，讓需要被聽見、被回應。</p>
+    </div>
+    <div class="story-grid">
+      <article class="story-card reveal">
+        <div class="story-img story"><div class="ph">missionary-story.jpg</div></div>
+        <div class="story-body">
+          <span class="badge">宣教士故事</span>
+          <h3>真實的生命故事</h3>
+          <p>聆聽來自世界各地宣教士的真實分享，了解他們的挑戰與需要，看見上帝在他們生命中的奇妙作為。每一個故事都是一個見證，每一份支持都能改變生命。</p>
+          <a class="story-link" href="about.html">閱讀更多故事
+            <svg width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg>
+          </a>
+        </div>
+      </article>
+      <article class="story-card reveal">
+        <div class="story-img coffee"><div class="ph">coffee-connection.jpg</div></div>
+        <div class="story-body">
+          <span class="badge">咖啡連結</span>
+          <h3>一杯咖啡的溫暖</h3>
+          <p>透過「咖啡連結」計畫，您可以定期為宣教士送上一杯溫暖的咖啡。這不只是一杯飲料，更是一份關心、一個禱告、一次陪伴。用最簡單的方式，傳遞最深的愛。</p>
+          <a class="story-link" href="donate.html">加入咖啡連結
+            <svg width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg>
+          </a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BAND -->
+<section class="cta-band">
+  <div class="cta-band-inner">
+    <h2>成為志工，用<em>專業</em>參與服事。</h2>
+    <p>不一定要遠行才能參與大使命。您的時間、專業與恩賜，都能成為前線工人的後盾。</p>
+    <div class="steps-inline">
+      <span>申請評估</span><span>→</span><span>裝備加入</span><span>→</span><span>媒合服事</span>
+    </div>
+    <div class="cta-band-ctas">
+      <a class="btn btn-accent" href="volunteer.html">瞭解更多 <svg class="arr" width="14" height="12" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg></a>
+      <a class="btn btn-outline-dark" href="volunteer.html">填寫意願表</a>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="newsletter">
+  <div class="newsletter-inner reveal">
+    <div>
+      <h3>訂閱我們的<em>電子報</em></h3>
+      <p>定期收到宣教士代禱信、事工更新與感恩見證，與我們一起關心神國度的擴展。</p>
+    </div>
+    <form class="newsletter-form">
+      <input type="email" required placeholder="您的電子郵件">
+      <button class="btn btn-accent" type="submit">
+        訂閱
+        <svg class="arr" width="14" height="12" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M1 6h12m-5-5 5 5-5 5"/>
+        </svg>
+      </button>
+    </form>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="logo" href="index.html">
+          <img src="assets/img/logo-on-dark.svg" alt="隱哈歌利 En-hakkore">
+        </a>
+        <p>求告者之泉 — 為宣教士提供支持與關懷的網絡。我們相信，後方的守護，能讓前線的呼求得著回應。</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Facebook">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.5 9.9V14.9H8v-2.9h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.3.2 2.3.2v2.5h-1.3c-1.3 0-1.7.8-1.7 1.6V12h2.9l-.5 2.9h-2.4v6.9A10 10 0 0 0 22 12z"/></svg>
+          </a>
+          <a href="#" aria-label="Instagram">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="18" cy="6" r="1" fill="currentColor"/></svg>
+          </a>
+          <a href="#" aria-label="YouTube">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.7 3.6 12 3.6 12 3.6s-7.7 0-9.4.5A3 3 0 0 0 .5 6.2C0 7.9 0 12 0 12s0 4.1.5 5.8a3 3 0 0 0 2.1 2.1c1.7.5 9.4.5 9.4.5s7.7 0 9.4-.5a3 3 0 0 0 2.1-2.1c.5-1.7.5-5.8.5-5.8s0-4.1-.5-5.8zM9.6 15.3V8.7l6.4 3.3-6.4 3.3z"/></svg>
+          </a>
         </div>
       </div>
-
-      <div class="services-section">
-        <h2 class="section-center-title">我們的核心服務</h2>
-        <div class="services-grid">
-          <div class="service-card">
-            <div class="service-icon">📢</div>
-            <h4>推廣與了解現況</h4>
-            <p>透過社群分享與推廣，讓更多人看見宣教士關顧的重要性。</p>
-          </div>
-          <div class="service-card">
-            <div class="service-icon">🔗</div>
-            <h4>資源平台</h4>
-            <p>整合不同專業領域的資源，提供宣教士合適專業的支持。</p>
-          </div>
-          <div class="service-card">
-            <div class="service-icon">🤝</div>
-            <h4>關顧支持網絡</h4>
-            <p>長期陪伴與資源媒合，讓需要能被聽見、被理解、被回應。</p>
-          </div>
-        </div>
+      <div class="footer-col">
+        <h4>關於我們</h4>
+        <ul>
+          <li><a href="about.html">起源與異象</a></li>
+          <li><a href="about.html">團隊成員</a></li>
+          <li><a href="contact.html">聯絡我們</a></li>
+        </ul>
       </div>
-
-      <div class="about-buttons">
-        <a href="about.html" class="btn btn-gold">瞭解更多背景</a>
-        <a href="#donate" class="btn btn-outline-blue">2026 年度預算</a>
+      <div class="footer-col">
+        <h4>參與服事</h4>
+        <ul>
+          <li><a href="donate.html">年度財務預算</a></li>
+          <li><a href="donate.html">奉獻支持</a></li>
+          <li><a href="volunteer.html">招募志工</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>其他資訊</h4>
+        <ul>
+          <li><a href="terms.html">隱私權政策</a></li>
+          <li><a href="terms.html">服務條款</a></li>
+        </ul>
       </div>
     </div>
-  </section>
-
-  <!-- Projects Section -->
-  <section class="projects-section section-lightgray" id="projects">
-    <div class="container">
-      <div class="section-header">
-        <h2>Projects</h2>
-        <p>實際事件、電子報</p>
-      </div>
-      <div class="projects-grid">
-        <div class="project-card">
-          <div class="placeholder-img medium"></div>
-          <h3>調查與研究</h3>
-          <p>透過質性訪談與數據收集，深入了解宣教士在工場前線與回國後的真實處境。我們不憑空想像需求，而是透過紮實的田野調查，讓關顧行動建立在真實的生命經驗之上。</p>
-        </div>
-        <div class="project-card">
-          <div class="placeholder-img medium"></div>
-          <h3>整合現有資源</h3>
-          <p>梳理現有的專業資源，如：醫療、教育、財務、法律、諮商輔導等，建立一個清晰的資訊中繼站。</p>
-        </div>
-        <div class="project-card">
-          <div class="placeholder-img medium"></div>
-          <h3>開發新資源</h3>
-          <p>針對目前關顧體系中的缺口，發展具備跨文化敏感度的基督徒專業工作者。我們致力於填補那些尚未被滿足的需求，為宣教提供更切中需要的後勤資源。</p>
-        </div>
-        <div class="project-card">
-          <div class="placeholder-img medium"></div>
-          <h3>關顧支持網絡</h3>
-          <p>擔任宣教士的「關顧小幫手」，提供資源媒合。我們針對個別需求進行評估，直接對接適切且有效的專業資源。免除在繁雜清單中反覆篩選、確認資格，讓支持精準落地。</p>
-        </div>
-        <div class="project-card">
-          <div class="placeholder-img medium"></div>
-          <h3>述職資源包</h3>
-          <p>專為回國述職的宣教夥伴設計，結合心理調適指引與實質的關懷資源。陪伴宣教士在跨文化轉換期間，能減少精神與行政上的消耗，得到有品質的休息。</p>
-        </div>
-      </div>
+    <div class="footer-bottom">
+      <span>© 2026 En-hakkore · 隱哈歌利. All rights reserved.</span>
+      <span>士師記 15:19</span>
     </div>
-  </section>
+  </div>
+</footer>
 
-  <!-- Donate + CTA Row -->
-  <section class="donate-cta-row" id="donate">
-    <div class="donate-side">
-      <div class="container-half">
-        <h2>2026 年度預算</h2>
-        <p>事蹟</p>
-        <a href="about.html" class="btn btn-outline">了解更多 →</a>
-      </div>
-    </div>
-    <div class="cta-side" id="serve">
-      <h2>成為志工，用專業參與服事。</h2>
-      <p>申請評估 → 裝備加入 → 媒合服事</p>
-      <div class="cta-buttons">
-        <a href="about.html" class="btn btn-gold">瞭解更多</a>
-        <a href="#" class="btn btn-outline-blue">填寫意願表</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Newsletter -->
-  <section class="newsletter section-white">
-    <div class="container">
-      <div class="newsletter-box">
-        <div class="newsletter-text">
-          <h3>訂閱我們的電子報</h3>
-          <p>定期收到宣教士代禱信、事工更新與感恩見證，與我們一起關心神國度的擴展。</p>
-        </div>
-        <form class="newsletter-form" onsubmit="handleNewsletter(event)">
-          <input type="email" placeholder="您的電子郵件" required />
-          <button type="submit" class="btn btn-white">訂閱</button>
-        </form>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="footer" id="contact">
-    <div class="container">
-      <div class="footer-top">
-        <div class="footer-brand">
-          <div class="footer-logo">
-            <span class="logo-icon">⛲</span>
-            <div class="logo-text">
-              <span class="logo-tc">隱哈歌利</span>
-              <span class="logo-en">En-hakkore</span>
-            </div>
-          </div>
-          <p>求告者之泉 - 為宣教士提供支持與關懷的網絡</p>
-          <div class="social-links">
-            <a href="#" class="social-btn" aria-label="Facebook">f</a>
-            <a href="#" class="social-btn" aria-label="Instagram">ig</a>
-          </div>
-        </div>
-        <div class="footer-links">
-          <div class="footer-col">
-            <h4>關於我們</h4>
-            <ul>
-              <li><a href="about.html">起源與意象</a></li>
-              <li><a href="about.html#members">團隊成員</a></li>
-              <li><a href="about.html#contact">聯絡我們</a></li>
-            </ul>
-          </div>
-          <div class="footer-col">
-            <h4>參與服務</h4>
-            <ul>
-              <li><a href="#">志工招募</a></li>
-              <li><a href="#donate">年度財務預算</a></li>
-              <li><a href="#donate">奉獻支持</a></li>
-            </ul>
-          </div>
-          <div class="footer-col">
-            <h4>其他資訊</h4>
-            <ul>
-              <li><a href="#">最新消息</a></li>
-              <li><a href="#">隱私權政策</a></li>
-              <li><a href="#">服務條款</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>© 2026 En-hakkore. All rights reserved.</p>
-      </div>
-    </div>
-  </footer>
-
-  <script src="main.js"></script>
+<script src="assets/js/site.js"></script>
 </body>
 </html>

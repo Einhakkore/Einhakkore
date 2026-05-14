@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 48" width="200" height="48">
+  <!-- Logo mark: outer amber ring -->
+  <circle cx="24" cy="24" r="22" fill="#E8A33D"/>
+  <!-- Middle ring: semi-transparent light -->
+  <circle cx="24" cy="24" r="15" fill="rgba(250,246,238,0.18)"/>
+  <!-- Inner circle: lighter navy -->
+  <circle cx="24" cy="24" r="9" fill="#3C5B73"/>
+  <!-- Chinese name -->
+  <text x="56" y="20" font-family="'Noto Serif TC','Noto Sans TC','PingFang TC',serif" font-weight="600" font-size="17" fill="#FAF6EE" letter-spacing="2">隱哈歌利</text>
+  <!-- English name -->
+  <text x="56" y="38" font-family="Georgia,'Times New Roman',serif" font-style="italic" font-weight="400" font-size="11" fill="rgba(245,241,235,0.65)" letter-spacing="1">En-hakkore</text>
+</svg>
