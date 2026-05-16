@@ -4,195 +4,190 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>首頁 · 隱哈歌利 En-hakkore</title>
-  <meta name="description" content="隱哈歌利 — 為宣教士提供支持與關懷的網絡">
-  <link rel="icon" href="assets/img/logo-on-light.svg">
+  <meta name="description" content="隱哈歌利 En-hakkore — 為宣教士提供支持與關懷的網絡。求告者之泉。">
+  <link rel="icon" href="assets/img/logo-on-light.png">
   <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body data-page="home">
 
+<div class="aurora" aria-hidden="true">
+  <div class="aurora-blob aurora-1"></div>
+  <div class="aurora-blob aurora-2"></div>
+  <div class="aurora-blob aurora-3"></div>
+  <div class="aurora-blob aurora-4"></div>
+  <div class="aurora-stars"></div>
+</div>
+
 <header class="site-header">
   <div class="header-inner">
     <a class="logo" href="index.html">
-      <img src="assets/img/logo-on-light.svg" alt="隱哈歌利 En-hakkore">
+      <img src="assets/img/logo-on-dark.png" alt="隱哈歌利 En-hakkore">
     </a>
-    <button class="menu-toggle" id="menuToggle" aria-label="menu">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M3 6h18M3 12h18M3 18h18"/>
-      </svg>
-    </button>
+    <button class="menu-toggle" id="menuToggle" aria-label="開啟選單"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
     <nav class="nav" id="nav">
       <a href="index.html"     data-page="home">首頁</a>
       <a href="about.html"     data-page="about">關於我們</a>
       <a href="volunteer.html" data-page="volunteer">參與服事</a>
       <a href="contact.html"   data-page="contact">聯絡我們</a>
-      <a href="donate.html" class="btn btn-accent btn-sm">
-        奉獻支持
-        <svg width="14" height="12" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <path d="M1 6h12m-5-5 5 5-5 5"/>
-        </svg>
+      <a href="donate.html" class="donate-btn" data-page="donate">
+        奉獻支持 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg>
       </a>
     </nav>
   </div>
 </header>
 
-
 <main>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-inner">
-    <div>
-      <div class="hero-eyebrow">En-hakkore · 求告者之泉</div>
-      <h1>築起宣教士的支持網絡，<br>讓服事的路<span class="accent">不再孤單</span>。</h1>
-      <p class="hero-sub">回應大使命不僅是前線的奔跑，更是後方細心的守護。我們致力於宣教士關顧，建立一個讓神國工人可以安心倚靠的支持生態。</p>
-      <div class="hero-ctas">
-        <a class="btn btn-accent" href="donate.html">立即支持 <svg class="arr" width="14" height="12" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg></a>
-        <a class="btn btn-outline-dark" href="about.html">瞭解更多</a>
-      </div>
-    </div>
-    <div class="hero-visual">
-      <div class="hero-visual-bg">
-        <img src="assets/img/logo-on-dark.svg" alt="">
-      </div>
-      <div class="hero-card hero-card-1">
-        <div class="label">From the field</div>
-        <div class="text"><strong>「謝謝你們的代禱信，</strong>讓我們在這個月看見孩子們重新回到聚會。」</div>
-      </div>
-      <div class="hero-card hero-card-2">
-        <div class="label">Coffee Connection</div>
-        <div class="text">本月已有 <strong>34 杯</strong> 咖啡，送到 12 個宣教家庭手中。</div>
-      </div>
-      <div class="hero-card hero-card-3">
-        <div class="label">Prayer Network</div>
-        <div class="text">每週三晚間 <strong>線上代禱會</strong>，與宣教士同心仰望。</div>
-      </div>
+  <div class="hero-content">
+    <div class="hero-symbol"></div>
+    <div class="hero-eyebrow">EN HAKKORE · 求告者之泉</div>
+    <h1>築起宣教士的支持網絡，<br>讓服事的路 <em>不再孤單</em>。</h1>
+    <p class="hero-sub">回應大使命不僅是前線的奔跑，<br>更是後方細心的守護。</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="donate.html">立即支持 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg></a>
+      <a class="btn btn-ghost" href="about.html">瞭解異象</a>
     </div>
   </div>
-  <div class="hero-wave">
-    <svg viewBox="0 0 1440 70" preserveAspectRatio="none">
-      <path d="M0,40 C240,70 480,10 720,30 C960,50 1200,20 1440,40 L1440,70 L0,70 Z" fill="#FAF6EE"/>
-    </svg>
-  </div>
+  <div class="scroll-hint">SCROLL</div>
 </section>
 
-<!-- STAT STRIP -->
-<div class="stat-strip">
-  <div class="stat-strip-inner">
-    <div class="stat"><div class="num"><em>12</em></div><div class="label">支持的宣教家庭</div></div>
-    <div class="stat"><div class="num"><em>67.7</em><span style="font-size:24px">萬</span></div><div class="label">2026 年度預算</div></div>
-    <div class="stat"><div class="num"><em>3</em></div><div class="label">核心實踐方向</div></div>
-    <div class="stat"><div class="num"><em>∞</em></div><div class="label">代禱與陪伴</div></div>
-  </div>
-</div>
-
-<!-- THREE VALUES -->
-<section style="background:var(--paper)">
+<!-- THREE PRACTICES -->
+<section class="section section-practices">
   <div class="wrap">
     <div class="section-head reveal">
-      <div class="eyebrow">Our Practice · 三大實踐</div>
-      <h2>我們的<em>核心服務</em></h2>
-      <p>透過具體行動，為宣教士帶來實質的支持與關懷。</p>
+      <div class="section-num">I.</div>
+      <div class="section-eyebrow">OUR PRACTICE · 三大實踐</div>
+      <h2>透過<em>具體行動</em>，<br>為宣教士帶來實質的支持與關懷。</h2>
+      <p class="lead">我們相信當「人」被看見，工作才會被祝福。</p>
     </div>
-    <div class="value-grid">
-      <article class="value-card reveal">
-        <div class="value-num">01</div>
-        <div class="value-icon">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-        </div>
+    <div class="practices">
+      <article class="practice-card reveal">
+        <div class="icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="32" cy="32" r="22"/>
+<path d="M32 14v6M32 44v6M14 32h6M44 32h6"/>
+<path d="M40 24l-6 12-12 6 6-12 12-6z"/>
+<circle cx="32" cy="32" r="2" fill="currentColor"/>
+</svg></div>
+        <div class="roman">i. RESEARCH</div>
         <h3>調研與倡議</h3>
-        <p>透過訪談與實際陪伴，讓更多人看見宣教士關顧的重要性。
-
-深入研究宣教士的需求與挑戰，提供數據驅動的支持方案。</p>
+        <p>透過訪談與實際陪伴，讓更多人看見宣教士關顧的重要性。深入研究宣教士的需求與挑戰，提供數據驅動的支持方案。</p>
       </article>
-      <article class="value-card reveal">
-        <div class="value-num">02</div>
-        <div class="value-icon">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 9 5-9 5-9-5 9-5z"/><path d="m3 17 9 5 9-5"/><path d="m3 12 9 5 9-5"/></svg>
-        </div>
+      <article class="practice-card reveal">
+        <div class="icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="32" cy="14" r="4"/>
+<circle cx="14" cy="42" r="4"/>
+<circle cx="50" cy="42" r="4"/>
+<circle cx="32" cy="50" r="3"/>
+<path d="M32 18v28M30.5 17l-15 22M33.5 17l15 22M17 44l13 5M47 44l-13 5"/>
+</svg></div>
+        <div class="roman">ii. INTEGRATE</div>
         <h3>資源整合平台</h3>
-        <p>盤點現有資源，培力具備宣教關顧理解的專業基督徒。
-
-連結教會、機構與個人，讓支持更有效率，讓關懷更加及時。</p>
+        <p>盤點現有資源，培力具備宣教關顧理解的專業基督徒。連結教會、機構與個人，讓支持更有效率，讓關懷更加及時。</p>
       </article>
-      <article class="value-card reveal">
-        <div class="value-num">03</div>
-        <div class="value-icon">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21.2l9-9.1a5.5 5.5 0 0 0 0-7.8z"/></svg>
-        </div>
+      <article class="practice-card reveal">
+        <div class="icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+<path d="M32 50s-14-8-14-20a8 8 0 0 1 14-5 8 8 0 0 1 14 5c0 12-14 20-14 20z"/>
+<path d="M14 38c-2 0-4 1-4 4M50 38c2 0 4 1 4 4"/>
+<path d="M10 46c-2 2-2 4-2 6M54 46c2 2 2 4 2 6"/>
+</svg></div>
+        <div class="roman">iii. ACCOMPANY</div>
         <h3>關顧支持網絡</h3>
-        <p>連結差會、教會與家庭，建立三方的關顧支持系統。
-
-定期聚會、線上交流與實體支持，讓每位宣教士都能感受到陪伴。</p>
+        <p>連結差會、教會與家庭，建立三方的關顧支持系統。打造溫暖的社群網絡，讓每位宣教士都能感受到陪伴。</p>
       </article>
     </div>
   </div>
 </section>
 
-<!-- FEATURE STORIES -->
-<section style="background:var(--white)">
+<!-- VERSE -->
+<section class="section-verse">
+  <div class="verse-wrap reveal">
+    <div class="verse-ref">JUDGES 15:19 · 士師記</div>
+    <div class="verse-quote">
+      神就使利希的窪處裂開，<br>
+      有水從其中湧出來。<br>
+      參孫喝了精神復原。<br>
+      因此那泉名叫 <strong>隱·哈歌利</strong>。
+    </div>
+    <div class="verse-cite">A WELLSPRING FOR THOSE WHO CALL</div>
+  </div>
+</section>
+
+<!-- FEATURE: COFFEE CONNECTION -->
+<section class="section">
   <div class="wrap">
-    <div class="section-head reveal">
-      <div class="eyebrow">Highlights · 事工亮點</div>
-      <h2>我們的<em>事工亮點</em></h2>
-      <p>跨文化挑戰與資源分配不均，常使宣教士逐漸失落熱忱。隱哈歌利立志成為橋樑，讓需要被聽見、被回應。</p>
-    </div>
-    <div class="story-grid">
-      <article class="story-card reveal">
-        <div class="story-img story"><div class="ph">missionary-story.jpg</div></div>
-        <div class="story-body">
-          <span class="badge">宣教士故事</span>
-          <h3>真實的生命故事</h3>
-          <p>聆聽來自世界各地宣教士的真實分享，了解他們的挑戰與需要，看見上帝在他們生命中的奇妙作為。每一個故事都是一個見證，每一份支持都能改變生命。</p>
-          <a class="story-link" href="about.html">閱讀更多故事
-            <svg width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg>
-          </a>
-        </div>
-      </article>
-      <article class="story-card reveal">
-        <div class="story-img coffee"><div class="ph">coffee-connection.jpg</div></div>
-        <div class="story-body">
-          <span class="badge">咖啡連結</span>
-          <h3>一杯咖啡的溫暖</h3>
-          <p>透過「咖啡連結」計畫，您可以定期為宣教士送上一杯溫暖的咖啡。這不只是一杯飲料，更是一份關心、一個禱告、一次陪伴。用最簡單的方式，傳遞最深的愛。</p>
-          <a class="story-link" href="donate.html">加入咖啡連結
-            <svg width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg>
-          </a>
-        </div>
-      </article>
+    <div class="feature-grid reveal">
+      <div class="feature-img">
+        <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1200&q=80" alt="一杯咖啡的溫暖陪伴" loading="lazy">
+        <div class="caption">— A simple gesture of presence, sent across continents.</div>
+      </div>
+      <div class="feature-text">
+        <div class="label">COFFEE CONNECTION · 咖啡連結</div>
+        <h2>一杯咖啡的<br><em>溫暖陪伴</em>。</h2>
+        <p>透過「咖啡連結」計畫，您可以定期為宣教士送上一杯溫暖的咖啡。這不只是一杯飲料，更是一份關心、一個禱告、一次陪伴。</p>
+        <p>用最簡單的方式，傳遞最深的愛。每一杯咖啡的背後，是一段關係的延續，是後方對前線最具體的問候。</p>
+        <a class="link" href="donate.html">加入咖啡連結 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg></a>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- CTA BAND -->
-<section class="cta-band">
-  <div class="cta-band-inner">
-    <h2>成為志工，用<em>專業</em>參與服事。</h2>
-    <p>不一定要遠行才能參與大使命。您的時間、專業與恩賜，都能成為前線工人的後盾。</p>
-    <div class="steps-inline">
-      <span>申請評估</span><span>→</span><span>裝備加入</span><span>→</span><span>媒合服事</span>
-    </div>
-    <div class="cta-band-ctas">
-      <a class="btn btn-accent" href="volunteer.html">瞭解更多 <svg class="arr" width="14" height="12" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg></a>
-      <a class="btn btn-outline-dark" href="volunteer.html">填寫意願表</a>
+<!-- FEATURE: FROM THE FIELD -->
+<section class="section">
+  <div class="wrap">
+    <div class="feature-grid reverse reveal">
+      <div class="feature-img">
+        <img src="https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1200&q=80" alt="來自前線的代禱信" loading="lazy">
+        <div class="caption">— A handwritten prayer letter from a missionary family abroad.</div>
+      </div>
+      <div class="feature-text">
+        <div class="label">FROM THE FIELD · 來自前線</div>
+        <h2>當「人」被看見，<br><em>工作才會被祝福</em>。</h2>
+        <p>「謝謝你們的代禱信，讓我們在這個月看見孩子們重新回到聚會。後方的禱告，是我們前線真正的支撐。」</p>
+        <p>每一封代禱信、每一次線上會議，都是關係累積的證據。我們在差會、教會與宣教士家庭之間，搭建可信賴的支持網絡。</p>
+        <a class="link" href="about.html">閱讀更多故事 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg></a>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- NEWSLETTER -->
+<!-- STATS -->
+<section class="section-stats">
+  <div class="stats-grid reveal">
+    <div class="stat"><div class="n">12</div><div class="l">支持的宣教家庭</div></div>
+    <div class="stat"><div class="n">67.7</div><div class="l">2026 年度預算（萬）</div></div>
+    <div class="stat"><div class="n">3</div><div class="l">核心實踐方向</div></div>
+    <div class="stat"><div class="n">∞</div><div class="l">代禱與陪伴</div></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section-cta">
+  <div class="cta-wrap reveal">
+    <div class="cta-label">JOIN US · 一同同行</div>
+    <div class="cta-poem">
+      <span class="line">不一定要遠行，</span>
+      <span class="line indent">才能參與<em>大使命</em>。</span>
+      <span class="line">您的時間、專業與恩賜，</span>
+      <span class="line indent">都能成為前線的後盾。</span>
+    </div>
+    <p class="cta-sub">申請評估 → 裝備加入 → 媒合服事</p>
+    <div class="cta-actions">
+      <a class="btn btn-primary" href="volunteer.html">瞭解志工流程 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg></a>
+      <a class="btn btn-ghost" href="volunteer.html">填寫意願表</a>
+    </div>
+  </div>
+</section>
+
 <section class="newsletter">
-  <div class="newsletter-inner reveal">
-    <div>
-      <h3>訂閱我們的<em>電子報</em></h3>
-      <p>定期收到宣教士代禱信、事工更新與感恩見證，與我們一起關心神國度的擴展。</p>
-    </div>
+  <div class="newsletter-wrap">
+    <div class="newsletter-label">STAY CONNECTED · 保持連結</div>
+    <h3>訂閱我們的代禱信</h3>
+    <p>定期收到宣教士代禱信、事工更新與感恩見證，與我們一起關心神國度的擴展。</p>
     <form class="newsletter-form">
-      <input type="email" required placeholder="您的電子郵件">
-      <button class="btn btn-accent" type="submit">
-        訂閱
-        <svg class="arr" width="14" height="12" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <path d="M1 6h12m-5-5 5 5-5 5"/>
-        </svg>
-      </button>
+      <input type="email" placeholder="您的電子郵件" required>
+      <button type="submit">訂閱</button>
     </form>
   </div>
 </section>
@@ -201,52 +196,44 @@
 
 <footer class="site-footer">
   <div class="footer-inner">
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <a class="logo" href="index.html">
-          <img src="assets/img/logo-on-dark.svg" alt="隱哈歌利 En-hakkore">
-        </a>
-        <p>求告者之泉 — 為宣教士提供支持與關懷的網絡。我們相信，後方的守護，能讓前線的呼求得著回應。</p>
-        <div class="footer-social">
-          <a href="#" aria-label="Facebook">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.5 9.9V14.9H8v-2.9h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.3.2 2.3.2v2.5h-1.3c-1.3 0-1.7.8-1.7 1.6V12h2.9l-.5 2.9h-2.4v6.9A10 10 0 0 0 22 12z"/></svg>
-          </a>
-          <a href="#" aria-label="Instagram">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="18" cy="6" r="1" fill="currentColor"/></svg>
-          </a>
-          <a href="#" aria-label="YouTube">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.7 3.6 12 3.6 12 3.6s-7.7 0-9.4.5A3 3 0 0 0 .5 6.2C0 7.9 0 12 0 12s0 4.1.5 5.8a3 3 0 0 0 2.1 2.1c1.7.5 9.4.5 9.4.5s7.7 0 9.4-.5a3 3 0 0 0 2.1-2.1c.5-1.7.5-5.8.5-5.8s0-4.1-.5-5.8zM9.6 15.3V8.7l6.4 3.3-6.4 3.3z"/></svg>
-          </a>
-        </div>
-      </div>
-      <div class="footer-col">
-        <h4>關於我們</h4>
-        <ul>
-          <li><a href="about.html">起源與異象</a></li>
-          <li><a href="about.html">團隊成員</a></li>
-          <li><a href="contact.html">聯絡我們</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>參與服事</h4>
-        <ul>
-          <li><a href="donate.html">年度財務預算</a></li>
-          <li><a href="donate.html">奉獻支持</a></li>
-          <li><a href="volunteer.html">招募志工</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>其他資訊</h4>
-        <ul>
-          <li><a href="terms.html">隱私權政策</a></li>
-          <li><a href="terms.html">服務條款</a></li>
-        </ul>
+    <div class="footer-brand">
+      <a class="logo" href="index.html">
+        <img src="assets/img/logo-on-dark.png" alt="隱哈歌利 En-hakkore">
+      </a>
+      <p>求告者之泉 — 為宣教士提供支持與關懷的網絡。我們相信，後方的守護，能讓前線的呼求得著回應。</p>
+      <div class="footer-social">
+        <a href="#" aria-label="Facebook"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.5 9.9V14.9H8v-2.9h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.3.2 2.3.2v2.5h-1.3c-1.3 0-1.7.8-1.7 1.6V12h2.9l-.5 2.9h-2.4v6.9A10 10 0 0 0 22 12z"/></svg></a>
+        <a href="#" aria-label="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="18" cy="6" r="1" fill="currentColor"/></svg></a>
+        <a href="#" aria-label="YouTube"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.7 3.6 12 3.6 12 3.6s-7.7 0-9.4.5A3 3 0 0 0 .5 6.2C0 7.9 0 12 0 12s0 4.1.5 5.8a3 3 0 0 0 2.1 2.1c1.7.5 9.4.5 9.4.5s7.7 0 9.4-.5a3 3 0 0 0 2.1-2.1c.5-1.7.5-5.8.5-5.8s0-4.1-.5-5.8zM9.6 15.3V8.7l6.4 3.3-6.4 3.3z"/></svg></a>
       </div>
     </div>
-    <div class="footer-bottom">
-      <span>© 2026 En-hakkore · 隱哈歌利. All rights reserved.</span>
-      <span>士師記 15:19</span>
+    <div class="footer-col">
+      <h4>關於</h4>
+      <ul>
+        <li><a href="about.html">起源與異象</a></li>
+        <li><a href="about.html">團隊成員</a></li>
+        <li><a href="contact.html">聯絡我們</a></li>
+      </ul>
     </div>
+    <div class="footer-col">
+      <h4>參與</h4>
+      <ul>
+        <li><a href="donate.html">奉獻支持</a></li>
+        <li><a href="volunteer.html">招募志工</a></li>
+        <li><a href="contact.html">代禱請求</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>資訊</h4>
+      <ul>
+        <li><a href="terms.html">隱私權政策</a></li>
+        <li><a href="terms.html">服務條款</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 En-hakkore · 隱哈歌利</span>
+    <span>士師記 15:19</span>
   </div>
 </footer>
 
