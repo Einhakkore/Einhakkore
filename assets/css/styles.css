@@ -1,6 +1,6 @@
 /* ============================================================
    ENHAKORRE — Final Stylesheet
-   Aurora 柔光 + AAA 對比 + 線型 icon + 質感圖片
+   暖中性鋪面 + 深色骨架 + 琥珀／陶土／鼠尾草點睛
    ============================================================ */
 
 /* -----------------------------------------------------------
@@ -46,45 +46,64 @@
   src: url("../fonts/FreightTextPro-Bold.otf") format("opentype");
   font-weight: 700; font-style: normal; font-display: swap;
 }
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@200;300;400;500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600&display=swap");
 
 /* -----------------------------------------------------------
    DESIGN TOKENS
-   AAA: 主要文字對比 ≥ 7:1 on navy-900 (#1A2E40)
-   AA:  裝飾文字對比 ≥ 4.5:1
+   深色骨架（ink） / 暖中性鋪面（paper、sand）/ 亮色點睛（amber／clay／sage）
    ----------------------------------------------------------- */
 :root {
-  /* Brand navy */
-  --navy-900: #1A2E40;
-  --navy-800: #274156;
-  --navy-700: #345670;
-  --navy-600: #1C6E8C;
+  /* Ink — 深色骨架（標題、結構） */
+  --ink-900: #1A2E40;
+  --ink-800: #274156;
+  --ink-700: #345670;
+  --ink-600: #4D6478;
 
-  /* Amber — accent */
-  --amber-700: #B8860B;
+  /* Paper & Sand — 暖中性大面積 */
+  --paper:      #FAF6EF;     /* 頁面底 — 奶紙白 */
+  --paper-2:    #F5EEDF;     /* 比 paper 再深一點，過渡用 */
+  --sand:       #EDE3D3;     /* 區塊／卡片底 — 沙米 */
+  --sand-2:     #E2D5BF;
+  --sand-deep:  #C9B998;
+
+  /* Amber — 主要強調（按鈕、重點） */
+  --amber-800: #8A6508;
+  --amber-700: #B8860B;      /* 文字級琥珀（對 paper 達 AA） */
   --amber-600: #D4AF37;
-  --amber-500: #E8A33D;
-  --amber-400: #F2C36B;
+  --amber-500: #E8A33D;      /* 按鈕主色 — 比舊版暖、少螢光 */
+  --amber-400: #F2C36B;      /* hover、柔性高光 */
   --amber-300: #F5D097;
 
-  /* Paper */
-  --paper: #FAF6EE;
+  /* Clay — 陶土橘：給「人味」的標籤色（咖啡、宣教士故事） */
+  --clay-800:  #7A4530;
+  --clay-700:  #9E5E3D;
+  --clay-500:  #C77B52;
+  --clay-400:  #D69877;
+  --clay-tint: rgba(199, 123, 82, .10);
 
-  /* Text colors — AAA-calibrated */
-  --text-1: #F5F1E8;        /* 主要文字   - 對比 13.5:1 - AAA */
-  --text-2: #D8DDE4;        /* 內文       - 對比 10.8:1 - AAA */
-  --text-3: #ADB7C0;        /* 次要內文   - 對比 7.1:1  - AAA */
-  --text-4: #8A96A2;        /* 標籤/小字  - 對比 4.8:1  - AA */
+  /* Sage — 鼠尾草綠：給「安心」的點綴（代禱、平安、安歇） */
+  --sage-800:  #50685B;
+  --sage-700:  #6E8579;
+  --sage-500:  #8AA293;
+  --sage-400:  #A4B8AB;
+  --sage-tint: rgba(138, 162, 147, .12);
 
-  /* Lines */
-  --line-dim: rgba(255,255,255,.08);
-  --line-mid: rgba(255,255,255,.14);
-  --line-strong: rgba(255,255,255,.22);
+  /* Text — 對 paper(#FAF6EF) 校正 */
+  --text-1: #1A2E40;        /* 主要標題    對比 12.8:1 — AAA */
+  --text-2: #3A4E60;        /* 內文         對比 8.4:1  — AAA */
+  --text-3: #5C6F80;        /* 次要內文     對比 5.4:1  — AA  */
+  --text-4: #7E8A96;        /* 標籤／小字   對比 3.8:1  — AA-large */
+  --text-on-dark: #F5F1E8;  /* 反白用（深色面上的文字） */
+
+  /* Lines — ink-based，讓分隔線在暖底上有溫度 */
+  --line-dim:    rgba(26, 46, 64, .08);
+  --line-mid:    rgba(26, 46, 64, .14);
+  --line-strong: rgba(26, 46, 64, .22);
 
   /* Typography families */
-  --font-zh: "Noto Sans TC", system-ui, sans-serif;
+  --font-zh:    "Noto Sans TC", system-ui, sans-serif;
   --font-brand: "ShiweiSiJiChun", "Noto Serif TC", serif;
-  --font-en: "FreightText", "Fraunces", Georgia, serif;
+  --font-en:    "FreightText", "Fraunces", Georgia, serif;
 }
 
 /* -----------------------------------------------------------
@@ -94,23 +113,33 @@
 html { scroll-behavior: smooth; }
 body {
   margin: 0; padding: 0;
-  background: var(--navy-900);
+  background: var(--paper);
   color: var(--text-2);
   font-family: var(--font-zh);
-  font-weight: 300;
+  font-weight: 400;
   font-size: 16px;
-  line-height: 1.7;
+  line-height: 1.8;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
   position: relative;
 }
+p { margin: 0 0 1.4em; }
+p:last-child { margin-bottom: 0; }
+
 img { max-width: 100%; display: block; }
+
+/* 全站照片：很淡的暖色濾鏡（略加暖、略降飽和），不影響 logo */
+img { filter: sepia(.06) saturate(.92) brightness(.99); }
+.logo img, .footer-brand img, .footer-social svg, .practice-card .icon svg,
+.step .icon svg, .contact-block .icon svg, .field select, .menu-toggle svg,
+.account-box .icon svg { filter: none; }
+
 a { color: inherit; text-decoration: none; cursor: pointer; }
 button { font-family: inherit; cursor: pointer; }
 
 /* -----------------------------------------------------------
-   AURORA BACKGROUND
+   AURORA BACKGROUND — 暖光柔霧（paper bg 上的淡淡漸層）
    ----------------------------------------------------------- */
 .aurora {
   position: fixed; inset: 0; z-index: 0;
@@ -119,34 +148,34 @@ button { font-family: inherit; cursor: pointer; }
 .aurora-blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(80px);
+  filter: blur(90px);
   will-change: transform;
 }
 .aurora-1 {
   width: 600px; height: 600px;
-  top: -100px; left: -100px;
-  background: radial-gradient(circle, rgba(232,163,61,.55), transparent 65%);
+  top: -120px; left: -120px;
+  background: radial-gradient(circle, rgba(232,163,61,.22), transparent 65%);
   opacity: .85;
   animation: drift1 32s ease-in-out infinite;
 }
 .aurora-2 {
-  width: 700px; height: 700px;
-  top: 30%; right: -200px;
-  background: radial-gradient(circle, rgba(28,110,140,.7), transparent 65%);
+  width: 720px; height: 720px;
+  top: 28%; right: -220px;
+  background: radial-gradient(circle, rgba(199,123,82,.16), transparent 65%);
   opacity: .8;
   animation: drift2 28s ease-in-out infinite;
 }
 .aurora-3 {
-  width: 500px; height: 500px;
-  bottom: 20%; left: 15%;
-  background: radial-gradient(circle, rgba(212,175,55,.32), transparent 65%);
+  width: 520px; height: 520px;
+  bottom: 22%; left: 12%;
+  background: radial-gradient(circle, rgba(242,195,107,.18), transparent 65%);
   opacity: .85;
   animation: drift3 36s ease-in-out infinite;
 }
 .aurora-4 {
-  width: 800px; height: 800px;
-  bottom: -200px; right: 5%;
-  background: radial-gradient(circle, rgba(52,86,112,.75), transparent 65%);
+  width: 780px; height: 780px;
+  bottom: -220px; right: 4%;
+  background: radial-gradient(circle, rgba(138,162,147,.16), transparent 65%);
   opacity: .85;
   animation: drift4 40s ease-in-out infinite;
 }
@@ -169,33 +198,17 @@ button { font-family: inherit; cursor: pointer; }
   50%      { transform: translate(-100px, -120px) scale(1.05); }
 }
 
-.aurora-stars {
-  position: absolute; inset: 0;
-  background-image:
-    radial-gradient(1px 1px at 12% 18%, rgba(232,163,61,.4), transparent 50%),
-    radial-gradient(1px 1px at 24% 47%, rgba(255,255,255,.3), transparent 50%),
-    radial-gradient(1px 1px at 88% 23%, rgba(232,163,61,.35), transparent 50%),
-    radial-gradient(1px 1px at 67% 75%, rgba(255,255,255,.25), transparent 50%),
-    radial-gradient(2px 2px at 33% 88%, rgba(232,163,61,.3), transparent 50%),
-    radial-gradient(1px 1px at 78% 56%, rgba(255,255,255,.2), transparent 50%),
-    radial-gradient(1px 1px at 45% 12%, rgba(232,163,61,.3), transparent 50%),
-    radial-gradient(1px 1px at 92% 88%, rgba(255,255,255,.2), transparent 50%);
-  animation: stars 60s ease-in-out infinite;
-}
-@keyframes stars {
-  0%, 100% { opacity: 1; }
-  50%      { opacity: .55; }
-}
+.aurora-stars { display: none; }
 
 /* 確保內容在 aurora 之上 */
 .site-header, main, footer { position: relative; z-index: 1; }
 
 /* -----------------------------------------------------------
-   HEADER
+   HEADER — 奶紙底、ink 文字
    ----------------------------------------------------------- */
 .site-header {
   position: sticky; top: 0; z-index: 100;
-  background: rgba(26,46,64,.65);
+  background: rgba(250,246,239,.78);
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
   border-bottom: 1px solid var(--line-dim);
@@ -211,17 +224,17 @@ button { font-family: inherit; cursor: pointer; }
 .nav { display: flex; align-items: center; gap: 4px; }
 .nav a {
   font-size: 15px; padding: 8px 16px;
-  color: var(--text-2);
+  color: var(--ink-800);
   transition: color .2s ease; font-weight: 400;
   border-radius: 999px;
 }
-.nav a:hover { color: var(--text-1); }
-.nav a.active { color: var(--amber-400); }
+.nav a:hover { color: var(--ink-900); }
+.nav a.active { color: var(--amber-700); }
 .nav .donate-btn {
   margin-left: 12px;
-  background: rgba(232,163,61,.15);
-  border: 1px solid rgba(232,163,61,.4);
-  color: var(--amber-300);
+  background: var(--amber-500);
+  border: 1px solid var(--amber-500);
+  color: var(--ink-900);
   padding: 9px 20px;
   font-size: 14px;
   font-weight: 500;
@@ -231,17 +244,17 @@ button { font-family: inherit; cursor: pointer; }
   gap: 8px;
 }
 .nav .donate-btn:hover {
-  background: var(--amber-500); color: var(--navy-900);
-  border-color: var(--amber-500);
+  background: var(--amber-400);
+  border-color: var(--amber-400);
 }
 
-.menu-toggle { display: none; background: transparent; border: 0; padding: 8px; color: var(--text-1); }
+.menu-toggle { display: none; background: transparent; border: 0; padding: 8px; color: var(--ink-900); }
 @media (max-width: 900px) {
   .menu-toggle { display: block; }
   .nav {
     display: none;
     position: absolute; top: 80px; left: 0; right: 0;
-    background: rgba(26,46,64,.95);
+    background: rgba(250,246,239,.97);
     backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--line-dim);
     flex-direction: column; align-items: stretch;
@@ -277,25 +290,25 @@ button { font-family: inherit; cursor: pointer; }
 .hero-symbol::after {
   content: ""; width: 14px; height: 14px;
   background: var(--amber-500); border-radius: 50%;
-  box-shadow: 0 0 24px rgba(232,163,61,.7);
+  box-shadow: 0 0 24px rgba(232,163,61,.6);
 }
 @keyframes pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(232,163,61,.5); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(232,163,61,.4); }
   50%      { box-shadow: 0 0 0 16px rgba(232,163,61,0); }
 }
 .hero-eyebrow {
   font-family: var(--font-en);
   font-style: italic; font-weight: 400;
   font-size: 14px;
-  color: var(--amber-300);
+  color: var(--amber-700);
   letter-spacing: .25em;
   margin-bottom: 40px;
 }
 .hero h1 {
   font-family: var(--font-brand);
-  font-weight: 500;
+  font-weight: 400;
   font-size: clamp(36px, 4.6vw, 56px);
-  line-height: 1.5;
+  line-height: 1.55;
   color: var(--text-1);
   letter-spacing: .02em;
   margin-bottom: 40px;
@@ -303,14 +316,14 @@ button { font-family: inherit; cursor: pointer; }
 .hero h1 em {
   font-family: var(--font-en);
   font-style: italic; font-weight: 400;
-  color: var(--amber-400);
+  color: var(--amber-700);
   letter-spacing: 0;
 }
 .hero-sub {
   font-size: 18px;
-  line-height: 1.95;
+  line-height: 2;
   color: var(--text-2);
-  font-weight: 300;
+  font-weight: 400;
   max-width: 600px;
   margin: 0 auto 56px;
 }
@@ -356,22 +369,22 @@ button { font-family: inherit; cursor: pointer; }
 }
 .page-hero .eyebrow {
   font-family: var(--font-en); font-style: italic; font-weight: 400;
-  font-size: 14px; color: var(--amber-300);
+  font-size: 14px; color: var(--amber-700);
   letter-spacing: .25em; margin-bottom: 28px;
 }
 .page-hero h1 {
-  font-family: var(--font-brand); font-weight: 500;
-  font-size: clamp(32px, 4vw, 48px); line-height: 1.5;
+  font-family: var(--font-brand); font-weight: 400;
+  font-size: clamp(32px, 4vw, 48px); line-height: 1.55;
   color: var(--text-1); letter-spacing: .02em; margin: 0 auto 28px;
   max-width: 800px;
 }
 .page-hero h1 em {
   font-family: var(--font-en); font-style: italic; font-weight: 400;
-  color: var(--amber-400);
+  color: var(--amber-700);
 }
 .page-hero p {
-  font-size: 17px; line-height: 1.95; color: var(--text-2);
-  margin: 0 auto; max-width: 640px; font-weight: 300;
+  font-size: 17px; line-height: 2; color: var(--text-2);
+  margin: 0 auto; max-width: 640px; font-weight: 400;
 }
 
 /* -----------------------------------------------------------
@@ -387,32 +400,32 @@ button { font-family: inherit; cursor: pointer; }
   cursor: pointer;
 }
 .btn-primary {
-  background: var(--amber-500); color: var(--navy-900);
+  background: var(--amber-500); color: var(--ink-900);
 }
 .btn-primary:hover {
   background: var(--amber-400); transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(232,163,61,.25);
 }
 .btn-ghost {
-  background: rgba(255,255,255,.06);
-  color: var(--text-1);
+  background: rgba(26,46,64,.04);
+  color: var(--ink-900);
   border: 1px solid var(--line-mid);
 }
 .btn-ghost:hover {
-  background: rgba(255,255,255,.10);
+  background: rgba(26,46,64,.08);
   border-color: var(--line-strong);
 }
 .btn-text {
   font-family: var(--font-en); font-style: italic;
-  font-size: 16px; color: var(--amber-400);
+  font-size: 16px; color: var(--amber-700);
   padding: 6px 0;
-  border-bottom: 1px solid var(--amber-400);
+  border-bottom: 1px solid var(--amber-700);
   background: transparent;
   border-radius: 0;
   transition: all .25s ease;
 }
 .btn-text:hover {
-  color: var(--text-1); border-color: var(--text-1);
+  color: var(--ink-900); border-color: var(--ink-900);
 }
 .btn .arr { transition: transform .25s ease; }
 .btn:hover .arr { transform: translateX(3px); }
@@ -429,26 +442,26 @@ button { font-family: inherit; cursor: pointer; }
 }
 .section-num {
   font-family: var(--font-en); font-style: italic; font-weight: 300;
-  font-size: 64px; color: rgba(242,195,107,.20);
+  font-size: 64px; color: rgba(232,163,61,.28);
   line-height: 1; margin-bottom: 8px;
 }
 .section-eyebrow {
   font-family: var(--font-en); font-style: italic; font-weight: 400;
-  font-size: 14px; color: var(--amber-300);
+  font-size: 14px; color: var(--amber-700);
   letter-spacing: .25em; margin-bottom: 24px;
 }
 .section-head h2 {
-  font-family: var(--font-brand); font-weight: 500;
-  font-size: clamp(28px, 3.4vw, 38px); line-height: 1.55;
+  font-family: var(--font-brand); font-weight: 400;
+  font-size: clamp(28px, 3.4vw, 38px); line-height: 1.6;
   color: var(--text-1); letter-spacing: .02em; margin: 0 0 20px;
 }
 .section-head h2 em {
   font-family: var(--font-en); font-style: italic; font-weight: 400;
-  color: var(--amber-400); letter-spacing: 0;
+  color: var(--amber-700); letter-spacing: 0;
 }
 .section-head .lead {
   font-size: 16px; line-height: 2; color: var(--text-2);
-  font-weight: 300; max-width: 600px; margin: 0 auto;
+  font-weight: 400; max-width: 600px; margin: 0 auto;
 }
 
 /* -----------------------------------------------------------
@@ -466,7 +479,7 @@ button { font-family: inherit; cursor: pointer; }
 }
 @media (max-width: 900px) { .practices { grid-template-columns: 1fr; } }
 .practice-card {
-  background: rgba(255,255,255,.04);
+  background: rgba(237,227,211,.70);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--line-dim);
@@ -482,7 +495,7 @@ button { font-family: inherit; cursor: pointer; }
   opacity: 0; transition: opacity .5s ease;
 }
 .practice-card:hover {
-  background: rgba(255,255,255,.07);
+  background: rgba(237,227,211,.92);
   border-color: rgba(232,163,61,.35);
   transform: translateY(-4px);
 }
@@ -490,57 +503,78 @@ button { font-family: inherit; cursor: pointer; }
 .practice-card > * { position: relative; z-index: 1; }
 .practice-card .icon {
   width: 56px; height: 56px;
-  color: var(--amber-400);
+  color: var(--amber-700);
   margin-bottom: 28px;
 }
 .practice-card .icon svg { width: 100%; height: 100%; }
 .practice-card .roman {
   font-family: var(--font-en); font-style: italic; font-weight: 300;
-  font-size: 16px; color: var(--amber-300);
+  font-size: 16px; color: var(--amber-700);
   letter-spacing: .15em; margin-bottom: 16px;
   display: flex; align-items: center; gap: 12px;
 }
 .practice-card .roman::after {
   content: ""; flex: 1; height: 1px;
-  background: linear-gradient(90deg, rgba(232,163,61,.3), transparent);
+  background: linear-gradient(90deg, rgba(232,163,61,.35), transparent);
 }
 .practice-card h3 {
-  font-family: var(--font-brand); font-weight: 500;
+  font-family: var(--font-brand); font-weight: 400;
   font-size: 24px; color: var(--text-1);
-  margin: 0 0 18px; letter-spacing: .02em; line-height: 1.5;
+  margin: 0 0 18px; letter-spacing: .02em; line-height: 1.55;
 }
 .practice-card p {
   font-size: 15px; line-height: 1.95;
-  color: var(--text-3); font-weight: 300; margin: 0;
+  color: var(--text-2); font-weight: 400; margin: 0;
+}
+
+/* Card variants — 陶土／鼠尾草 */
+.practice-card.clay .icon,
+.practice-card.clay .roman { color: var(--clay-700); }
+.practice-card.clay .roman::after {
+  background: linear-gradient(90deg, rgba(199,123,82,.35), transparent);
+}
+.practice-card.clay:hover { border-color: rgba(199,123,82,.35); }
+.practice-card.clay:hover::before {
+  background: radial-gradient(circle at center, rgba(199,123,82,.10), transparent 50%);
+}
+
+.practice-card.sage .icon,
+.practice-card.sage .roman { color: var(--sage-700); }
+.practice-card.sage .roman::after {
+  background: linear-gradient(90deg, rgba(138,162,147,.35), transparent);
+}
+.practice-card.sage:hover { border-color: rgba(138,162,147,.35); }
+.practice-card.sage:hover::before {
+  background: radial-gradient(circle at center, rgba(138,162,147,.12), transparent 50%);
 }
 
 /* -----------------------------------------------------------
-   VERSE
+   VERSE — 安歇感的鼠尾草點綴
    ----------------------------------------------------------- */
 .section-verse { padding: 140px 32px; text-align: center; position: relative; }
 .section-verse::before, .section-verse::after {
   content: ""; position: absolute;
   left: 50%; transform: translateX(-50%);
   width: 60px; height: 1px;
-  background: var(--amber-500); opacity: .6;
+  background: var(--sage-500); opacity: .7;
 }
 .section-verse::before { top: 64px; }
 .section-verse::after { bottom: 64px; }
 .verse-wrap { max-width: 760px; margin: 0 auto; }
 .verse-ref {
   font-family: var(--font-en); font-style: italic; font-weight: 400;
-  font-size: 14px; color: var(--amber-300);
+  font-size: 14px; color: var(--sage-700);
   letter-spacing: .3em; margin-bottom: 48px;
 }
 .verse-quote {
   font-family: var(--font-brand); font-weight: 400;
-  font-size: clamp(22px, 2.6vw, 30px); line-height: 1.95;
+  font-size: clamp(22px, 2.6vw, 30px); line-height: 2;
   color: var(--text-1); letter-spacing: .03em;
   margin-bottom: 40px;
 }
 .verse-quote strong {
   font-family: var(--font-en); font-style: italic; font-weight: 400;
-  color: var(--amber-400); letter-spacing: 0;
+  color: var(--amber-700); letter-spacing: 0;
 }
 .verse-cite {
   font-family: var(--font-en); font-style: italic; font-weight: 400;
@@ -564,65 +598,75 @@ button { font-family: inherit; cursor: pointer; }
   aspect-ratio: 4 / 5;
   border-radius: 24px;
   overflow: hidden; position: relative;
+  background: var(--sand);
 }
 .feature-img img {
   width: 100%; height: 100%; object-fit: cover;
-  filter: brightness(.85) saturate(.9);
+  /* 比全站再深一層的暖濾鏡，讓圖片在暖底上更柔 */
+  filter: sepia(.10) saturate(.88) brightness(.97);
 }
 .feature-img::after {
   content: ""; position: absolute; inset: 0;
   background:
-    linear-gradient(180deg, transparent 50%, rgba(26,46,64,.6) 100%),
-    linear-gradient(135deg, rgba(28,110,140,.25), transparent 50%);
+    linear-gradient(180deg, transparent 55%, rgba(26,46,64,.55) 100%),
+    linear-gradient(135deg, rgba(199,123,82,.10), transparent 50%);
 }
 .feature-img .caption {
   position: absolute; bottom: 24px; left: 24px; right: 24px;
   font-family: var(--font-en); font-style: italic;
-  font-size: 13px; color: rgba(255,255,255,.85);
+  font-size: 13px; color: rgba(255,255,255,.92);
   letter-spacing: .04em; padding-top: 16px;
-  border-top: 1px solid rgba(255,255,255,.25);
+  border-top: 1px solid rgba(255,255,255,.30);
   z-index: 1;
 }
 .feature-text .label {
   display: inline-flex; align-items: center; gap: 10px;
   font-family: var(--font-en); font-style: italic; font-weight: 400;
-  font-size: 14px; color: var(--amber-300);
+  font-size: 14px; color: var(--amber-700);
   letter-spacing: .25em; margin-bottom: 24px;
 }
 .feature-text .label::before {
-  content: ""; width: 32px; height: 1px; background: var(--amber-500);
+  content: ""; width: 32px; height: 1px; background: currentColor; opacity: .6;
 }
+/* Label 變體 */
+.feature-text .label.clay { color: var(--clay-700); }
+.feature-text .label.sage { color: var(--sage-700); }
+
 .feature-text h2 {
-  font-family: var(--font-brand); font-weight: 500;
-  font-size: clamp(28px, 3vw, 36px); line-height: 1.45;
+  font-family: var(--font-brand); font-weight: 400;
+  font-size: clamp(28px, 3vw, 36px); line-height: 1.55;
   color: var(--text-1); letter-spacing: .02em; margin: 0 0 24px;
 }
 .feature-text h2 em {
   font-family: var(--font-en); font-style: italic; font-weight: 400;
-  color: var(--amber-400); letter-spacing: 0;
+  color: var(--amber-700); letter-spacing: 0;
 }
+.feature-text h2.clay em { color: var(--clay-700); }
+.feature-text h2.sage em { color: var(--sage-700); }
 .feature-text p {
   font-size: 16px; line-height: 1.95;
-  color: var(--text-2); font-weight: 300; margin: 0 0 16px;
+  color: var(--text-2); font-weight: 400; margin: 0 0 1.4em;
 }
 .feature-text .link {
   display: inline-flex; align-items: center; gap: 10px;
   margin-top: 16px; padding: 6px 0;
   font-family: var(--font-en); font-style: italic; font-size: 16px;
-  color: var(--amber-400);
-  border-bottom: 1px solid var(--amber-400);
+  color: var(--amber-700);
+  border-bottom: 1px solid var(--amber-700);
   transition: all .25s ease;
 }
-.feature-text .link:hover { color: var(--text-1); border-color: var(--text-1); }
+.feature-text .link:hover { color: var(--ink-900); border-color: var(--ink-900); }
+.feature-text .link.clay { color: var(--clay-700); border-color: var(--clay-700); }
+.feature-text .link.sage { color: var(--sage-700); border-color: var(--sage-700); }
 
 /* -----------------------------------------------------------
-   STATS
+   STATS — 沙米腰帶
    ----------------------------------------------------------- */
 .section-stats {
   padding: 64px 32px;
   border-top: 1px solid var(--line-dim);
   border-bottom: 1px solid var(--line-dim);
-  background: rgba(0,0,0,.2);
+  background: rgba(237,227,211,.55);
   backdrop-filter: blur(10px);
 }
 .stats-grid {
@@ -640,7 +684,7 @@ button { font-family: inherit; cursor: pointer; }
 .stat:not(:last-child)::after {
   content: ""; position: absolute;
   right: -16px; top: 20%; height: 60%; width: 1px;
-  background: var(--line-dim);
+  background: var(--line-mid);
 }
 @media (max-width: 700px) {
   .stat:not(:last-child)::after { display: none; }
@@ -648,7 +692,7 @@ button { font-family: inherit; cursor: pointer; }
 .stat .n {
   font-family: var(--font-en); font-style: italic; font-weight: 300;
   font-size: clamp(40px, 4.5vw, 52px); line-height: 1;
-  color: var(--amber-400); margin-bottom: 10px;
+  color: var(--amber-700); margin-bottom: 10px;
   letter-spacing: -.02em;
 }
 .stat .l {
@@ -663,34 +707,34 @@ button { font-family: inherit; cursor: pointer; }
 .cta-wrap { max-width: 720px; margin: 0 auto; }
 .cta-label {
   font-family: var(--font-en); font-style: italic; font-weight: 400;
-  font-size: 14px; color: var(--amber-300);
+  font-size: 14px; color: var(--amber-700);
   letter-spacing: .3em; margin-bottom: 40px;
 }
 .cta-poem {
   font-family: var(--font-brand); font-weight: 400;
-  font-size: clamp(26px, 3vw, 36px); line-height: 1.8;
+  font-size: clamp(26px, 3vw, 36px); line-height: 1.95;
   color: var(--text-1); letter-spacing: .03em; margin-bottom: 48px;
 }
 .cta-poem em {
   font-family: var(--font-en); font-style: italic; font-weight: 400;
-  color: var(--amber-400); letter-spacing: 0;
+  color: var(--amber-700); letter-spacing: 0;
 }
 .cta-poem .line { display: block; }
 .cta-poem .indent { padding-left: 2em; }
 .cta-sub {
   font-size: 16px; line-height: 1.95; color: var(--text-2);
-  font-weight: 300; margin-bottom: 48px;
+  font-weight: 400; margin-bottom: 48px;
 }
 .cta-actions {
   display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
 }
 
 /* -----------------------------------------------------------
-   NEWSLETTER
+   NEWSLETTER — 與「代禱信」相關，鼠尾草點綴
    ----------------------------------------------------------- */
 .newsletter {
   padding: 120px 32px; text-align: center;
-  background: rgba(0,0,0,.25);
+  background: rgba(237,227,211,.55);
   border-top: 1px solid var(--line-dim);
   border-bottom: 1px solid var(--line-dim);
   position: relative;
@@ -698,42 +742,43 @@ button { font-family: inherit; cursor: pointer; }
 .newsletter-wrap { max-width: 560px; margin: 0 auto; }
 .newsletter-label {
   font-family: var(--font-en); font-style: italic; font-weight: 400;
-  font-size: 14px; color: var(--amber-300);
+  font-size: 14px; color: var(--sage-700);
   letter-spacing: .3em; margin-bottom: 28px;
 }
 .newsletter h3 {
-  font-family: var(--font-brand); font-weight: 500;
+  font-family: var(--font-brand); font-weight: 400;
   font-size: 28px; color: var(--text-1);
   letter-spacing: .02em; margin: 0 0 20px;
+  line-height: 1.55;
 }
 .newsletter p {
-  font-size: 15px; line-height: 1.85;
-  color: var(--text-2); font-weight: 300; margin: 0 0 36px;
+  font-size: 15px; line-height: 1.9;
+  color: var(--text-2); font-weight: 400; margin: 0 0 36px;
 }
 .newsletter-form {
   display: flex; gap: 8px;
-  background: rgba(255,255,255,.06);
+  background: var(--paper);
   border: 1px solid var(--line-mid);
   border-radius: 999px; padding: 6px;
   transition: border-color .25s ease;
 }
-.newsletter-form:focus-within { border-color: var(--amber-400); }
+.newsletter-form:focus-within { border-color: var(--amber-500); }
 .newsletter-form input {
   flex: 1; height: 48px; padding: 0 20px;
   background: transparent; border: 0; outline: none;
   font-family: var(--font-zh); font-size: 15px; color: var(--text-1);
 }
-.newsletter-form input::placeholder { color: var(--text-3); }
+.newsletter-form input::placeholder { color: var(--text-4); }
 .newsletter-form button {
   height: 48px; padding: 0 24px;
-  background: var(--amber-500); color: var(--navy-900);
+  background: var(--amber-500); color: var(--ink-900);
   border: 0; border-radius: 999px;
   font-family: var(--font-zh); font-size: 14px; font-weight: 500;
   transition: background .2s ease;
 }
 .newsletter-form button:hover { background: var(--amber-400); }
 .newsletter-success {
-  color: var(--amber-300); font-family: var(--font-en); font-style: italic;
+  color: var(--sage-700); font-family: var(--font-en); font-style: italic;
   font-size: 16px; padding: 24px;
 }
 
@@ -768,17 +813,17 @@ button { font-family: inherit; cursor: pointer; }
 .footer-social { display: flex; gap: 10px; margin-top: 4px; }
 .footer-social a {
   width: 38px; height: 38px; border-radius: 50%;
-  background: rgba(255,255,255,.06);
+  background: rgba(26,46,64,.06);
   display: flex; align-items: center; justify-content: center;
-  color: var(--text-2); transition: all .2s ease;
+  color: var(--ink-700); transition: all .2s ease;
 }
 .footer-social a:hover {
-  background: var(--amber-500); color: var(--navy-900);
+  background: var(--amber-500); color: var(--ink-900);
   transform: translateY(-2px);
 }
 .footer-col h4 {
   font-family: var(--font-brand); font-weight: 500;
-  font-size: 15px; color: var(--amber-300);
+  font-size: 15px; color: var(--amber-700);
   letter-spacing: .12em; margin: 0 0 18px;
 }
 .footer-col ul {
@@ -789,7 +834,7 @@ button { font-family: inherit; cursor: pointer; }
   font-size: 14px; color: var(--text-2);
   transition: color .2s ease; cursor: pointer;
 }
-.footer-col a:hover { color: var(--amber-300); }
+.footer-col a:hover { color: var(--amber-700); }
 .footer-bottom {
   max-width: 1180px; margin: 32px auto 0;
   display: flex; justify-content: space-between; align-items: center;
@@ -810,13 +855,13 @@ button { font-family: inherit; cursor: pointer; }
 }
 .donate-quote {
   padding: 32px;
-  background: rgba(255,255,255,.04);
+  background: rgba(237,227,211,.65);
   backdrop-filter: blur(20px);
   border: 1px solid var(--line-dim);
   border-radius: 20px;
-  border-left: 3px solid var(--amber-500);
+  border-left: 3px solid var(--clay-500);
   font-family: var(--font-brand); font-weight: 400;
-  font-size: 18px; line-height: 1.95;
+  font-size: 18px; line-height: 2;
   color: var(--text-1); margin-bottom: 40px;
   letter-spacing: .01em;
 }
@@ -827,10 +872,11 @@ button { font-family: inherit; cursor: pointer; }
   margin: 0 0 24px;
   display: flex; align-items: baseline; gap: 14px;
   letter-spacing: .02em;
+  line-height: 1.55;
 }
 .budget h3 em {
   font-family: var(--font-en); font-style: italic; font-weight: 400;
-  font-size: 28px; color: var(--amber-400); letter-spacing: 0;
+  font-size: 28px; color: var(--amber-700); letter-spacing: 0;
 }
 .budget-row {
   display: grid; grid-template-columns: 1.4fr 2fr auto; gap: 20px;
@@ -842,7 +888,7 @@ button { font-family: inherit; cursor: pointer; }
   font-size: 15px; color: var(--text-2); font-weight: 400;
 }
 .budget-row .bar {
-  height: 6px; background: rgba(255,255,255,.06);
+  height: 6px; background: rgba(26,46,64,.08);
   border-radius: 999px; overflow: hidden;
 }
 .budget-row .bar > div {
@@ -857,7 +903,7 @@ button { font-family: inherit; cursor: pointer; }
 }
 
 .account-box {
-  background: rgba(255,255,255,.04);
+  background: rgba(237,227,211,.65);
   backdrop-filter: blur(20px);
   border: 1px solid var(--line-dim);
   border-radius: 20px;
@@ -869,29 +915,30 @@ button { font-family: inherit; cursor: pointer; }
   font-size: 18px; color: var(--text-1); margin: 0;
   display: flex; align-items: center; gap: 12px;
   letter-spacing: .02em;
+  line-height: 1.55;
 }
 .account-box .icon {
   width: 32px; height: 32px;
-  color: var(--amber-400);
+  color: var(--amber-700);
 }
 .account-box .info {
   font-family: var(--font-en); font-weight: 400;
-  font-size: 15px; line-height: 1.8;
+  font-size: 15px; line-height: 1.85;
   color: var(--text-1);
-  background: rgba(255,255,255,.04);
+  background: rgba(250,246,239,.85);
   padding: 14px 18px; border-radius: 12px;
 }
 .account-box .note {
-  font-size: 13px; line-height: 1.75;
+  font-size: 13px; line-height: 1.85;
   color: var(--text-3); margin: 0;
 }
-.account-box .note a { color: var(--amber-300); }
+.account-box .note a { color: var(--clay-700); border-bottom: 1px solid rgba(199,123,82,.4); }
 
 /* -----------------------------------------------------------
    CONTACT FORM
    ----------------------------------------------------------- */
 .contact-form {
-  background: rgba(255,255,255,.04);
+  background: rgba(237,227,211,.65);
   backdrop-filter: blur(20px);
   border: 1px solid var(--line-dim);
   border-radius: 24px;
@@ -902,6 +949,7 @@ button { font-family: inherit; cursor: pointer; }
   font-family: var(--font-brand); font-weight: 500;
   font-size: 22px; color: var(--text-1);
   margin: 0 0 4px; letter-spacing: .02em;
+  line-height: 1.55;
 }
 .contact-form .desc {
   font-size: 14px; color: var(--text-3); margin: 0 0 8px;
@@ -914,7 +962,7 @@ button { font-family: inherit; cursor: pointer; }
 .field input, .field textarea, .field select {
   height: 48px; padding: 0 16px; border-radius: 12px;
   border: 1px solid var(--line-mid);
-  background: rgba(255,255,255,.04);
+  background: rgba(250,246,239,.85);
   font-family: var(--font-zh); font-size: 15px;
   color: var(--text-1); outline: none;
   transition: all .2s ease;
@@ -922,11 +970,11 @@ button { font-family: inherit; cursor: pointer; }
 .field input::placeholder, .field textarea::placeholder { color: var(--text-4); }
 .field textarea {
   height: auto; padding: 14px 16px; resize: vertical;
-  min-height: 110px; line-height: 1.7;
+  min-height: 110px; line-height: 1.8;
 }
 .field input:focus, .field textarea:focus, .field select:focus {
-  border-color: var(--amber-400);
-  background: rgba(255,255,255,.06);
+  border-color: var(--amber-500);
+  background: var(--paper);
 }
 .field-row {
   display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
@@ -936,7 +984,7 @@ button { font-family: inherit; cursor: pointer; }
 }
 .field select {
   appearance: none;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none' stroke='%23ADB7C0' stroke-width='1.5'><path d='M1 1l5 5 5-5'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none' stroke='%235C6F80' stroke-width='1.5'><path d='M1 1l5 5 5-5'/></svg>");
   background-repeat: no-repeat;
   background-position: right 16px center;
   padding-right: 40px;
@@ -944,12 +992,12 @@ button { font-family: inherit; cursor: pointer; }
 .form-success {
   padding: 24px; border-radius: 16px;
   background: rgba(232,163,61,.10);
-  color: var(--text-1); font-size: 15px; line-height: 1.7;
+  color: var(--text-1); font-size: 15px; line-height: 1.85;
   border: 1px solid rgba(232,163,61,.3);
   display: flex; gap: 12px; align-items: flex-start;
 }
 .form-success svg {
-  flex-shrink: 0; margin-top: 2px; color: var(--amber-400);
+  flex-shrink: 0; margin-top: 2px; color: var(--amber-700);
 }
 
 /* -----------------------------------------------------------
@@ -960,7 +1008,7 @@ button { font-family: inherit; cursor: pointer; }
 }
 @media (max-width: 900px) { .steps { grid-template-columns: 1fr; } }
 .step {
-  background: rgba(255,255,255,.04);
+  background: rgba(237,227,211,.70);
   backdrop-filter: blur(20px);
   border: 1px solid var(--line-dim);
   border-radius: 24px;
@@ -969,27 +1017,28 @@ button { font-family: inherit; cursor: pointer; }
   transition: all .3s ease;
 }
 .step:hover {
-  background: rgba(255,255,255,.07);
+  background: rgba(237,227,211,.92);
   border-color: rgba(232,163,61,.35);
   transform: translateY(-4px);
 }
 .step .icon {
   width: 56px; height: 56px;
-  color: var(--amber-400);
+  color: var(--amber-700);
 }
 .step .num {
   font-family: var(--font-en); font-style: italic; font-weight: 300;
   font-size: 48px; line-height: .9;
-  color: var(--amber-400);
+  color: var(--amber-700);
 }
 .step h3 {
-  font-family: var(--font-brand); font-weight: 500;
+  font-family: var(--font-brand); font-weight: 400;
   font-size: 22px; color: var(--text-1); margin: 0;
   letter-spacing: .02em;
+  line-height: 1.55;
 }
 .step p {
   font-size: 15px; line-height: 1.95;
-  color: var(--text-3); margin: 0;
+  color: var(--text-2); margin: 0;
 }
 
 /* -----------------------------------------------------------
@@ -1008,24 +1057,35 @@ button { font-family: inherit; cursor: pointer; }
 }
 .contact-block .icon {
   width: 48px; height: 48px; flex-shrink: 0;
-  color: var(--amber-400);
-  background: rgba(232,163,61,.08);
-  border: 1px solid rgba(232,163,61,.2);
+  color: var(--amber-700);
+  background: rgba(232,163,61,.10);
+  border: 1px solid rgba(232,163,61,.25);
   border-radius: 14px;
   display: flex; align-items: center; justify-content: center;
+}
+.contact-block.sage .icon {
+  color: var(--sage-700);
+  background: var(--sage-tint);
+  border-color: rgba(138,162,147,.30);
+}
+.contact-block.clay .icon {
+  color: var(--clay-700);
+  background: var(--clay-tint);
+  border-color: rgba(199,123,82,.30);
 }
 .contact-block .info-text { flex: 1; }
 .contact-block h4 {
   font-family: var(--font-brand); font-weight: 500;
   font-size: 17px; color: var(--text-1); margin: 0 0 8px;
   letter-spacing: .02em;
+  line-height: 1.55;
 }
 .contact-block p {
-  font-size: 15px; line-height: 1.75;
+  font-size: 15px; line-height: 1.85;
   color: var(--text-2); margin: 0; white-space: pre-line;
 }
-.contact-block a { color: var(--amber-300); }
-.contact-block a:hover { color: var(--text-1); }
+.contact-block a { color: var(--amber-700); border-bottom: 1px solid rgba(184,134,11,.35); }
+.contact-block a:hover { color: var(--ink-900); border-color: var(--ink-900); }
 
 /* -----------------------------------------------------------
    TERMS
@@ -1039,10 +1099,11 @@ button { font-family: inherit; cursor: pointer; }
   font-family: var(--font-brand); font-weight: 500;
   font-size: 22px; color: var(--text-1);
   margin: 40px 0 16px; letter-spacing: .02em;
+  line-height: 1.55;
 }
 .terms-content h3:first-child { margin-top: 0; }
-.terms-content p { margin: 0 0 16px; }
-.terms-content a { color: var(--amber-300); }
+.terms-content p { margin: 0 0 1.4em; }
+.terms-content a { color: var(--amber-700); border-bottom: 1px solid rgba(184,134,11,.35); }
 
 /* -----------------------------------------------------------
    ABOUT VERSE CARD
@@ -1050,7 +1111,7 @@ button { font-family: inherit; cursor: pointer; }
 .verse-card {
   max-width: 760px; margin: 0 auto;
   text-align: center; padding: 56px 48px;
-  background: rgba(255,255,255,.04);
+  background: rgba(237,227,211,.65);
   backdrop-filter: blur(20px);
   border: 1px solid var(--line-dim);
   border-radius: 24px;
@@ -1060,25 +1121,25 @@ button { font-family: inherit; cursor: pointer; }
   content: ""; position: absolute;
   top: -1px; left: 50%; transform: translateX(-50%);
   width: 60px; height: 3px;
-  background: var(--amber-500); border-radius: 0 0 4px 4px;
+  background: var(--sage-500); border-radius: 0 0 4px 4px;
 }
 .verse-card .quote-mark {
   font-family: var(--font-en); font-style: italic;
   font-size: 88px; line-height: .6;
-  color: var(--amber-400); margin-bottom: 16px;
+  color: var(--sage-500); margin-bottom: 16px;
 }
 .verse-card blockquote {
   font-family: var(--font-brand); font-weight: 400;
-  font-size: 22px; line-height: 1.95;
+  font-size: 22px; line-height: 2;
   color: var(--text-1); margin: 0 0 24px;
   letter-spacing: .02em;
 }
 .verse-card blockquote strong {
-  font-weight: 600; color: var(--amber-400);
+  font-weight: 500; color: var(--amber-700);
 }
 .verse-card cite {
   display: block; font-family: var(--font-en); font-style: italic;
-  font-size: 14px; color: var(--amber-300);
+  font-size: 14px; color: var(--sage-700);
   letter-spacing: .15em;
 }
 
