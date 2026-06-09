@@ -299,18 +299,18 @@ button { font-family: inherit; cursor: pointer; }
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg,
+  linear-gradient(180deg,
       transparent 0%,
-      rgba(250, 246, 239, .10) 22%,
-      rgba(250, 246, 239, .55) 52%,
-      rgba(250, 246, 239, .92) 82%,
-      var(--paper) 100%
+      rgba(250, 246, 239, .10) 2%,
+      rgba(250, 246, 239, .45) 12%,
+      rgba(250, 246, 239, 100) 92%,
+      var(--paper) 80%
     ),
     linear-gradient(180deg,
-      rgba(232, 163, 61, .22) 0%,
-      rgba(199, 123, 82, .10) 35%,
-      transparent 60%
-    );
+      rgba(232, 163, 61, .42) 0%,
+      rgba(199, 123, 82, .60) 65%,
+      transparent 100%
+    )
   z-index: 1;
 }
 @media (max-width: 700px) {
