@@ -272,14 +272,54 @@ button { font-family: inherit; cursor: pointer; }
 .wrap { max-width: 1180px; margin: 0 auto; padding: 0 32px; position: relative; }
 
 /* -----------------------------------------------------------
-   HERO
+   HERO — 滿版照片 + 暖色漸層遮罩（下方靠文字處漸漸透成奶紙白）
    ----------------------------------------------------------- */
 .hero {
   position: relative;
-  padding: 160px 32px 120px;
+  padding: 220px 32px 140px;
   text-align: center;
+  overflow: hidden;
+  min-height: clamp(640px, 90vh, 900px);
 }
-.hero-content { max-width: 800px; margin: 0 auto; }
+.hero::before {
+  /* 滿版背景照片：套上和全站一致的暖色濾鏡 */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    url("../img/HandsWater.jpg") center/cover no-repeat,
+    var(--sand);
+  filter: sepia(.10) saturate(.88) brightness(.96);
+  z-index: 0;
+}
+.hero::after {
+  /* 雙層漸層：上方薄薄一層琥珀／陶土暖光；下方逐漸轉成奶紙白，
+     使文字所在區域變透出底色、與下方段落無縫相接 */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg,
+      transparent 0%,
+      rgba(250, 246, 239, .10) 22%,
+      rgba(250, 246, 239, .55) 52%,
+      rgba(250, 246, 239, .92) 82%,
+      var(--paper) 100%
+    ),
+    linear-gradient(180deg,
+      rgba(232, 163, 61, .22) 0%,
+      rgba(199, 123, 82, .10) 35%,
+      transparent 60%
+    );
+  z-index: 1;
+}
+@media (max-width: 700px) {
+  .hero {
+    padding: 160px 24px 100px;
+    min-height: clamp(560px, 85vh, 720px);
+  }
+}
+.hero-content { max-width: 800px; margin: 0 auto; position: relative; z-index: 2; }
 .hero-symbol {
   width: 56px; height: 56px;
   margin: 0 auto 48px;
@@ -340,6 +380,7 @@ button { font-family: inherit; cursor: pointer; }
   font-family: var(--font-en); font-style: italic;
   font-size: 12px; color: var(--text-4); letter-spacing: .3em;
   animation: hint-fade 3s ease-in-out infinite;
+  z-index: 2;
 }
 .scroll-hint::after {
   content: ""; width: 1px; height: 32px;
