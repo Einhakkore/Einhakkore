@@ -758,6 +758,9 @@ button { font-family: inherit; cursor: pointer; }
   font-size: clamp(26px, 3vw, 36px); line-height: 1.95;
   color: var(--text-1); letter-spacing: .03em; margin-bottom: 48px;
 }
+.line-m{
+font-size: 24px; line-height: 1.95;
+}
 .cta-poem em {
   font-family: var(--font-en); font-style: italic; font-weight: 400;
   color: var(--amber-700); letter-spacing: 0;
