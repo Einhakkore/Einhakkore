@@ -5,45 +5,47 @@
 
 /* -----------------------------------------------------------
    FONTS
+   WOFF2 — Chinese 字體已 subset 到站內實際使用的字元，大小由
+   ~26 MB/weight 壓到 ~180 KB；Latin 字體也轉成 WOFF2 加速載入。
    ----------------------------------------------------------- */
 @font-face {
   font-family: "ShiweiSiJiChun";
-  src: url("../fonts/ShiweiSiJiChun-Regular.ttf") format("truetype");
+  src: url("../fonts/ShiweiSiJiChun-Regular.woff2") format("woff2");
   font-weight: 400; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: "ShiweiSiJiChun";
-  src: url("../fonts/ShiweiSiJiChun-Medium.ttf") format("truetype");
+  src: url("../fonts/ShiweiSiJiChun-Medium.woff2") format("woff2");
   font-weight: 500; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: "ShiweiSiJiChun";
-  src: url("../fonts/ShiweiSiJiChun-SemiBold.ttf") format("truetype");
+  src: url("../fonts/ShiweiSiJiChun-SemiBold.woff2") format("woff2");
   font-weight: 600; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: "FreightText";
-  src: url("../fonts/FreightTextPro-Light.otf") format("opentype");
+  src: url("../fonts/FreightTextPro-Light.woff2") format("woff2");
   font-weight: 300; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: "FreightText";
-  src: url("../fonts/FreightTextPro-Book.otf") format("opentype");
+  src: url("../fonts/FreightTextPro-Book.woff2") format("woff2");
   font-weight: 400; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: "FreightText";
-  src: url("../fonts/FreightTextPro-Medium.otf") format("opentype");
+  src: url("../fonts/FreightTextPro-Medium.woff2") format("woff2");
   font-weight: 500; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: "FreightText";
-  src: url("../fonts/FreightTextPro-Semibold.otf") format("opentype");
+  src: url("../fonts/FreightTextPro-Semibold.woff2") format("woff2");
   font-weight: 600; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: "FreightText";
-  src: url("../fonts/FreightTextPro-Bold.otf") format("opentype");
+  src: url("../fonts/FreightTextPro-Bold.woff2") format("woff2");
   font-weight: 700; font-style: normal; font-display: swap;
 }
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600&display=swap");
