@@ -300,17 +300,17 @@ button { font-family: inherit; cursor: pointer; }
   inset: 0;
   background:
     linear-gradient(180deg,
-      transparent 0%,
-      rgba(250, 246, 239, .10) 2%,
-      rgba(250, 246, 239, .45) 12%,
-      rgba(250, 246, 239, 1) 80%, 
-      var(--paper) 100%            
+      rgba(250, 246, 239, .55) 0%,
+      rgba(250, 246, 239, .30) 38%,
+      rgba(250, 246, 239, .10) 78%,
+      transparent 100%
     ),
     linear-gradient(180deg,
-      rgba(232, 163, 61, .42) 0%,
-      rgba(199, 123, 82, .60) 65%,
-      transparent 100%
-    );
+      rgba(232, 163, 61, .18) 0%,
+      rgba(199, 123, 82, .06) 35%,
+      transparent 60%
+    ),
+    rgba(250, 246, 239, .32);
   z-index: 1;
 }
 @media (max-width: 700px) {
@@ -592,17 +592,9 @@ button { font-family: inherit; cursor: pointer; }
 }
 
 /* -----------------------------------------------------------
-   VERSE — 安歇感的鼠尾草點綴
+   VERSE — 經文區（基底樣式；套上 .section--navy 時改用深藍 + 極光）
    ----------------------------------------------------------- */
 .section-verse { padding: 140px 32px; text-align: center; position: relative; }
-.section-verse::before, .section-verse::after {
-  content: ""; position: absolute;
-  left: 50%; transform: translateX(-50%);
-  width: 60px; height: 1px;
-  background: var(--sage-500); opacity: .7;
-}
-.section-verse::before { top: 64px; }
-.section-verse::after { bottom: 64px; }
 .verse-wrap { max-width: 760px; margin: 0 auto; }
 .verse-ref {
   font-family: var(--font-en); font-style: italic; font-weight: 400;
@@ -744,35 +736,111 @@ button { font-family: inherit; cursor: pointer; }
 }
 
 /* -----------------------------------------------------------
-   CTA
+   CTA — 品牌定錨段落（深藍 + 極光由 .section--navy 提供）
    ----------------------------------------------------------- */
 .section-cta { padding: 160px 32px; text-align: center; }
 .cta-wrap { max-width: 720px; margin: 0 auto; }
 .cta-label {
   font-family: var(--font-en); font-style: italic; font-weight: 400;
-  font-size: 14px; color: var(--amber-700);
+  font-size: 14px; color: var(--amber-400);
   letter-spacing: .3em; margin-bottom: 40px;
 }
 .cta-poem {
   font-family: var(--font-brand); font-weight: 400;
   font-size: clamp(26px, 3vw, 36px); line-height: 1.95;
-  color: var(--text-1); letter-spacing: .03em; margin-bottom: 48px;
+  color: var(--text-on-dark); letter-spacing: .03em; margin-bottom: 48px;
 }
 .line-m{
 font-size: 24px; line-height: 1.95;
 }
 .cta-poem em {
   font-family: var(--font-en); font-style: italic; font-weight: 400;
-  color: var(--amber-700); letter-spacing: 0;
+  color: var(--amber-400); letter-spacing: 0;
 }
 .cta-poem .line { display: block; }
 .cta-poem .indent { padding-left: 2em; }
 .cta-sub {
-  font-size: 16px; line-height: 1.95; color: var(--text-2);
+  font-size: 16px; line-height: 1.95; color: rgba(245,241,232,.78);
   font-weight: 400; margin-bottom: 48px;
 }
 .cta-actions {
   display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+}
+
+/* -----------------------------------------------------------
+   .section--navy — 深色骨架的可疊加類別
+   讓區塊「鎖在內部」自帶柔和的暖極光，像一道光進到深色房間後
+   變成發亮的極光；footer 仍用平面深藍、不套這個類別。
+   ----------------------------------------------------------- */
+.section--navy {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--ink-900);
+  color: var(--text-on-dark);
+}
+.section--navy::before,
+.section--navy::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  width: 60%;
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: .5;
+  pointer-events: none;
+  will-change: transform;
+}
+/* 松青光團，藏在左上角外 */
+.section--navy::before {
+  top: -18%; left: -12%;
+  background: radial-gradient(circle, #1C6E8C 0%, transparent 70%);
+  animation: navyAuroraA 32s ease-in-out infinite alternate;
+}
+/* 靛藍光團＋琥珀核心，藏在右下角外 */
+.section--navy::after {
+  width: 58%;
+  bottom: -22%; right: -10%;
+  background:
+    radial-gradient(circle, #2A4E6E 0%, transparent 68%),
+    radial-gradient(circle at 60% 60%, rgba(232,163,61,.30) 0%, transparent 55%);
+  animation: navyAuroraB 38s ease-in-out infinite alternate;
+}
+/* 內容墊在光層之上 */
+.section--navy > * { position: relative; z-index: 1; }
+
+@keyframes navyAuroraA {
+  from { transform: translate(0, 0)   scale(1);    }
+  to   { transform: translate(8%, 6%) scale(1.15); }
+}
+@keyframes navyAuroraB {
+  from { transform: translate(0, 0)    scale(1);   }
+  to   { transform: translate(-6%, -8%) scale(1.1);}
+}
+
+/* 在 .section--navy 內的元件變體 */
+.section--navy .btn-ghost {
+  background: rgba(255,255,255,.06);
+  color: var(--text-on-dark);
+  border: 1px solid rgba(255,255,255,.20);
+}
+.section--navy .btn-ghost:hover {
+  background: rgba(255,255,255,.12);
+  border-color: rgba(255,255,255,.35);
+}
+
+/* 經文區套到 navy 時的文字色階 */
+.section-verse.section--navy .verse-ref          { color: var(--sage-400); }
+.section-verse.section--navy .verse-quote        { color: var(--text-on-dark); }
+.section-verse.section--navy .verse-quote strong { color: var(--amber-400); }
+.section-verse.section--navy .verse-cite         { color: rgba(245,241,232,.55); }
+
+/* 系統「減少動態」時，極光靜止 */
+@media (prefers-reduced-motion: reduce) {
+  .section--navy::before,
+  .section--navy::after { animation: none; }
 }
 
 /* -----------------------------------------------------------
@@ -829,12 +897,12 @@ font-size: 24px; line-height: 1.95;
 }
 
 /* -----------------------------------------------------------
-   FOOTER
+   FOOTER — 平面深藍（不套 .section--navy，刻意維持沉穩、無極光）
    ----------------------------------------------------------- */
 .site-footer {
-  background: transparent;
+  background: var(--ink-900);
   padding: 80px 32px 32px;
-  color: var(--text-3);
+  color: rgba(245,241,232,.70);
   position: relative;
 }
 .footer-inner {
@@ -842,7 +910,7 @@ font-size: 24px; line-height: 1.95;
   display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr;
   gap: 48px;
   padding-bottom: 48px;
-  border-bottom: 1px solid var(--line-dim);
+  border-bottom: 1px solid rgba(255,255,255,.10);
 }
 @media (max-width: 900px) {
   .footer-inner { grid-template-columns: 1fr 1fr; gap: 32px; }
@@ -854,14 +922,14 @@ font-size: 24px; line-height: 1.95;
 .footer-brand img { height: 56px; }
 .footer-brand p {
   font-size: 14px; line-height: 1.95;
-  color: var(--text-3); max-width: 320px;
+  color: rgba(245,241,232,.70); max-width: 320px;
 }
 .footer-social { display: flex; gap: 10px; margin-top: 4px; }
 .footer-social a {
   width: 38px; height: 38px; border-radius: 50%;
-  background: rgba(26,46,64,.06);
+  background: rgba(255,255,255,.08);
   display: flex; align-items: center; justify-content: center;
-  color: var(--ink-700); transition: all .2s ease;
+  color: var(--text-on-dark); transition: all .2s ease;
 }
 .footer-social a:hover {
   background: var(--amber-500); color: var(--ink-900);
@@ -869,7 +937,7 @@ font-size: 24px; line-height: 1.95;
 }
 .footer-col h4 {
   font-family: var(--font-brand); font-weight: 500;
-  font-size: 15px; color: var(--amber-700);
+  font-size: 15px; color: var(--amber-400);
   letter-spacing: .12em; margin: 0 0 18px;
 }
 .footer-col ul {
@@ -877,15 +945,15 @@ font-size: 24px; line-height: 1.95;
   display: flex; flex-direction: column; gap: 12px;
 }
 .footer-col a {
-  font-size: 14px; color: var(--text-2);
+  font-size: 14px; color: rgba(245,241,232,.85);
   transition: color .2s ease; cursor: pointer;
 }
-.footer-col a:hover { color: var(--amber-700); }
+.footer-col a:hover { color: var(--amber-400); }
 .footer-bottom {
   max-width: 1180px; margin: 32px auto 0;
   display: flex; justify-content: space-between; align-items: center;
   font-family: var(--font-en); font-style: italic;
-  font-size: 13px; color: var(--text-3);
+  font-size: 13px; color: rgba(245,241,232,.55);
   letter-spacing: .08em; flex-wrap: wrap; gap: 12px;
 }
 
