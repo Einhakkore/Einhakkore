@@ -217,7 +217,7 @@ button { font-family: inherit; cursor: pointer; }
 }
 .header-inner {
   max-width: 1280px; margin: 0 auto;
-  padding: 0 40px; height: 80px;
+  padding: 0 40px; height: 64px;
   display: flex; align-items: center; justify-content: space-between;
 }
 .logo { display: flex; align-items: center; cursor: pointer; }
@@ -255,7 +255,7 @@ button { font-family: inherit; cursor: pointer; }
   .menu-toggle { display: block; }
   .nav {
     display: none;
-    position: absolute; top: 80px; left: 0; right: 0;
+    position: absolute; top: 60px; left: 0; right: 0;
     background: rgba(250,246,239,.97);
     backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--line-dim);
@@ -293,12 +293,8 @@ button { font-family: inherit; cursor: pointer; }
   z-index: 0;
 }
 .hero::after {
-  /* 兩層遮罩疊在照片上：
-     1) 底層：一層恆定的暖白薄霧（base veil），讓照片整體被柔化、
-        為文字提供基本可讀性；
-     2) 上層：上方厚、下方透明的暖白漸層 — 越下方越透明，
-        讓照片的下半部（手與水）逐漸露出來。
-     再加一點點上緣的琥珀／陶土暖光，照片頂端不會看起來灰白。 */
+  /* 雙層漸層：上方薄薄一層琥珀／陶土暖光；下方逐漸轉成奶紙白，
+     使文字所在區域透出底色、與下方段落無縫相接 */
   content: "";
   position: absolute;
   inset: 0;
@@ -753,6 +749,9 @@ button { font-family: inherit; cursor: pointer; }
   font-family: var(--font-brand); font-weight: 400;
   font-size: clamp(26px, 3vw, 36px); line-height: 1.95;
   color: var(--text-on-dark); letter-spacing: .03em; margin-bottom: 48px;
+}
+.line-m{
+font-size: 24px; line-height: 1.95;
 }
 .cta-poem em {
   font-family: var(--font-en); font-style: italic; font-weight: 400;
