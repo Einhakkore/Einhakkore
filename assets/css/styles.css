@@ -294,23 +294,23 @@ button { font-family: inherit; cursor: pointer; }
 }
 .hero::after {
   /* 雙層漸層：上方薄薄一層琥珀／陶土暖光；下方逐漸轉成奶紙白，
-     使文字所在區域變透出底色、與下方段落無縫相接 */
+     使文字所在區域透出底色、與下方段落無縫相接 */
   content: "";
   position: absolute;
   inset: 0;
   background:
-  linear-gradient(180deg,
+    linear-gradient(180deg,
       transparent 0%,
       rgba(250, 246, 239, .10) 2%,
       rgba(250, 246, 239, .45) 12%,
-      rgba(250, 246, 239, 100) 92%,
-      var(--paper) 80%
+      rgba(250, 246, 239, 1) 80%, 
+      var(--paper) 100%            
     ),
     linear-gradient(180deg,
       rgba(232, 163, 61, .42) 0%,
       rgba(199, 123, 82, .60) 65%,
       transparent 100%
-    )
+    );
   z-index: 1;
 }
 @media (max-width: 700px) {
