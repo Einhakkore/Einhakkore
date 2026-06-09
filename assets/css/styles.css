@@ -217,11 +217,11 @@ button { font-family: inherit; cursor: pointer; }
 }
 .header-inner {
   max-width: 1280px; margin: 0 auto;
-  padding: 0 40px; height: 80px;
+  padding: 0 40px; height: 64px;
   display: flex; align-items: center; justify-content: space-between;
 }
 .logo { display: flex; align-items: center; cursor: pointer; }
-.logo img { height: 44px; width: auto; display: block; }
+.logo img { height: 54px; width: auto; display: block; }
 
 .nav { display: flex; align-items: center; gap: 4px; }
 .nav a {
@@ -255,7 +255,7 @@ button { font-family: inherit; cursor: pointer; }
   .menu-toggle { display: block; }
   .nav {
     display: none;
-    position: absolute; top: 80px; left: 0; right: 0;
+    position: absolute; top: 60px; left: 0; right: 0;
     background: rgba(250,246,239,.97);
     backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--line-dim);
