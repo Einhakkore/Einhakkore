@@ -583,6 +583,12 @@ button { font-family: inherit; cursor: pointer; }
   color: var(--text-2); font-weight: 400; margin: 0;
 }
 
+/* 區段下方置中按鈕（例如三大實踐後的「認識我們」CTA） */
+.section-actions {
+  display: flex; justify-content: center; flex-wrap: wrap;
+  gap: 16px; margin-top: 64px;
+}
+
 /* Card variants — 陶土／鼠尾草 */
 .practice-card.clay .icon,
 .practice-card.clay .roman { color: var(--clay-700); }
