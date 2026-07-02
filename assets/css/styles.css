@@ -1299,3 +1299,197 @@ font-size: 24px; line-height: 1.95;
     opacity: 1 !important; transform: none !important;
   }
 }
+
+/* ============================================================
+   DONATE PAGE V2 — 深色 hero + 左固定右滾動版型
+   ============================================================ */
+
+/* ---- 頁面級變數：header 高度供左欄 sticky 定位使用 ---- */
+:root { --header-h: 64px; }
+
+/* ---- Donate hero：滿版背景圖 + 深色漸層遮罩 ---- */
+.page-hero.donate-hero {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  padding: 140px 32px 110px;
+}
+.page-hero.donate-hero::before {
+  content: "";
+  position: absolute; inset: 0; z-index: -2;
+  background: url("../img/HandsWater.jpg") center / cover no-repeat;
+  transform: scale(1.02);
+}
+.page-hero.donate-hero::after {
+  content: "";
+  position: absolute; inset: 0; z-index: -1;
+  background:
+    linear-gradient(115deg,
+      rgba(26, 46, 64, .82) 0%,
+      rgba(26, 46, 64, .55) 45%,
+      rgba(122, 69, 48, .28) 100%),
+    linear-gradient(to bottom,
+      transparent 55%,
+      var(--paper) 100%);
+}
+.page-hero.donate-hero .symbol-sm {
+  border-color: var(--amber-400);
+}
+.page-hero.donate-hero .symbol-sm::after {
+  background: var(--amber-400);
+}
+.page-hero.donate-hero .eyebrow { color: rgba(245, 241, 232, .85); }
+.page-hero.donate-hero h1 { color: var(--text-on-dark); }
+.page-hero.donate-hero h1 em { color: var(--amber-400); }
+.page-hero.donate-hero p { color: rgba(245, 241, 232, .92); }
+
+/* ---- 左固定 / 右滾動 版型 ---- */
+.donate-layout { display: block; }
+.donate-right > .donate-block { margin-bottom: 40px; }
+.donate-right > .donate-block:last-child { margin-bottom: 0; }
+
+@media (min-width: 1069px) {
+  .donate-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 390px) minmax(0, 1fr);
+    gap: 56px;
+    align-items: start;
+  }
+  .donate-left {
+    position: sticky;
+    top: calc(var(--header-h) + 24px);
+    max-height: calc(100vh - var(--header-h) - 48px);
+    overflow: auto;
+    padding-right: 6px;
+  }
+  .donate-left::-webkit-scrollbar { width: 6px; }
+  .donate-left::-webkit-scrollbar-thumb {
+    background: rgba(26, 46, 64, .14);
+    border-radius: 6px;
+  }
+}
+
+/* ---- 右側區塊卡片 ---- */
+.donate-block {
+  background: rgba(250, 246, 239, .85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--line-dim);
+  border-radius: 20px;
+  padding: 36px 34px;
+  box-shadow: 0 10px 34px rgba(26, 46, 64, .05);
+}
+.donate-block h2 {
+  font-family: var(--font-brand); font-weight: 500;
+  font-size: 22px; line-height: 1.55; letter-spacing: .02em;
+  margin: 0 0 18px; color: var(--text-1);
+}
+.donate-block p {
+  font-size: 15px; line-height: 1.95;
+  color: var(--text-2); margin: 0 0 14px;
+}
+.donate-block p:last-child { margin-bottom: 0; }
+
+/* ---- 銀行匯款卡片（深色點睛） ---- */
+.bank-card {
+  border-radius: 18px;
+  padding: 26px 28px 24px;
+  margin: 22px 0;
+  background: linear-gradient(135deg, var(--ink-900), var(--ink-700));
+  color: var(--text-on-dark);
+}
+.bank-card .bank-title {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--font-en); font-style: italic; font-weight: 400;
+  font-size: 14px; letter-spacing: .18em;
+  color: var(--amber-400);
+  margin: 0 0 18px;
+  opacity: .95;
+}
+.bank-card dl {
+  margin: 0; display: grid;
+  grid-template-columns: auto 1fr;
+  row-gap: 12px; column-gap: 20px;
+}
+.bank-card dt {
+  font-size: 14px; white-space: nowrap;
+  color: rgba(245, 241, 232, .65);
+  font-weight: 400;
+}
+.bank-card dd {
+  margin: 0; font-weight: 500; letter-spacing: .02em;
+  color: var(--text-on-dark);
+}
+.bank-card dd.acct {
+  font-family: var(--font-en);
+  font-variant-numeric: tabular-nums;
+  font-size: 17px; letter-spacing: .04em;
+}
+
+/* ---- 匯款備註提醒 ---- */
+.remit-note {
+  background: rgba(232, 163, 61, .08);
+  border: 1px dashed var(--amber-500);
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin: 20px 0 24px;
+}
+.remit-note > p {
+  margin: 0 0 6px;
+  color: var(--text-1); font-weight: 500; font-size: 14px;
+}
+.remit-note ol { margin: 10px 0 0; padding-left: 20px; }
+.remit-note li {
+  margin-bottom: 8px; line-height: 1.85;
+  color: var(--text-2); font-size: 14px;
+}
+.remit-note li:last-child { margin-bottom: 0; }
+.remit-note b { color: var(--coral-700); font-weight: 600; }
+
+.pay-cta { margin-top: 4px; }
+
+/* ---- 奉獻確認表單（與 .contact-form 分離，避免 site.js 攔截） ---- */
+.donate-form {
+  display: flex; flex-direction: column; gap: 18px;
+}
+.donate-form h2 {
+  font-family: var(--font-brand); font-weight: 500;
+  font-size: 22px; margin: 0 0 4px; letter-spacing: .02em;
+  color: var(--text-1); line-height: 1.55;
+}
+.donate-form .desc {
+  font-size: 14px; color: var(--text-3); margin: 0 0 8px;
+}
+.donate-form label .req { color: var(--coral-700); margin-left: 2px; }
+.donate-form label .hint {
+  color: var(--text-4); font-weight: 400;
+  font-size: 12px; margin-left: 6px;
+}
+
+.form-status {
+  margin-top: 4px;
+  padding: 12px 16px; border-radius: 10px;
+  font-size: 14px; line-height: 1.7;
+  display: none;
+}
+.form-status.show { display: block; }
+.form-status.ok {
+  color: var(--sage-700);
+  background: var(--sage-100);
+  border: 1px solid rgba(107, 144, 64, .28);
+}
+.form-status.err {
+  color: var(--coral-800);
+  background: var(--coral-100);
+  border: 1px solid rgba(210, 80, 43, .28);
+}
+
+/* ---- 手機版：銀行卡片改成單欄 ---- */
+@media (max-width: 1068px) {
+  .bank-card dl { grid-template-columns: 1fr; row-gap: 4px; }
+  .bank-card dt { margin-top: 8px; }
+}
+@media (max-width: 640px) {
+  .donate-block { padding: 28px 22px; }
+  .page-hero.donate-hero { padding: 110px 24px 90px; }
+}
