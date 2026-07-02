@@ -70,7 +70,7 @@
 
   /* Amber — 主要強調（按鈕、重點） */
   --amber-800: #8A6508;
-  --amber-700: #C49C0C;      /* 文字級琥珀（對 paper 達 AA） */ C49C0C 原本色系badge fg 700
+  --amber-700: #C49C0C;      /* 文字級琥珀（對 paper 達 AA） C49C0C 原本色系badge fg 700 */
   --amber-600: #D4AF37;
   --amber-500: #FFBA49;      /* 按鈕主色 — 比舊版暖、少螢光 */
   --amber-400: #F2C36B;      /* hover、柔性高光 */
@@ -397,7 +397,7 @@ button { font-family: inherit; cursor: pointer; }
 }
 .scroll-hint::after {
   content: ""; width: 1px; height: 32px;
-  background: linear-gradient(180deg, var(--amber-500), transparent);
+  background: linear-gradient(180deg, var"--amber-500", transparent);
 }
 @keyframes hint-fade {
   0%, 100% { opacity: .5; }
@@ -421,11 +421,11 @@ button { font-family: inherit; cursor: pointer; }
   }
   .budget h3 em{
     font-style:normal;
-    color:var(--c2);
+    color:var"--amber-500";
     font-weight:700;
   }
   .budget > p{
-    color:var(--muted);
+    color:var"--amber-500";
     font-size:.95rem;
     max-width:560px;
     margin:0 auto 8px;
@@ -445,9 +445,9 @@ button { font-family: inherit; cursor: pointer; }
   .lead{ stroke:var(--line); stroke-width:1; fill:none; }
   .dot{ fill:currentColor; }
   .lbl-name{ font-size:14px; font-weight:600; fill:var(--ink); }
-  .lbl-note{ font-size:12.5px; fill:var(--muted); }
+  .lbl-note{ font-size:12.5px; fill:var"--amber-500"; }
 
-  .center-sub{ font-size:13px; fill:var(--muted); letter-spacing:.05em; }
+  .center-sub{ font-size:13px; fill:var"--amber-500"; letter-spacing:.05em; }
   .center-big{ font-size:34px; font-weight:700; fill:var(--ink); }
   .center-unit{ font-size:16px; font-weight:600; fill:var(--ink); }
 
@@ -469,6 +469,7 @@ button { font-family: inherit; cursor: pointer; }
     .lbl-name{ font-size:12px; }
     .lbl-note{ font-size:11px; }
     .center-big{ font-size:28px; }
+  }
 /* -----------------------------------------------------------
    PAGE HERO (內頁、較小)
    ----------------------------------------------------------- */
