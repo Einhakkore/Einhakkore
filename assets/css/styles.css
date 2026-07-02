@@ -991,7 +991,7 @@ font-size: 24px; line-height: 1.95;
   background: rgba(237,227,211,.65);
   backdrop-filter: blur(20px);
   border: 1px solid var(--line-dim);
-  border-radius: 20px;
+  border-radius: 12px;
   border-left: 3px solid var(--clay-500);
   font-family: var(--font-brand); font-weight: 400;
   font-size: 18px; line-height: 2;
@@ -1301,7 +1301,7 @@ font-size: 24px; line-height: 1.95;
 }
 
 /* ============================================================
-   DONATE PAGE V2 — 深色 ink-800 底 + 左固定右滾動版型
+   DONATE PAGE  — 深色 ink-800 底 + 左固定右滾動版型
    ============================================================ */
 
 /* ---- 頁面級變數：header 高度供左欄 sticky 定位使用 ---- */
@@ -1326,7 +1326,7 @@ body[data-page="donate"] .section { background: transparent; }
 .page-hero.donate-hero::before {
   content: "";
   position: absolute; inset: 0; z-index: -2;
-  background: url("../img/HandsWater.jpg") center / cover no-repeat;
+  background: url("../img/donate_bg.jpg") center / cover no-repeat;
   transform: scale(1.02);
 }
 .page-hero.donate-hero::after {
@@ -1354,13 +1354,13 @@ body[data-page="donate"] .section { background: transparent; }
 .donate-layout {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 32px;
+  gap: 24px;
 }
 .donate-right { display: flex; flex-direction: column; gap: 40px; }
 
 @media (min-width: 900px) {
   .donate-layout {
-    grid-template-columns: minmax(0, 360px) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 500px) minmax(0, 1fr);
     gap: 48px;
     align-items: start;
   }
