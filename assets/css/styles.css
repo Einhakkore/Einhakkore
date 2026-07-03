@@ -408,7 +408,7 @@ button { font-family: inherit; cursor: pointer; }
    Donate 圓餅圖
    ----------------------------------------------------------- */
   .budget{
-    max-width:760px;
+    max-width:660px;
     margin:48px auto;
     padding:0 24px;
     text-align:left;
@@ -445,26 +445,15 @@ button { font-family: inherit; cursor: pointer; }
 
   .lead{ stroke:var(--line); stroke-width:1; fill:none; }
   .dot{ fill:currentColor; }
-  .lbl-name{ font-size:14px; font-weight:600; fill:var(--ink); }
+
+
+  .lbl-name{ font-size:14px; font-weight:600; fill:var(--text-1); }
   .lbl-note{ font-size:12.5px; fill:var(--text-3); }
 
   .center-sub{ font-size:13px; fill:var(--text-3); letter-spacing:.05em; }
-  .center-big{ font-size:34px; font-weight:700; fill:var(--ink); }
-  .center-unit{ font-size:16px; font-weight:600; fill:var(--ink); }
+  .center-big{ font-size:34px; font-weight:700; fill:var(--text-1); }
+  .center-unit{ font-size:16px; font-weight:600; fill:var(--text-2); }
 
-  .btn{
-    display:inline-block;
-    margin-top:12px;
-    padding:11px 30px;
-    border:1px solid var(--c2);
-    border-radius:999px;
-    color:var(--c2);
-    text-decoration:none;
-    font-size:.9rem;
-    letter-spacing:.05em;
-    transition:.2s;
-  }
-  .btn:hover{ background:var(--c2); color:#fff; }
 
   @media(max-width:520px){
     .lbl-name{ font-size:12px; }
