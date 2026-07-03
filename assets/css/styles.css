@@ -576,17 +576,13 @@ button { font-family: inherit; cursor: pointer; }
   font-weight: 400; max-width: 600px; margin: 0 auto;
 }
 
-/* section-head 在深色背景上的變體（參照 .page-hero.donate-hero 的配色） */
+/* section-head 在深色背景上的變體 */
 .section-head--on-dark .section-num { color: var(--amber-400); }
-.section-head--on-dark .cta-label   { color: rgba(245, 241, 232, .85); }
-.section-head--on-dark h2 {
-  color: var(--text-on-dark);
-  text-shadow: 0 2px 20px rgba(26, 46, 64, .35);
-}
-.section-head--on-dark h2 em { color: var(--amber-400); }
+.section-head--on-dark .cta-label   { color: var(--amber-600); }
+.section-head--on-dark h2           { color: var(--text-on-dark); }
+.section-head--on-dark h2 em        { color: var(--amber-400); }
 .section-head--on-dark > p {
-  color: rgba(245, 241, 232, .92);
-  text-shadow: 0 1px 12px rgba(26, 46, 64, .35);
+  color: var(--text-on-dark);
   font-size: 16px; line-height: 2; font-weight: 400;
   max-width: 600px; margin: 0 auto;
 }
