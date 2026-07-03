@@ -576,6 +576,17 @@ button { font-family: inherit; cursor: pointer; }
   font-weight: 400; max-width: 600px; margin: 0 auto;
 }
 
+/* section-head 在深色背景上的變體 */
+.section-head--on-dark .section-num { color: var(--amber-400); }
+.section-head--on-dark .cta-label   { color: var(--amber-600); }
+.section-head--on-dark h2           { color: var(--text-on-dark); }
+.section-head--on-dark h2 em        { color: var(--amber-400); }
+.section-head--on-dark > p {
+  color: var(--text-on-dark);
+  font-size: 16px; line-height: 2; font-weight: 400;
+  max-width: 600px; margin: 0 auto;
+}
+
 /* -----------------------------------------------------------
    PRACTICES
    ----------------------------------------------------------- */
