@@ -24,6 +24,11 @@
   font-weight: 600; font-style: normal; font-display: swap;
 }
 @font-face {
+  font-family: "ShiweiSiJiChun";
+  src: url("../fonts/ShiweiSiJiChun-Italic.woff2") format("woff2");
+  font-weight: 100 900; font-style: italic; font-display: swap;
+}
+@font-face {
   font-family: "FreightText";
   src: url("../fonts/FreightTextPro-Light.woff2") format("woff2");
   font-weight: 300; font-style: normal; font-display: swap;
@@ -370,7 +375,7 @@ button { font-family: inherit; cursor: pointer; }
   margin-bottom: 40px;
 }
 .hero h1 em {
-  font-family: var(--font-en);
+  font-family: var(--font-brand);
   font-style: italic; font-weight: 400;
   color: var(--amber-700);
   letter-spacing: 0;
@@ -492,7 +497,7 @@ button { font-family: inherit; cursor: pointer; }
   max-width: 800px;
 }
 .page-hero h1 em {
-  font-family: var(--font-en); font-style: italic; font-weight: 400;
+  font-family: var(--font-brand); font-style: italic; font-weight: 400;
   color: var(--amber-700);
 }
 .page-hero p {
@@ -569,7 +574,7 @@ button { font-family: inherit; cursor: pointer; }
   color: var(--text-1); letter-spacing: .02em; margin: 0 0 20px;
 }
 .section-head h2 em {
-  font-family: var(--font-en); font-style: italic; font-weight: 400;
+  font-family: var(--font-brand); font-style: italic; font-weight: 400;
   color: var(--amber-700); letter-spacing: 0;
 }
 .section-head .lead {
@@ -760,7 +765,7 @@ button { font-family: inherit; cursor: pointer; }
   color: var(--text-1); letter-spacing: .02em; margin: 0 0 24px;
 }
 .feature-text h2 em {
-  font-family: var(--font-en); font-style: italic; font-weight: 400;
+  font-family: var(--font-brand); font-style: italic; font-weight: 400;
   color: var(--amber-700); letter-spacing: 0;
 }
 .feature-text h2.clay em { color: var(--clay-700); }
@@ -841,7 +846,7 @@ button { font-family: inherit; cursor: pointer; }
 font-size: 24px; line-height: 1.95;
 }
 .cta-poem em {
-  font-family: var(--font-en); font-style: italic; font-weight: 400;
+  font-family: var(--font-brand); font-style: italic; font-weight: 400;
   color: var(--amber-400); letter-spacing: 0;
 }
 .cta-poem .line { display: block; }
@@ -1076,7 +1081,7 @@ font-size: 24px; line-height: 1.95;
   line-height: 1.55;
 }
 .budget h3 em {
-  font-family: var(--font-en); font-style: italic; font-weight: 400;
+  font-family: var(--font-brand); font-style: italic; font-weight: 400;
   font-size: 28px; color: var(--amber-700); letter-spacing: 0;
 }
 .budget-row {
