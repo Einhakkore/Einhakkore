@@ -44,9 +44,15 @@
     }
 
     // ---------- Newsletter forms ----------
-    // 不要 preventDefault — 讓表單真的 POST 到 Substack（送進隱藏 iframe）
+    // 用 fetch + no-cors POST 到 Substack。POST 有送達，但 response 是 opaque —
+    // 我們讀不到、也不需要讀；避開了隱藏 iframe 遇到 X-Frame-Options 的問題。
     document.querySelectorAll("form.newsletter-form").forEach(form => {
-      form.addEventListener("submit", () => {
+      form.addEventListener("submit", e => {
+        e.preventDefault();
+        const body = new URLSearchParams();
+        new FormData(form).forEach((v, k) => body.append(k, v));
+        fetch(form.action, { method: "POST", mode: "no-cors", body })
+          .catch(() => { /* 網路失敗也吞掉，反正也讀不到結果 */ });
         const div = document.createElement("div");
         div.className = "newsletter-success";
         div.innerHTML = `
@@ -55,8 +61,7 @@
           </svg>
           已收到！請至信箱點擊確認連結，完成訂閱。
         `;
-        // 延遲一下再換掉表單，確保 POST 已送出
-        setTimeout(() => form.replaceWith(div), 400);
+        form.replaceWith(div);
       });
     });
 
