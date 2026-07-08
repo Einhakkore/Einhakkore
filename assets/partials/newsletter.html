@@ -3,9 +3,20 @@
     <div class="newsletter-label">STAY CONNECTED · 保持連結</div>
     <h3>訂閱我們的代禱信</h3>
     <p>定期收到宣教士代禱信、事工更新與感恩見證，與我們一起關心神國度的擴展。</p>
-    <form class="newsletter-form">
-      <input type="email" placeholder="您的電子郵件" required>
+    <form class="newsletter-form"
+          action="https://enhakkore.substack.com/api/v1/free?nojs=true"
+          method="post"
+          target="newsletter-sink">
+      <input type="email" name="email" placeholder="您的電子郵件" required autocomplete="email">
+      <input type="hidden" name="first_url" value="https://enhakkore.substack.com/">
+      <input type="hidden" name="first_referrer" value="">
+      <input type="hidden" name="current_url" value="https://enhakkore.substack.com/">
+      <input type="hidden" name="current_referrer" value="">
+      <input type="hidden" name="referral_code" value="">
+      <input type="hidden" name="source" value="embed">
       <button type="submit">訂閱</button>
     </form>
+    <iframe name="newsletter-sink" title="newsletter-sink" aria-hidden="true" tabindex="-1"
+            style="position:absolute;width:0;height:0;border:0;opacity:0;pointer-events:none"></iframe>
   </div>
 </section>
