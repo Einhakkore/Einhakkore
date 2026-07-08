@@ -1374,14 +1374,21 @@ font-size: 24px; line-height: 1.95;
 /* ---- 頁面級變數：header 高度供左欄 sticky 定位使用 ---- */
 :root { --header-h: 64px; }
 
-/* ---- 整頁背景改為主色 ink-800 ---- */
-body[data-page="donate"] { background: var(--ink-800); }
+/* ---- 深色遮罩只作用在 body 內兩個 section：
+       .page-hero.donate-hero 與中間主要內容 .section
+       （不影響 sticky header 的奉獻按鈕、也不影響 newsletter） ---- */
+body[data-page="donate"] main > .section {
+  background: var(--ink-800);
+  position: relative;
+  isolation: isolate;
+}
 
-/* Donate 頁的 aurora 在深色底下改暖橘、低透明度，避免亮到刺眼 */
-body[data-page="donate"] .aurora-blob { opacity: .35; }
-
-/* Donate 頁的 section 保持透明，讓 body 的 ink-800 透出來 */
-body[data-page="donate"] .section { background: transparent; }
+/* 中間主要內容區塊在深色底下，蓋住背景 aurora 避免亮點透出 */
+body[data-page="donate"] main > .section::before {
+  content: "";
+  position: absolute; inset: 0; z-index: -1;
+  background: var(--ink-800);
+}
 
 /* ---- Donate hero：滿版背景圖 + ink-800 漸層 30% → 100% 融入背景 ---- */
 .page-hero.donate-hero {
@@ -1393,7 +1400,7 @@ body[data-page="donate"] .section { background: transparent; }
 .page-hero.donate-hero::before {
   content: "";
   position: absolute; inset: 0; z-index: -2;
-  background: url("../img/donate_bg.jpg") center / cover no-repeat;
+  background: url("../img/HandsWater.webp") center / cover no-repeat;
   transform: scale(1.02);
 }
 .page-hero.donate-hero::after {
