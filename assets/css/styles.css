@@ -70,7 +70,7 @@
 
   /* Amber — 主要強調（按鈕、重點） */
   --amber-800: #8A6508;
-  --amber-700: #C49C0C;      /* 文字級琥珀（對 paper 達 AA） */ C49C0C 原本色系badge fg 700
+  --amber-700: #C49C0C;      /* 文字級琥珀（對 paper 達 AA） C49C0C 原本色系badge fg 700 */
   --amber-600: #D4AF37;
   --amber-500: #FFBA49;      /* 按鈕主色 — 比舊版暖、少螢光 */
   --amber-400: #F2C36B;      /* hover、柔性高光 */
@@ -397,13 +397,69 @@ button { font-family: inherit; cursor: pointer; }
 }
 .scroll-hint::after {
   content: ""; width: 1px; height: 32px;
-  background: linear-gradient(180deg, var(--amber-500), transparent);
+  background: linear-gradient(180deg, var(--amber-400), transparent);
 }
 @keyframes hint-fade {
   0%, 100% { opacity: .5; }
   50%      { opacity: 1; }
 }
 
+/* -----------------------------------------------------------
+   Donate 圓餅圖
+   ----------------------------------------------------------- */
+  .budget{
+    max-width:660px;
+    margin:48px auto;
+    padding:0 24px;
+    text-align:left;
+  }
+  .budget h3{
+    font-size:1.5rem;
+    font-weight:600;
+    letter-spacing:.02em;
+    margin:0 0 16px;
+    color:var(--text-2);
+  }
+  .budget h3 em{
+    font-style:normal;
+    color:var(--amber-500);
+    font-weight:700;
+  }
+  .budget > p{
+    color:var(--text-2);
+    font-size:.95rem;
+    max-width:560px;
+    margin:0 0 8px;
+  }
+
+  /* 圓環圖 */
+  .donut-wrap{
+    width:100%;
+    margin:8px auto 4px;
+  }
+  .donut-wrap svg{ width:100%; height:auto; display:block; }
+
+  .seg-arc{ transition:opacity .2s; }
+  .donut-wrap:hover .seg-arc{ opacity:.35; }
+  .donut-wrap .seg:hover .seg-arc{ opacity:1; }
+
+  .lead{ stroke:var(--line); stroke-width:1; fill:none; }
+  .dot{ fill:currentColor; }
+
+
+  .lbl-name{ font-size:14px; font-weight:600; fill:var(--text-1); }
+  .lbl-note{ font-size:12.5px; fill:var(--text-3); }
+
+  .center-sub{ font-size:13px; fill:var(--text-3); letter-spacing:.05em; }
+  .center-big{ font-size:34px; font-weight:700; fill:var(--text-1); }
+  .center-unit{ font-size:16px; font-weight:600; fill:var(--text-2); }
+
+
+  @media(max-width:520px){
+    .lbl-name{ font-size:12px; }
+    .lbl-note{ font-size:11px; }
+    .center-big{ font-size:28px; }
+  }
 /* -----------------------------------------------------------
    PAGE HERO (內頁、較小)
    ----------------------------------------------------------- */
@@ -518,6 +574,17 @@ button { font-family: inherit; cursor: pointer; }
 .section-head .lead {
   font-size: 16px; line-height: 2; color: var(--text-2);
   font-weight: 400; max-width: 600px; margin: 0 auto;
+}
+
+/* section-head 在深色背景上的變體 */
+.section-head--on-dark .section-num { color: var(--amber-400); }
+.section-head--on-dark .cta-label   { color: var(--amber-600); }
+.section-head--on-dark h2           { color: var(--text-on-dark); }
+.section-head--on-dark h2 em        { color: var(--amber-400); }
+.section-head--on-dark > p {
+  color: var(--text-on-dark);
+  font-size: 16px; line-height: 2; font-weight: 400;
+  max-width: 600px; margin: 0 auto;
 }
 
 /* -----------------------------------------------------------
@@ -991,7 +1058,7 @@ font-size: 24px; line-height: 1.95;
   background: rgba(237,227,211,.65);
   backdrop-filter: blur(20px);
   border: 1px solid var(--line-dim);
-  border-radius: 20px;
+  border-radius: 12px;
   border-left: 3px solid var(--clay-500);
   font-family: var(--font-brand); font-weight: 400;
   font-size: 18px; line-height: 2;
@@ -1301,7 +1368,7 @@ font-size: 24px; line-height: 1.95;
 }
 
 /* ============================================================
-   DONATE PAGE V2 — 深色 ink-800 底 + 左固定右滾動版型
+   DONATE PAGE  — 深色 ink-800 底 + 左固定右滾動版型
    ============================================================ */
 
 /* ---- 頁面級變數：header 高度供左欄 sticky 定位使用 ---- */
@@ -1361,13 +1428,13 @@ body[data-page="donate"] main > .section::before {
 .donate-layout {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 32px;
+  gap: 24px;
 }
 .donate-right { display: flex; flex-direction: column; gap: 40px; }
 
 @media (min-width: 900px) {
   .donate-layout {
-    grid-template-columns: minmax(0, 360px) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 500px) minmax(0, 1fr);
     gap: 48px;
     align-items: start;
   }

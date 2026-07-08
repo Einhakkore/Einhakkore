@@ -24,11 +24,10 @@ enhakorre-site/
 │
 └── assets/
     ├── css/styles.css      # 全站樣式
-    ├── js/site.js          # 共用 JS
+    ├── js/site.js          # 共用 JS（含 partial loader）
     ├── fonts/              # 字型檔
     ├── img/                # logo 圖片
-    ├── icons/              # 線型 SVG icon 預覽
-    └── partials/           # 共用區塊原始碼
+    └── partials/           # 共用區塊（nav / footer / 訂閱信 / aurora）
 ```
 
 ## 怎麼瀏覽
@@ -91,12 +90,21 @@ python3 -m http.server 8000
 
 ## 共用區塊維護
 
-`assets/partials/` 裡的檔案不會被瀏覽器讀到，是給你**維護用的藍本**。改 nav 或 footer 時：
+Nav、footer、訂閱信、Aurora 背景四個共用區塊都放在 `assets/partials/`，
+每一頁只放對應的佔位 `<div data-include="...">`，由 `assets/js/site.js`
+於載入時透過 `fetch()` 抓取 partials 並塞回 DOM。
 
-1. 先改 partials 裡的對應檔案
-2. 把改好的內容**複製到 6 個 HTML 頁面**對應位置
+要修改共用區塊，只要改 `assets/partials/` 下的檔案，六個頁面會同步更新：
 
-> 未來想避免手動同步，可以考慮換成 Astro 或 11ty 等靜態網站產生器。
+| 檔案 | 用途 | 頁面裡的佔位標籤 |
+|---|---|---|
+| `partials/header.html`     | 導覽列 | `<div data-include="header"></div>` |
+| `partials/footer.html`     | 頁尾 | `<div data-include="footer"></div>` |
+| `partials/newsletter.html` | 訂閱代禱信 | `<div data-include="newsletter"></div>` |
+| `partials/aurora.html`     | 背景光暈 | `<div data-include="aurora"></div>` |
+
+> 因為 loader 用 `fetch()`，請務必透過本地伺服器（例如 `python3 -m http.server`）
+> 或部署到 Web server 觀看；直接雙擊開啟 `file://` 會被瀏覽器擋。
 
 ## 表單
 
