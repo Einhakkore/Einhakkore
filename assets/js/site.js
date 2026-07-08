@@ -44,18 +44,19 @@
     }
 
     // ---------- Newsletter forms ----------
+    // 不要 preventDefault — 讓表單真的 POST 到 Substack（送進隱藏 iframe）
     document.querySelectorAll("form.newsletter-form").forEach(form => {
-      form.addEventListener("submit", e => {
-        e.preventDefault();
+      form.addEventListener("submit", () => {
         const div = document.createElement("div");
         div.className = "newsletter-success";
         div.innerHTML = `
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:10px;">
             <polyline points="20 6 9 17 4 12"></polyline>
           </svg>
-          已收到您的訂閱，感謝同行。
+          已收到！請至信箱點擊確認連結，完成訂閱。
         `;
-        form.replaceWith(div);
+        // 延遲一下再換掉表單，確保 POST 已送出
+        setTimeout(() => form.replaceWith(div), 400);
       });
     });
 
