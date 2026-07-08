@@ -139,6 +139,7 @@ body {
   overflow-x: hidden;
   position: relative;
 }
+h1, h2, h3 { font-weight: 600; }
 p { margin: 0 0 1.4em; }
 p:last-child { margin-bottom: 0; }
 
