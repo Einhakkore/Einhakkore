@@ -361,7 +361,7 @@ button { font-family: inherit; cursor: pointer; }
 }
 .hero h1 {
   font-family: var(--font-brand);
-  font-weight: 400;
+  font-weight: 600;
   font-size: clamp(36px, 4.6vw, 56px);
   line-height: 1.55;
   color: var(--text-1);
@@ -485,7 +485,7 @@ button { font-family: inherit; cursor: pointer; }
   letter-spacing: .25em; margin-bottom: 28px;
 }
 .page-hero h1 {
-  font-family: var(--font-brand); font-weight: 400;
+  font-family: var(--font-brand); font-weight: 600;
   font-size: clamp(32px, 4vw, 48px); line-height: 1.55;
   color: var(--text-1); letter-spacing: .02em; margin: 0 auto 28px;
   max-width: 800px;
@@ -563,7 +563,7 @@ button { font-family: inherit; cursor: pointer; }
   letter-spacing: .25em; margin-bottom: 24px;
 }
 .section-head h2 {
-  font-family: var(--font-brand); font-weight: 400;
+  font-family: var(--font-brand); font-weight: 600;
   font-size: clamp(28px, 3.4vw, 38px); line-height: 1.6;
   color: var(--text-1); letter-spacing: .02em; margin: 0 0 20px;
 }
@@ -641,7 +641,7 @@ button { font-family: inherit; cursor: pointer; }
   background: linear-gradient(90deg, rgba(232,163,61,.35), transparent);
 }
 .practice-card h3 {
-  font-family: var(--font-brand); font-weight: 400;
+  font-family: var(--font-brand); font-weight: 600;
   font-size: 24px; color: var(--text-1);
   margin: 0 0 18px; letter-spacing: .02em; line-height: 1.55;
 }
@@ -688,7 +688,7 @@ button { font-family: inherit; cursor: pointer; }
   letter-spacing: .3em; margin-bottom: 48px;
 }
 .verse-quote {
-  font-family: var(--font-brand); font-weight: 400;
+  font-family: var(--font-brand); font-weight: 500;
   font-size: clamp(22px, 2.6vw, 30px); line-height: 2;
   color: var(--text-1); letter-spacing: .03em;
   margin-bottom: 40px;
@@ -754,7 +754,7 @@ button { font-family: inherit; cursor: pointer; }
 .feature-text .label.sage { color: var(--sage-700); }
 
 .feature-text h2 {
-  font-family: var(--font-brand); font-weight: 400;
+  font-family: var(--font-brand); font-weight: 600;
   font-size: clamp(28px, 3vw, 36px); line-height: 1.55;
   color: var(--text-1); letter-spacing: .02em; margin: 0 0 24px;
 }
@@ -832,7 +832,7 @@ button { font-family: inherit; cursor: pointer; }
   letter-spacing: .3em; margin-bottom: 40px;
 }
 .cta-poem {
-  font-family: var(--font-brand); font-weight: 400;
+  font-family: var(--font-brand); font-weight: 500;
   font-size: clamp(26px, 3vw, 36px); line-height: 1.95;
   color: var(--text-on-dark); letter-spacing: .03em; margin-bottom: 48px;
 }
@@ -946,7 +946,7 @@ font-size: 24px; line-height: 1.95;
   letter-spacing: .3em; margin-bottom: 28px;
 }
 .newsletter h3 {
-  font-family: var(--font-brand); font-weight: 400;
+  font-family: var(--font-brand); font-weight: 600;
   font-size: 28px; color: var(--text-1);
   letter-spacing: .02em; margin: 0 0 20px;
   line-height: 1.55;
@@ -1060,14 +1060,14 @@ font-size: 24px; line-height: 1.95;
   border: 1px solid var(--line-dim);
   border-radius: 12px;
   border-left: 3px solid var(--clay-500);
-  font-family: var(--font-brand); font-weight: 400;
+  font-family: var(--font-brand); font-weight: 500;
   font-size: 18px; line-height: 2;
   color: var(--text-1); margin-bottom: 40px;
   letter-spacing: .01em;
 }
 .budget { margin-bottom: 40px; }
 .budget h3 {
-  font-family: var(--font-brand); font-weight: 500;
+  font-family: var(--font-brand); font-weight: 600;
   font-size: 24px; color: var(--text-1);
   margin: 0 0 24px;
   display: flex; align-items: baseline; gap: 14px;
@@ -1111,7 +1111,7 @@ font-size: 24px; line-height: 1.95;
   display: flex; flex-direction: column; gap: 14px;
 }
 .account-box h3 {
-  font-family: var(--font-brand); font-weight: 500;
+  font-family: var(--font-brand); font-weight: 600;
   font-size: 18px; color: var(--text-1); margin: 0;
   display: flex; align-items: center; gap: 12px;
   letter-spacing: .02em;
@@ -1146,7 +1146,7 @@ font-size: 24px; line-height: 1.95;
   display: flex; flex-direction: column; gap: 18px;
 }
 .contact-form h3 {
-  font-family: var(--font-brand); font-weight: 500;
+  font-family: var(--font-brand); font-weight: 600;
   font-size: 22px; color: var(--text-1);
   margin: 0 0 4px; letter-spacing: .02em;
   line-height: 1.55;
@@ -1231,7 +1231,7 @@ font-size: 24px; line-height: 1.95;
   color: var(--amber-700);
 }
 .step h3 {
-  font-family: var(--font-brand); font-weight: 400;
+  font-family: var(--font-brand); font-weight: 600;
   font-size: 22px; color: var(--text-1); margin: 0;
   letter-spacing: .02em;
   line-height: 1.55;
@@ -1296,7 +1296,7 @@ font-size: 24px; line-height: 1.95;
   color: var(--text-2);
 }
 .terms-content h3 {
-  font-family: var(--font-brand); font-weight: 500;
+  font-family: var(--font-brand); font-weight: 600;
   font-size: 22px; color: var(--text-1);
   margin: 40px 0 16px; letter-spacing: .02em;
   line-height: 1.55;
@@ -1329,7 +1329,7 @@ font-size: 24px; line-height: 1.95;
   color: var(--sage-500); margin-bottom: 16px;
 }
 .verse-card blockquote {
-  font-family: var(--font-brand); font-weight: 400;
+  font-family: var(--font-brand); font-weight: 500;
   font-size: 22px; line-height: 2;
   color: var(--text-1); margin: 0 0 24px;
   letter-spacing: .02em;
@@ -1456,7 +1456,7 @@ body[data-page="donate"] .section { background: transparent; }
   box-shadow: 0 10px 34px rgba(0, 0, 0, .18);
 }
 .donate-block h2 {
-  font-family: var(--font-brand); font-weight: 500;
+  font-family: var(--font-brand); font-weight: 600;
   font-size: 22px; line-height: 1.55; letter-spacing: .02em;
   margin: 0 0 18px; color: var(--text-1);
 }
@@ -1555,7 +1555,7 @@ body[data-page="donate"] .account-box .info {
   display: flex; flex-direction: column; gap: 18px;
 }
 .donate-form h2 {
-  font-family: var(--font-brand); font-weight: 500;
+  font-family: var(--font-brand); font-weight: 600;
   font-size: 22px; margin: 0 0 4px; letter-spacing: .02em;
   color: var(--text-1); line-height: 1.55;
 }
