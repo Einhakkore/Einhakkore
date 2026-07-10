@@ -115,6 +115,16 @@
   --text-4: #7E8A96;        /* 標籤／小字   對比 3.8:1  — AA-large */
   --text-on-dark: #F5F1E8;  /* 反白用（深色面上的文字） */
 
+  /* Home — 深流 (deep-flow) 首頁專用漸層場 tokens */
+  --home-navy-top:   #243D4F;                 /* 頁頂淺 navy（介於 ink-800 與 ink-700 之間） */
+  --home-navy-mid:   var(--ink-900);          /* #1A2E40，40% 位置 */
+  --home-navy-deep:  #0E1A23;                 /* 頁尾深底，比 ink-900 再沉一階 */
+  --home-glow-amber: rgba(232, 163, 61, .16); /* 左上暖光（原設計稿 amber） */
+  --home-glow-sky:   rgba(110, 147, 168, .14);/* 右下冷光（比 sky-500 更灰藍） */
+  --home-text-1:     var(--text-on-dark);           /* 主標題，AAA 對比 */
+  --home-text-2:     rgba(245, 241, 232, .82);     /* 內文，AA+ */
+  --home-text-3:     rgba(245, 241, 232, .60);     /* 小字／hint */
+
   /* Lines — ink-based，讓分隔線在暖底上有溫度 */
   --line-dim:    rgba(26, 46, 64, .08);
   --line-mid:    rgba(26, 46, 64, .14);
@@ -1406,7 +1416,7 @@ body[data-page="donate"] main > .section::before {
 .page-hero.donate-hero::before {
   content: "";
   position: absolute; inset: 0; z-index: -2;
-  background: url("../img/HandsWater.webp") center / cover no-repeat;
+  background: url("../img/donate_bg.webp") center / cover no-repeat;
   transform: scale(1.02);
 }
 .page-hero.donate-hero::after {
@@ -1607,3 +1617,125 @@ body[data-page="donate"] .account-box .info {
   .page-hero.donate-hero { padding: 110px 24px 90px; }
   body[data-page="donate"] .budget { padding: 22px; }
 }
+
+/* ============================================================
+   HOME PAGE — 深流：整頁固定深色漸層背景 + hero 圖漸層露出
+   全部作用域鎖在 body[data-page="home"]，其他頁不受影響。
+   ============================================================ */
+
+/* 深流：整頁固定深色連續漸層場，內容在其上滾動 */
+body[data-page="home"] {
+  background:
+    radial-gradient(60vw 60vw at 20% 12%, var(--home-glow-amber), transparent 60%),
+    radial-gradient(70vw 70vw at 82% 68%, var(--home-glow-sky), transparent 62%),
+    linear-gradient(175deg,
+      var(--home-navy-top) 0%,
+      var(--home-navy-mid) 40%,
+      var(--home-navy-deep) 100%
+    );
+  background-attachment: fixed;
+  color: var(--home-text-2);
+}
+
+/* 深流本身已提供暖／冷光氛圍，頁面級 aurora 疊上去會混濁 → 關掉 */
+body[data-page="home"] .aurora { display: none; }
+
+/* ---- HERO：圖片以下緣遮罩淡出、上疊深色 scrim ---- */
+body[data-page="home"] .hero { background: transparent; }
+
+/* 圖層：低透明度、下緣 mask 淡入深流，無硬邊矩形 */
+body[data-page="home"] .hero::before {
+  background: url("../img/HandsWater.webp") center / cover no-repeat;
+  filter: none;                    /* 拿掉全站暖濾鏡，避免疊圖過黃 */
+  opacity: .60;
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, .95) 0%,
+    rgba(0, 0, 0, .50) 55%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, .95) 0%,
+    rgba(0, 0, 0, .50) 55%,
+    transparent 100%
+  );
+  z-index: 0;
+}
+
+/* Scrim：斜向深藍加深，保住 hero 文字對比 */
+body[data-page="home"] .hero::after {
+  background: linear-gradient(
+    175deg,
+    rgba(26, 46, 64, .20) 0%,
+    rgba(14, 26, 35, .70) 100%
+  );
+  z-index: 1;
+}
+
+/* ---- HERO 文字：改為深底上的淺色階 ---- */
+body[data-page="home"] .hero-eyebrow { color: var(--amber-400); }
+body[data-page="home"] .hero h1,
+body[data-page="home"] .hero h3 { color: var(--home-text-1); }
+body[data-page="home"] .hero h1 em { color: var(--amber-400); }
+body[data-page="home"] .hero-sub { color: var(--home-text-2); }
+body[data-page="home"] .scroll-hint { color: var(--home-text-3); }
+
+/* ---- 中段：讓半透明奶紙卡片在深流上仍可讀 ---- */
+/* 三大實踐區的標題與 lead 反白 */
+body[data-page="home"] .section-practices .section-num { color: var(--amber-400); opacity: .85; }
+body[data-page="home"] .section-practices .section-eyebrow { color: var(--amber-400); }
+body[data-page="home"] .section-practices .section-head h2 { color: var(--home-text-1); }
+body[data-page="home"] .section-practices .section-head h2 em { color: var(--amber-400); }
+body[data-page="home"] .section-practices .section-head .lead { color: var(--home-text-2); }
+
+/* practice-card 提高不透明度，讓卡片本身仍是奶紙色 */
+body[data-page="home"] .practice-card {
+  background: rgba(237, 227, 211, .94);
+  border-color: rgba(245, 241, 232, .18);
+}
+body[data-page="home"] .practice-card:hover {
+  background: rgba(237, 227, 211, .98);
+}
+
+/* Feature 圖文段 — 深底上文字反白，強調色改用亮階 amber */
+body[data-page="home"] .feature-text .label,
+body[data-page="home"] .feature-text .label.amber { color: var(--amber-400); }
+body[data-page="home"] .feature-text h2,
+body[data-page="home"] .feature-text h2.amber { color: var(--home-text-1); }
+body[data-page="home"] .feature-text h2 em,
+body[data-page="home"] .feature-text h2.amber em { color: var(--amber-400); }
+body[data-page="home"] .feature-text p { color: var(--home-text-2); }
+body[data-page="home"] .feature-text .link,
+body[data-page="home"] .feature-text .link.amber {
+  color: var(--amber-400);
+  border-color: rgba(242, 195, 107, .55);
+}
+body[data-page="home"] .feature-text .link:hover {
+  color: var(--amber-300); border-color: var(--amber-300);
+}
+
+/* Stats 沙米腰帶 — 提高不透明度，避免與深流混濁 */
+body[data-page="home"] .section-stats {
+  background: rgba(237, 227, 211, .92);
+  border-color: rgba(245, 241, 232, .12);
+}
+
+/* Newsletter — 同樣提高奶紙不透明度 */
+body[data-page="home"] .newsletter {
+  background: rgba(237, 227, 211, .92);
+  border-color: rgba(245, 241, 232, .12);
+}
+
+/* Ghost button on 深流：深色版變不見 → 用反白版（比照 .section--navy） */
+body[data-page="home"] .hero .btn-ghost {
+  background: rgba(255, 255, 255, .06);
+  color: var(--home-text-1);
+  border: 1px solid rgba(255, 255, 255, .20);
+}
+body[data-page="home"] .hero .btn-ghost:hover {
+  background: rgba(255, 255, 255, .12);
+  border-color: rgba(255, 255, 255, .35);
+}
+
+/* .section--navy 內建 ink-900 底 + 極光，在深流上照常運作，無需覆寫 */
