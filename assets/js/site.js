@@ -28,8 +28,13 @@
     }));
   }
 
-  // ---------- #flow-bg：注入固定的整站背景場 ----------
+  // ---------- #flow-bg：只在 home / donate 兩頁注入 ----------
+  function isFlowPage() {
+    const p = document.body.getAttribute('data-page');
+    return p === 'home' || p === 'donate';
+  }
   function injectFlowBg() {
+    if (!isFlowPage()) return;
     if (document.getElementById('flow-bg')) return;
     const el = document.createElement('div');
     el.id = 'flow-bg';
@@ -67,9 +72,13 @@
   }
   const fmtColor = c => `rgba(${c.r | 0},${c.g | 0},${c.b | 0},${(+c.a).toFixed(3)})`;
 
-  // ---------- Scroll flow field：從 CSS token 讀色站、單一 rAF 迴圈 ----------
+  // ---------- Scroll flow field：只在 home / donate 跑 ----------
   function initFlowField() {
+    if (!isFlowPage()) return;
     const cs = getComputedStyle(root);
+    // 寫入 <body> 而非 <html>：body 有 CSS 變數宣告（page-scoped 深色主題），
+    // 直接寫在 <html> 的 inline style 反而會被 body 的宣告覆蓋掉。
+    const target = document.body;
     const T = (name, fb) => (cs.getPropertyValue(name).trim() || fb);
 
     const P_STOPS = [
@@ -93,10 +102,10 @@
       const b = P_STOPS[Math.min(i + 1, P_STOPS.length - 1)];
       const span = b.p - a.p;
       const t = span > 0 ? Math.min(1, Math.max(0, (p - a.p) / span)) : 0;
-      root.style.setProperty('--bg1',  fmtColor(lerpColor(a.bg1,  b.bg1,  t)));
-      root.style.setProperty('--bg2',  fmtColor(lerpColor(a.bg2,  b.bg2,  t)));
-      root.style.setProperty('--glow', fmtColor(lerpColor(a.glow, b.glow, t)));
-      root.style.setProperty('--fg',   fmtColor(lerpColor(a.fg,   b.fg,   t)));
+      target.style.setProperty('--bg1',  fmtColor(lerpColor(a.bg1,  b.bg1,  t)));
+      target.style.setProperty('--bg2',  fmtColor(lerpColor(a.bg2,  b.bg2,  t)));
+      target.style.setProperty('--glow', fmtColor(lerpColor(a.glow, b.glow, t)));
+      target.style.setProperty('--fg',   fmtColor(lerpColor(a.fg,   b.fg,   t)));
     }
 
     if (reducedMotion) {
