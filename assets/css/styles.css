@@ -378,7 +378,10 @@ button { font-family: inherit; cursor: pointer; }
   z-index: 0;
 }
 .hero::after {
-  /* 深色遮罩：上方半透薄暖光；下方吃到 STOP 0 深藍，跟 #flow-bg 無縫接軌 */
+  /* 深色遮罩：上方半透薄暖光；下方直接吃 #flow-bg 當下的 --bg1，
+     不論捲動位置，hero 底緣的顏色永遠跟緊接的背景場對齊。
+     漸層拉長到 100%，40% 之後就開始轉深、直到全不透明覆掉照片，
+     讓照片與 flow field 之間有一段柔和過渡。 */
   content: "";
   position: absolute;
   inset: 0;
@@ -389,9 +392,10 @@ button { font-family: inherit; cursor: pointer; }
       transparent 75%
     ),
     linear-gradient(180deg,
-      rgba(20, 35, 50, .35) 0%,
-      rgba(20, 35, 50, .55) 55%,
-      var(--stop-0-bg1) 100%
+      color-mix(in oklab, var(--bg1) 20%, transparent) 0%,
+      color-mix(in oklab, var(--bg1) 40%, transparent) 40%,
+      color-mix(in oklab, var(--bg1) 80%, transparent) 75%,
+      var(--bg1) 100%
     );
   z-index: 1;
 }
@@ -1462,13 +1466,16 @@ body[data-page="donate"] main > .section {
   transform: scale(1.02);
 }
 .page-hero.donate-hero::after {
+  /* 直接吃 --bg1（scroll flow field 當下值）作為漸層收尾色，
+     hero 底緣永遠跟緊接的背景場對齊，無縫接軌。 */
   content: "";
   position: absolute; inset: 0; z-index: -1;
   background: linear-gradient(
     180deg,
-    rgba(39, 65, 86, .30) 0%,
-    rgba(39, 65, 86, .70) 55%,
-    rgba(39, 65, 86, 1)   100%
+    color-mix(in oklab, var(--bg1) 25%, transparent) 0%,
+    color-mix(in oklab, var(--bg1) 55%, transparent) 40%,
+    color-mix(in oklab, var(--bg1) 85%, transparent) 75%,
+    var(--bg1) 100%
   );
 }
 .page-hero.donate-hero .symbol-sm {
