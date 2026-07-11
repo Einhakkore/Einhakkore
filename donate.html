@@ -8,82 +8,145 @@
   <link rel="icon" href="assets/img/logo-on-light.png">
   <link rel="preload" href="assets/fonts/ShiweiSiJiChun-Regular.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/FreightTextPro-Book.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/img/donate_bg.webp" as="image" type="image/webp">
   <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body data-page="donate">
 
-<div class="aurora" aria-hidden="true">
-  <div class="aurora-blob aurora-1"></div>
-  <div class="aurora-blob aurora-2"></div>
-  <div class="aurora-blob aurora-3"></div>
-  <div class="aurora-blob aurora-4"></div>
-  <div class="aurora-stars"></div>
-</div>
+<div data-include="aurora"></div>
 
-<header class="site-header">
-  <div class="header-inner">
-    <a class="logo" href="index.html">
-      <img src="assets/img/logo-on-light.png" alt="隱哈歌利 En-hakkore">
-    </a>
-    <button class="menu-toggle" id="menuToggle" aria-label="開啟選單"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
-    <nav class="nav" id="nav">
-      <a href="index.html"     data-page="home">首頁</a>
-      <a href="about.html"     data-page="about">關於我們</a>
-      <a href="volunteer.html" data-page="volunteer">參與服事</a>
-      <a href="contact.html"   data-page="contact">聯絡我們</a>
-      <a href="donate.html" class="donate-btn" data-page="donate">
-        奉獻支持 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg>
-      </a>
-    </nav>
-  </div>
-</header>
+<div data-include="header"></div>
 
 <main>
 
 <section class="page-hero donate-hero">
   <div class="symbol-sm"></div>
-  <div class="eyebrow">GIVE · 奉獻支持</div>
-  <h1>每一份支持，都是<br><em>堅定的陪伴</em></h1>
-  <p>無論是單次奉獻或定期定額，您的參與都讓隱哈歌利能持續走在宣教士身旁。</p>
+  <div class="eyebrow">奉獻支持</div>
+  <h1>你們要給人，就必有給你們的</h1>
+  <div class="cta-label">路加福音 6:38</div>
+  <p> 無論金額大小，您的支持都是與宣教士誠實同行的堅定力量。<br>不論是單次奉獻、或是設定每月定期定額轉帳，這份長流的泉源，都將成為宣教士最務實的後援。</p>
 </section>
 
 <section class="section">
+    <div class="section-head section-head--on-dark reveal">
+      <div class="section-num">WHY</div>
+      <div class="cta-label">您的奉獻，將轉化為第一線宣教士生命中具體可行的資源與陪伴。</div>
+      <h2>為什麼我們需要您的支持？</h2>
+      <p>宣教士在跨文化的環境中前行，常需面對複雜與不易。隱哈歌利相信，真誠的關懷會先接住情緒，再帶出方向與實際步驟。我們尊重每個生命的節奏，不給標準答案，但在關鍵時刻，我們希望具體、務實地陪著他們一起走過。</p>
+    </div>
   <div class="wrap">
     <div class="donate-layout">
 
       <!-- ============================================================
-           左欄（>1068px 時固定 sticky）
+           左欄（>1068px 時固定 sticky）        
            ============================================================ -->
       <aside class="donate-left reveal">
-        <div class="donate-quote">
-          「每一份小額支持，都是一份堅定的陪伴力量。<br>
-          無論是單次奉獻或定期定額，您的參與都讓隱哈歌利<br>
-          能持續走在宣教士身旁，在具體的資源與代禱中，<br>
-          一同見證神的工作。」
-        </div>
 
-        <div class="budget">
-          <h3>2026 年度預算 <em>67.7 萬</em></h3>
-          <div class="budget-row"><span class="lbl">計劃一　倡議與調研</span><div class="bar"><div style="width:20%"></div></div><span class="amt">137,280</span></div>
-          <div class="budget-row"><span class="lbl">計劃二　資源整合平台</span><div class="bar"><div style="width:54%"></div></div><span class="amt">366,640</span></div>
-          <div class="budget-row"><span class="lbl">計劃三　關顧支持網絡</span><div class="bar"><div style="width:8%"></div></div><span class="amt">55,260</span></div>
-          <div class="budget-row"><span class="lbl">行政管理費用</span><div class="bar"><div style="width:18%"></div></div><span class="amt">117,280</span></div>
-        </div>
+  <div class="budget">
+    <h3>2026 年度預算 共<em>67.7 萬</em></h3>
+    <p>我們尊重神的主權，也誠實面對機構運作的有限與需要。<br>
+       隱哈歌利堅持財務公開透明，以下是我們 2026 年度的整體預算規劃與分佈：</p>
 
-        <!-- ⚠️ 提醒：此區塊為「舊帳戶資訊」(曾柏閎/國泰世華)，與右側 Section B
-             的「好地方協會/玉山銀行」是兩個不同帳戶。若奉獻已改由好地方協會
-             統籌，建議將此 account-box 移除或改為協會帳戶，避免奉獻者匯錯。 -->
-        <div class="account-box">
-          <h3>
-            <div class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="21" x2="21" y2="21"/><line x1="3" y1="10" x2="21" y2="10"/><polyline points="5 6 12 3 19 6"/><line x1="4" y1="10" x2="4" y2="21"/><line x1="20" y1="10" x2="20" y2="21"/></svg></div>
-            帳戶資訊
-          </h3>
-          <div class="info">
-            戶名　曾柏閎<br>
-            國泰世華　013　032700005851
-          </div>
-          <p class="note">匯款後請來信 <a href="mailto:einhakkore@gmail.com">einhakkore@gmail.com</a>，提供戶名與帳號末五碼，以利財務同工對帳。第一次奉獻請提供電話、地址供建檔。</p>
-        </div>
+    <div class="donut-wrap">
+      <svg id="donut" viewBox="0 0 560 400" role="img" aria-label="2026 年度預算分佈圓環圖"></svg>
+    </div>
+
+    <a class="btn btn-ghost" href="#">了解事工</a>
+  </div>
+
+<script>
+  const data = [
+    { name:'倡議與調研',value:20, note:'約 20%',            color:'var(--ink-900)' },
+    { name:'資源整合平台', value:54, note:'約 54%',            color:'var(--ink-700)' },
+    { name:'關顧支持網絡', value:8,  note:'約 8%',             color:'var(--sky-700)' },
+    { name:'行政管理費用',value:18, note:'117,280（約 18%）', color:'var(--sky-500)' },
+  ];
+
+  const cx = 280, cy = 190;   // 圓心
+  const r  = 100;             // 圓環中線半徑
+  const sw = 42;              // 圓環厚度
+  const pad = 1.3;            // 每段之間的空隙（角度）
+  const total = data.reduce((s,d)=>s+d.value,0);
+
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.getElementById('donut');
+
+  const rad = a => (a - 90) * Math.PI / 180;           // 0° 從正上方開始
+  const pt  = (radius, ang) => ({
+    x: cx + radius * Math.cos(rad(ang)),
+    y: cy + radius * Math.sin(rad(ang))
+  });
+  const el = (tag, attrs) => {
+    const n = document.createElementNS(NS, tag);
+    for (const k in attrs) n.setAttribute(k, attrs[k]);
+    return n;
+  };
+
+  let cum = 0;
+
+  data.forEach(d => {
+    const a0 = cum / total * 360;
+    cum += d.value;
+    const a1 = cum / total * 360;
+    const mid = (a0 + a1) / 2;
+
+    const g = el('g', { class:'seg' });
+
+    // ── 圓弧 ──
+    const s = pt(r, a0 + pad);
+    const e = pt(r, a1 - pad);
+    const large = (a1 - a0) > 180 ? 1 : 0;
+    const arc = el('path', {
+      class:'seg-arc',
+      d:`M ${s.x} ${s.y} A ${r} ${r} 0 ${large} 1 ${e.x} ${e.y}`,
+      fill:'none',
+      stroke:d.color,
+      'stroke-width':sw,
+      'stroke-linecap':'butt'
+    });
+    g.appendChild(arc);
+
+    // ── 引導線 ──
+    const edge  = pt(r + sw/2, mid);          // 圓環外緣
+    const elbow = pt(r + sw/2 + 20, mid);     // 轉折點
+    const right = pt(r, mid).x >= cx;         // 判斷在左半還右半
+    const labelX = right ? 430 : 130;
+    const lineEndX = right ? labelX - 8 : labelX + 8;
+
+    g.appendChild(el('path', {
+      class:'lead',
+      d:`M ${edge.x} ${edge.y} L ${elbow.x} ${elbow.y} L ${lineEndX} ${elbow.y}`
+    }));
+
+    // 顏色小圓點
+    const dot = el('circle', { class:'dot', cx:lineEndX, cy:elbow.y, r:3 });
+    dot.style.color = d.color;
+    g.appendChild(dot);
+
+    // ── 文字（兩行）──
+    const anchor = right ? 'start' : 'end';
+    const name = el('text', { x:labelX, y:elbow.y - 4, 'text-anchor':anchor, class:'lbl-name' });
+    name.textContent = d.name;
+    const note = el('text', { x:labelX, y:elbow.y + 14, 'text-anchor':anchor, class:'lbl-note' });
+    note.textContent = d.note;
+    g.appendChild(name);
+    g.appendChild(note);
+
+    svg.appendChild(g);
+  });
+
+  // ── 中間總金額 ──
+  const c1 = el('text', { x:cx, y:cy - 16, 'text-anchor':'middle', class:'center-sub' });
+  c1.textContent = '2026 年度總預算';
+  const c2 = el('text', { x:cx, y:cy + 20, 'text-anchor':'middle' });
+  const big  = el('tspan', { class:'center-big' }); big.textContent = '67.7';
+  const unit = el('tspan', { class:'center-unit', dx:'4' }); unit.textContent = '萬';
+  c2.appendChild(big); c2.appendChild(unit);
+  svg.appendChild(c1);
+  svg.appendChild(c2);
+</script>
+
+
       </aside>
 
       <!-- ============================================================
@@ -93,15 +156,16 @@
 
         <!-- ---------- Section A ---------- -->
         <div class="donate-block reveal">
-          <h2>隱哈歌利 × 台灣好地方社區發展協會</h2>
-          <p>為了讓財務流程更臻完善、提供支持者更放心的奉獻管道，隱哈歌利目前與「社團法人台灣好地方社區發展協會」展開正式的專案合作。</p>
+          <h2>📣 重要公告——關於我們的合作夥伴</h2>
+          <h3>隱哈歌利 × 台灣好地方社區發展協會</h3>
+          <p>為了讓財務流程更完善、提供支持者更放心的奉獻管道，隱哈歌利目前與「社團法人台灣好地方社區發展協會」展開正式的專案合作。</p>
           <p>目前隱哈歌利的所有奉獻將由「好地方協會」協助統籌收款、管理帳務並協助開立正式的奉獻收據。請大家放心，您的每一分奉獻，都將專款專用於隱哈歌利的事工推動中，陪伴我們走穩每一步。</p>
         </div>
 
         <!-- ---------- Section B：匯款與奉獻確認（Step 1 選匯款方式 / Step 2 填表） ---------- -->
         <div class="donate-block reveal">
-          <h2>匯款與奉獻確認</h2>
-          <p>請先透過下方 A / B 兩種方式擇一完成奉獻，再回到步驟 2 填寫確認表單，方便我們對帳與開立收據。</p>
+          <h2>匯款與奉獻資訊</h2>
+          <p>您可以單次奉獻，或在您的網路銀行設定每月固定轉帳（定期定額），成為我們長期的關顧夥伴。</p>
 
           <div class="give-step">
             <span class="give-step-num">1</span>
@@ -113,12 +177,12 @@
             <span class="give-option-tag">A</span>銀行匯款
           </h4>
           <div class="bank-card">
-            <p class="bank-title">BANK · 銀行匯款帳戶</p>
+            <p class="bank-title">匯款帳戶</p>
             <dl>
               <dt>戶名</dt><dd>台灣好地方協會</dd>
-              <dt>統編</dt><dd>60291512</dd>
               <dt>銀行</dt><dd>808（玉山銀行／忠孝分行）</dd>
-              <dt>帳號</dt><dd class="acct">0875940142895</dd>
+              <dt>帳號</dt><dd>0875940142895</dd>
+              <dt>統編</dt><dd>60291512</dd>
             </dl>
           </div>
 
@@ -193,62 +257,11 @@
   </div>
 </section>
 
-<section class="newsletter">
-  <div class="newsletter-wrap">
-    <div class="newsletter-label">STAY CONNECTED · 保持連結</div>
-    <h3>訂閱我們的代禱信</h3>
-    <p>定期收到宣教士代禱信、事工更新與感恩見證，與我們一起關心神國度的擴展。</p>
-    <form class="newsletter-form">
-      <input type="email" placeholder="您的電子郵件" required>
-      <button type="submit">訂閱</button>
-    </form>
-  </div>
-</section>
+<div data-include="newsletter"></div>
 
 </main>
 
-<footer class="site-footer">
-  <div class="footer-inner">
-    <div class="footer-brand">
-      <a class="logo" href="index.html">
-        <img src="assets/img/logo-on-dark.png" alt="隱哈歌利 En-hakkore">
-      </a>
-      <p>求告者之泉 — 為宣教士提供支持與關懷的網絡。我們相信，後方的守護，能讓前線的呼求得著回應。</p>
-      <div class="footer-social">
-        <a href="#" aria-label="Facebook"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.5 9.9V14.9H8v-2.9h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.3.2 2.3.2v2.5h-1.3c-1.3 0-1.7.8-1.7 1.6V12h2.9l-.5 2.9h-2.4v6.9A10 10 0 0 0 22 12z"/></svg></a>
-        <a href="#" aria-label="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="18" cy="6" r="1" fill="currentColor"/></svg></a>
-        <a href="#" aria-label="YouTube"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.7 3.6 12 3.6 12 3.6s-7.7 0-9.4.5A3 3 0 0 0 .5 6.2C0 7.9 0 12 0 12s0 4.1.5 5.8a3 3 0 0 0 2.1 2.1c1.7.5 9.4.5 9.4.5s7.7 0 9.4-.5a3 3 0 0 0 2.1-2.1c.5-1.7.5-5.8.5-5.8s0-4.1-.5-5.8zM9.6 15.3V8.7l6.4 3.3-6.4 3.3z"/></svg></a>
-      </div>
-    </div>
-    <div class="footer-col">
-      <h4>關於</h4>
-      <ul>
-        <li><a href="about.html">起源與異象</a></li>
-        <li><a href="about.html">團隊成員</a></li>
-        <li><a href="contact.html">聯絡我們</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>參與</h4>
-      <ul>
-        <li><a href="donate.html">奉獻支持</a></li>
-        <li><a href="volunteer.html">招募志工</a></li>
-        <li><a href="contact.html">代禱請求</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>資訊</h4>
-      <ul>
-        <li><a href="terms.html">隱私權政策</a></li>
-        <li><a href="terms.html">服務條款</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <span>© 2026 En-hakkore · 隱哈歌利</span>
-    <span>士師記 15:19</span>
-  </div>
-</footer>
+<div data-include="footer"></div>
 
 <script src="assets/js/site.js"></script>
 
