@@ -162,11 +162,20 @@
           <p>目前隱哈歌利的所有奉獻將由「好地方協會」協助統籌收款、管理帳務並協助開立正式的奉獻收據。請大家放心，您的每一分奉獻，都將專款專用於隱哈歌利的事工推動中，陪伴我們走穩每一步。</p>
         </div>
 
-        <!-- ---------- Section B ---------- -->
+        <!-- ---------- Section B：匯款與奉獻確認（Step 1 選匯款方式 / Step 2 填表） ---------- -->
         <div class="donate-block reveal">
           <h2>匯款與奉獻資訊</h2>
           <p>您可以單次奉獻，或在您的網路銀行設定每月固定轉帳（定期定額），成為我們長期的關顧夥伴。</p>
 
+          <div class="give-step">
+            <span class="give-step-num">1</span>
+            <span class="give-step-title">選擇匯款方式</span>
+          </div>
+          <p class="desc">以下兩種方式擇一即可，銀行匯款或線上刷卡都能完成奉獻。</p>
+
+          <h4 class="give-option-name">
+            <span class="give-option-tag">A</span>銀行匯款
+          </h4>
           <div class="bank-card">
             <p class="bank-title">匯款帳戶</p>
             <dl>
@@ -185,19 +194,23 @@
             </ol>
           </div>
 
-          <!-- 👉 按鈕連結：連接到好地方協會 -->
-          <a class="btn btn-primary pay-cta" href="https://gooodplace.dobtor.com/" target="_blank" rel="noopener">
-            刷卡（前往好地方協會）↗️
+          <h4 class="give-option-name">
+            <span class="give-option-tag">B</span>線上刷卡
+          </h4>
+          <p>透過信用卡連結，也能快速完成單次或定期奉獻。</p>
+          <!-- 👉 刷卡連結：把 href="#REPLACE_WITH_YOUR_PAYMENT_LINK" 換成金流頁面網址 -->
+          <a class="btn btn-primary pay-cta" href="#REPLACE_WITH_YOUR_PAYMENT_LINK" target="_blank" rel="noopener">
+            前往刷卡頁面
             <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg>
           </a>
-        </div>
 
-        <!-- ---------- Section C：奉獻確認表單（Firebase 串接） ---------- -->
-        <div class="donate-block reveal">
+          <div class="give-step">
+            <span class="give-step-num">2</span>
+            <span class="give-step-title">填寫奉獻確認表單</span>
+          </div>
+          <p class="desc">完成轉帳或刷卡後，請填寫以下資訊，方便我們對帳與開立收據。</p>
+
           <form class="donate-form" id="donationForm" novalidate>
-            <h2>奉獻確認表單</h2>
-            <p class="desc">完成轉帳後，請填寫以下資訊，方便我們對帳與開立收據。</p>
-
             <div class="field">
               <label>1. 奉獻者姓名（或建檔戶名）<span class="req">*</span></label>
               <input type="text" name="name" required placeholder="王小明">
@@ -230,7 +243,7 @@
               <textarea name="address" placeholder="郵遞區號 + 完整地址"></textarea>
             </div>
 
-            <button class="btn btn-primary" type="submit" id="donateSubmit" style="margin-top:8px;align-self:flex-start;">
+            <button class="btn btn-primary" type="submit" id="donateSubmit">
               送出確認
               <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg>
             </button>
