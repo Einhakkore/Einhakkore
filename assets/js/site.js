@@ -185,7 +185,7 @@
       cards.forEach(c => {
         const on = c.dataset.category === value;
         if (on) matched = c;
-        c.classList.toggle('sage', on);
+        c.classList.toggle('is-selected', on);
         c.setAttribute('aria-pressed', on ? 'true' : 'false');
       });
       if (message) {
@@ -204,6 +204,51 @@
     });
 
     select.addEventListener('change', () => syncTo(select.value));
+  }
+
+  // ---------- Snackbar ----------
+  let snackbarEl = null;
+  let snackbarTimer = null;
+  function showSnackbar(text) {
+    if (!snackbarEl) {
+      snackbarEl = document.createElement('div');
+      snackbarEl.className = 'snackbar';
+      snackbarEl.setAttribute('role', 'status');
+      snackbarEl.setAttribute('aria-live', 'polite');
+      document.body.appendChild(snackbarEl);
+    }
+    snackbarEl.textContent = text;
+    // Force reflow so re-triggering the same message re-runs the transition.
+    void snackbarEl.offsetWidth;
+    snackbarEl.classList.add('show');
+    clearTimeout(snackbarTimer);
+    snackbarTimer = setTimeout(() => snackbarEl.classList.remove('show'), 2000);
+  }
+
+  function initEmailCopy() {
+    document.querySelectorAll('.email-card').forEach(card => {
+      card.addEventListener('click', async () => {
+        const email = card.dataset.email;
+        if (!email) return;
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(email);
+          } else {
+            const ta = document.createElement('textarea');
+            ta.value = email;
+            ta.setAttribute('readonly', '');
+            ta.style.position = 'fixed'; ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+          }
+          showSnackbar('已複製 Email');
+        } catch (e) {
+          showSnackbar('複製失敗，請手動選取');
+        }
+      });
+    });
   }
 
   function initInteractivity() {
@@ -247,6 +292,7 @@
 
     // ---------- Contact guide cards ↔ Category select ----------
     initContactGuides();
+    initEmailCopy();
 
     // ---------- Contact forms ----------
     document.querySelectorAll("form.contact-form").forEach(form => {

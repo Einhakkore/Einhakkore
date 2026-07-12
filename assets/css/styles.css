@@ -1430,6 +1430,154 @@ body.footer-reveal-ready .site-header { z-index: 100; }
 .contact-block a { color: var(--accent); border-bottom: 1px solid rgba(232, 163, 61, .35); }
 .contact-block a:hover { color: var(--fg); border-color: var(--fg); }
 
+/* ----- Help guide cards ----- */
+.help-guides h3 {
+  font-family: var(--font-brand); font-weight: 500;
+  font-size: 22px; color: var(--fg);
+  margin: 0 0 10px; letter-spacing: .02em; line-height: 1.4;
+}
+.help-guides .lead {
+  font-size: 15px; line-height: 1.85;
+  color: var(--fg); opacity: .78;
+  margin: 0 0 18px;
+}
+.guide-list { display: flex; flex-direction: column; gap: 10px; }
+.guide-card {
+  display: block; width: 100%;
+  background: rgba(232, 163, 61, .05);
+  border: 1px solid rgba(232, 163, 61, .20);
+  border-radius: 14px;
+  padding: 16px 20px;
+  text-align: left; color: inherit;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 220ms ease, border-color 220ms ease,
+              transform 220ms ease, box-shadow 220ms ease;
+}
+.guide-card .title {
+  display: block;
+  font-family: var(--font-brand); font-weight: 500;
+  font-size: 16px; color: var(--fg);
+  letter-spacing: .02em; line-height: 1.5;
+}
+.guide-card .helper {
+  display: block;
+  font-size: 14px; line-height: 1.6;
+  color: var(--fg);
+  opacity: 0; max-height: 0; overflow: hidden;
+  margin-top: 0;
+  transition: opacity 200ms ease, max-height 260ms ease, margin-top 200ms ease;
+}
+.guide-card:hover,
+.guide-card:focus-visible {
+  background: rgba(232, 163, 61, .10);
+  border-color: rgba(232, 163, 61, .45);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px -10px rgba(0, 0, 0, .18);
+  outline: none;
+}
+.guide-card:hover .helper,
+.guide-card:focus-visible .helper,
+.guide-card.is-selected .helper {
+  opacity: .78;
+  max-height: 60px;
+  margin-top: 6px;
+}
+.guide-card.is-selected {
+  background: rgba(232, 163, 61, .14);
+  border-color: rgba(232, 163, 61, .55);
+}
+
+/* ----- Clickable Email card ----- */
+.contact-card {
+  display: flex; gap: 18px; align-items: center;
+  width: 100%;
+  background: transparent;
+  border: 1px solid rgba(232, 163, 61, .20);
+  border-radius: 14px;
+  padding: 14px 18px;
+  text-align: left; color: inherit;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 220ms ease, border-color 220ms ease;
+}
+.contact-card .icon {
+  width: 48px; height: 48px; flex-shrink: 0;
+  color: var(--amber-700);
+  background: rgba(232, 163, 61, .10);
+  border: 1px solid rgba(232, 163, 61, .25);
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+}
+.contact-card .info-text { flex: 1; }
+.contact-card h4 {
+  font-family: var(--font-brand); font-weight: 500;
+  font-size: 17px; color: var(--fg); margin: 0 0 4px;
+  letter-spacing: .02em; line-height: 1.55;
+}
+.contact-card p {
+  font-size: 15px; line-height: 1.6;
+  color: var(--fg); opacity: .82; margin: 0;
+}
+.contact-card .copy-hint {
+  font-size: 12px; color: var(--fg); opacity: 0;
+  transition: opacity 200ms ease;
+  white-space: nowrap; margin-left: 8px;
+}
+.contact-card:hover,
+.contact-card:focus-visible {
+  background: rgba(232, 163, 61, .06);
+  border-color: rgba(232, 163, 61, .45);
+  outline: none;
+}
+.contact-card:hover .copy-hint,
+.contact-card:focus-visible .copy-hint { opacity: .65; }
+
+/* ----- Social block with circular icons ----- */
+.social-block h4 {
+  font-family: var(--font-brand); font-weight: 500;
+  font-size: 17px; color: var(--fg); margin: 0 0 12px;
+  letter-spacing: .02em; line-height: 1.55;
+}
+.social-circles { display: flex; gap: 12px; }
+.social-circles a {
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--amber-700);
+  background: rgba(232, 163, 61, .10);
+  border: 1px solid rgba(232, 163, 61, .25);
+  transition: background 200ms ease, color 200ms ease,
+              border-color 200ms ease, transform 200ms ease;
+}
+.social-circles a:hover {
+  background: var(--amber-700);
+  color: #fff;
+  border-color: var(--amber-700);
+  transform: translateY(-2px);
+}
+
+/* ----- Snackbar toast ----- */
+.snackbar {
+  position: fixed;
+  left: 50%; bottom: 32px;
+  transform: translateX(-50%) translateY(12px);
+  background: var(--fg);
+  color: #fff;
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-size: 14px;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, .35);
+  transition: opacity 220ms ease, transform 220ms ease;
+  z-index: 1000;
+}
+.snackbar.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
 /* -----------------------------------------------------------
    TERMS
    ----------------------------------------------------------- */
