@@ -33,274 +33,39 @@
       <h2>三步驟</h2>
       <p class="lead">我們希望志工的服事是長久且合適的。所以我們以陪伴的方式，與您一起確認呼召、預備生命、找到位置。</p>
     </div>
-    <style>
-      /* ============================================================
-         STEPS-SCROLL — 三步驟 scroll-driven 動畫（純 CSS + inline SVG）
-         - 觸發：animation-timeline: view()
-         - 降級：不支援 view() 或使用者偏好減弱動畫 → 直接呈現終態
-         - RWD ：≤720px 改為垂直堆疊，關閉 morph 動畫
-         ============================================================ */
-      .steps-scroll {
-        --ss-w:      min(1100px, 92vw);          /* 舞台總寬 = shape-3 展開後寬度 */
-        --ss-h:      clamp(280px, 30vw, 400px);  /* shape-1 高＝直徑 */
-        --ss-gap:    8px;                        /* 圈與圈間距 */
-        --ss-h2:     calc(var(--ss-h) + var(--ss-gap) * 2);      /* 416 */
-        --ss-h3:     calc(var(--ss-h) + var(--ss-gap) * 4);      /* 432 */
-        --ss-w2:     calc(var(--ss-w) * 2 / 3);  /* shape-2 展開後寬度＝2/3 */
-        --ss-w3:     var(--ss-w);                /* shape-3 展開後寬度＝滿版 */
-        --ss-ease:   cubic-bezier(.6,.2,.2,1);
-        /* 各階段 view() 進度區間，方便調參 */
-        --ss-morph:      cover 12% cover 62%;
-        --ss-arrow-1:    cover 50% cover 68%;
-        --ss-arrow-2:    cover 60% cover 78%;
-        --ss-text-1:     cover 18% cover 42%;
-        --ss-text-2:     cover 55% cover 78%;
-        --ss-text-3:     cover 68% cover 90%;
-
-        width: var(--ss-w);
-        margin: 56px auto 0;
-      }
-
-      .ss-stage {
-        position: relative;
-        height: var(--ss-h3);
-      }
-
-      /* 形狀層：三個左緣對齊的膠囊/圓，垂直中心對齊
-         底色由外（shape-3）到內（shape-1）由淺入深；外圈幾乎融進頁面底色，
-         內圓因層層疊加同色成為視覺焦點 */
-      .ss-shape {
-        position: absolute;
-        left: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        backdrop-filter: blur(20px);
-        border: 1px solid var(--card-border);
-        box-shadow: var(--card-shadow);
-        border-radius: 9999px;
-        transition: none;
-      }
-      .ss-shape-1 { width: var(--ss-h);  height: var(--ss-h);  z-index: 3;
-                    background: rgba(237, 227, 211, .55); }
-      .ss-shape-2 { width: var(--ss-w2); height: var(--ss-h2); z-index: 2;
-                    background: rgba(237, 227, 211, .32); }
-      .ss-shape-3 { width: var(--ss-w3); height: var(--ss-h3); z-index: 1;
-                    background: rgba(237, 227, 211, .16); }
-
-      /* 文字內容：絕對定位在各形狀的可見「尾巴」區 */
-      .ss-shape .ss-content {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        z-index: 5;
-      }
-      .ss-shape-1 .ss-content {
-        left: 0;
-        width: var(--ss-h);
-        padding: 20px;
-        text-align: center;
-      }
-      .ss-shape-2 .ss-content {
-        left: var(--ss-h);
-        width: calc(var(--ss-w2) - var(--ss-h) - 24px);
-        padding: 20px 24px;
-        text-align: center;
-      }
-      .ss-shape-3 .ss-content {
-        left: var(--ss-w2);
-        width: calc(var(--ss-w3) - var(--ss-w2) - 24px);
-        padding: 20px 24px;
-        text-align: center;
-      }
-
-      .ss-content .ss-num {
-        display: block;
-        font-family: var(--font-en);
-        font-style: italic;
-        font-weight: 300;
-        font-size: clamp(36px, 4vw, 48px);
-        line-height: .9;
-        color: var(--amber-700);
-        margin-bottom: 12px;
-      }
-      .ss-content h3 {
-        font-family: var(--font-brand);
-        font-weight: 600;
-        font-size: clamp(18px, 1.9vw, 22px);
-        color: var(--text-1);
-        margin: 0 0 8px;
-        letter-spacing: .02em;
-        line-height: 1.55;
-      }
-      .ss-content p {
-        font-size: clamp(13px, 1.3vw, 15px);
-        line-height: 1.85;
-        color: var(--text-2);
-        margin: 0;
-      }
-
-      /* 箭頭 */
-      .ss-arrow {
-        position: absolute;
-        top: 50%;
-        width: clamp(24px, 2.6vw, 34px);
-        height: auto;
-        transform: translateY(-50%);
-        color: var(--amber-700);
-        z-index: 6;
-      }
-      .ss-arrow-1 { left: calc(var(--ss-h)  - 8px); }
-      .ss-arrow-2 { left: calc(var(--ss-w2) - 8px); }
-
-      /* ============================================================
-         SCROLL 動畫（僅在支援 view() 且未要求減弱動畫時啟用）
-         ============================================================ */
-      @supports (animation-timeline: view()) {
-        @media (prefers-reduced-motion: no-preference) and (min-width: 721px) {
-
-          /* shape morph：由 8px 內縮的圓 → 膠囊 */
-          .ss-shape-2 {
-            animation: ss-morph-2 auto var(--ss-ease) both;
-            animation-timeline: view();
-            animation-range: var(--ss-morph);
-          }
-          .ss-shape-3 {
-            animation: ss-morph-3 auto var(--ss-ease) both;
-            animation-timeline: view();
-            animation-range: var(--ss-morph);
-          }
-          @keyframes ss-morph-2 {
-            from { width: var(--ss-h2); }   /* 圓：直徑＝高度 */
-            to   { width: var(--ss-w2); }   /* 膠囊：2/3 */
-          }
-          @keyframes ss-morph-3 {
-            from { width: var(--ss-h3); }   /* 圓：直徑＝高度 */
-            to   { width: var(--ss-w3); }   /* 膠囊：滿版 */
-          }
-
-          /* 箭頭淡入（略帶右移） */
-          .ss-arrow {
-            opacity: 0;
-            animation: ss-arrow-in auto ease-out both;
-            animation-timeline: view();
-          }
-          .ss-arrow-1 { animation-range: var(--ss-arrow-1); }
-          .ss-arrow-2 { animation-range: var(--ss-arrow-2); }
-          @keyframes ss-arrow-in {
-            from { opacity: 0; transform: translateY(-50%) translateX(-10px); }
-            to   { opacity: 1; transform: translateY(-50%) translateX(0); }
-          }
-
-          /* 文字淡入（stagger） */
-          .ss-content {
-            opacity: 0;
-            animation: ss-text-in auto ease-out both;
-            animation-timeline: view();
-          }
-          .ss-shape-1 .ss-content { animation-range: var(--ss-text-1); }
-          .ss-shape-2 .ss-content { animation-range: var(--ss-text-2); }
-          .ss-shape-3 .ss-content { animation-range: var(--ss-text-3); }
-          @keyframes ss-text-in {
-            from { opacity: 0; transform: translateY(calc(-50% + 8px)); }
-            to   { opacity: 1; transform: translateY(-50%); }
-          }
-        }
-      }
-
-      /* ============================================================
-         RWD：≤720px 垂直堆疊，關閉動畫，形狀改為圓角卡片
-         ============================================================ */
-      @media (max-width: 720px) {
-        .steps-scroll {
-          --ss-h: auto;
-          width: 100%;
-          margin-top: 40px;
-        }
-        .ss-stage {
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-          height: auto;
-          position: static;
-        }
-        .ss-shape,
-        .ss-shape-1, .ss-shape-2, .ss-shape-3 {
-          position: relative;
-          left: auto; top: auto;
-          transform: none;
-          width: 100%;
-          height: auto;
-          min-height: 120px;
-          border-radius: 24px;
-          padding: 28px 24px;
-          animation: none !important;
-          opacity: 1 !important;
-        }
-        /* 讓 01 → 02 → 03 在垂直堆疊時由上到下 */
-        .ss-shape-1 { order: 1; }
-        .ss-arrow-1 { order: 2; }
-        .ss-shape-2 { order: 3; }
-        .ss-arrow-2 { order: 4; }
-        .ss-shape-3 { order: 5; }
-        .ss-shape .ss-content,
-        .ss-shape-1 .ss-content,
-        .ss-shape-2 .ss-content,
-        .ss-shape-3 .ss-content {
-          position: static;
-          transform: none;
-          width: 100%;
-          padding: 0;
-          text-align: left;
-          opacity: 1 !important;
-          animation: none !important;
-        }
-        .ss-arrow {
-          position: static;
-          transform: rotate(90deg);
-          width: 22px;
-          align-self: center;
-          margin: 0;
-          opacity: 1 !important;
-          animation: none !important;
-        }
-      }
-    </style>
-
-    <div class="steps-scroll" aria-label="招募三步驟流程動畫">
-      <div class="ss-stage">
-        <!-- shape-3：最底層、最外圈（展開後最長） -->
-        <div class="ss-shape ss-shape-3">
-          <div class="ss-content">
-            <span class="ss-num">03</span>
-            <h3>媒合服事</h3>
-            <p>依照您的時間、技能與興趣，媒合合適的宣教士關顧需要，開始長期陪伴的關係。</p>
-          </div>
-        </div>
-        <!-- shape-2：中層、中間圈（展開後 2/3） -->
-        <div class="ss-shape ss-shape-2">
-          <div class="ss-content">
-            <span class="ss-num">02</span>
-            <h3>裝備與加入</h3>
-            <p>透過短期培訓與宣教關顧理解的培力，預備您進入服事的位置。建立對前線工作的基本理解。</p>
-          </div>
-        </div>
-        <!-- shape-1：最上層、最內圈（維持圓形） -->
-        <div class="ss-shape ss-shape-1">
-          <div class="ss-content">
-            <span class="ss-num">01</span>
-            <h3>申請與評估</h3>
-            <p>填寫意願表，與我們進行初步認識，了解您的呼召與專業背景。我們會用一杯咖啡的時間與您聊聊。</p>
-          </div>
-        </div>
-
-        <!-- 箭頭：置於 shape-1↔shape-2 與 shape-2↔shape-3 交界 -->
-        <svg class="ss-arrow ss-arrow-1" viewBox="0 0 32 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M2 8h26m-7-6 7 6-7 6"/>
-        </svg>
-        <svg class="ss-arrow ss-arrow-2" viewBox="0 0 32 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M2 8h26m-7-6 7 6-7 6"/>
-        </svg>
-      </div>
+    <div class="steps">
+      <article class="step reveal">
+        <div class="icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+<rect x="8" y="16" width="48" height="32" rx="3"/>
+<path d="M8 20l24 16 24-16"/>
+<path d="M8 44l16-12M56 44l-16-12" opacity=".5"/>
+</svg></div>
+        <div class="num">01</div>
+        <h3>申請與評估</h3>
+        <p>填寫意願表，與我們進行初步認識，了解您的呼召與專業背景。我們會用一杯咖啡的時間與您聊聊。</p>
+      </article>
+      <article class="step reveal">
+        <div class="icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+<path d="M12 14v40c0-3 3-4 6-4h28v-40h-28c-3 0-6 1-6 4z"/>
+<path d="M12 54c0-3 3-4 6-4h28"/>
+<path d="M24 22h12M24 28h12M24 34h8" opacity=".6"/>
+</svg></div>
+        <div class="num">02</div>
+        <h3>裝備與加入</h3>
+        <p>透過短期培訓與宣教關顧理解的培力，預備您進入服事的位置。建立對前線工作的基本理解。</p>
+      </article>
+      <article class="step reveal">
+        <div class="icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="32" cy="14" r="4"/>
+<circle cx="14" cy="42" r="4"/>
+<circle cx="50" cy="42" r="4"/>
+<circle cx="32" cy="50" r="3"/>
+<path d="M32 18v28M30.5 17l-15 22M33.5 17l15 22M17 44l13 5M47 44l-13 5"/>
+</svg></div>
+        <div class="num">03</div>
+        <h3>媒合服事</h3>
+        <p>依照您的時間、技能與興趣，媒合合適的宣教士關顧需要，開始長期陪伴的關係。</p>
+      </article>
     </div>
   </div>
 </section>
