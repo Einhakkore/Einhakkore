@@ -67,7 +67,8 @@
       }
 
       /* 形狀層：三個左緣對齊的膠囊/圓，垂直中心對齊
-         底色由外（shape-3）到內（shape-1）由淺入深 */
+         底色由外（shape-3）到內（shape-1）由深入淺 —— 因為 shape-1
+         疊在最上層，要把它調成淡且不透明，才能蓋掉外層的深色 */
       .ss-shape {
         position: absolute;
         left: 0;
@@ -80,11 +81,11 @@
         transition: none;
       }
       .ss-shape-1 { width: var(--ss-h);  height: var(--ss-h);  z-index: 3;
-                    background: rgba(237, 227, 211, .55); }
+                    background: rgba(252, 246, 234, .78); }
       .ss-shape-2 { width: var(--ss-w2); height: var(--ss-h2); z-index: 2;
-                    background: rgba(237, 227, 211, .32); }
+                    background: rgba(228, 214, 187, .55); }
       .ss-shape-3 { width: var(--ss-w3); height: var(--ss-h3); z-index: 1;
-                    background: rgba(237, 227, 211, .16); }
+                    background: rgba(197, 170, 128, .42); }
 
       /* 文字內容：絕對定位在各形狀的可見「尾巴」區 */
       .ss-shape .ss-content {
