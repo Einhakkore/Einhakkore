@@ -12,138 +12,33 @@
 
   <style>
     /* ============================================================
-       SCROLL INTERACTIONS — 日系スクロール演出型
-       Lenis + GSAP ScrollTrigger + three.js
+       SCROLL INTERACTIONS — 精簡版 (無 three.js / cursor / nav mask)
        ============================================================ */
 
-    /* Lenis 停用 CSS 平滑捲動，讓 JS 完全接手 */
-    html.lenis { height: auto; }
     html.lenis, html.lenis body { scroll-behavior: auto !important; }
-    html.lenis-smooth { scroll-behavior: auto; }
 
-    /* 讓 body 允許 sticky footer 疊層 */
-    body { background: var(--ink-900, #1A2E40); }
-    body.footer-reveal-ready main {
-      position: relative;
-      z-index: 2;
-      background: var(--paper, #FAF6EF);
-      /* margin-bottom 由 JS 依 footer 高度設置 */
-    }
-    body.footer-reveal-ready .site-footer {
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      z-index: 1;
-    }
+    /* ---------- 逐行分割 ---------- */
+    .scr-mask   { display: block; overflow: hidden; line-height: inherit; }
+    .scr-line   { display: block; }
+    .scr-mask--inline { display: inline-block; vertical-align: bottom; }
 
-    /* ---------- 自訂游標 ---------- */
-    .cursor {
-      position: fixed;
-      top: 0; left: 0;
-      width: 14px; height: 14px;
-      border-radius: 50%;
-      background: var(--amber-500, #FFBA49);
-      pointer-events: none;
-      z-index: 9999;
-      transform: translate3d(-50%, -50%, 0);
-      mix-blend-mode: difference;
-      transition: width .28s cubic-bezier(.16,1,.3,1),
-                  height .28s cubic-bezier(.16,1,.3,1),
-                  background .28s ease,
-                  mix-blend-mode .28s ease;
-      will-change: transform, width, height;
-      opacity: 0;
-    }
-    .cursor.is-ready { opacity: 1; }
-    .cursor > span {
-      position: absolute; inset: 0;
-      display: flex; align-items: center; justify-content: center;
-      color: #1A2E40;
-      font-family: var(--font-en, serif);
-      font-style: italic;
-      font-size: 12px;
-      letter-spacing: .18em;
-      text-transform: uppercase;
-      opacity: 0;
-      transition: opacity .2s ease;
-    }
-    .cursor.is-view {
-      width: 78px; height: 78px;
-      background: var(--amber-400, #F2C36B);
-      mix-blend-mode: normal;
-      box-shadow: 0 8px 30px rgba(0,0,0,.18);
-    }
-    .cursor.is-view > span { opacity: 1; }
-    html.cursor-custom, html.cursor-custom * { cursor: none !important; }
-    @media (hover: none), (pointer: coarse) {
-      .cursor { display: none !important; }
-    }
-
-    /* ---------- 導覽雙層 mask hover ---------- */
-    .nav-mask {
-      position: relative;
-      display: inline-block;
-      overflow: hidden;
-      height: 1.15em;
-      line-height: 1.15;
-      vertical-align: middle;
-    }
-    .nav-mask__inner {
-      display: block;
-      will-change: transform;
-    }
-    .nav-mask__inner > span {
-      display: block;
-      height: 1.15em;
-      white-space: nowrap;
-    }
-
-    /* ---------- 逐行分割文字 ---------- */
-    .scr-mask {
-      display: block;
-      overflow: hidden;
-      line-height: inherit;
-    }
-    .scr-line {
-      display: block;
-      will-change: transform, opacity;
-    }
-    /* 內聯的 mask（同一行內小塊） */
-    .scr-mask--inline {
-      display: inline-block;
-      vertical-align: bottom;
-    }
-
-    /* ---------- HERO (three.js pinned) ---------- */
+    /* ---------- HERO ---------- */
     .scr-hero {
       position: relative;
-      height: 260vh;              /* pin scrub 距離 */
-    }
-    .scr-hero__pin {
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      overflow: hidden;
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
+      padding: 140px 32px;
     }
-    .scr-hero__canvas {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-    }
-    .scr-hero__canvas canvas {
-      display: block;
-      width: 100%; height: 100%;
-    }
-    .scr-hero__fallback {
+    .scr-hero__bg {
       position: absolute; inset: 0;
       background: url("assets/img/HandsWater.webp") center/cover no-repeat,
                   var(--stop-0-bg2, #182C3B);
       filter: sepia(.10) saturate(.80) brightness(.55);
-      opacity: 1;
       z-index: 0;
+      transform: translateZ(0);   /* GPU 合成，避開 blur 混合 repaint */
     }
     .scr-hero__veil {
       position: absolute; inset: 0;
@@ -159,7 +54,6 @@
       z-index: 3;
       max-width: 960px;
       width: 100%;
-      padding: 0 32px;
       text-align: center;
       color: var(--text-on-dark, #F5F1E8);
     }
@@ -172,10 +66,6 @@
       margin-bottom: 40px;
       opacity: 0;
     }
-    .scr-hero__title-stack {
-      position: relative;
-      min-height: 1.5em;
-    }
     .scr-hero__title {
       font-family: var(--font-brand, serif);
       font-weight: 600;
@@ -184,12 +74,6 @@
       letter-spacing: .04em;
       margin: 0;
       color: var(--text-on-dark, #F5F1E8);
-    }
-    .scr-hero__title:not(:first-child) {
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      opacity: 0;
-      pointer-events: none;
     }
     .scr-hero__sub {
       margin: 40px auto 0;
@@ -219,30 +103,29 @@
       background: linear-gradient(180deg, var(--amber-400, #F2C36B), transparent);
     }
 
-    /* ---------- 視差裝飾物 ---------- */
+    /* ---------- 視差裝飾（blur 從 70 降到 32，opacity 從 .55 降到 .45） ---------- */
     .parallax-deco {
       position: absolute;
       border-radius: 50%;
       pointer-events: none;
-      filter: blur(70px);
-      will-change: transform;
+      filter: blur(32px);
       z-index: 2;
-      opacity: .55;
+      opacity: .45;
     }
     .parallax-deco.deco-1 {
-      width: 420px; height: 420px;
-      top: 8%; left: -100px;
-      background: radial-gradient(circle, rgba(232,163,61,.35), transparent 65%);
+      width: 360px; height: 360px;
+      top: 8%; left: -80px;
+      background: radial-gradient(circle, rgba(232,163,61,.32), transparent 65%);
     }
     .parallax-deco.deco-2 {
-      width: 520px; height: 520px;
-      top: 32%; right: -160px;
-      background: radial-gradient(circle, rgba(138,162,147,.32), transparent 65%);
+      width: 440px; height: 440px;
+      top: 32%; right: -140px;
+      background: radial-gradient(circle, rgba(138,162,147,.30), transparent 65%);
     }
     .parallax-deco.deco-3 {
-      width: 320px; height: 320px;
+      width: 260px; height: 260px;
       bottom: 10%; left: 42%;
-      background: radial-gradient(circle, rgba(199,123,82,.28), transparent 65%);
+      background: radial-gradient(circle, rgba(199,123,82,.26), transparent 65%);
     }
 
     /* ---------- Verse 深色區 ---------- */
@@ -290,22 +173,16 @@
     .reveal-clip {
       position: relative;
       overflow: hidden;
-      will-change: clip-path;
       clip-path: inset(0 0 100% 0);
-    }
-    .reveal-clip > .reveal-clip__inner {
-      display: block;
-      width: 100%; height: 100%;
     }
     .reveal-clip img {
       width: 100%; height: 100%;
       object-fit: cover;
       transform: scale(1.15);
       transform-origin: center;
-      will-change: transform;
     }
 
-    /* ---------- 作品區 marquee ---------- */
+    /* ---------- Marquee ---------- */
     .marquee-section {
       padding: 140px 0 160px;
       overflow: hidden;
@@ -320,19 +197,13 @@
       padding: 0 32px;
       display: flex; align-items: baseline; gap: 24px; flex-wrap: wrap;
     }
-    .marquee-head .section-num {
-      font-size: 56px; margin: 0; line-height: 1;
-    }
+    .marquee-head .section-num { font-size: 56px; margin: 0; line-height: 1; }
     .marquee-head .section-eyebrow { margin: 0; }
-    .marquee-viewport {
-      position: relative;
-      overflow: hidden;
-    }
+    .marquee-viewport { position: relative; overflow: hidden; }
     .marquee-track {
       display: flex;
       gap: 32px;
       width: max-content;
-      will-change: transform;
       transform-origin: center;
     }
     .marquee-item {
@@ -349,7 +220,6 @@
       object-fit: cover;
       transform: scale(1.02);
       transition: transform .6s cubic-bezier(.16,1,.3,1);
-      will-change: transform;
     }
     .marquee-item:hover img { transform: scale(1.09); }
     .marquee-item::after {
@@ -370,44 +240,32 @@
       text-shadow: 0 2px 10px rgba(0,0,0,.35);
       display: flex; align-items: baseline; gap: 12px;
     }
-    .marquee-item .m-label .num {
-      font-size: 12px; opacity: .8;
-    }
+    .marquee-item .m-label .num { font-size: 12px; opacity: .8; }
 
-    /* ---------- Practice card 進場預設 (由 JS 觸發 reveal) ---------- */
+    /* ---------- Card fade in ---------- */
     .scr-fade {
       opacity: 0;
       transform: translate3d(0, 40px, 0);
-      will-change: transform, opacity;
     }
 
     /* ---------- prefers-reduced-motion ---------- */
     @media (prefers-reduced-motion: reduce) {
-      .scr-hero { height: auto; }
-      .scr-hero__pin { position: relative; height: auto; padding: 140px 0; min-height: 80vh; }
       .parallax-deco { display: none; }
       .reveal-clip { clip-path: none !important; }
       .reveal-clip img { transform: none !important; }
       .scr-line, .scr-fade { transform: none !important; opacity: 1 !important; }
       .scr-hero__eyebrow, .scr-hero__sub { opacity: 1 !important; }
-      .scr-hero__title:not(:first-child) { display: none; }
     }
 
     /* ---------- Mobile ---------- */
     @media (max-width: 720px) {
-      .scr-hero { height: auto; }
-      .scr-hero__pin { position: relative; height: auto; min-height: 100vh; padding: 120px 24px; }
-      .scr-hero__canvas canvas { display: none; }
-      .parallax-deco { opacity: .35; }
+      .scr-hero { padding: 120px 24px; }
+      .parallax-deco { opacity: .28; filter: blur(24px); }
       .marquee-section { padding: 100px 0 120px; }
-      .cursor { display: none; }
     }
   </style>
 </head>
 <body data-page="about">
-
-<!-- 自訂游標 -->
-<div class="cursor" aria-hidden="true"><span>View</span></div>
 
 <div data-include="aurora"></div>
 <div data-include="header"></div>
@@ -415,31 +273,21 @@
 <main>
 
   <!-- ============================ HERO ============================ -->
-  <section class="scr-hero" data-scene="hero">
-    <div class="scr-hero__pin">
-      <div class="scr-hero__canvas" id="hero-canvas-wrap">
-        <div class="scr-hero__fallback" id="hero-fallback"></div>
-      </div>
-      <div class="scr-hero__veil"></div>
+  <section class="scr-hero">
+    <div class="scr-hero__bg"></div>
+    <div class="scr-hero__veil"></div>
 
-      <div class="parallax-deco deco-1" data-speed="-0.35"></div>
-      <div class="parallax-deco deco-2" data-speed="0.28"></div>
-      <div class="parallax-deco deco-3" data-speed="0.18"></div>
+    <div class="parallax-deco deco-1" data-speed="-0.28"></div>
+    <div class="parallax-deco deco-2" data-speed="0.22"></div>
+    <div class="parallax-deco deco-3" data-speed="0.14"></div>
 
-      <div class="scr-hero__content">
-        <div class="scr-hero__eyebrow" data-hero-fade>ABOUT US · 關於我們</div>
-
-        <div class="scr-hero__title-stack">
-          <h1 class="scr-hero__title" data-hero-title="0"><span data-split-lines>起源與異象</span></h1>
-          <h1 class="scr-hero__title" data-hero-title="1"><span data-split-lines>破裂窪處的泉</span></h1>
-          <h1 class="scr-hero__title" data-hero-title="2"><span data-split-lines>後方的守護者</span></h1>
-        </div>
-
-        <p class="scr-hero__sub" data-hero-fade>士師記 15:19 — 神為呼求的人破裂窪處，使水湧出。<br>隱哈歌利取名於此，盼望成為宣教士的安歇之泉。</p>
-      </div>
-
-      <div class="scr-hero__scroll-hint">SCROLL</div>
+    <div class="scr-hero__content">
+      <div class="scr-hero__eyebrow" data-hero-fade>ABOUT US · 關於我們</div>
+      <h1 class="scr-hero__title" data-split-lines>起源與異象</h1>
+      <p class="scr-hero__sub" data-hero-fade>士師記 15:19 — 神為呼求的人破裂窪處，使水湧出。<br>隱哈歌利取名於此，盼望成為宣教士的安歇之泉。</p>
     </div>
+
+    <div class="scr-hero__scroll-hint">SCROLL</div>
   </section>
 
   <!-- ============================ Verse ============================ -->
@@ -497,7 +345,7 @@
     </div>
   </section>
 
-  <!-- ============================ Feature 1 (image reveal + 視差) ============================ -->
+  <!-- ============================ Feature 1 ============================ -->
   <section class="section" data-scene="feature">
     <div class="wrap">
       <div class="feature-grid">
@@ -510,7 +358,7 @@
           <h2 class="sage" data-split-lines>長期的同行。</h2>
           <p data-split-lines>關顧不是短期的活動，而是持續的陪伴。我們相信宣教士的旅程需要可以一起走長路的夥伴。</p>
           <p data-split-lines>從預備期、出工場、再回國述職，每一個階段我們都希望以實際的方式同在。透過個別陪伴、家庭關懷與屬靈成長支持，建立穩固的後援。</p>
-          <a class="link sage" href="contact.html" data-cursor="view">與我們聊聊 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg></a>
+          <a class="link sage" href="contact.html">與我們聊聊 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg></a>
         </div>
       </div>
     </div>
@@ -529,7 +377,7 @@
           <h2 class="coral" data-split-lines>建立關係的支持。</h2>
           <p data-split-lines>不只提供資源，更建立關係。我們在差會、教會與宣教士家庭之間，搭建可信賴的支持網絡。</p>
           <p data-split-lines>每一杯咖啡、每一封代禱信、每一次線上會議，都是關係累積的證據。我們相信，當「人」被看見，工作才會被祝福。</p>
-          <a class="link coral" href="volunteer.html" data-cursor="view">加入我們 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg></a>
+          <a class="link coral" href="volunteer.html">加入我們 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg></a>
         </div>
       </div>
     </div>
@@ -543,27 +391,27 @@
     </div>
     <div class="marquee-viewport">
       <div class="marquee-track" data-marquee>
-        <a class="marquee-item" href="volunteer.html" data-cursor="view">
+        <a class="marquee-item" href="volunteer.html">
           <img src="https://images.unsplash.com/photo-1518050227004-c4cb7104d79a?w=800&q=70" alt="陪伴" loading="lazy">
           <div class="m-label"><span class="num">01</span><span>陪伴 · Companionship</span></div>
         </a>
-        <a class="marquee-item" href="volunteer.html" data-cursor="view">
+        <a class="marquee-item" href="volunteer.html">
           <img src="https://images.unsplash.com/photo-1591382696684-38c427c7547a?w=800&q=70" alt="關係" loading="lazy">
           <div class="m-label"><span class="num">02</span><span>關係 · Relationship</span></div>
         </a>
-        <a class="marquee-item" href="volunteer.html" data-cursor="view">
+        <a class="marquee-item" href="volunteer.html">
           <img src="https://images.unsplash.com/photo-1509099836639-18ba1795216d?w=800&q=70" alt="代禱" loading="lazy">
           <div class="m-label"><span class="num">03</span><span>代禱 · Prayer</span></div>
         </a>
-        <a class="marquee-item" href="volunteer.html" data-cursor="view">
+        <a class="marquee-item" href="volunteer.html">
           <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&q=70" alt="接待" loading="lazy">
           <div class="m-label"><span class="num">04</span><span>接待 · Hospitality</span></div>
         </a>
-        <a class="marquee-item" href="donate.html" data-cursor="view">
+        <a class="marquee-item" href="donate.html">
           <img src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800&q=70" alt="資源" loading="lazy">
           <div class="m-label"><span class="num">05</span><span>資源 · Resources</span></div>
         </a>
-        <a class="marquee-item" href="about.html" data-cursor="view">
+        <a class="marquee-item" href="about.html">
           <img src="https://images.unsplash.com/photo-1476820865390-c52aeebb9891?w=800&q=70" alt="紀念" loading="lazy">
           <div class="m-label"><span class="num">06</span><span>紀念 · Remembrance</span></div>
         </a>
@@ -580,26 +428,18 @@
 <script src="assets/js/site.js"></script>
 
 <!-- ============================================================
-     Scroll interaction libs
+     Scroll interaction libs — GSAP + Lenis (無 three.js)
      ============================================================ -->
 <script src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://unpkg.com/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
 
-<script type="importmap">
-  { "imports": { "three": "https://unpkg.com/three@0.161.0/build/three.module.js" } }
-</script>
-
-<script type="module">
-  import * as THREE from 'three';
-
+<script>
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const isMobile   = window.matchMedia('(max-width: 720px)').matches;
-  const isTouch    = window.matchMedia('(hover: none), (pointer: coarse)').matches;
 
   gsap.registerPlugin(ScrollTrigger);
 
-  /* ---------- 1. Lenis 平滑捲動 + 與 ScrollTrigger 同步 ---------- */
+  /* ---------- Lenis 平滑捲動 ---------- */
   let lenis;
   if (!prefersReducedMotion) {
     lenis = new Lenis({
@@ -613,13 +453,11 @@
     document.documentElement.classList.add('lenis');
   }
 
-  /* ---------- 逐行分割 helper（不用付費 SplitText） ---------- */
+  /* ---------- 逐行分割 helper ---------- */
   function splitByLines(el) {
     if (!el || el.dataset.splitDone) return [];
-    // 保留原本 HTML 中的 <strong> / <em> 等
     const original = el.innerHTML.trim();
 
-    // 若有 <br>，直接照它切
     if (/<br\s*\/?>/i.test(original)) {
       const parts = original.split(/<br\s*\/?>/i);
       el.innerHTML = parts.map(p =>
@@ -629,8 +467,6 @@
       return [...el.querySelectorAll('.scr-line')];
     }
 
-    // 沒 <br>：把每個字元／英文詞包成 inline-block，依 offsetTop 分行
-    // 拆的時候要保留原有 tag（strong / em）內容
     const tmp = document.createElement('div');
     tmp.innerHTML = original;
 
@@ -638,7 +474,6 @@
       const frag = document.createDocumentFragment();
       node.childNodes.forEach(child => {
         if (child.nodeType === 3) {
-          // 文字：中文逐字、英文以字元包 word；保留空白
           const text = child.textContent;
           text.split('').forEach(ch => {
             if (ch === ' ') {
@@ -665,7 +500,6 @@
 
     const chars = [...el.querySelectorAll('.scr-ch')];
     if (!chars.length) {
-      // fallback：整段當一行
       el.innerHTML = `<span class="scr-mask"><span class="scr-line">${original}</span></span>`;
       el.dataset.splitDone = '1';
       return [...el.querySelectorAll('.scr-line')];
@@ -682,7 +516,6 @@
       }
       currentGroup.push(c);
     });
-    // 依 group 拆行、重建 HTML
     const html = groups.map(g => {
       const inner = g.map(c => c.outerHTML).join('');
       return `<span class="scr-mask"><span class="scr-line">${inner}</span></span>`;
@@ -692,7 +525,7 @@
     return [...el.querySelectorAll('.scr-line')];
   }
 
-  /* ---------- 3+4. SplitText 進場 ---------- */
+  /* ---------- SplitText 進場 ---------- */
   function initSplitEntrance() {
     document.querySelectorAll('[data-split-lines]').forEach(el => {
       const lines = splitByLines(el);
@@ -711,7 +544,6 @@
         }
       });
     });
-    // 一般 fade 進場（quote mark, section-num）
     document.querySelectorAll('[data-scr-fade]').forEach(el => {
       gsap.fromTo(el,
         { opacity: 0, y: 30 },
@@ -722,7 +554,6 @@
         }
       );
     });
-    // .scr-fade 卡片
     document.querySelectorAll('.scr-fade').forEach(el => {
       gsap.to(el, {
         opacity: 1,
@@ -734,123 +565,15 @@
     });
   }
 
-  /* ---------- 3. HERO three.js 立方體 + 標題三段接力 ---------- */
+  /* ---------- HERO 淡入 ---------- */
   function initHero() {
-    const wrap = document.getElementById('hero-canvas-wrap');
     const eyebrow = document.querySelector('.scr-hero__eyebrow');
     const sub     = document.querySelector('.scr-hero__sub');
-    const titles  = [...document.querySelectorAll('[data-hero-title]')];
-
-    // 進場淡入（只跑一次，不受 scrub 影響）
     if (eyebrow) gsap.to(eyebrow, { opacity: 1, duration: 1.0, delay: 0.2, ease: 'power2.out' });
     if (sub)     gsap.to(sub,     { opacity: 1, duration: 1.0, delay: 0.5, ease: 'power2.out' });
-
-    // 三段接力
-    if (titles.length === 3 && !prefersReducedMotion) {
-      gsap.set(titles[0], { opacity: 1, yPercent: 0 });
-      gsap.set([titles[1], titles[2]], { opacity: 0, yPercent: 20 });
-
-      const relay = gsap.timeline({
-        scrollTrigger: {
-          trigger: '.scr-hero',
-          start: 'top top',
-          end: 'bottom top',
-          scrub: true,
-        }
-      });
-      relay
-        .to(titles[0],   { opacity: 0, yPercent: -20, ease: 'none' }, 0.20)
-        .to(titles[1],   { opacity: 1, yPercent: 0,   ease: 'none' }, 0.28)
-        .to(titles[1],   { opacity: 0, yPercent: -20, ease: 'none' }, 0.58)
-        .to(titles[2],   { opacity: 1, yPercent: 0,   ease: 'none' }, 0.66);
-    }
-
-    // three.js：手機 / 減少動態時關掉
-    if (isMobile || prefersReducedMotion || !wrap) return;
-    const fallback = document.getElementById('hero-fallback');
-
-    const scene    = new THREE.Scene();
-    const camera   = new THREE.PerspectiveCamera(45, wrap.clientWidth / wrap.clientHeight, 0.1, 100);
-    camera.position.set(0, 0, 5);
-
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(wrap.clientWidth, wrap.clientHeight);
-    wrap.appendChild(renderer.domElement);
-
-    // 淡出靜態 fallback（three 開起來後）
-    if (fallback) gsap.to(fallback, { opacity: 0.35, duration: 1.2 });
-
-    // 外框琥珀 wireframe 立方體
-    const outerGeo = new THREE.BoxGeometry(1.6, 1.6, 1.6);
-    const outerMat = new THREE.MeshBasicMaterial({
-      color: 0xE8A33D, wireframe: true, transparent: true, opacity: 0.85,
-    });
-    const cube = new THREE.Mesh(outerGeo, outerMat);
-    scene.add(cube);
-
-    // 內側較亮 mesh（深度感）
-    const innerGeo = new THREE.BoxGeometry(1.15, 1.15, 1.15);
-    const innerMat = new THREE.MeshBasicMaterial({
-      color: 0xF2C36B, wireframe: true, transparent: true, opacity: 0.35,
-    });
-    cube.add(new THREE.Mesh(innerGeo, innerMat));
-
-    // 初始傾斜，讓正面帶點透視
-    cube.rotation.x = -0.35;
-    cube.rotation.y = 0;
-
-    function resize() {
-      const w = wrap.clientWidth, h = wrap.clientHeight;
-      if (!w || !h) return;
-      renderer.setSize(w, h);
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
-    }
-    window.addEventListener('resize', resize);
-
-    // 常態自轉，讓靜止時也活著
-    function tick() {
-      cube.rotation.z += 0.0015;
-      renderer.render(scene, camera);
-      requestAnimationFrame(tick);
-    }
-    tick();
-
-    // scrub: y 0→π（180deg）、z 推近
-    gsap.timeline({
-      scrollTrigger: {
-        trigger: '.scr-hero',
-        start: 'top top',
-        end: 'bottom top',
-        scrub: 1,
-      }
-    })
-    .to(cube.rotation, { y: Math.PI, ease: 'none' }, 0)
-    .to(camera.position, { z: 2.4, ease: 'none' }, 0);
   }
 
-  /* ---------- 5. 導覽 hover 雙層 mask roll-up ---------- */
-  function initNavMask() {
-    const links = document.querySelectorAll('.nav a:not(.donate-btn)');
-    links.forEach(link => {
-      if (link.dataset.navMasked) return;
-      const text = link.textContent.trim();
-      if (!text) return;
-      link.dataset.navMasked = '1';
-      link.innerHTML = `<span class="nav-mask"><span class="nav-mask__inner"><span>${text}</span><span>${text}</span></span></span>`;
-      const inner = link.querySelector('.nav-mask__inner');
-      gsap.set(inner, { yPercent: 0 });
-      link.addEventListener('mouseenter', () => {
-        gsap.to(inner, { yPercent: -50, duration: 0.35, ease: 'power2.inOut' });
-      });
-      link.addEventListener('mouseleave', () => {
-        gsap.to(inner, { yPercent: 0, duration: 0.35, ease: 'power2.inOut' });
-      });
-    });
-  }
-
-  /* ---------- 6. 圖片 clip-path reveal + 內層反向視差 ---------- */
+  /* ---------- 圖片 clip-path reveal + 內層反向視差 ---------- */
   function initClipReveal() {
     document.querySelectorAll('[data-reveal-clip]').forEach(wrap => {
       const img = wrap.querySelector('img');
@@ -866,43 +589,28 @@
     });
   }
 
-  /* ---------- 7. 作品區 marquee + scroll velocity skew ---------- */
+  /* ---------- 作品區 marquee + scroll velocity skew ---------- */
   function initMarquee() {
     const track = document.querySelector('[data-marquee]');
     if (!track) return;
-    // 複製一份達成無縫循環
     track.innerHTML = track.innerHTML + track.innerHTML;
 
-    const measure = () => track.scrollWidth / 2;
-    let loopWidth = measure();
-    window.addEventListener('resize', () => { loopWidth = measure(); });
+    let loopWidth = track.scrollWidth / 2;
+    window.addEventListener('resize', () => { loopWidth = track.scrollWidth / 2; });
 
-    const speedBase = 40; // px / s
+    const speedBase = 40;
     let offset = 0;
     let lastTime = performance.now();
-    let velocityBoost = 0;   // 0..1
-    let dir = -1;            // 預設向左流
+    let velocityBoost = 0;
+    let dir = -1;
     let skew = 0;
+    let running = false;
 
-    // 用 ScrollTrigger 監聽 scroll velocity
-    ScrollTrigger.create({
-      trigger: track.closest('.marquee-section') || document.body,
-      start: 'top bottom',
-      end: 'bottom top',
-      onUpdate: (self) => {
-        const v = self.getVelocity(); // px/s (可為負)
-        // 捲動方向：向下 → 向左；向上 → 向右
-        dir = v >= 0 ? -1 : 1;
-        velocityBoost = Math.min(Math.abs(v) / 1500, 4);
-      }
-    });
-
-    gsap.ticker.add(() => {
+    function tickFn() {
       const now = performance.now();
       const dt = Math.min((now - lastTime) / 1000, 0.05);
       lastTime = now;
 
-      // 平滑衰減
       velocityBoost *= 0.94;
 
       const px = (speedBase * (1 + velocityBoost)) * dir * dt;
@@ -910,15 +618,40 @@
       if (offset <= -loopWidth) offset += loopWidth;
       if (offset >= 0)          offset -= loopWidth;
 
-      // skew 依 velocity
       const targetSkew = gsap.utils.clamp(-8, 8, dir * velocityBoost * 4);
       skew += (targetSkew - skew) * 0.12;
 
       track.style.transform = `translate3d(${offset}px, 0, 0) skewX(${skew}deg)`;
+    }
+    function start() {
+      if (running) return;
+      running = true;
+      lastTime = performance.now();
+      gsap.ticker.add(tickFn);
+    }
+    function stop() {
+      if (!running) return;
+      running = false;
+      gsap.ticker.remove(tickFn);
+    }
+
+    ScrollTrigger.create({
+      trigger: track.closest('.marquee-section'),
+      start: 'top bottom',
+      end: 'bottom top',
+      onEnter: start,
+      onEnterBack: start,
+      onLeave: stop,
+      onLeaveBack: stop,
+      onUpdate: (self) => {
+        const v = self.getVelocity();
+        dir = v >= 0 ? -1 : 1;
+        velocityBoost = Math.min(Math.abs(v) / 1500, 4);
+      }
     });
   }
 
-  /* ---------- 8. 視差 data-speed ---------- */
+  /* ---------- 視差 data-speed ---------- */
   function initParallax() {
     if (prefersReducedMotion) return;
     document.querySelectorAll('[data-speed]').forEach(el => {
@@ -936,49 +669,6 @@
     });
   }
 
-  /* ---------- 9. 自訂游標 ---------- */
-  function initCursor() {
-    if (isTouch) return;
-    const cursor = document.querySelector('.cursor');
-    if (!cursor) return;
-    document.documentElement.classList.add('cursor-custom');
-
-    const xTo = gsap.quickTo(cursor, 'x', { duration: 0.25, ease: 'power3.out' });
-    const yTo = gsap.quickTo(cursor, 'y', { duration: 0.25, ease: 'power3.out' });
-    window.addEventListener('pointermove', (e) => {
-      xTo(e.clientX);
-      yTo(e.clientY);
-      cursor.classList.add('is-ready');
-    });
-
-    // 委派 hover 判斷（因為 header/footer 是後載）
-    const hoverSelector = 'a, button, [data-cursor="view"], .marquee-item, .practice-card, .link';
-    document.addEventListener('mouseover', (e) => {
-      const t = e.target instanceof Element ? e.target.closest(hoverSelector) : null;
-      if (t) cursor.classList.add('is-view');
-    });
-    document.addEventListener('mouseout', (e) => {
-      const t = e.target instanceof Element ? e.target.closest(hoverSelector) : null;
-      if (t) cursor.classList.remove('is-view');
-    });
-  }
-
-  /* ---------- 10. Footer sticky reveal ---------- */
-  function initFooterReveal() {
-    const footer = document.querySelector('.site-footer');
-    const main = document.querySelector('main');
-    if (!footer || !main) return;
-    document.body.classList.add('footer-reveal-ready');
-
-    const apply = () => {
-      const h = footer.offsetHeight;
-      main.style.marginBottom = h + 'px';
-      ScrollTrigger.refresh();
-    };
-    apply();
-    new ResizeObserver(apply).observe(footer);
-  }
-
   /* ---------- 啟動 ---------- */
   function bootAnimations() {
     initSplitEntrance();
@@ -986,43 +676,14 @@
     initClipReveal();
     initMarquee();
     initParallax();
-    initCursor();
   }
 
-  // 等 site.js 的 partials 載入完（header/footer 就位）再初始化 mask + footer reveal
-  function waitFor(selector, timeoutMs = 8000) {
-    return new Promise((resolve) => {
-      const found = document.querySelector(selector);
-      if (found) return resolve(found);
-      const start = performance.now();
-      const iv = setInterval(() => {
-        const el = document.querySelector(selector);
-        if (el) { clearInterval(iv); resolve(el); }
-        else if (performance.now() - start > timeoutMs) {
-          clearInterval(iv); resolve(null);
-        }
-      }, 80);
-    });
-  }
-
-  // 進場動畫立即跑；nav / footer 相關等 partials 到位再跑
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', bootAnimations);
   } else {
     bootAnimations();
   }
 
-  Promise.all([
-    waitFor('.nav a'),
-    waitFor('.site-footer'),
-  ]).then(([nav, footer]) => {
-    if (nav)    initNavMask();
-    if (footer) initFooterReveal();
-    // 版面加入 footer sticky 後，重新計算 ScrollTrigger
-    setTimeout(() => ScrollTrigger.refresh(), 100);
-  });
-
-  // 圖片載入後，行高會變 → 重新 refresh
   window.addEventListener('load', () => ScrollTrigger.refresh());
 </script>
 

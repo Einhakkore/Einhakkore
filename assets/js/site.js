@@ -232,6 +232,28 @@
     injectFlowBg();
     initFlowField();
     initReveal();
+    initFooterReveal();
+  }
+
+  // ---------- Footer sticky reveal（每一頁都套） ----------
+  // main 疊在上層、fixed 的 footer 在下層；捲到 main 底部後 footer 掀開
+  function initFooterReveal() {
+    const footer = document.querySelector('.site-footer');
+    const main   = document.querySelector('main');
+    if (!footer || !main) return;
+
+    document.body.classList.add('footer-reveal-ready');
+
+    const apply = () => {
+      main.style.marginBottom = footer.offsetHeight + 'px';
+    };
+    apply();
+    if ('ResizeObserver' in window) {
+      new ResizeObserver(apply).observe(footer);
+    } else {
+      window.addEventListener('resize', apply, { passive: true });
+    }
+    window.addEventListener('load', apply);
   }
 
   // 進站流程：先把 partials 塞好，再綁事件（保證 header/footer 都能找到 DOM）

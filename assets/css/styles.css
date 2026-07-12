@@ -1102,6 +1102,35 @@ font-size: 24px; line-height: 1.95;
   position: relative;
   z-index: 2;
 }
+
+/* -----------------------------------------------------------
+   Footer sticky reveal — 由 site.js 依頁面加上 .footer-reveal-ready
+   main 用暖紙白覆蓋 fixed footer，捲到底時掀開露出深藍 footer。
+   home / donate 走 flow-bg，改用 --bg1 / --bg2 漸層做同樣效果，
+   保留 scroll flow field 的色階轉場。
+   ----------------------------------------------------------- */
+body.footer-reveal-ready {
+  background: var(--ink-900);
+}
+body.footer-reveal-ready main {
+  position: relative;
+  z-index: 2;
+  background: var(--paper);
+  /* margin-bottom 由 site.js 依 footer 高度動態設 */
+}
+body.footer-reveal-ready .site-footer {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 1;
+}
+/* flow-bg 頁：main 用當前 --bg1/--bg2 漸層，同步 scroll flow field 的色階 */
+body[data-page="home"].footer-reveal-ready main,
+body[data-page="donate"].footer-reveal-ready main {
+  background: linear-gradient(175deg, var(--bg1), var(--bg2));
+}
+/* flow-bg 頁的 header 疊在 main 之上 */
+body.footer-reveal-ready .site-header { z-index: 100; }
+
 .footer-inner {
   max-width: 1180px; margin: 0 auto;
   display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr;
