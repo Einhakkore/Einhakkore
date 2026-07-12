@@ -66,22 +66,25 @@
         height: var(--ss-h3);
       }
 
-      /* 形狀層：三個左緣對齊的膠囊/圓，垂直中心對齊 */
+      /* 形狀層：三個左緣對齊的膠囊/圓，垂直中心對齊
+         底色由外（shape-3）到內（shape-1）由淺入深 */
       .ss-shape {
         position: absolute;
         left: 0;
         top: 50%;
         transform: translateY(-50%);
-        background: var(--card-bg);
         backdrop-filter: blur(20px);
         border: 1px solid var(--card-border);
         box-shadow: var(--card-shadow);
         border-radius: 9999px;
         transition: none;
       }
-      .ss-shape-1 { width: var(--ss-h);  height: var(--ss-h);  z-index: 3; }
-      .ss-shape-2 { width: var(--ss-w2); height: var(--ss-h2); z-index: 2; }
-      .ss-shape-3 { width: var(--ss-w3); height: var(--ss-h3); z-index: 1; }
+      .ss-shape-1 { width: var(--ss-h);  height: var(--ss-h);  z-index: 3;
+                    background: rgba(237, 227, 211, .55); }
+      .ss-shape-2 { width: var(--ss-w2); height: var(--ss-h2); z-index: 2;
+                    background: rgba(237, 227, 211, .32); }
+      .ss-shape-3 { width: var(--ss-w3); height: var(--ss-h3); z-index: 1;
+                    background: rgba(237, 227, 211, .16); }
 
       /* 文字內容：絕對定位在各形狀的可見「尾巴」區 */
       .ss-shape .ss-content {
@@ -99,12 +102,14 @@
       .ss-shape-2 .ss-content {
         left: var(--ss-h);
         width: calc(var(--ss-w2) - var(--ss-h) - 24px);
-        padding: 20px 24px 20px 32px;
+        padding: 20px 24px;
+        text-align: center;
       }
       .ss-shape-3 .ss-content {
         left: var(--ss-w2);
         width: calc(var(--ss-w3) - var(--ss-w2) - 24px);
-        padding: 20px 24px 20px 32px;
+        padding: 20px 24px;
+        text-align: center;
       }
 
       .ss-content .ss-num {
