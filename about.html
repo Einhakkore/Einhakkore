@@ -9,117 +9,1022 @@
   <link rel="preload" href="assets/fonts/ShiweiSiJiChun-Regular.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/FreightTextPro-Book.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="assets/css/styles.css">
+
+  <style>
+    /* ============================================================
+       SCROLL INTERACTIONS — 日系スクロール演出型
+       Lenis + GSAP ScrollTrigger + three.js
+       ============================================================ */
+
+    /* Lenis 停用 CSS 平滑捲動，讓 JS 完全接手 */
+    html.lenis { height: auto; }
+    html.lenis, html.lenis body { scroll-behavior: auto !important; }
+    html.lenis-smooth { scroll-behavior: auto; }
+
+    /* 讓 body 允許 sticky footer 疊層 */
+    body { background: var(--ink-900, #1A2E40); }
+    body.footer-reveal-ready main {
+      position: relative;
+      z-index: 2;
+      background: var(--paper, #FAF6EF);
+      /* margin-bottom 由 JS 依 footer 高度設置 */
+    }
+    body.footer-reveal-ready .site-footer {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 1;
+    }
+
+    /* ---------- 自訂游標 ---------- */
+    .cursor {
+      position: fixed;
+      top: 0; left: 0;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: var(--amber-500, #FFBA49);
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate3d(-50%, -50%, 0);
+      mix-blend-mode: difference;
+      transition: width .28s cubic-bezier(.16,1,.3,1),
+                  height .28s cubic-bezier(.16,1,.3,1),
+                  background .28s ease,
+                  mix-blend-mode .28s ease;
+      will-change: transform, width, height;
+      opacity: 0;
+    }
+    .cursor.is-ready { opacity: 1; }
+    .cursor > span {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: #1A2E40;
+      font-family: var(--font-en, serif);
+      font-style: italic;
+      font-size: 12px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      opacity: 0;
+      transition: opacity .2s ease;
+    }
+    .cursor.is-view {
+      width: 78px; height: 78px;
+      background: var(--amber-400, #F2C36B);
+      mix-blend-mode: normal;
+      box-shadow: 0 8px 30px rgba(0,0,0,.18);
+    }
+    .cursor.is-view > span { opacity: 1; }
+    html.cursor-custom, html.cursor-custom * { cursor: none !important; }
+    @media (hover: none), (pointer: coarse) {
+      .cursor { display: none !important; }
+    }
+
+    /* ---------- 導覽雙層 mask hover ---------- */
+    .nav-mask {
+      position: relative;
+      display: inline-block;
+      overflow: hidden;
+      height: 1.15em;
+      line-height: 1.15;
+      vertical-align: middle;
+    }
+    .nav-mask__inner {
+      display: block;
+      will-change: transform;
+    }
+    .nav-mask__inner > span {
+      display: block;
+      height: 1.15em;
+      white-space: nowrap;
+    }
+
+    /* ---------- 逐行分割文字 ---------- */
+    .scr-mask {
+      display: block;
+      overflow: hidden;
+      line-height: inherit;
+    }
+    .scr-line {
+      display: block;
+      will-change: transform, opacity;
+    }
+    /* 內聯的 mask（同一行內小塊） */
+    .scr-mask--inline {
+      display: inline-block;
+      vertical-align: bottom;
+    }
+
+    /* ---------- HERO (three.js pinned) ---------- */
+    .scr-hero {
+      position: relative;
+      height: 260vh;              /* pin scrub 距離 */
+    }
+    .scr-hero__pin {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .scr-hero__canvas {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .scr-hero__canvas canvas {
+      display: block;
+      width: 100%; height: 100%;
+    }
+    .scr-hero__fallback {
+      position: absolute; inset: 0;
+      background: url("assets/img/HandsWater.webp") center/cover no-repeat,
+                  var(--stop-0-bg2, #182C3B);
+      filter: sepia(.10) saturate(.80) brightness(.55);
+      opacity: 1;
+      z-index: 0;
+    }
+    .scr-hero__veil {
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg,
+        rgba(24,44,59,.30) 0%,
+        rgba(24,44,59,.55) 55%,
+        rgba(24,44,59,.85) 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+    .scr-hero__content {
+      position: relative;
+      z-index: 3;
+      max-width: 960px;
+      width: 100%;
+      padding: 0 32px;
+      text-align: center;
+      color: var(--text-on-dark, #F5F1E8);
+    }
+    .scr-hero__eyebrow {
+      font-family: var(--font-en, serif);
+      font-style: italic;
+      font-size: 14px;
+      letter-spacing: .35em;
+      color: var(--amber-400, #F2C36B);
+      margin-bottom: 40px;
+      opacity: 0;
+    }
+    .scr-hero__title-stack {
+      position: relative;
+      min-height: 1.5em;
+    }
+    .scr-hero__title {
+      font-family: var(--font-brand, serif);
+      font-weight: 600;
+      font-size: clamp(36px, 5.6vw, 72px);
+      line-height: 1.5;
+      letter-spacing: .04em;
+      margin: 0;
+      color: var(--text-on-dark, #F5F1E8);
+    }
+    .scr-hero__title:not(:first-child) {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .scr-hero__sub {
+      margin: 40px auto 0;
+      max-width: 640px;
+      font-size: 17px;
+      line-height: 2;
+      color: rgba(245,241,232,.82);
+      opacity: 0;
+    }
+    .scr-hero__scroll-hint {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 3;
+      font-family: var(--font-en, serif);
+      font-style: italic;
+      font-size: 12px;
+      letter-spacing: .3em;
+      color: rgba(245,241,232,.72);
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+      pointer-events: none;
+    }
+    .scr-hero__scroll-hint::after {
+      content: "";
+      width: 1px; height: 40px;
+      background: linear-gradient(180deg, var(--amber-400, #F2C36B), transparent);
+    }
+
+    /* ---------- 視差裝飾物 ---------- */
+    .parallax-deco {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(70px);
+      will-change: transform;
+      z-index: 2;
+      opacity: .55;
+    }
+    .parallax-deco.deco-1 {
+      width: 420px; height: 420px;
+      top: 8%; left: -100px;
+      background: radial-gradient(circle, rgba(232,163,61,.35), transparent 65%);
+    }
+    .parallax-deco.deco-2 {
+      width: 520px; height: 520px;
+      top: 32%; right: -160px;
+      background: radial-gradient(circle, rgba(138,162,147,.32), transparent 65%);
+    }
+    .parallax-deco.deco-3 {
+      width: 320px; height: 320px;
+      bottom: 10%; left: 42%;
+      background: radial-gradient(circle, rgba(199,123,82,.28), transparent 65%);
+    }
+
+    /* ---------- Verse 深色區 ---------- */
+    .section-dark {
+      background: transparent;
+      color: var(--text-on-dark, #F5F1E8);
+      padding: 140px 32px;
+      position: relative;
+    }
+    .section-dark .verse-card {
+      max-width: 780px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .section-dark .quote-mark {
+      font-family: var(--font-en, serif);
+      font-size: 100px; line-height: 1;
+      color: var(--amber-400, #F2C36B);
+      margin-bottom: -20px;
+      opacity: .6;
+    }
+    .section-dark blockquote {
+      font-family: var(--font-brand, serif);
+      font-weight: 500;
+      font-size: clamp(22px, 2.6vw, 30px);
+      line-height: 2;
+      color: var(--text-on-dark, #F5F1E8);
+      letter-spacing: .03em;
+      margin: 0 0 32px;
+    }
+    .section-dark blockquote strong {
+      font-family: var(--font-en, serif);
+      font-style: italic; font-weight: 400;
+      color: var(--amber-400, #F2C36B);
+    }
+    .section-dark cite {
+      font-family: var(--font-en, serif);
+      font-style: italic;
+      font-size: 14px;
+      letter-spacing: .3em;
+      color: rgba(245,241,232,.65);
+    }
+
+    /* ---------- 圖片 reveal ---------- */
+    .reveal-clip {
+      position: relative;
+      overflow: hidden;
+      will-change: clip-path;
+      clip-path: inset(0 0 100% 0);
+    }
+    .reveal-clip > .reveal-clip__inner {
+      display: block;
+      width: 100%; height: 100%;
+    }
+    .reveal-clip img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transform: scale(1.15);
+      transform-origin: center;
+      will-change: transform;
+    }
+
+    /* ---------- 作品區 marquee ---------- */
+    .marquee-section {
+      padding: 140px 0 160px;
+      overflow: hidden;
+      position: relative;
+      background: linear-gradient(180deg,
+        color-mix(in oklab, var(--paper, #FAF6EF) 100%, transparent) 0%,
+        color-mix(in oklab, var(--sand, #EDE3D3) 60%, var(--paper) 40%) 100%);
+    }
+    .marquee-head {
+      max-width: 1180px;
+      margin: 0 auto 60px;
+      padding: 0 32px;
+      display: flex; align-items: baseline; gap: 24px; flex-wrap: wrap;
+    }
+    .marquee-head .section-num {
+      font-size: 56px; margin: 0; line-height: 1;
+    }
+    .marquee-head .section-eyebrow { margin: 0; }
+    .marquee-viewport {
+      position: relative;
+      overflow: hidden;
+    }
+    .marquee-track {
+      display: flex;
+      gap: 32px;
+      width: max-content;
+      will-change: transform;
+      transform-origin: center;
+    }
+    .marquee-item {
+      flex: 0 0 auto;
+      width: clamp(280px, 30vw, 440px);
+      aspect-ratio: 4 / 5;
+      border-radius: 24px;
+      overflow: hidden;
+      position: relative;
+      background: var(--sand, #EDE3D3);
+    }
+    .marquee-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transform: scale(1.02);
+      transition: transform .6s cubic-bezier(.16,1,.3,1);
+      will-change: transform;
+    }
+    .marquee-item:hover img { transform: scale(1.09); }
+    .marquee-item::after {
+      content: "";
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, transparent 55%, rgba(26,46,64,.55) 100%);
+      pointer-events: none;
+    }
+    .marquee-item .m-label {
+      position: absolute;
+      left: 24px; right: 24px; bottom: 22px;
+      z-index: 1;
+      color: #fff;
+      font-family: var(--font-en, serif);
+      font-style: italic;
+      font-size: 14px;
+      letter-spacing: .18em;
+      text-shadow: 0 2px 10px rgba(0,0,0,.35);
+      display: flex; align-items: baseline; gap: 12px;
+    }
+    .marquee-item .m-label .num {
+      font-size: 12px; opacity: .8;
+    }
+
+    /* ---------- Practice card 進場預設 (由 JS 觸發 reveal) ---------- */
+    .scr-fade {
+      opacity: 0;
+      transform: translate3d(0, 40px, 0);
+      will-change: transform, opacity;
+    }
+
+    /* ---------- prefers-reduced-motion ---------- */
+    @media (prefers-reduced-motion: reduce) {
+      .scr-hero { height: auto; }
+      .scr-hero__pin { position: relative; height: auto; padding: 140px 0; min-height: 80vh; }
+      .parallax-deco { display: none; }
+      .reveal-clip { clip-path: none !important; }
+      .reveal-clip img { transform: none !important; }
+      .scr-line, .scr-fade { transform: none !important; opacity: 1 !important; }
+      .scr-hero__eyebrow, .scr-hero__sub { opacity: 1 !important; }
+      .scr-hero__title:not(:first-child) { display: none; }
+    }
+
+    /* ---------- Mobile ---------- */
+    @media (max-width: 720px) {
+      .scr-hero { height: auto; }
+      .scr-hero__pin { position: relative; height: auto; min-height: 100vh; padding: 120px 24px; }
+      .scr-hero__canvas canvas { display: none; }
+      .parallax-deco { opacity: .35; }
+      .marquee-section { padding: 100px 0 120px; }
+      .cursor { display: none; }
+    }
+  </style>
 </head>
 <body data-page="about">
 
-<div data-include="aurora"></div>
+<!-- 自訂游標 -->
+<div class="cursor" aria-hidden="true"><span>View</span></div>
 
+<div data-include="aurora"></div>
 <div data-include="header"></div>
 
 <main>
 
-<section class="page-hero">
-  <div class="symbol-sm"></div>
-  <div class="eyebrow">ABOUT US · 關於我們</div>
-  <h1>起源與異象</h1>
-  <p>士師記 15:19 — 神為呼求的人破裂窪處，使水湧出。<br>隱哈歌利取名於此，盼望成為宣教士的安歇之泉。</p>
-</section>
-
-<section class="section reveal">
-  <div class="verse-card">
-    <div class="quote-mark">"</div>
-    <blockquote>神就使利希的窪處裂開，有水從其中湧出來。參孫喝了精神復原。<br>因此那泉名叫 <strong>隱哈歌利</strong>。</blockquote>
-    <cite>— 士師記 15:19</cite>
-  </div>
-</section>
-
-<section class="section section-practices">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <div class="section-num">OUR VISION</div>
-      <div class="section-eyebrow">我們的方向</div>
-      <h2><em>3</em>個關鍵承諾</h2>
-      <p class="lead">為宣教士提供全方位的支持與資源，回應大使命的後方守護。</p>
-    </div>
-    <div class="practices">
-      <article class="practice-card reveal">
-        <div class="icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-<path d="M32 8c0 0 -10 14 -10 22a10 10 0 0 0 20 0c0 -8 -10 -22 -10 -22z"/>
-<path d="M28 30a4 4 0 0 0 4 4" opacity=".6"/>
-<path d="M14 50h36M18 56h28" opacity=".5"/>
-</svg></div>
-        <div class="roman">VISION</div>
-        <h3>我們的異象</h3>
-        <p>為宣教士提供全方位的支持與資源，回應大使命的後方守護。讓神國工人在前線奔跑時，後方有人為他們築起堅固的支持網絡。</p>
-      </article>
-      <article class="practice-card reveal">
-        <div class="icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-<path d="M6 40c8-12 16-12 26-12s18 0 26 12"/>
-<path d="M6 40v8M58 40v8"/>
-<path d="M14 40v8M22 40v8M32 38v10M42 40v8M50 40v8" opacity=".5"/>
-<path d="M6 48h52"/>
-</svg></div>
-        <div class="roman">RESOURCE</div>
-        <h3>資源整合</h3>
-        <p>建立完整的資源整合平台，連結教會、機構與個人，讓支持更有效率，讓關懷更加及時。盤點現有資源，使每一份心意都能精準到位。</p>
-      </article>
-      <article class="practice-card sage reveal">
-        <div class="icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-<circle cx="22" cy="22" r="6"/>
-<circle cx="42" cy="22" r="6"/>
-<path d="M10 48c0 -6 6 -10 12 -10s12 4 12 10"/>
-<path d="M30 48c0 -6 6 -10 12 -10s12 4 12 10"/>
-</svg></div>
-        <div class="roman">COMMUNITY</div>
-        <h3>關顧網絡</h3>
-        <p>打造溫暖的社群網絡，透過定期聚會、線上交流與實體支持，讓每位宣教士都能感受到陪伴。從心靈到實際生活，全方位的關顧。</p>
-      </article>
-    </div>
-  </div>
-</section>
-
-<section class="section">
-  <div class="wrap">
-    <div class="feature-grid reveal">
-      <div class="feature-img">
-        <img src="https://images.unsplash.com/photo-1518050227004-c4cb7104d79a?w=1200&q=80" alt="長期的同行" loading="lazy">
-        <div class="caption">— Hands that are held through every season.</div>
+  <!-- ============================ HERO ============================ -->
+  <section class="scr-hero" data-scene="hero">
+    <div class="scr-hero__pin">
+      <div class="scr-hero__canvas" id="hero-canvas-wrap">
+        <div class="scr-hero__fallback" id="hero-fallback"></div>
       </div>
-      <div class="feature-text">
-        <div class="label sage">COMPANIONSHIP · 同行</div>
-        <h2 class="sage">長期的同行。</h2>
-        <p>關顧不是短期的活動，而是持續的陪伴。我們相信宣教士的旅程需要可以一起走長路的夥伴。</p>
-        <p>從預備期、出工場、再回國述職，每一個階段我們都希望以實際的方式同在。透過個別陪伴、家庭關懷與屬靈成長支持，建立穩固的後援。</p>
-        <a class="link sage" href="contact.html">與我們聊聊 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg></a>
-      </div>
-    </div>
-  </div>
-</section>
+      <div class="scr-hero__veil"></div>
 
-<section class="section">
-  <div class="wrap">
-    <div class="feature-grid reverse reveal">
-      <div class="feature-img">
-        <img src="https://images.unsplash.com/photo-1591382696684-38c427c7547a?w=1200&q=80" alt="建立關係的支持" loading="lazy">
-        <div class="caption">— Trust is built one conversation at a time.</div>
+      <div class="parallax-deco deco-1" data-speed="-0.35"></div>
+      <div class="parallax-deco deco-2" data-speed="0.28"></div>
+      <div class="parallax-deco deco-3" data-speed="0.18"></div>
+
+      <div class="scr-hero__content">
+        <div class="scr-hero__eyebrow" data-hero-fade>ABOUT US · 關於我們</div>
+
+        <div class="scr-hero__title-stack">
+          <h1 class="scr-hero__title" data-hero-title="0"><span data-split-lines>起源與異象</span></h1>
+          <h1 class="scr-hero__title" data-hero-title="1"><span data-split-lines>破裂窪處的泉</span></h1>
+          <h1 class="scr-hero__title" data-hero-title="2"><span data-split-lines>後方的守護者</span></h1>
+        </div>
+
+        <p class="scr-hero__sub" data-hero-fade>士師記 15:19 — 神為呼求的人破裂窪處，使水湧出。<br>隱哈歌利取名於此，盼望成為宣教士的安歇之泉。</p>
       </div>
-      <div class="feature-text">
-        <div class="label clay">RELATIONSHIP · 關係</div>
-        <h2 class="coral">建立關係的支持。</h2>
-        <p>不只提供資源，更建立關係。我們在差會、教會與宣教士家庭之間，搭建可信賴的支持網絡。</p>
-        <p>每一杯咖啡、每一封代禱信、每一次線上會議，都是關係累積的證據。我們相信，當「人」被看見，工作才會被祝福。</p>
-        <a class="link coral" href="volunteer.html">加入我們 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg></a>
+
+      <div class="scr-hero__scroll-hint">SCROLL</div>
+    </div>
+  </section>
+
+  <!-- ============================ Verse ============================ -->
+  <section class="section-dark" data-scene="verse">
+    <div class="verse-card">
+      <div class="quote-mark" data-scr-fade>&ldquo;</div>
+      <blockquote data-split-lines>神就使利希的窪處裂開，有水從其中湧出來。<br>參孫喝了精神復原。<br>因此那泉名叫 <strong>隱哈歌利</strong>。</blockquote>
+      <cite data-split-lines>— 士師記 15:19</cite>
+    </div>
+  </section>
+
+  <!-- ============================ Vision ============================ -->
+  <section class="section section-practices">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="section-num" data-scr-fade>OUR VISION</div>
+        <div class="section-eyebrow" data-split-lines>我們的方向</div>
+        <h2 data-split-lines><em>3</em>個關鍵承諾</h2>
+        <p class="lead" data-split-lines>為宣教士提供全方位的支持與資源，回應大使命的後方守護。</p>
+      </div>
+      <div class="practices">
+        <article class="practice-card scr-fade">
+          <div class="icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M32 8c0 0 -10 14 -10 22a10 10 0 0 0 20 0c0 -8 -10 -22 -10 -22z"/>
+            <path d="M28 30a4 4 0 0 0 4 4" opacity=".6"/>
+            <path d="M14 50h36M18 56h28" opacity=".5"/>
+          </svg></div>
+          <div class="roman">VISION</div>
+          <h3>我們的異象</h3>
+          <p>為宣教士提供全方位的支持與資源，回應大使命的後方守護。讓神國工人在前線奔跑時，後方有人為他們築起堅固的支持網絡。</p>
+        </article>
+        <article class="practice-card scr-fade">
+          <div class="icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 40c8-12 16-12 26-12s18 0 26 12"/>
+            <path d="M6 40v8M58 40v8"/>
+            <path d="M14 40v8M22 40v8M32 38v10M42 40v8M50 40v8" opacity=".5"/>
+            <path d="M6 48h52"/>
+          </svg></div>
+          <div class="roman">RESOURCE</div>
+          <h3>資源整合</h3>
+          <p>建立完整的資源整合平台，連結教會、機構與個人，讓支持更有效率，讓關懷更加及時。盤點現有資源，使每一份心意都能精準到位。</p>
+        </article>
+        <article class="practice-card sage scr-fade">
+          <div class="icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="22" cy="22" r="6"/>
+            <circle cx="42" cy="22" r="6"/>
+            <path d="M10 48c0 -6 6 -10 12 -10s12 4 12 10"/>
+            <path d="M30 48c0 -6 6 -10 12 -10s12 4 12 10"/>
+          </svg></div>
+          <div class="roman">COMMUNITY</div>
+          <h3>關顧網絡</h3>
+          <p>打造溫暖的社群網絡，透過定期聚會、線上交流與實體支持，讓每位宣教士都能感受到陪伴。從心靈到實際生活，全方位的關顧。</p>
+        </article>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<div data-include="newsletter"></div>
+  <!-- ============================ Feature 1 (image reveal + 視差) ============================ -->
+  <section class="section" data-scene="feature">
+    <div class="wrap">
+      <div class="feature-grid">
+        <div class="feature-img reveal-clip" data-reveal-clip>
+          <img src="https://images.unsplash.com/photo-1518050227004-c4cb7104d79a?w=1200&q=80" alt="長期的同行" loading="lazy">
+          <div class="caption">— Hands that are held through every season.</div>
+        </div>
+        <div class="feature-text">
+          <div class="label sage" data-split-lines>COMPANIONSHIP · 同行</div>
+          <h2 class="sage" data-split-lines>長期的同行。</h2>
+          <p data-split-lines>關顧不是短期的活動，而是持續的陪伴。我們相信宣教士的旅程需要可以一起走長路的夥伴。</p>
+          <p data-split-lines>從預備期、出工場、再回國述職，每一個階段我們都希望以實際的方式同在。透過個別陪伴、家庭關懷與屬靈成長支持，建立穩固的後援。</p>
+          <a class="link sage" href="contact.html" data-cursor="view">與我們聊聊 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ Feature 2 ============================ -->
+  <section class="section" data-scene="feature">
+    <div class="wrap">
+      <div class="feature-grid reverse">
+        <div class="feature-img reveal-clip" data-reveal-clip>
+          <img src="https://images.unsplash.com/photo-1591382696684-38c427c7547a?w=1200&q=80" alt="建立關係的支持" loading="lazy">
+          <div class="caption">— Trust is built one conversation at a time.</div>
+        </div>
+        <div class="feature-text">
+          <div class="label clay" data-split-lines>RELATIONSHIP · 關係</div>
+          <h2 class="coral" data-split-lines>建立關係的支持。</h2>
+          <p data-split-lines>不只提供資源，更建立關係。我們在差會、教會與宣教士家庭之間，搭建可信賴的支持網絡。</p>
+          <p data-split-lines>每一杯咖啡、每一封代禱信、每一次線上會議，都是關係累積的證據。我們相信，當「人」被看見，工作才會被祝福。</p>
+          <a class="link coral" href="volunteer.html" data-cursor="view">加入我們 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ 作品區 · 無限橫向 marquee ============================ -->
+  <section class="marquee-section" data-scene="marquee">
+    <div class="marquee-head">
+      <div class="section-num">OUR WORKS</div>
+      <div class="section-eyebrow" data-split-lines>我們的軌跡</div>
+    </div>
+    <div class="marquee-viewport">
+      <div class="marquee-track" data-marquee>
+        <a class="marquee-item" href="volunteer.html" data-cursor="view">
+          <img src="https://images.unsplash.com/photo-1518050227004-c4cb7104d79a?w=800&q=70" alt="陪伴" loading="lazy">
+          <div class="m-label"><span class="num">01</span><span>陪伴 · Companionship</span></div>
+        </a>
+        <a class="marquee-item" href="volunteer.html" data-cursor="view">
+          <img src="https://images.unsplash.com/photo-1591382696684-38c427c7547a?w=800&q=70" alt="關係" loading="lazy">
+          <div class="m-label"><span class="num">02</span><span>關係 · Relationship</span></div>
+        </a>
+        <a class="marquee-item" href="volunteer.html" data-cursor="view">
+          <img src="https://images.unsplash.com/photo-1509099836639-18ba1795216d?w=800&q=70" alt="代禱" loading="lazy">
+          <div class="m-label"><span class="num">03</span><span>代禱 · Prayer</span></div>
+        </a>
+        <a class="marquee-item" href="volunteer.html" data-cursor="view">
+          <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&q=70" alt="接待" loading="lazy">
+          <div class="m-label"><span class="num">04</span><span>接待 · Hospitality</span></div>
+        </a>
+        <a class="marquee-item" href="donate.html" data-cursor="view">
+          <img src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800&q=70" alt="資源" loading="lazy">
+          <div class="m-label"><span class="num">05</span><span>資源 · Resources</span></div>
+        </a>
+        <a class="marquee-item" href="about.html" data-cursor="view">
+          <img src="https://images.unsplash.com/photo-1476820865390-c52aeebb9891?w=800&q=70" alt="紀念" loading="lazy">
+          <div class="m-label"><span class="num">06</span><span>紀念 · Remembrance</span></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <div data-include="newsletter"></div>
 
 </main>
 
 <div data-include="footer"></div>
 
 <script src="assets/js/site.js"></script>
+
+<!-- ============================================================
+     Scroll interaction libs
+     ============================================================ -->
+<script src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://unpkg.com/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+
+<script type="importmap">
+  { "imports": { "three": "https://unpkg.com/three@0.161.0/build/three.module.js" } }
+</script>
+
+<script type="module">
+  import * as THREE from 'three';
+
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isMobile   = window.matchMedia('(max-width: 720px)').matches;
+  const isTouch    = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* ---------- 1. Lenis 平滑捲動 + 與 ScrollTrigger 同步 ---------- */
+  let lenis;
+  if (!prefersReducedMotion) {
+    lenis = new Lenis({
+      lerp: 0.08,
+      wheelMultiplier: 1,
+      smoothWheel: true,
+    });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((time) => lenis.raf(time * 1000));
+    gsap.ticker.lagSmoothing(0);
+    document.documentElement.classList.add('lenis');
+  }
+
+  /* ---------- 逐行分割 helper（不用付費 SplitText） ---------- */
+  function splitByLines(el) {
+    if (!el || el.dataset.splitDone) return [];
+    // 保留原本 HTML 中的 <strong> / <em> 等
+    const original = el.innerHTML.trim();
+
+    // 若有 <br>，直接照它切
+    if (/<br\s*\/?>/i.test(original)) {
+      const parts = original.split(/<br\s*\/?>/i);
+      el.innerHTML = parts.map(p =>
+        `<span class="scr-mask"><span class="scr-line">${p.trim()}</span></span>`
+      ).join('');
+      el.dataset.splitDone = '1';
+      return [...el.querySelectorAll('.scr-line')];
+    }
+
+    // 沒 <br>：把每個字元／英文詞包成 inline-block，依 offsetTop 分行
+    // 拆的時候要保留原有 tag（strong / em）內容
+    const tmp = document.createElement('div');
+    tmp.innerHTML = original;
+
+    function wrap(node) {
+      const frag = document.createDocumentFragment();
+      node.childNodes.forEach(child => {
+        if (child.nodeType === 3) {
+          // 文字：中文逐字、英文以字元包 word；保留空白
+          const text = child.textContent;
+          text.split('').forEach(ch => {
+            if (ch === ' ') {
+              frag.appendChild(document.createTextNode(' '));
+              return;
+            }
+            const s = document.createElement('span');
+            s.className = 'scr-ch';
+            s.style.display = 'inline-block';
+            s.textContent = ch;
+            frag.appendChild(s);
+          });
+        } else if (child.nodeType === 1) {
+          const clone = child.cloneNode(false);
+          clone.appendChild(wrap(child));
+          frag.appendChild(clone);
+        }
+      });
+      return frag;
+    }
+    const wrappedFrag = wrap(tmp);
+    el.innerHTML = '';
+    el.appendChild(wrappedFrag);
+
+    const chars = [...el.querySelectorAll('.scr-ch')];
+    if (!chars.length) {
+      // fallback：整段當一行
+      el.innerHTML = `<span class="scr-mask"><span class="scr-line">${original}</span></span>`;
+      el.dataset.splitDone = '1';
+      return [...el.querySelectorAll('.scr-line')];
+    }
+    const groups = [];
+    let currentTop = null;
+    let currentGroup = null;
+    chars.forEach(c => {
+      const t = c.offsetTop;
+      if (currentTop === null || Math.abs(t - currentTop) > 6) {
+        currentTop = t;
+        currentGroup = [];
+        groups.push(currentGroup);
+      }
+      currentGroup.push(c);
+    });
+    // 依 group 拆行、重建 HTML
+    const html = groups.map(g => {
+      const inner = g.map(c => c.outerHTML).join('');
+      return `<span class="scr-mask"><span class="scr-line">${inner}</span></span>`;
+    }).join('');
+    el.innerHTML = html;
+    el.dataset.splitDone = '1';
+    return [...el.querySelectorAll('.scr-line')];
+  }
+
+  /* ---------- 3+4. SplitText 進場 ---------- */
+  function initSplitEntrance() {
+    document.querySelectorAll('[data-split-lines]').forEach(el => {
+      const lines = splitByLines(el);
+      if (!lines.length) return;
+      gsap.set(lines, { yPercent: 110, opacity: 0 });
+      gsap.to(lines, {
+        yPercent: 0,
+        opacity: 1,
+        duration: 0.9,
+        stagger: 0.08,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 80%',
+          once: true,
+        }
+      });
+    });
+    // 一般 fade 進場（quote mark, section-num）
+    document.querySelectorAll('[data-scr-fade]').forEach(el => {
+      gsap.fromTo(el,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1, y: 0,
+          duration: 1.0, ease: 'power3.out',
+          scrollTrigger: { trigger: el, start: 'top 85%', once: true }
+        }
+      );
+    });
+    // .scr-fade 卡片
+    document.querySelectorAll('.scr-fade').forEach(el => {
+      gsap.to(el, {
+        opacity: 1,
+        y: 0,
+        duration: 1.0,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 85%', once: true }
+      });
+    });
+  }
+
+  /* ---------- 3. HERO three.js 立方體 + 標題三段接力 ---------- */
+  function initHero() {
+    const wrap = document.getElementById('hero-canvas-wrap');
+    const eyebrow = document.querySelector('.scr-hero__eyebrow');
+    const sub     = document.querySelector('.scr-hero__sub');
+    const titles  = [...document.querySelectorAll('[data-hero-title]')];
+
+    // 進場淡入（只跑一次，不受 scrub 影響）
+    if (eyebrow) gsap.to(eyebrow, { opacity: 1, duration: 1.0, delay: 0.2, ease: 'power2.out' });
+    if (sub)     gsap.to(sub,     { opacity: 1, duration: 1.0, delay: 0.5, ease: 'power2.out' });
+
+    // 三段接力
+    if (titles.length === 3 && !prefersReducedMotion) {
+      gsap.set(titles[0], { opacity: 1, yPercent: 0 });
+      gsap.set([titles[1], titles[2]], { opacity: 0, yPercent: 20 });
+
+      const relay = gsap.timeline({
+        scrollTrigger: {
+          trigger: '.scr-hero',
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true,
+        }
+      });
+      relay
+        .to(titles[0],   { opacity: 0, yPercent: -20, ease: 'none' }, 0.20)
+        .to(titles[1],   { opacity: 1, yPercent: 0,   ease: 'none' }, 0.28)
+        .to(titles[1],   { opacity: 0, yPercent: -20, ease: 'none' }, 0.58)
+        .to(titles[2],   { opacity: 1, yPercent: 0,   ease: 'none' }, 0.66);
+    }
+
+    // three.js：手機 / 減少動態時關掉
+    if (isMobile || prefersReducedMotion || !wrap) return;
+    const fallback = document.getElementById('hero-fallback');
+
+    const scene    = new THREE.Scene();
+    const camera   = new THREE.PerspectiveCamera(45, wrap.clientWidth / wrap.clientHeight, 0.1, 100);
+    camera.position.set(0, 0, 5);
+
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(wrap.clientWidth, wrap.clientHeight);
+    wrap.appendChild(renderer.domElement);
+
+    // 淡出靜態 fallback（three 開起來後）
+    if (fallback) gsap.to(fallback, { opacity: 0.35, duration: 1.2 });
+
+    // 外框琥珀 wireframe 立方體
+    const outerGeo = new THREE.BoxGeometry(1.6, 1.6, 1.6);
+    const outerMat = new THREE.MeshBasicMaterial({
+      color: 0xE8A33D, wireframe: true, transparent: true, opacity: 0.85,
+    });
+    const cube = new THREE.Mesh(outerGeo, outerMat);
+    scene.add(cube);
+
+    // 內側較亮 mesh（深度感）
+    const innerGeo = new THREE.BoxGeometry(1.15, 1.15, 1.15);
+    const innerMat = new THREE.MeshBasicMaterial({
+      color: 0xF2C36B, wireframe: true, transparent: true, opacity: 0.35,
+    });
+    cube.add(new THREE.Mesh(innerGeo, innerMat));
+
+    // 初始傾斜，讓正面帶點透視
+    cube.rotation.x = -0.35;
+    cube.rotation.y = 0;
+
+    function resize() {
+      const w = wrap.clientWidth, h = wrap.clientHeight;
+      if (!w || !h) return;
+      renderer.setSize(w, h);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+    window.addEventListener('resize', resize);
+
+    // 常態自轉，讓靜止時也活著
+    function tick() {
+      cube.rotation.z += 0.0015;
+      renderer.render(scene, camera);
+      requestAnimationFrame(tick);
+    }
+    tick();
+
+    // scrub: y 0→π（180deg）、z 推近
+    gsap.timeline({
+      scrollTrigger: {
+        trigger: '.scr-hero',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 1,
+      }
+    })
+    .to(cube.rotation, { y: Math.PI, ease: 'none' }, 0)
+    .to(camera.position, { z: 2.4, ease: 'none' }, 0);
+  }
+
+  /* ---------- 5. 導覽 hover 雙層 mask roll-up ---------- */
+  function initNavMask() {
+    const links = document.querySelectorAll('.nav a:not(.donate-btn)');
+    links.forEach(link => {
+      if (link.dataset.navMasked) return;
+      const text = link.textContent.trim();
+      if (!text) return;
+      link.dataset.navMasked = '1';
+      link.innerHTML = `<span class="nav-mask"><span class="nav-mask__inner"><span>${text}</span><span>${text}</span></span></span>`;
+      const inner = link.querySelector('.nav-mask__inner');
+      gsap.set(inner, { yPercent: 0 });
+      link.addEventListener('mouseenter', () => {
+        gsap.to(inner, { yPercent: -50, duration: 0.35, ease: 'power2.inOut' });
+      });
+      link.addEventListener('mouseleave', () => {
+        gsap.to(inner, { yPercent: 0, duration: 0.35, ease: 'power2.inOut' });
+      });
+    });
+  }
+
+  /* ---------- 6. 圖片 clip-path reveal + 內層反向視差 ---------- */
+  function initClipReveal() {
+    document.querySelectorAll('[data-reveal-clip]').forEach(wrap => {
+      const img = wrap.querySelector('img');
+      const tl = gsap.timeline({
+        scrollTrigger: { trigger: wrap, start: 'top 80%', once: true }
+      });
+      tl.fromTo(wrap,
+        { clipPath: 'inset(0 0 100% 0)' },
+        { clipPath: 'inset(0 0 0% 0)', duration: 1.2, ease: 'power3.out' }, 0);
+      if (img) {
+        tl.to(img, { scale: 1, duration: 1.6, ease: 'power3.out' }, 0);
+      }
+    });
+  }
+
+  /* ---------- 7. 作品區 marquee + scroll velocity skew ---------- */
+  function initMarquee() {
+    const track = document.querySelector('[data-marquee]');
+    if (!track) return;
+    // 複製一份達成無縫循環
+    track.innerHTML = track.innerHTML + track.innerHTML;
+
+    const measure = () => track.scrollWidth / 2;
+    let loopWidth = measure();
+    window.addEventListener('resize', () => { loopWidth = measure(); });
+
+    const speedBase = 40; // px / s
+    let offset = 0;
+    let lastTime = performance.now();
+    let velocityBoost = 0;   // 0..1
+    let dir = -1;            // 預設向左流
+    let skew = 0;
+
+    // 用 ScrollTrigger 監聽 scroll velocity
+    ScrollTrigger.create({
+      trigger: track.closest('.marquee-section') || document.body,
+      start: 'top bottom',
+      end: 'bottom top',
+      onUpdate: (self) => {
+        const v = self.getVelocity(); // px/s (可為負)
+        // 捲動方向：向下 → 向左；向上 → 向右
+        dir = v >= 0 ? -1 : 1;
+        velocityBoost = Math.min(Math.abs(v) / 1500, 4);
+      }
+    });
+
+    gsap.ticker.add(() => {
+      const now = performance.now();
+      const dt = Math.min((now - lastTime) / 1000, 0.05);
+      lastTime = now;
+
+      // 平滑衰減
+      velocityBoost *= 0.94;
+
+      const px = (speedBase * (1 + velocityBoost)) * dir * dt;
+      offset += px;
+      if (offset <= -loopWidth) offset += loopWidth;
+      if (offset >= 0)          offset -= loopWidth;
+
+      // skew 依 velocity
+      const targetSkew = gsap.utils.clamp(-8, 8, dir * velocityBoost * 4);
+      skew += (targetSkew - skew) * 0.12;
+
+      track.style.transform = `translate3d(${offset}px, 0, 0) skewX(${skew}deg)`;
+    });
+  }
+
+  /* ---------- 8. 視差 data-speed ---------- */
+  function initParallax() {
+    if (prefersReducedMotion) return;
+    document.querySelectorAll('[data-speed]').forEach(el => {
+      const speed = parseFloat(el.dataset.speed) || 0;
+      gsap.to(el, {
+        yPercent: speed * 100,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: el.closest('section') || el,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 1,
+        }
+      });
+    });
+  }
+
+  /* ---------- 9. 自訂游標 ---------- */
+  function initCursor() {
+    if (isTouch) return;
+    const cursor = document.querySelector('.cursor');
+    if (!cursor) return;
+    document.documentElement.classList.add('cursor-custom');
+
+    const xTo = gsap.quickTo(cursor, 'x', { duration: 0.25, ease: 'power3.out' });
+    const yTo = gsap.quickTo(cursor, 'y', { duration: 0.25, ease: 'power3.out' });
+    window.addEventListener('pointermove', (e) => {
+      xTo(e.clientX);
+      yTo(e.clientY);
+      cursor.classList.add('is-ready');
+    });
+
+    // 委派 hover 判斷（因為 header/footer 是後載）
+    const hoverSelector = 'a, button, [data-cursor="view"], .marquee-item, .practice-card, .link';
+    document.addEventListener('mouseover', (e) => {
+      const t = e.target instanceof Element ? e.target.closest(hoverSelector) : null;
+      if (t) cursor.classList.add('is-view');
+    });
+    document.addEventListener('mouseout', (e) => {
+      const t = e.target instanceof Element ? e.target.closest(hoverSelector) : null;
+      if (t) cursor.classList.remove('is-view');
+    });
+  }
+
+  /* ---------- 10. Footer sticky reveal ---------- */
+  function initFooterReveal() {
+    const footer = document.querySelector('.site-footer');
+    const main = document.querySelector('main');
+    if (!footer || !main) return;
+    document.body.classList.add('footer-reveal-ready');
+
+    const apply = () => {
+      const h = footer.offsetHeight;
+      main.style.marginBottom = h + 'px';
+      ScrollTrigger.refresh();
+    };
+    apply();
+    new ResizeObserver(apply).observe(footer);
+  }
+
+  /* ---------- 啟動 ---------- */
+  function bootAnimations() {
+    initSplitEntrance();
+    initHero();
+    initClipReveal();
+    initMarquee();
+    initParallax();
+    initCursor();
+  }
+
+  // 等 site.js 的 partials 載入完（header/footer 就位）再初始化 mask + footer reveal
+  function waitFor(selector, timeoutMs = 8000) {
+    return new Promise((resolve) => {
+      const found = document.querySelector(selector);
+      if (found) return resolve(found);
+      const start = performance.now();
+      const iv = setInterval(() => {
+        const el = document.querySelector(selector);
+        if (el) { clearInterval(iv); resolve(el); }
+        else if (performance.now() - start > timeoutMs) {
+          clearInterval(iv); resolve(null);
+        }
+      }, 80);
+    });
+  }
+
+  // 進場動畫立即跑；nav / footer 相關等 partials 到位再跑
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bootAnimations);
+  } else {
+    bootAnimations();
+  }
+
+  Promise.all([
+    waitFor('.nav a'),
+    waitFor('.site-footer'),
+  ]).then(([nav, footer]) => {
+    if (nav)    initNavMask();
+    if (footer) initFooterReveal();
+    // 版面加入 footer sticky 後，重新計算 ScrollTrigger
+    setTimeout(() => ScrollTrigger.refresh(), 100);
+  });
+
+  // 圖片載入後，行高會變 → 重新 refresh
+  window.addEventListener('load', () => ScrollTrigger.refresh());
+</script>
+
 </body>
 </html>
