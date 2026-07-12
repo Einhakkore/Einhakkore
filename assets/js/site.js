@@ -172,6 +172,40 @@
     reveals.forEach(el => io.observe(el));
   }
 
+  function initContactGuides() {
+    const cards = document.querySelectorAll('.guide-card');
+    const select = document.getElementById('contact-category');
+    const message = document.getElementById('contact-message');
+    if (!cards.length || !select) return;
+
+    const defaultPlaceholder = message ? message.placeholder : '';
+
+    function syncTo(value) {
+      let matched = null;
+      cards.forEach(c => {
+        const on = c.dataset.category === value;
+        if (on) matched = c;
+        c.classList.toggle('sage', on);
+        c.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+      if (message) {
+        message.placeholder = matched && matched.dataset.placeholder
+          ? matched.dataset.placeholder
+          : defaultPlaceholder;
+      }
+    }
+
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        const value = card.dataset.category;
+        select.value = value;
+        syncTo(value);
+      });
+    });
+
+    select.addEventListener('change', () => syncTo(select.value));
+  }
+
   function initInteractivity() {
 
     // ---------- Mobile menu ----------
@@ -210,6 +244,9 @@
         form.replaceWith(div);
       });
     });
+
+    // ---------- Contact guide cards ↔ Category select ----------
+    initContactGuides();
 
     // ---------- Contact forms ----------
     document.querySelectorAll("form.contact-form").forEach(form => {
