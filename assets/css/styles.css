@@ -1710,18 +1710,17 @@ body[data-page="donate"] .account-box .info {
 }
 
 /* ---- 匯款備註提醒 ---- */
-/* ---- 匯款注意事項：拿掉虛線邊框，改成溫和的琥珀左邊條 callout ---- */
+/* ---- 匯款注意事項：拿掉底色、左邊條，讓文字像內文一樣自然融入卡片 ---- */
 .remit-note {
-  background: rgba(232, 163, 61, .10);
-  border-left: 4px solid var(--amber-500);
-  border-radius: 0 10px 10px 0;
-  padding: 18px 22px;
-  margin: 22px 0 26px;
+  padding: 0;
+  margin: 18px 0 22px;
+  background: transparent;
+  border: 0;
 }
 .remit-note > p {
   margin: 0 0 8px;
-  color: var(--text-1); font-weight: 500; font-size: 14px;
-  line-height: 1.7;
+  color: var(--text-1); font-weight: 500; font-size: 15px;
+  line-height: 1.85;
 }
 .remit-note ol {
   margin: 10px 0 0; padding-left: 22px;
@@ -1729,17 +1728,17 @@ body[data-page="donate"] .account-box .info {
 }
 .remit-note li {
   line-height: 1.85;
-  color: var(--text-2); font-size: 14px;
+  color: var(--text-2); font-size: 15px;
 }
 .remit-note b { color: var(--ink-900); font-weight: 700; }
 
 .pay-cta { margin-top: 4px; align-self: flex-start; }
-/* 刷卡按鈕：深藍主色（.btn-text 預設是琥珀底線，這裡覆蓋成 ink） */
-.pay-cta.btn-text {
+/* Donate 頁的 .btn-text 全數改用深藍主色（.btn-text 預設是琥珀底線） */
+body[data-page="donate"] .btn.btn-text {
   color: var(--ink-800);
   border-bottom-color: var(--ink-800);
 }
-.pay-cta.btn-text:hover {
+body[data-page="donate"] .btn.btn-text:hover {
   color: var(--ink-900);
   border-bottom-color: var(--ink-900);
 }
