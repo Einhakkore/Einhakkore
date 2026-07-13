@@ -315,6 +315,58 @@
     injectFlowBg();
     initFlowField();
     initReveal();
+    initCopyToClipboard();
+  }
+
+  // ---------- 點擊複製 + snackbar ----------
+  function showSnackbar(msg) {
+    let bar = document.getElementById('snackbar');
+    if (!bar) {
+      bar = document.createElement('div');
+      bar.id = 'snackbar';
+      bar.setAttribute('role', 'status');
+      bar.setAttribute('aria-live', 'polite');
+      document.body.appendChild(bar);
+    }
+    bar.textContent = msg;
+    bar.classList.add('show');
+    clearTimeout(showSnackbar._t);
+    showSnackbar._t = setTimeout(() => bar.classList.remove('show'), 2000);
+  }
+
+  async function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext !== false) {
+      try { await navigator.clipboard.writeText(text); return true; } catch (_) { /* fall through */ }
+    }
+    // Fallback for older browsers / non-secure contexts
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed'; ta.style.top = '-1000px';
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (_) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  function initCopyToClipboard() {
+    document.addEventListener('click', async (e) => {
+      const trigger = e.target.closest('[data-copy]');
+      if (!trigger) return;
+      e.preventDefault();
+      const text  = trigger.dataset.copy || trigger.textContent.trim();
+      const label = trigger.dataset.label || '';
+      const ok = await copyText(text);
+      if (ok) {
+        showSnackbar(label ? `已複製${label}：${text}` : `已複製：${text}`);
+        trigger.classList.add('copied');
+        clearTimeout(trigger._copyResetT);
+        trigger._copyResetT = setTimeout(() => trigger.classList.remove('copied'), 1600);
+      } else {
+        showSnackbar('複製失敗，請手動選取');
+      }
+    });
     initFooterReveal();
   }
 
