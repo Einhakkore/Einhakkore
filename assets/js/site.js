@@ -172,6 +172,85 @@
     reveals.forEach(el => io.observe(el));
   }
 
+  function initContactGuides() {
+    const cards = document.querySelectorAll('.guide-card');
+    const select = document.getElementById('contact-category');
+    const message = document.getElementById('contact-message');
+    if (!cards.length || !select) return;
+
+    const defaultPlaceholder = message ? message.placeholder : '';
+
+    function syncTo(value) {
+      let matched = null;
+      cards.forEach(c => {
+        const on = c.dataset.category === value;
+        if (on) matched = c;
+        c.classList.toggle('is-selected', on);
+        c.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+      if (message) {
+        message.placeholder = matched && matched.dataset.placeholder
+          ? matched.dataset.placeholder
+          : defaultPlaceholder;
+      }
+    }
+
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        const value = card.dataset.category;
+        select.value = value;
+        syncTo(value);
+      });
+    });
+
+    select.addEventListener('change', () => syncTo(select.value));
+  }
+
+  // ---------- Snackbar ----------
+  let snackbarEl = null;
+  let snackbarTimer = null;
+  function showSnackbar(text) {
+    if (!snackbarEl) {
+      snackbarEl = document.createElement('div');
+      snackbarEl.className = 'snackbar';
+      snackbarEl.setAttribute('role', 'status');
+      snackbarEl.setAttribute('aria-live', 'polite');
+      document.body.appendChild(snackbarEl);
+    }
+    snackbarEl.textContent = text;
+    // Force reflow so re-triggering the same message re-runs the transition.
+    void snackbarEl.offsetWidth;
+    snackbarEl.classList.add('show');
+    clearTimeout(snackbarTimer);
+    snackbarTimer = setTimeout(() => snackbarEl.classList.remove('show'), 2000);
+  }
+
+  function initEmailCopy() {
+    document.querySelectorAll('.email-card').forEach(card => {
+      card.addEventListener('click', async () => {
+        const email = card.dataset.email;
+        if (!email) return;
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(email);
+          } else {
+            const ta = document.createElement('textarea');
+            ta.value = email;
+            ta.setAttribute('readonly', '');
+            ta.style.position = 'fixed'; ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+          }
+          showSnackbar('已複製 Email');
+        } catch (e) {
+          showSnackbar('複製失敗，請手動選取');
+        }
+      });
+    });
+  }
+
   function initInteractivity() {
 
     // ---------- Mobile menu ----------
@@ -210,6 +289,10 @@
         form.replaceWith(div);
       });
     });
+
+    // ---------- Contact guide cards ↔ Category select ----------
+    initContactGuides();
+    initEmailCopy();
 
     // ---------- Contact forms ----------
     document.querySelectorAll("form.contact-form").forEach(form => {
@@ -284,6 +367,28 @@
         showSnackbar('複製失敗，請手動選取');
       }
     });
+    initFooterReveal();
+  }
+
+  // ---------- Footer sticky reveal（每一頁都套） ----------
+  // main 疊在上層、fixed 的 footer 在下層；捲到 main 底部後 footer 掀開
+  function initFooterReveal() {
+    const footer = document.querySelector('.site-footer');
+    const main   = document.querySelector('main');
+    if (!footer || !main) return;
+
+    document.body.classList.add('footer-reveal-ready');
+
+    const apply = () => {
+      main.style.marginBottom = footer.offsetHeight + 'px';
+    };
+    apply();
+    if ('ResizeObserver' in window) {
+      new ResizeObserver(apply).observe(footer);
+    } else {
+      window.addEventListener('resize', apply, { passive: true });
+    }
+    window.addEventListener('load', apply);
   }
 
   // 進站流程：先把 partials 塞好，再綁事件（保證 header/footer 都能找到 DOM）

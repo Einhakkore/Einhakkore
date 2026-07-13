@@ -57,40 +57,74 @@
       <p class="lead">我們是一群關心宣教士的志工夥伴組成的支持網絡。透過穩定的陪伴與資源整合，與你一起在宣教路上走得更遠、更穩健。</p>
     </div>
 
-    <div class="practices">
-      <article class="practice-card reveal">
-        <div class="icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-<circle cx="32" cy="32" r="22"/>
-<path d="M32 14v6M32 44v6M14 32h6M44 32h6"/>
-<path d="M40 24l-6 12-12 6 6-12 12-6z"/>
-<circle cx="32" cy="32" r="2" fill="currentColor"/>
-</svg></div>
-        <div class="roman">RESEARCH</div>
-        <h3>推廣與了解現況</h3>
-        <p>透過社群分享與推廣，讓更多人看見宣教士關顧的重要性。</p>
-      </article>
-      <article class="practice-card reveal">
-        <div class="icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-<circle cx="32" cy="14" r="4"/>
-<circle cx="14" cy="42" r="4"/>
-<circle cx="50" cy="42" r="4"/>
-<circle cx="32" cy="50" r="3"/>
-<path d="M32 18v28M30.5 17l-15 22M33.5 17l15 22M17 44l13 5M47 44l-13 5"/>
-</svg></div>
-        <div class="roman">INTEGRATE</div>
-        <h3>資源整合平台</h3>
-        <p>整合不同專業領域的資源，提供宣教士合適專業的支持。</p>
-      </article>
-      <article class="practice-card sage reveal">
-        <div class="icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-<path d="M32 50s-14-8-14-20a8 8 0 0 1 14-5 8 8 0 0 1 14 5c0 12-14 20-14 20z"/>
-<path d="M14 38c-2 0-4 1-4 4M50 38c2 0 4 1 4 4"/>
-<path d="M10 46c-2 2-2 4-2 6M54 46c2 2 2 4 2 6"/>
-</svg></div>
-        <div class="roman">ACCOMPANY</div>
-        <h3>關顧支持網絡</h3>
-        <p>長期陪伴與資源媒合，讓需要能被聽見、被理解、被回應。 </p>
-      </article>
+    <div class="orbit reveal">
+      <div class="orbit-stage">
+        <svg class="orbit-svg" viewBox="0 0 800 800" role="img" aria-label="三個環繞核心運轉的節點：RESEARCH、INTEGRATE、ACCOMPANY">
+          <circle class="orbit-ring" cx="400" cy="400" r="260"/>
+
+          <circle class="orbit-core-halo" cx="400" cy="400" r="126"/>
+          <circle class="orbit-core" cx="400" cy="400" r="96"/>
+          <text class="core-en"    x="400" y="380">EN HAKKORE</text>
+          <text class="core-brand" x="400" y="416">隱哈歌利</text>
+
+          <g class="orbit-rotate">
+            <line class="spoke" x1="400" y1="400" x2="400"    y2="140"/>
+            <line class="spoke" x1="400" y1="400" x2="625.17" y2="530"/>
+            <line class="spoke" x1="400" y1="400" x2="174.83" y2="530"/>
+
+            <g class="node-group node-r n1" tabindex="0" role="button"
+               aria-label="RESEARCH — 推廣與了解現況"
+               data-node="r" transform="translate(400 140)">
+              <g class="node-counter">
+                <circle class="node-halo" r="78"/>
+                <circle class="node-disc" r="55"/>
+                <text class="node-en" y="-14">RESEARCH</text>
+                <text class="node-zh" y="12">推廣了解</text>
+              </g>
+            </g>
+
+            <g class="node-group node-i n2" tabindex="0" role="button"
+               aria-label="INTEGRATE — 資源整合平台"
+               data-node="i" transform="translate(625.17 530)">
+              <g class="node-counter">
+                <circle class="node-halo" r="78"/>
+                <circle class="node-disc" r="55"/>
+                <text class="node-en" y="-14">INTEGRATE</text>
+                <text class="node-zh" y="12">資源整合</text>
+              </g>
+            </g>
+
+            <g class="node-group node-a n3" tabindex="0" role="button"
+               aria-label="ACCOMPANY — 關顧支持網絡"
+               data-node="a" transform="translate(174.83 530)">
+              <g class="node-counter">
+                <circle class="node-halo" r="78"/>
+                <circle class="node-disc" r="55"/>
+                <text class="node-en" y="-14">ACCOMPANY</text>
+                <text class="node-zh" y="12">關顧陪伴</text>
+              </g>
+            </g>
+          </g>
+        </svg>
+      </div>
+
+      <div class="orbit-copy">
+        <article class="copy-item c-r" tabindex="0" data-node="r">
+          <div class="roman">RESEARCH</div>
+          <h3>推廣與了解現況</h3>
+          <p>透過社群分享與推廣，讓更多人看見宣教士關顧的重要性。</p>
+        </article>
+        <article class="copy-item c-i" tabindex="0" data-node="i">
+          <div class="roman">INTEGRATE</div>
+          <h3>資源整合平台</h3>
+          <p>整合不同專業領域的資源，提供宣教士合適專業的支持。</p>
+        </article>
+        <article class="copy-item c-a" tabindex="0" data-node="a">
+          <div class="roman">ACCOMPANY</div>
+          <h3>關顧支持網絡</h3>
+          <p>長期陪伴與資源媒合，讓需要能被聽見、被理解、被回應。</p>
+        </article>
+      </div>
     </div>
     <div class="section-actions reveal">
       <a class="btn btn-primary" href="about.html">認識隱哈歌利 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg></a>
@@ -134,7 +168,7 @@
         <h2 class="amber">讓你的專業，<br>成為前線同行者的力量。</h2>
         <p>「我們深信，溫柔的關懷需要專業的支撐。隱哈歌利不只是提供陪伴，更致力於連結心理、醫療、財務規劃等各領域的基督徒工作者，將後方的專業力量，轉化為前線最具體的支持。」</p>
         <p>在這裡，我們擔任『關顧小幫手』的角色。透過主動式的資源媒合，將你的專業傳遞到個別宣教夥伴的需求上，免除他們在疲憊中反覆篩選資訊的負擔。</p>
-        <a class="link amber" href="about.html">投入你的專業 / 加入我們<svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg></a>
+        <a class="link amber" href="volunteer.html">投入你的專業 / 加入我們<svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg></a>
       </div>
     </div>
   </div>
@@ -150,10 +184,22 @@
       <span class="line indent">讓福音的腳步<em>穩健前行</em>。</span>
       <span class="line-m">匯聚後方的專業，支持每一位跨文化神國工人，<br>在身心靈健康中，更有韌性地推動神的工。</span>
     </div>
+    <div class="cta-actions">
+      <a class="btn btn-primary" href="volunteer.html">加入志工行列 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg></a>
+    </div>
   </div>
 </section>
 
-<div data-include="newsletter"></div>
+<div class="newsletter-scene">
+  <div class="ripple-field" aria-hidden="true">
+    <span class="ripple-origin"></span>
+    <span class="ripple r1"></span>
+    <span class="ripple r2"></span>
+    <span class="ripple r3"></span>
+    <span class="ripple r4"></span>
+  </div>
+  <div data-include="newsletter"></div>
+</div>
 
 </main>
 

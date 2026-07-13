@@ -9,117 +9,683 @@
   <link rel="preload" href="assets/fonts/ShiweiSiJiChun-Regular.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/FreightTextPro-Book.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="assets/css/styles.css">
+
+  <style>
+    /* ============================================================
+       SCROLL INTERACTIONS — 精簡版 (無 three.js / cursor / nav mask)
+       ============================================================ */
+
+    html.lenis, html.lenis body { scroll-behavior: auto !important; }
+
+    /* ---------- 逐行分割 ---------- */
+    .scr-mask   { display: block; overflow: hidden; line-height: inherit; }
+    .scr-line   { display: block; }
+    .scr-mask--inline { display: inline-block; vertical-align: bottom; }
+
+    /* ---------- HERO ---------- */
+    .scr-hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 140px 32px;
+    }
+    .scr-hero__bg {
+      position: absolute; inset: 0;
+      background: url("assets/img/HandsWater.webp") center/cover no-repeat,
+                  var(--stop-0-bg2, #182C3B);
+      filter: sepia(.10) saturate(.80) brightness(.55);
+      z-index: 0;
+      transform: translateZ(0);   /* GPU 合成，避開 blur 混合 repaint */
+    }
+    .scr-hero__veil {
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg,
+        rgba(24,44,59,.30) 0%,
+        rgba(24,44,59,.55) 55%,
+        rgba(24,44,59,.85) 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+    .scr-hero__content {
+      position: relative;
+      z-index: 3;
+      max-width: 960px;
+      width: 100%;
+      text-align: center;
+      color: var(--text-on-dark, #F5F1E8);
+    }
+    .scr-hero__eyebrow {
+      font-family: var(--font-en, serif);
+      font-style: italic;
+      font-size: 14px;
+      letter-spacing: .35em;
+      color: var(--amber-400, #F2C36B);
+      margin-bottom: 40px;
+      opacity: 0;
+    }
+    .scr-hero__title {
+      font-family: var(--font-brand, serif);
+      font-weight: 600;
+      font-size: clamp(36px, 5.6vw, 72px);
+      line-height: 1.5;
+      letter-spacing: .04em;
+      margin: 0;
+      color: var(--text-on-dark, #F5F1E8);
+    }
+    .scr-hero__sub {
+      margin: 40px auto 0;
+      max-width: 640px;
+      font-size: 17px;
+      line-height: 2;
+      color: rgba(245,241,232,.82);
+      opacity: 0;
+    }
+    .scr-hero__scroll-hint {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 3;
+      font-family: var(--font-en, serif);
+      font-style: italic;
+      font-size: 12px;
+      letter-spacing: .3em;
+      color: rgba(245,241,232,.72);
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+      pointer-events: none;
+    }
+    .scr-hero__scroll-hint::after {
+      content: "";
+      width: 1px; height: 40px;
+      background: linear-gradient(180deg, var(--amber-400, #F2C36B), transparent);
+    }
+
+    /* ---------- 視差裝飾（blur 從 70 降到 32，opacity 從 .55 降到 .45） ---------- */
+    .parallax-deco {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(32px);
+      z-index: 2;
+      opacity: .45;
+    }
+    .parallax-deco.deco-1 {
+      width: 360px; height: 360px;
+      top: 8%; left: -80px;
+      background: radial-gradient(circle, rgba(232,163,61,.32), transparent 65%);
+    }
+    .parallax-deco.deco-2 {
+      width: 440px; height: 440px;
+      top: 32%; right: -140px;
+      background: radial-gradient(circle, rgba(138,162,147,.30), transparent 65%);
+    }
+    .parallax-deco.deco-3 {
+      width: 260px; height: 260px;
+      bottom: 10%; left: 42%;
+      background: radial-gradient(circle, rgba(199,123,82,.26), transparent 65%);
+    }
+
+    /* ---------- Verse 深色區 ---------- */
+    .section-dark {
+      background: transparent;
+      color: var(--text-on-dark, #F5F1E8);
+      padding: 140px 32px;
+      position: relative;
+    }
+    .section-dark .verse-card {
+      max-width: 780px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .section-dark .quote-mark {
+      font-family: var(--font-en, serif);
+      font-size: 100px; line-height: 1;
+      color: var(--amber-400, #F2C36B);
+      margin-bottom: -20px;
+      opacity: .6;
+    }
+    .section-dark blockquote {
+      font-family: var(--font-brand, serif);
+      font-weight: 500;
+      font-size: clamp(22px, 2.6vw, 30px);
+      line-height: 2;
+      color: var(--text-on-dark, #F5F1E8);
+      letter-spacing: .03em;
+      margin: 0 0 32px;
+    }
+    .section-dark blockquote strong {
+      font-family: var(--font-en, serif);
+      font-style: italic; font-weight: 400;
+      color: var(--amber-400, #F2C36B);
+    }
+    .section-dark cite {
+      font-family: var(--font-en, serif);
+      font-style: italic;
+      font-size: 14px;
+      letter-spacing: .3em;
+      color: rgba(245,241,232,.65);
+    }
+
+    /* ---------- 圖片 reveal ---------- */
+    .reveal-clip {
+      position: relative;
+      overflow: hidden;
+      clip-path: inset(0 0 100% 0);
+    }
+    .reveal-clip img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transform: scale(1.15);
+      transform-origin: center;
+    }
+
+    /* ---------- Marquee ---------- */
+    .marquee-section {
+      padding: 140px 0 160px;
+      overflow: hidden;
+      position: relative;
+      background: linear-gradient(180deg,
+        color-mix(in oklab, var(--paper, #FAF6EF) 100%, transparent) 0%,
+        color-mix(in oklab, var(--sand, #EDE3D3) 60%, var(--paper) 40%) 100%);
+    }
+    .marquee-head {
+      max-width: 1180px;
+      margin: 0 auto 60px;
+      padding: 0 32px;
+      display: flex; align-items: baseline; gap: 24px; flex-wrap: wrap;
+    }
+    .marquee-head .section-num { font-size: 56px; margin: 0; line-height: 1; }
+    .marquee-head .section-eyebrow { margin: 0; }
+    .marquee-viewport { position: relative; overflow: hidden; }
+    .marquee-track {
+      display: flex;
+      gap: 32px;
+      width: max-content;
+      transform-origin: center;
+    }
+    .marquee-item {
+      flex: 0 0 auto;
+      width: clamp(280px, 30vw, 440px);
+      aspect-ratio: 4 / 5;
+      border-radius: 24px;
+      overflow: hidden;
+      position: relative;
+      background: var(--sand, #EDE3D3);
+    }
+    .marquee-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transform: scale(1.02);
+      transition: transform .6s cubic-bezier(.16,1,.3,1);
+    }
+    .marquee-item:hover img { transform: scale(1.09); }
+    .marquee-item::after {
+      content: "";
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, transparent 55%, rgba(26,46,64,.55) 100%);
+      pointer-events: none;
+    }
+    .marquee-item .m-label {
+      position: absolute;
+      left: 24px; right: 24px; bottom: 22px;
+      z-index: 1;
+      color: #fff;
+      font-family: var(--font-en, serif);
+      font-style: italic;
+      font-size: 14px;
+      letter-spacing: .18em;
+      text-shadow: 0 2px 10px rgba(0,0,0,.35);
+      display: flex; align-items: baseline; gap: 12px;
+    }
+    .marquee-item .m-label .num { font-size: 12px; opacity: .8; }
+
+    /* ---------- Card fade in ---------- */
+    .scr-fade {
+      opacity: 0;
+      transform: translate3d(0, 40px, 0);
+    }
+
+    /* ---------- prefers-reduced-motion ---------- */
+    @media (prefers-reduced-motion: reduce) {
+      .parallax-deco { display: none; }
+      .reveal-clip { clip-path: none !important; }
+      .reveal-clip img { transform: none !important; }
+      .scr-line, .scr-fade { transform: none !important; opacity: 1 !important; }
+      .scr-hero__eyebrow, .scr-hero__sub { opacity: 1 !important; }
+    }
+
+    /* ---------- Mobile ---------- */
+    @media (max-width: 720px) {
+      .scr-hero { padding: 120px 24px; }
+      .parallax-deco { opacity: .28; filter: blur(24px); }
+      .marquee-section { padding: 100px 0 120px; }
+    }
+  </style>
 </head>
 <body data-page="about">
 
 <div data-include="aurora"></div>
-
 <div data-include="header"></div>
 
 <main>
 
-<section class="page-hero">
-  <div class="symbol-sm"></div>
-  <div class="eyebrow">ABOUT US · 關於我們</div>
-  <h1>起源與異象</h1>
-  <p>士師記 15:19 — 神為呼求的人破裂窪處，使水湧出。<br>隱哈歌利取名於此，盼望成為宣教士的安歇之泉。</p>
-</section>
+  <!-- ============================ HERO ============================ -->
+  <section class="scr-hero">
+    <div class="scr-hero__bg"></div>
+    <div class="scr-hero__veil"></div>
 
-<section class="section reveal">
-  <div class="verse-card">
-    <div class="quote-mark">"</div>
-    <blockquote>神就使利希的窪處裂開，有水從其中湧出來。參孫喝了精神復原。<br>因此那泉名叫 <strong>隱哈歌利</strong>。</blockquote>
-    <cite>— 士師記 15:19</cite>
-  </div>
-</section>
+    <div class="parallax-deco deco-1" data-speed="-0.28"></div>
+    <div class="parallax-deco deco-2" data-speed="0.22"></div>
+    <div class="parallax-deco deco-3" data-speed="0.14"></div>
 
-<section class="section section-practices">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <div class="section-num">OUR VISION</div>
-      <div class="section-eyebrow">我們的方向</div>
-      <h2><em>3</em>個關鍵承諾</h2>
-      <p class="lead">為宣教士提供全方位的支持與資源，回應大使命的後方守護。</p>
+    <div class="scr-hero__content">
+      <div class="scr-hero__eyebrow" data-hero-fade>ABOUT US · 關於我們</div>
+      <h1 class="scr-hero__title" data-split-lines>起源與異象</h1>
+      <p class="scr-hero__sub" data-hero-fade>士師記 15:19 — 神為呼求的人破裂窪處，使水湧出。<br>隱哈歌利取名於此，盼望成為宣教士的安歇之泉。</p>
     </div>
-    <div class="practices">
-      <article class="practice-card reveal">
-        <div class="icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-<path d="M32 8c0 0 -10 14 -10 22a10 10 0 0 0 20 0c0 -8 -10 -22 -10 -22z"/>
-<path d="M28 30a4 4 0 0 0 4 4" opacity=".6"/>
-<path d="M14 50h36M18 56h28" opacity=".5"/>
-</svg></div>
-        <div class="roman">VISION</div>
-        <h3>我們的異象</h3>
-        <p>為宣教士提供全方位的支持與資源，回應大使命的後方守護。讓神國工人在前線奔跑時，後方有人為他們築起堅固的支持網絡。</p>
-      </article>
-      <article class="practice-card reveal">
-        <div class="icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-<path d="M6 40c8-12 16-12 26-12s18 0 26 12"/>
-<path d="M6 40v8M58 40v8"/>
-<path d="M14 40v8M22 40v8M32 38v10M42 40v8M50 40v8" opacity=".5"/>
-<path d="M6 48h52"/>
-</svg></div>
-        <div class="roman">RESOURCE</div>
-        <h3>資源整合</h3>
-        <p>建立完整的資源整合平台，連結教會、機構與個人，讓支持更有效率，讓關懷更加及時。盤點現有資源，使每一份心意都能精準到位。</p>
-      </article>
-      <article class="practice-card sage reveal">
-        <div class="icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-<circle cx="22" cy="22" r="6"/>
-<circle cx="42" cy="22" r="6"/>
-<path d="M10 48c0 -6 6 -10 12 -10s12 4 12 10"/>
-<path d="M30 48c0 -6 6 -10 12 -10s12 4 12 10"/>
-</svg></div>
-        <div class="roman">COMMUNITY</div>
-        <h3>關顧網絡</h3>
-        <p>打造溫暖的社群網絡，透過定期聚會、線上交流與實體支持，讓每位宣教士都能感受到陪伴。從心靈到實際生活，全方位的關顧。</p>
-      </article>
-    </div>
-  </div>
-</section>
 
-<section class="section">
-  <div class="wrap">
-    <div class="feature-grid reveal">
-      <div class="feature-img">
-        <img src="https://images.unsplash.com/photo-1518050227004-c4cb7104d79a?w=1200&q=80" alt="長期的同行" loading="lazy">
-        <div class="caption">— Hands that are held through every season.</div>
+    <div class="scr-hero__scroll-hint">SCROLL</div>
+  </section>
+
+  <!-- ============================ Verse ============================ -->
+  <section class="section-dark" data-scene="verse">
+    <div class="verse-card">
+      <div class="quote-mark" data-scr-fade>&ldquo;</div>
+      <blockquote data-split-lines>神就使利希的窪處裂開，有水從其中湧出來。<br>參孫喝了精神復原。<br>因此那泉名叫 <strong>隱哈歌利</strong>。</blockquote>
+      <cite data-split-lines>— 士師記 15:19</cite>
+    </div>
+  </section>
+
+  <!-- ============================ Vision ============================ -->
+  <section class="section section-practices">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="section-num" data-scr-fade>OUR VISION</div>
+        <div class="section-eyebrow" data-split-lines>我們的方向</div>
+        <h2 data-split-lines><em>3</em>個關鍵承諾</h2>
+        <p class="lead" data-split-lines>為宣教士提供全方位的支持與資源，回應大使命的後方守護。</p>
       </div>
-      <div class="feature-text">
-        <div class="label sage">COMPANIONSHIP · 同行</div>
-        <h2 class="sage">長期的同行。</h2>
-        <p>關顧不是短期的活動，而是持續的陪伴。我們相信宣教士的旅程需要可以一起走長路的夥伴。</p>
-        <p>從預備期、出工場、再回國述職，每一個階段我們都希望以實際的方式同在。透過個別陪伴、家庭關懷與屬靈成長支持，建立穩固的後援。</p>
-        <a class="link sage" href="contact.html">與我們聊聊 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg></a>
+      <div class="practices">
+        <article class="practice-card scr-fade">
+          <div class="icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M32 8c0 0 -10 14 -10 22a10 10 0 0 0 20 0c0 -8 -10 -22 -10 -22z"/>
+            <path d="M28 30a4 4 0 0 0 4 4" opacity=".6"/>
+            <path d="M14 50h36M18 56h28" opacity=".5"/>
+          </svg></div>
+          <div class="roman">VISION</div>
+          <h3>我們的異象</h3>
+          <p>為宣教士提供全方位的支持與資源，回應大使命的後方守護。讓神國工人在前線奔跑時，後方有人為他們築起堅固的支持網絡。</p>
+        </article>
+        <article class="practice-card scr-fade">
+          <div class="icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 40c8-12 16-12 26-12s18 0 26 12"/>
+            <path d="M6 40v8M58 40v8"/>
+            <path d="M14 40v8M22 40v8M32 38v10M42 40v8M50 40v8" opacity=".5"/>
+            <path d="M6 48h52"/>
+          </svg></div>
+          <div class="roman">RESOURCE</div>
+          <h3>資源整合</h3>
+          <p>建立完整的資源整合平台，連結教會、機構與個人，讓支持更有效率，讓關懷更加及時。盤點現有資源，使每一份心意都能精準到位。</p>
+        </article>
+        <article class="practice-card sage scr-fade">
+          <div class="icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="22" cy="22" r="6"/>
+            <circle cx="42" cy="22" r="6"/>
+            <path d="M10 48c0 -6 6 -10 12 -10s12 4 12 10"/>
+            <path d="M30 48c0 -6 6 -10 12 -10s12 4 12 10"/>
+          </svg></div>
+          <div class="roman">COMMUNITY</div>
+          <h3>關顧網絡</h3>
+          <p>打造溫暖的社群網絡，透過定期聚會、線上交流與實體支持，讓每位宣教士都能感受到陪伴。從心靈到實際生活，全方位的關顧。</p>
+        </article>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="section">
-  <div class="wrap">
-    <div class="feature-grid reverse reveal">
-      <div class="feature-img">
-        <img src="https://images.unsplash.com/photo-1591382696684-38c427c7547a?w=1200&q=80" alt="建立關係的支持" loading="lazy">
-        <div class="caption">— Trust is built one conversation at a time.</div>
-      </div>
-      <div class="feature-text">
-        <div class="label clay">RELATIONSHIP · 關係</div>
-        <h2 class="coral">建立關係的支持。</h2>
-        <p>不只提供資源，更建立關係。我們在差會、教會與宣教士家庭之間，搭建可信賴的支持網絡。</p>
-        <p>每一杯咖啡、每一封代禱信、每一次線上會議，都是關係累積的證據。我們相信，當「人」被看見，工作才會被祝福。</p>
-        <a class="link coral" href="volunteer.html">加入我們 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg></a>
+  <!-- ============================ Feature 1 ============================ -->
+  <section class="section" data-scene="feature">
+    <div class="wrap">
+      <div class="feature-grid">
+        <div class="feature-img reveal-clip" data-reveal-clip>
+          <img src="https://images.unsplash.com/photo-1518050227004-c4cb7104d79a?w=1200&q=80" alt="長期的同行" loading="lazy">
+          <div class="caption">— Hands that are held through every season.</div>
+        </div>
+        <div class="feature-text">
+          <div class="label sage" data-split-lines>COMPANIONSHIP · 同行</div>
+          <h2 class="sage" data-split-lines>長期的同行。</h2>
+          <p data-split-lines>關顧不是短期的活動，而是持續的陪伴。我們相信宣教士的旅程需要可以一起走長路的夥伴。</p>
+          <p data-split-lines>從預備期、出工場、再回國述職，每一個階段我們都希望以實際的方式同在。透過個別陪伴、家庭關懷與屬靈成長支持，建立穩固的後援。</p>
+          <a class="link sage" href="contact.html">與我們聊聊 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg></a>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<div data-include="newsletter"></div>
+  <!-- ============================ Feature 2 ============================ -->
+  <section class="section" data-scene="feature">
+    <div class="wrap">
+      <div class="feature-grid reverse">
+        <div class="feature-img reveal-clip" data-reveal-clip>
+          <img src="https://images.unsplash.com/photo-1591382696684-38c427c7547a?w=1200&q=80" alt="建立關係的支持" loading="lazy">
+          <div class="caption">— Trust is built one conversation at a time.</div>
+        </div>
+        <div class="feature-text">
+          <div class="label clay" data-split-lines>RELATIONSHIP · 關係</div>
+          <h2 class="coral" data-split-lines>建立關係的支持。</h2>
+          <p data-split-lines>不只提供資源，更建立關係。我們在差會、教會與宣教士家庭之間，搭建可信賴的支持網絡。</p>
+          <p data-split-lines>每一杯咖啡、每一封代禱信、每一次線上會議，都是關係累積的證據。我們相信，當「人」被看見，工作才會被祝福。</p>
+          <a class="link coral" href="volunteer.html">加入我們 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ 作品區 · 無限橫向 marquee ============================ -->
+  <section class="marquee-section" data-scene="marquee">
+    <div class="marquee-head">
+      <div class="section-num">OUR WORKS</div>
+      <div class="section-eyebrow" data-split-lines>我們的軌跡</div>
+    </div>
+    <div class="marquee-viewport">
+      <div class="marquee-track" data-marquee>
+        <a class="marquee-item" href="volunteer.html">
+          <img src="https://images.unsplash.com/photo-1518050227004-c4cb7104d79a?w=800&q=70" alt="陪伴" loading="lazy">
+          <div class="m-label"><span class="num">01</span><span>陪伴 · Companionship</span></div>
+        </a>
+        <a class="marquee-item" href="volunteer.html">
+          <img src="https://images.unsplash.com/photo-1591382696684-38c427c7547a?w=800&q=70" alt="關係" loading="lazy">
+          <div class="m-label"><span class="num">02</span><span>關係 · Relationship</span></div>
+        </a>
+        <a class="marquee-item" href="volunteer.html">
+          <img src="https://images.unsplash.com/photo-1509099836639-18ba1795216d?w=800&q=70" alt="代禱" loading="lazy">
+          <div class="m-label"><span class="num">03</span><span>代禱 · Prayer</span></div>
+        </a>
+        <a class="marquee-item" href="volunteer.html">
+          <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&q=70" alt="接待" loading="lazy">
+          <div class="m-label"><span class="num">04</span><span>接待 · Hospitality</span></div>
+        </a>
+        <a class="marquee-item" href="donate.html">
+          <img src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800&q=70" alt="資源" loading="lazy">
+          <div class="m-label"><span class="num">05</span><span>資源 · Resources</span></div>
+        </a>
+        <a class="marquee-item" href="about.html">
+          <img src="https://images.unsplash.com/photo-1476820865390-c52aeebb9891?w=800&q=70" alt="紀念" loading="lazy">
+          <div class="m-label"><span class="num">06</span><span>紀念 · Remembrance</span></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <div data-include="newsletter"></div>
 
 </main>
 
 <div data-include="footer"></div>
 
 <script src="assets/js/site.js"></script>
+
+<!-- ============================================================
+     Scroll interaction libs — GSAP + Lenis (無 three.js)
+     ============================================================ -->
+<script src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://unpkg.com/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+
+<script>
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* ---------- Lenis 平滑捲動 ---------- */
+  let lenis;
+  if (!prefersReducedMotion) {
+    lenis = new Lenis({
+      lerp: 0.08,
+      wheelMultiplier: 1,
+      smoothWheel: true,
+    });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((time) => lenis.raf(time * 1000));
+    gsap.ticker.lagSmoothing(0);
+    document.documentElement.classList.add('lenis');
+  }
+
+  /* ---------- 逐行分割 helper ---------- */
+  function splitByLines(el) {
+    if (!el || el.dataset.splitDone) return [];
+    const original = el.innerHTML.trim();
+
+    if (/<br\s*\/?>/i.test(original)) {
+      const parts = original.split(/<br\s*\/?>/i);
+      el.innerHTML = parts.map(p =>
+        `<span class="scr-mask"><span class="scr-line">${p.trim()}</span></span>`
+      ).join('');
+      el.dataset.splitDone = '1';
+      return [...el.querySelectorAll('.scr-line')];
+    }
+
+    const tmp = document.createElement('div');
+    tmp.innerHTML = original;
+
+    function wrap(node) {
+      const frag = document.createDocumentFragment();
+      node.childNodes.forEach(child => {
+        if (child.nodeType === 3) {
+          const text = child.textContent;
+          text.split('').forEach(ch => {
+            if (ch === ' ') {
+              frag.appendChild(document.createTextNode(' '));
+              return;
+            }
+            const s = document.createElement('span');
+            s.className = 'scr-ch';
+            s.style.display = 'inline-block';
+            s.textContent = ch;
+            frag.appendChild(s);
+          });
+        } else if (child.nodeType === 1) {
+          const clone = child.cloneNode(false);
+          clone.appendChild(wrap(child));
+          frag.appendChild(clone);
+        }
+      });
+      return frag;
+    }
+    const wrappedFrag = wrap(tmp);
+    el.innerHTML = '';
+    el.appendChild(wrappedFrag);
+
+    const chars = [...el.querySelectorAll('.scr-ch')];
+    if (!chars.length) {
+      el.innerHTML = `<span class="scr-mask"><span class="scr-line">${original}</span></span>`;
+      el.dataset.splitDone = '1';
+      return [...el.querySelectorAll('.scr-line')];
+    }
+    const groups = [];
+    let currentTop = null;
+    let currentGroup = null;
+    chars.forEach(c => {
+      const t = c.offsetTop;
+      if (currentTop === null || Math.abs(t - currentTop) > 6) {
+        currentTop = t;
+        currentGroup = [];
+        groups.push(currentGroup);
+      }
+      currentGroup.push(c);
+    });
+    const html = groups.map(g => {
+      const inner = g.map(c => c.outerHTML).join('');
+      return `<span class="scr-mask"><span class="scr-line">${inner}</span></span>`;
+    }).join('');
+    el.innerHTML = html;
+    el.dataset.splitDone = '1';
+    return [...el.querySelectorAll('.scr-line')];
+  }
+
+  /* ---------- SplitText 進場 ---------- */
+  function initSplitEntrance() {
+    document.querySelectorAll('[data-split-lines]').forEach(el => {
+      const lines = splitByLines(el);
+      if (!lines.length) return;
+      gsap.set(lines, { yPercent: 110, opacity: 0 });
+      gsap.to(lines, {
+        yPercent: 0,
+        opacity: 1,
+        duration: 0.9,
+        stagger: 0.08,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 80%',
+          once: true,
+        }
+      });
+    });
+    document.querySelectorAll('[data-scr-fade]').forEach(el => {
+      gsap.fromTo(el,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1, y: 0,
+          duration: 1.0, ease: 'power3.out',
+          scrollTrigger: { trigger: el, start: 'top 85%', once: true }
+        }
+      );
+    });
+    document.querySelectorAll('.scr-fade').forEach(el => {
+      gsap.to(el, {
+        opacity: 1,
+        y: 0,
+        duration: 1.0,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 85%', once: true }
+      });
+    });
+  }
+
+  /* ---------- HERO 淡入 ---------- */
+  function initHero() {
+    const eyebrow = document.querySelector('.scr-hero__eyebrow');
+    const sub     = document.querySelector('.scr-hero__sub');
+    if (eyebrow) gsap.to(eyebrow, { opacity: 1, duration: 1.0, delay: 0.2, ease: 'power2.out' });
+    if (sub)     gsap.to(sub,     { opacity: 1, duration: 1.0, delay: 0.5, ease: 'power2.out' });
+  }
+
+  /* ---------- 圖片 clip-path reveal + 內層反向視差 ---------- */
+  function initClipReveal() {
+    document.querySelectorAll('[data-reveal-clip]').forEach(wrap => {
+      const img = wrap.querySelector('img');
+      const tl = gsap.timeline({
+        scrollTrigger: { trigger: wrap, start: 'top 80%', once: true }
+      });
+      tl.fromTo(wrap,
+        { clipPath: 'inset(0 0 100% 0)' },
+        { clipPath: 'inset(0 0 0% 0)', duration: 1.2, ease: 'power3.out' }, 0);
+      if (img) {
+        tl.to(img, { scale: 1, duration: 1.6, ease: 'power3.out' }, 0);
+      }
+    });
+  }
+
+  /* ---------- 作品區 marquee + scroll velocity skew ---------- */
+  function initMarquee() {
+    const track = document.querySelector('[data-marquee]');
+    if (!track) return;
+    track.innerHTML = track.innerHTML + track.innerHTML;
+
+    let loopWidth = track.scrollWidth / 2;
+    window.addEventListener('resize', () => { loopWidth = track.scrollWidth / 2; });
+
+    const speedBase = 40;
+    let offset = 0;
+    let lastTime = performance.now();
+    let velocityBoost = 0;
+    let dir = -1;
+    let skew = 0;
+    let running = false;
+
+    function tickFn() {
+      const now = performance.now();
+      const dt = Math.min((now - lastTime) / 1000, 0.05);
+      lastTime = now;
+
+      velocityBoost *= 0.94;
+
+      const px = (speedBase * (1 + velocityBoost)) * dir * dt;
+      offset += px;
+      if (offset <= -loopWidth) offset += loopWidth;
+      if (offset >= 0)          offset -= loopWidth;
+
+      const targetSkew = gsap.utils.clamp(-8, 8, dir * velocityBoost * 4);
+      skew += (targetSkew - skew) * 0.12;
+
+      track.style.transform = `translate3d(${offset}px, 0, 0) skewX(${skew}deg)`;
+    }
+    function start() {
+      if (running) return;
+      running = true;
+      lastTime = performance.now();
+      gsap.ticker.add(tickFn);
+    }
+    function stop() {
+      if (!running) return;
+      running = false;
+      gsap.ticker.remove(tickFn);
+    }
+
+    ScrollTrigger.create({
+      trigger: track.closest('.marquee-section'),
+      start: 'top bottom',
+      end: 'bottom top',
+      onEnter: start,
+      onEnterBack: start,
+      onLeave: stop,
+      onLeaveBack: stop,
+      onUpdate: (self) => {
+        const v = self.getVelocity();
+        dir = v >= 0 ? -1 : 1;
+        velocityBoost = Math.min(Math.abs(v) / 1500, 4);
+      }
+    });
+  }
+
+  /* ---------- 視差 data-speed ---------- */
+  function initParallax() {
+    if (prefersReducedMotion) return;
+    document.querySelectorAll('[data-speed]').forEach(el => {
+      const speed = parseFloat(el.dataset.speed) || 0;
+      gsap.to(el, {
+        yPercent: speed * 100,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: el.closest('section') || el,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 1,
+        }
+      });
+    });
+  }
+
+  /* ---------- 啟動 ---------- */
+  function bootAnimations() {
+    initSplitEntrance();
+    initHero();
+    initClipReveal();
+    initMarquee();
+    initParallax();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bootAnimations);
+  } else {
+    bootAnimations();
+  }
+
+  window.addEventListener('load', () => ScrollTrigger.refresh());
+</script>
+
 </body>
 </html>
