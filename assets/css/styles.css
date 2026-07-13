@@ -2292,10 +2292,69 @@ body[data-page="home"] .section-stats {
   border-color: rgba(245, 241, 232, .12);
 }
 
-/* Newsletter — 同樣提高奶紙不透明度 */
+/* Newsletter — 首頁讓區塊融入捲動漸層背景（不再蓋沙米卡片色）；
+   text 顏色沿用基底：newsletter 落在捲動 ~90% 處，此時 --fg 為深色，讀得清楚 */
 body[data-page="home"] .newsletter {
-  background: rgba(237, 227, 211, .92);
-  border-color: rgba(245, 241, 232, .12);
+  background: transparent;
+  border-top: 0;
+  border-bottom: 0;
+}
+
+/* Ripple field — 只在首頁 .newsletter-scene 內生效，
+   從畫面右下一角湧出的細環，18s 一輪、4 圈錯開，
+   呼應「隱哈歌利 = 泉」的敘事 */
+.newsletter-scene {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.newsletter-scene .newsletter {
+  position: relative;
+  z-index: 1;
+}
+.ripple-field {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+.ripple,
+.ripple-origin {
+  position: absolute;
+  left: 82%; top: 72%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+}
+.ripple-origin {
+  width: 12px; height: 12px;
+  background: radial-gradient(circle,
+    rgba(255, 186, 73, .70),
+    rgba(255, 186, 73, 0) 70%);
+}
+.ripple {
+  width: 40px; height: 40px;
+  border: 1.5px solid rgba(26, 46, 64, .35);
+  opacity: 0;
+  animation: ripple-out 18s cubic-bezier(.15, .4, .35, 1) infinite;
+}
+.ripple.r1 { animation-delay: 0s;    }
+.ripple.r2 { animation-delay: 4.5s;  }
+.ripple.r3 { animation-delay: 9s;    }
+.ripple.r4 { animation-delay: 13.5s; }
+
+@keyframes ripple-out {
+  0%   { width: 40px;   height: 40px;   opacity: 0;   border-width: 1.5px; }
+  8%   { opacity: .40; }
+  70%  { opacity: .12; }
+  100% { width: 1600px; height: 1600px; opacity: 0;   border-width: .5px;  }
+}
+
+@media (max-width: 900px) {
+  /* 手機不跑漣漪，畫面清爽為先 */
+  .ripple-field { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ripple { animation: none; opacity: 0; }
 }
 
 /* Ghost button on 深流：深色版變不見 → 用反白版（比照 .section--navy） */
