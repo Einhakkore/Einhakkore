@@ -1656,12 +1656,57 @@ body[data-page="donate"] .account-box .info {
   margin: 0; font-weight: 500; letter-spacing: .02em;
   color: var(--text-1);
   font-size: 15px;
-}
-.bank-card dd.acct {
-  font-family: var(--font-en);
   font-variant-numeric: tabular-nums;
-  font-size: 17px; letter-spacing: .04em;
-  color: var(--text-1);
+}
+
+/* ---- 點擊複製按鈕：帳號的可複製版本，樣式對齊其他數字（不用 italic 英文）---- */
+.copy-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  border-bottom: 1px dashed rgba(26, 46, 64, .28);
+  transition: color .2s ease, border-color .2s ease;
+}
+.copy-btn:hover {
+  color: var(--amber-700);
+  border-bottom-color: var(--amber-700);
+}
+.copy-btn:focus-visible {
+  outline: 2px solid var(--amber-500);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+.copy-btn .copy-icon { opacity: .55; transition: opacity .2s ease; }
+.copy-btn:hover .copy-icon { opacity: 1; }
+.copy-btn.copied { color: var(--sage-700); border-bottom-color: var(--sage-500); }
+
+/* ---- Snackbar：複製後的提示條 ---- */
+#snackbar {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translate(-50%, 20px);
+  z-index: 2000;
+  padding: 12px 22px;
+  border-radius: 999px;
+  background: var(--ink-900);
+  color: var(--text-on-dark);
+  font-size: 14px; letter-spacing: .02em;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, .35);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .22s ease, transform .22s ease;
+  max-width: calc(100vw - 40px);
+  text-align: center;
+}
+#snackbar.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
 }
 
 /* ---- 匯款備註提醒 ---- */
@@ -1686,9 +1731,18 @@ body[data-page="donate"] .account-box .info {
   line-height: 1.85;
   color: var(--text-2); font-size: 14px;
 }
-.remit-note b { color: var(--coral-700); font-weight: 600; }
+.remit-note b { color: var(--ink-900); font-weight: 700; }
 
 .pay-cta { margin-top: 4px; align-self: flex-start; }
+/* 刷卡按鈕：深藍主色（.btn-text 預設是琥珀底線，這裡覆蓋成 ink） */
+.pay-cta.btn-text {
+  color: var(--ink-800);
+  border-bottom-color: var(--ink-800);
+}
+.pay-cta.btn-text:hover {
+  color: var(--ink-900);
+  border-bottom-color: var(--ink-900);
+}
 
 /* ---- 匯款＋表單合併卡：步驟 / 選項 標記 ---- */
 .give-step {
