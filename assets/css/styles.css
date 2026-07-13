@@ -2292,10 +2292,12 @@ body[data-page="home"] .section-stats {
   border-color: rgba(245, 241, 232, .12);
 }
 
-/* Newsletter — 同樣提高奶紙不透明度 */
+/* Newsletter — 首頁讓區塊融入捲動漸層背景（不再蓋沙米卡片色）；
+   text 顏色沿用基底：newsletter 落在捲動 ~90% 處，此時 --fg 為深色，讀得清楚 */
 body[data-page="home"] .newsletter {
-  background: rgba(237, 227, 211, .92);
-  border-color: rgba(245, 241, 232, .12);
+  background: transparent;
+  border-top: 0;
+  border-bottom: 0;
 }
 
 /* Ghost button on 深流：深色版變不見 → 用反白版（比照 .section--navy） */
