@@ -811,6 +811,247 @@ body[data-page="donate"] .logo .logo-dark { display: block; }
 }
 
 /* -----------------------------------------------------------
+   ORBIT — 三個環繞核心運轉的節點（只在 home 使用；深底）
+   ----------------------------------------------------------- */
+.orbit {
+  --node-color-r: var(--amber-500);
+  --node-color-i: #8FB4CE;
+  --node-color-a: #A8C77E;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 48px;
+  align-items: center;
+  margin: 40px auto 24px;
+  max-width: 1120px;
+}
+.orbit-stage {
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+.orbit-svg {
+  width: 100%;
+  max-width: 640px;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+/* --- ring / core / spokes --- */
+.orbit-ring {
+  fill: none;
+  stroke: rgba(255, 186, 73, .30);
+  stroke-width: 1;
+  stroke-dasharray: 4 8;
+  opacity: 0;
+  animation: orbit-ring-in 1.1s ease-out .1s forwards;
+}
+@keyframes orbit-ring-in {
+  from { opacity: 0; transform: rotate(-40deg); transform-origin: 400px 400px; }
+  to   { opacity: 1; transform: rotate(0);      transform-origin: 400px 400px; }
+}
+.orbit-core-halo {
+  fill: none;
+  stroke: rgba(255, 186, 73, .18);
+  stroke-width: 1;
+}
+.orbit-core {
+  fill: rgba(26, 46, 64, .55);
+  stroke: rgba(255, 186, 73, .55);
+  stroke-width: 1;
+}
+.core-en {
+  font-family: var(--font-en); font-style: italic;
+  font-size: 11px; letter-spacing: .4em;
+  fill: rgba(245, 241, 232, .65);
+  text-anchor: middle; dominant-baseline: central;
+}
+.core-brand {
+  font-family: var(--font-brand); font-weight: 600;
+  font-size: 26px; letter-spacing: .28em;
+  fill: var(--text-on-dark);
+  text-anchor: middle; dominant-baseline: central;
+}
+.spoke {
+  stroke: rgba(255, 186, 73, .26);
+  stroke-width: .75;
+}
+
+/* --- rotation groups (paused on mobile / reduced-motion) --- */
+.orbit-rotate {
+  transform-origin: 400px 400px;
+  animation: orbit-spin 55s linear infinite;
+}
+.node-counter {
+  animation: orbit-spin-rev 55s linear infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@keyframes orbit-spin     { from { transform: rotate(0);    } to { transform: rotate(360deg);  } }
+@keyframes orbit-spin-rev { from { transform: rotate(0);    } to { transform: rotate(-360deg); } }
+
+/* --- nodes --- */
+.node-group { cursor: pointer; outline: none; }
+.node-r { color: var(--node-color-r); }
+.node-i { color: var(--node-color-i); }
+.node-a { color: var(--node-color-a); }
+
+.node-halo {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1;
+  opacity: 0;
+  transition: opacity .35s ease, r .35s ease;
+}
+.node-disc {
+  fill: rgba(255, 255, 255, .30);
+  stroke: currentColor;
+  stroke-width: 1;
+  transition: r .35s ease, fill .35s ease;
+}
+.node-en {
+  font-family: var(--font-en); font-style: italic;
+  font-size: 10px; letter-spacing: .3em;
+  fill: var(--text-on-dark);
+  text-anchor: middle; dominant-baseline: central;
+  pointer-events: none;
+}
+.node-zh {
+  font-family: var(--font-brand); font-weight: 600;
+  font-size: 19px; letter-spacing: .15em;
+  fill: var(--text-on-dark);
+  text-anchor: middle; dominant-baseline: central;
+  pointer-events: none;
+}
+
+/* intro fade for nodes */
+.node-group { opacity: 0; animation: orbit-node-in .5s ease forwards; }
+.node-group.n1 { animation-delay: .9s; }
+.node-group.n2 { animation-delay: 1.05s; }
+.node-group.n3 { animation-delay: 1.2s; }
+@keyframes orbit-node-in { to { opacity: 1; } }
+
+/* --- side text column --- */
+.orbit-copy {
+  display: flex; flex-direction: column; gap: 28px;
+  position: relative;
+}
+.copy-item {
+  padding: 16px 18px 16px 20px;
+  border-left: 2px solid rgba(255, 186, 73, .35);
+  transition: opacity .35s ease, transform .35s ease, border-color .35s ease;
+  cursor: pointer;
+  outline: none;
+}
+.copy-item .roman {
+  font-family: var(--font-en); font-style: italic; font-weight: 400;
+  font-size: 12px; letter-spacing: .32em;
+  color: var(--amber-400);
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 10px;
+}
+.copy-item .roman::before {
+  content: ""; width: 22px; height: 1px; background: currentColor;
+}
+.copy-item h3 {
+  font-family: var(--font-brand); font-weight: 600;
+  font-size: 22px; color: var(--text-on-dark);
+  letter-spacing: .05em; line-height: 1.55;
+  margin: 0 0 8px;
+}
+.copy-item p {
+  font-size: 14.5px; line-height: 1.9;
+  color: var(--home-text-2);
+  margin: 0;
+}
+.copy-item.c-r { border-left-color: rgba(255, 186, 73, .55); }
+.copy-item.c-r .roman { color: var(--amber-400); }
+.copy-item.c-i { border-left-color: rgba(143, 180, 206, .55); }
+.copy-item.c-i .roman { color: var(--node-color-i); }
+.copy-item.c-a { border-left-color: rgba(168, 199, 126, .55); }
+.copy-item.c-a .roman { color: var(--node-color-a); }
+
+/* ===== bidirectional hover / focus linkage ===== */
+.orbit:has(.node-group:hover) .orbit-rotate,
+.orbit:has(.node-group:focus-visible) .orbit-rotate,
+.orbit:has(.copy-item:hover) .orbit-rotate,
+.orbit:has(.copy-item:focus-visible) .orbit-rotate,
+.orbit:has(.node-group:hover) .node-counter,
+.orbit:has(.node-group:focus-visible) .node-counter,
+.orbit:has(.copy-item:hover) .node-counter,
+.orbit:has(.copy-item:focus-visible) .node-counter {
+  animation-play-state: paused;
+}
+
+/* node hover → dim other text panels + slide matching panel */
+.orbit:has(.node-r:hover) .copy-item:not(.c-r),
+.orbit:has(.node-r:focus-visible) .copy-item:not(.c-r),
+.orbit:has(.node-i:hover) .copy-item:not(.c-i),
+.orbit:has(.node-i:focus-visible) .copy-item:not(.c-i),
+.orbit:has(.node-a:hover) .copy-item:not(.c-a),
+.orbit:has(.node-a:focus-visible) .copy-item:not(.c-a) { opacity: .35; }
+
+.orbit:has(.node-r:hover) .copy-item.c-r,
+.orbit:has(.node-i:hover) .copy-item.c-i,
+.orbit:has(.node-a:hover) .copy-item.c-a { transform: translateX(4px); }
+
+/* text hover → dim other nodes */
+.orbit:has(.copy-item.c-r:hover) .node-i,
+.orbit:has(.copy-item.c-r:hover) .node-a,
+.orbit:has(.copy-item.c-i:hover) .node-r,
+.orbit:has(.copy-item.c-i:hover) .node-a,
+.orbit:has(.copy-item.c-a:hover) .node-r,
+.orbit:has(.copy-item.c-a:hover) .node-i { opacity: .35; }
+
+/* enlarge active node (from either side) */
+.node-group:hover .node-disc,
+.node-group:focus-visible .node-disc,
+.orbit:has(.copy-item.c-r:hover) .node-r .node-disc,
+.orbit:has(.copy-item.c-i:hover) .node-i .node-disc,
+.orbit:has(.copy-item.c-a:hover) .node-a .node-disc {
+  r: 68;
+  fill: rgba(255, 255, 255, .42);
+}
+.node-group:hover .node-halo,
+.node-group:focus-visible .node-halo,
+.orbit:has(.copy-item.c-r:hover) .node-r .node-halo,
+.orbit:has(.copy-item.c-i:hover) .node-i .node-halo,
+.orbit:has(.copy-item.c-a:hover) .node-a .node-halo { opacity: .55; }
+
+/* keyboard focus outline on copy panels */
+.copy-item:focus-visible {
+  border-left-color: var(--amber-400);
+  box-shadow: inset 2px 0 0 0 var(--amber-400);
+}
+
+/* ---- MOBILE ---- */
+@media (max-width: 900px) {
+  .orbit {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin: 24px auto 12px;
+  }
+  .orbit-svg { max-width: 320px; }
+  .orbit-rotate,
+  .node-counter { animation: none; }
+  .orbit-copy { gap: 14px; }
+  .copy-item { padding: 12px 14px 12px 16px; border-left-width: 3px; }
+  .copy-item .roman { font-size: 11px; margin-bottom: 6px; }
+  .copy-item .roman::before { width: 16px; }
+  .copy-item h3 { font-size: 18px; margin-bottom: 6px; }
+  .copy-item p { font-size: 13px; line-height: 1.7; }
+  .core-brand { font-size: 30px; }
+  .node-zh { font-size: 20px; }
+  .node-en { font-size: 11px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit-rotate,
+  .node-counter { animation: none !important; }
+  .orbit-ring   { animation: none; opacity: 1; }
+  .node-group   { animation: none; opacity: 1; }
+}
+
+/* -----------------------------------------------------------
    VERSE — 經文區（基底樣式；套上 .section--navy 時改用深藍 + 極光）
    ----------------------------------------------------------- */
 .section-verse { padding: 140px 32px; text-align: center; position: relative; }
