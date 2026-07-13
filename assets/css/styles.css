@@ -1744,40 +1744,53 @@ body[data-page="donate"] .btn.btn-text:hover {
 }
 
 /* ---- 匯款＋表單合併卡：步驟 / 選項 標記 ---- */
+/* ---- 步驟軌道：step 1 → step 2 之間畫一條垂直連接線 ---- */
+.give-track {
+  margin-top: 14px;
+}
 .give-step {
   display: flex; align-items: center; gap: 14px;
-  margin: 34px 0 14px;
-  padding-top: 26px;
-  border-top: 1px dashed var(--line-mid);
-}
-.give-step:first-of-type {
-  padding-top: 6px; border-top: 0; margin-top: 12px;
+  padding: 4px 0;
+  position: relative;
 }
 .give-step-num {
-  width: 30px; height: 30px; border-radius: 50%;
-  background: var(--amber-500); color: var(--ink-900);
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--ink-800);
+  color: #fff;
   font-family: var(--font-en); font-style: italic;
-  font-size: 14px; font-weight: 500;
+  font-size: 15px; font-weight: 500;
   display: inline-flex; align-items: center; justify-content: center;
   flex-shrink: 0; line-height: 1;
+  position: relative; z-index: 1;
 }
 .give-step-title {
   font-family: var(--font-brand); font-weight: 500;
   font-size: 17px; color: var(--text-1);
   letter-spacing: .02em; line-height: 1.4;
 }
+.give-step-body {
+  margin-left: 15px;                          /* 對齊 32px 圓心 (16px) 的左邊緣 */
+  padding: 14px 0 24px 31px;                  /* 內容縮排到 step title 的起始位置 */
+  border-left: 2px solid var(--ink-800);      /* 直立連接線 */
+  position: relative;
+}
+.give-step-body.give-step-body--last {
+  border-left-color: transparent;             /* 最後一段不再往下延伸 */
+  padding-bottom: 8px;
+}
 
 .give-option-name {
   display: flex; align-items: center; gap: 10px;
   font-family: var(--font-brand); font-weight: 500;
-  font-size: 16px; color: var(--text-1);
+  font-size: 16px; color: var(--ink-800);
   margin: 20px 0 10px; letter-spacing: .02em;
   line-height: 1.4;
 }
 .give-option-tag {
-  width: 24px; height: 24px; border-radius: 6px;
-  background: rgba(232, 163, 61, .14);
-  color: var(--amber-700);
+  width: 26px; height: 26px; border-radius: 50%;
+  background: transparent;
+  border: 1.5px solid var(--ink-800);
+  color: var(--ink-800);
   font-family: var(--font-en); font-style: italic;
   font-size: 13px; font-weight: 500;
   display: inline-flex; align-items: center; justify-content: center;
