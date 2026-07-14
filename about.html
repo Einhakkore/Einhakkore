@@ -467,6 +467,14 @@
       return [...el.querySelectorAll('.scr-line')];
     }
 
+    // 含 <em> / <strong> 這類 inline 標籤 → 不做逐字切，整段一起包成一個 mask，
+    // 才不會把 <em>3</em> 的斜體琥珀樣式吃掉。單行內容視覺上一樣。
+    if (/<[a-z][^>]*>/i.test(original)) {
+      el.innerHTML = `<span class="scr-mask"><span class="scr-line">${original}</span></span>`;
+      el.dataset.splitDone = '1';
+      return [...el.querySelectorAll('.scr-line')];
+    }
+
     const tmp = document.createElement('div');
     tmp.innerHTML = original;
 
