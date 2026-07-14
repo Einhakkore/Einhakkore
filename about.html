@@ -143,16 +143,20 @@
       column-gap: clamp(48px, 8vw, 140px);
       align-items: start;
     }
-    /* 左欄只放一個大英文標籤，其餘全留白 */
+    /* 左欄只放一個超大英文標籤，透明度 20% 當成留白的水印 */
     .philosophy__label {
       font-family: var(--font-en, serif);
       font-style: normal;
-      font-weight: 500;
-      font-size: clamp(30px, 3.2vw, 46px);
-      line-height: 1.2;
-      letter-spacing: -.005em;
+      font-weight: 400;
+      font-size: clamp(72px, 11vw, 168px);
+      line-height: 1;
+      letter-spacing: -.02em;
       color: var(--text-1);
+      opacity: .20;
       margin: 0;
+    }
+    @media (prefers-color-scheme: dark) {
+      .philosophy__label { opacity: .28; }
     }
     /* 右欄：標題 → 大留白 → 內文 → 小 cite */
     .philosophy__title {
