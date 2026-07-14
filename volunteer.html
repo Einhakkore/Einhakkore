@@ -49,14 +49,14 @@
         --ss-w2:     calc(var(--ss-w) * 2 / 3);  /* shape-2 展開後寬度＝2/3 */
         --ss-w3:     var(--ss-w);                /* shape-3 展開後寬度＝滿版 */
         --ss-ease:   cubic-bezier(.6,.2,.2,1);
-        /* 各階段 view() 進度區間 —— 所有動畫在 30% 前完成，其後停在終態
-           讓使用者有充裕時間閱讀 */
-        --ss-morph:      cover  0% cover 15%;
-        --ss-text-1:     cover  5% cover 14%;
-        --ss-arrow-1:    cover 12% cover 20%;
-        --ss-text-2:     cover 15% cover 24%;
-        --ss-arrow-2:    cover 18% cover 26%;
-        --ss-text-3:     cover 22% cover 30%;
+        /* 各階段 view() 進度區間 —— 所有動畫在 12% 前完成，區塊剛進畫面
+           就跑完，剩餘的 scroll 都是靜態閱讀 */
+        --ss-morph:      cover  0% cover  5%;
+        --ss-text-1:     cover  1% cover  5%;
+        --ss-arrow-1:    cover  4% cover  7%;
+        --ss-text-2:     cover  5% cover  9%;
+        --ss-arrow-2:    cover  7% cover 10%;
+        --ss-text-3:     cover  8% cover 12%;
 
         width: var(--ss-w);
         margin: 56px auto 0;
