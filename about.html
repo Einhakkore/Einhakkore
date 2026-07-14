@@ -249,6 +249,99 @@
     }
 
     /* ============================================================
+       PRACTICES · 版型重設（直向堆疊 · icon 在左 · 半透明白 + 光暈）
+       ============================================================ */
+
+    /* 覆寫預設 3 欄柵格 → 單欄直向堆疊 */
+    .section-practices .practices {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* 卡片改為 icon 左 · 文字右 的 grid 排版：
+       左欄放 icon（跨 2 列），右欄上排 h3、下排 p */
+    .section-practices .practice-card {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      grid-template-rows: auto auto;
+      column-gap: 32px;
+      row-gap: 8px;
+      align-items: start;
+      padding: 36px 40px;
+      /* 半透明白底 + backdrop blur，形成毛玻璃 */
+      background: rgba(255, 255, 255, 0.55);
+      backdrop-filter: blur(18px) saturate(1.15);
+      -webkit-backdrop-filter: blur(18px) saturate(1.15);
+      /* 光暈感邊框：內線亮白 + 外層琥珀光暈 */
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      border-radius: 20px;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),        /* 頂端內光 */
+        0 0 0 1px rgba(232, 163, 61, 0.08),            /* 環邊淡光 */
+        0 12px 40px rgba(232, 163, 61, 0.12),          /* 琥珀光暈 */
+        0 4px 20px rgba(24, 44, 59, 0.06);             /* 底層柔陰影 */
+    }
+
+    /* hover 時光暈更亮，微微上浮 */
+    .section-practices .practice-card:hover {
+      background: rgba(255, 255, 255, 0.72);
+      border-color: rgba(255, 255, 255, 0.9);
+      transform: translateY(-3px);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 1),
+        0 0 0 1px rgba(232, 163, 61, 0.16),
+        0 20px 56px rgba(232, 163, 61, 0.20),
+        0 8px 28px rgba(24, 44, 59, 0.08);
+    }
+
+    /* Icon 容器：占 grid 左欄，跨兩列（貼齊 h3+p 的整段高度） */
+    .section-practices .practice-card .icon {
+      grid-column: 1;
+      grid-row: 1 / span 2;
+      width: 72px;
+      height: 72px;
+      margin-bottom: 0;         /* 覆寫預設 margin-bottom: 28px */
+    }
+
+    /* 標題：右欄第一列，單行不換行 */
+    .section-practices .practice-card h3 {
+      grid-column: 2;
+      grid-row: 1;
+      margin: 4px 0 0;          /* 與 icon 頂端視覺對齊 */
+    }
+    /* 內文：右欄第二列 */
+    .section-practices .practice-card p {
+      grid-column: 2;
+      grid-row: 2;
+      margin: 0;
+      max-width: 62ch;          /* 舒服的閱讀寬度 */
+    }
+
+    /* sage 變體：icon 顏色沿用鼠尾草，卡片本體維持白底 */
+    .section-practices .practice-card.sage .icon { color: var(--sage-700); }
+
+    /* Mobile：icon 縮回上方、單欄直向堆疊（避免窄畫面左欄擠壓文字） */
+    @media (max-width: 640px) {
+      .section-practices .practice-card {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+        row-gap: 12px;
+        padding: 28px 24px;
+      }
+      .section-practices .practice-card .icon {
+        grid-column: 1;
+        grid-row: 1;
+        width: 56px;
+        height: 56px;
+      }
+      .section-practices .practice-card h3 { grid-column: 1; grid-row: 2; }
+      .section-practices .practice-card p  { grid-column: 1; grid-row: 3; }
+    }
+
+    /* ============================================================
        PRACTICES · 滾動閱讀（Pin + Line-draw + Card stagger + Icon draw）
        ============================================================ */
 
@@ -298,10 +391,10 @@
       stroke-dashoffset: 1;
     }
 
-    /* 卡片初始狀態：右側偏移 + 透明，等待 timeline 逐一推入 */
+    /* 卡片初始狀態：下移 40px + 透明，配合直向堆疊改為垂直進場 */
     .section-practices .practice-card.slideItem {
       opacity: 0;
-      transform: translate3d(80px, 0, 0);
+      transform: translate3d(0, 40px, 0);
       will-change: transform, opacity;
     }
 
@@ -409,7 +502,6 @@
               <path d="M28 30a4 4 0 0 0 4 4" opacity=".6"/>
               <path d="M14 50h36M18 56h28" opacity=".5"/>
             </svg></div>
-            <div class="roman">VISION</div>
             <h3>我們的異象</h3>
             <p>為宣教士提供全方位的支持與資源，回應大使命的後方守護。讓神國工人在前線奔跑時，後方有人為他們築起堅固的支持網絡。</p>
           </article>
@@ -420,7 +512,6 @@
               <path d="M14 40v8M22 40v8M32 38v10M42 40v8M50 40v8" opacity=".5"/>
               <path d="M6 48h52"/>
             </svg></div>
-            <div class="roman">RESOURCE</div>
             <h3>資源整合</h3>
             <p>建立完整的資源整合平台，連結教會、機構與個人，讓支持更有效率，讓關懷更加及時。盤點現有資源，使每一份心意都能精準到位。</p>
           </article>
@@ -431,7 +522,6 @@
               <path d="M10 48c0 -6 6 -10 12 -10s12 4 12 10"/>
               <path d="M30 48c0 -6 6 -10 12 -10s12 4 12 10"/>
             </svg></div>
-            <div class="roman">COMMUNITY</div>
             <h3>關顧網絡</h3>
             <p>打造溫暖的社群網絡，透過定期聚會、線上交流與實體支持，讓每位宣教士都能感受到陪伴。從心靈到實際生活，全方位的關顧。</p>
           </article>
@@ -878,13 +968,13 @@
       );
     }
 
-    // (D2) 每張卡片：x:80 → 0 淡入，icon 描邊繪出，icon 容器 back.out 反彈
+    // (D2) 每張卡片：y:40 → 0 淡入（配合直向堆疊），icon 描邊繪出，icon 容器 back.out 反彈
     cards.forEach((card, i) => {
       const start = i;
-      // 卡片本體：x 從 100% 滑入（此處以 80px 呈現，避免柵格外溢），輕微 scale
+      // 卡片本體：從下方 40px 上移淡入，符合上→下閱讀動線
       tl.fromTo(card,
-        { x: 80, opacity: 0, scale: 0.98 },
-        { x: 0,  opacity: 1, scale: 1, duration: 0.6, ease: 'power3.out' },
+        { y: 40, opacity: 0, scale: 0.98 },
+        { y: 0,  opacity: 1, scale: 1, duration: 0.6, ease: 'power3.out' },
         start
       );
       const iconNodes = card.querySelectorAll('[data-strength-icon] svg path, [data-strength-icon] svg circle');
