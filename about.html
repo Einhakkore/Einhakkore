@@ -363,11 +363,18 @@
       opacity: 0;
     }
 
-    /* 給整段 practices 一個 stage，便於 pin 與圖層堆疊 */
+    /* 給整段 practices 一個 stage：
+       min-height 100vh + flex-center，讓 pin 時卡片組垂直置中於視窗 */
     .practices-stage {
       position: relative;
       isolation: isolate;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
+    /* stage 內的 .practices grid 需自動撐滿寬度，維持原本 max-width 排版 */
+    .practices-stage .practices { width: 100%; }
 
     /* SVG 描邊裝飾線：跟隨滾動 scrub 從 0 -> 100% 繪出
        透過 stroke-dasharray + stroke-dashoffset 實作 */
@@ -515,7 +522,7 @@
             <h3>資源整合</h3>
             <p>建立完整的資源整合平台，連結教會、機構與個人，讓支持更有效率，讓關懷更加及時。盤點現有資源，使每一份心意都能精準到位。</p>
           </article>
-          <article class="practice-card sage slideItem scr-fade" data-slide-item data-index="2">
+          <article class="practice-card sage slideItem" data-slide-item data-index="2">
             <div class="icon" data-strength-icon><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="22" cy="22" r="6"/>
               <circle cx="42" cy="22" r="6"/>
@@ -539,11 +546,11 @@
           <div class="caption">— Hands that are held through every season.</div>
         </div>
         <div class="feature-text">
-          <div class="label sage" data-split-lines>COMPANIONSHIP · 同行</div>
-          <h2 class="sage" data-split-lines>長期的同行。</h2>
+          <div class="label" data-split-lines>COMPANIONSHIP · 同行</div>
+          <h2 data-split-lines>長期的同行。</h2>
           <p data-split-lines>關顧不是短期的活動，而是持續的陪伴。我們相信宣教士的旅程需要可以一起走長路的夥伴。</p>
           <p data-split-lines>從預備期、出工場、再回國述職，每一個階段我們都希望以實際的方式同在。透過個別陪伴、家庭關懷與屬靈成長支持，建立穩固的後援。</p>
-          <a class="link sage" href="contact.html">與我們聊聊 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg></a>
+          <a class="link" href="contact.html">與我們聊聊 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg></a>
         </div>
       </div>
     </div>
@@ -558,11 +565,11 @@
           <div class="caption">— Trust is built one conversation at a time.</div>
         </div>
         <div class="feature-text">
-          <div class="label clay" data-split-lines>RELATIONSHIP · 關係</div>
-          <h2 class="coral" data-split-lines>建立關係的支持。</h2>
+          <div class="label" data-split-lines>RELATIONSHIP · 關係</div>
+          <h2 data-split-lines>建立關係的支持。</h2>
           <p data-split-lines>不只提供資源，更建立關係。我們在差會、教會與宣教士家庭之間，搭建可信賴的支持網絡。</p>
           <p data-split-lines>每一杯咖啡、每一封代禱信、每一次線上會議，都是關係累積的證據。我們相信，當「人」被看見，工作才會被祝福。</p>
-          <a class="link coral" href="volunteer.html">加入我們 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg></a>
+          <a class="link" href="volunteer.html">加入我們 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg></a>
         </div>
       </div>
     </div>
@@ -945,12 +952,20 @@
     // N=3 時約 1.9×viewport，讓每張卡有喘息又不會太長
     const pinDistance = () => window.innerHeight * (0.4 + 0.5 * cards.length);
 
+    // 用 gsap.set() 鎖定初始態（在 timeline 建立前執行，讓 CSS 尚未布局階段就不會閃現）
+    gsap.set(cards, { y: 40, opacity: 0, scale: 0.98 });
+    cards.forEach(card => {
+      const iconWrap = card.querySelector('[data-strength-icon]');
+      if (iconWrap) gsap.set(iconWrap, { scale: 0.85 });
+    });
+
     const tl = gsap.timeline({
       defaults: { ease: 'power3.out' },
       scrollTrigger: {
         trigger: pinTarget,
-        // 讓卡片區塊置中於視窗才定格：中線對視窗中線；早於此時，卡片仍是滑入前的隱藏狀態
-        start: 'top 30%',         // stage 頂端進入視窗上三分之一 → 立即 pin，減少「空卡」等待
+        // stage 高度為 100vh + 內容 flex-center，pin 從 stage 頂端貼齊視窗頂端起算
+        // → 內容自然位於視窗垂直正中
+        start: 'top top',
         end: () => '+=' + pinDistance(),
         pin: pinTarget,
         pinSpacing: true,
@@ -962,19 +977,22 @@
 
     // (D1) 背景線條 stroke draw：於整條 timeline 期間 dashoffset len → 0
     if (bgPathLen > 0) {
-      tl.to('[data-value-line-bg] path',
-        { strokeDashoffset: 0, ease: 'none', duration: cards.length },
+      tl.fromTo('[data-value-line-bg] path',
+        { strokeDashoffset: bgPathLen },
+        { strokeDashoffset: 0, ease: 'none', duration: cards.length, immediateRender: false },
         0
       );
     }
 
     // (D2) 每張卡片：y:40 → 0 淡入（配合直向堆疊），icon 描邊繪出，icon 容器 back.out 反彈
+    // 用 fromTo + immediateRender:false 讓每個 tween 明確記錄自己的「from」值，
+    // 這樣 scrubbed timeline 反向捲動時能夠正確回復到初始態，卡片依 index 序列播放不亂序。
     cards.forEach((card, i) => {
       const start = i;
       // 卡片本體：從下方 40px 上移淡入，符合上→下閱讀動線
       tl.fromTo(card,
         { y: 40, opacity: 0, scale: 0.98 },
-        { y: 0,  opacity: 1, scale: 1, duration: 0.6, ease: 'power3.out' },
+        { y: 0, opacity: 1, scale: 1, duration: 0.6, ease: 'power3.out', immediateRender: false },
         start
       );
       const iconNodes = card.querySelectorAll('[data-strength-icon] svg path, [data-strength-icon] svg circle');
@@ -990,7 +1008,7 @@
         // icon 容器：0.85 → 1，back.out(2.2) 彈性收尾（縮放反彈感）
         tl.fromTo(iconWrap,
           { scale: 0.85 },
-          { scale: 1, duration: 0.45, ease: 'back.out(2.2)' },
+          { scale: 1, duration: 0.45, ease: 'back.out(2.2)', immediateRender: false },
           start + 0.3
         );
       }
