@@ -9,8 +9,12 @@
   const root = document.documentElement;
 
   // ---------- Shared partials loader ----------
-  // 每頁把 <div data-include="header|footer|newsletter|aurora"></div>
+  // 每頁把 <div data-include="header|footer|newsletter|aurora|page-hero"></div>
   // 換成 assets/partials/*.html 的內容，nav / footer / 訂閱只要改一次。
+  // 支援兩種輕量樣板語法，讓 page-hero 這類「殼相同、內容不同」的區塊也能共用一份 partial：
+  //   {{attr}}      → 換成 include 節點的 data-attr 值
+  //   <slot></slot> → 換成 include 節點原本的子節點（頁面自己寫的 h1 / p 等）
+  //   data-extra-class → 加到 partial 根節點的 class（例如 donate 頁的 .donate-hero）
   async function loadPartials() {
     const nodes = document.querySelectorAll("[data-include]");
     await Promise.all([...nodes].map(async node => {
@@ -19,8 +23,15 @@
         const res = await fetch(`assets/partials/${name}.html`, { cache: "no-cache" });
         if (!res.ok) throw new Error(res.status);
         const html = await res.text();
+        const filled = html.replace(/\{\{(\w+)\}\}/g, (_, key) => node.dataset[key] || "");
         const tpl = document.createElement("template");
-        tpl.innerHTML = html.trim();
+        tpl.innerHTML = filled.trim();
+        const slot = tpl.content.querySelector("slot");
+        if (slot) slot.replaceWith(...node.childNodes);
+        if (node.dataset.extraClass) {
+          const root = tpl.content.firstElementChild;
+          if (root) root.classList.add(node.dataset.extraClass);
+        }
         node.replaceWith(tpl.content);
       } catch (err) {
         console.warn(`[partials] failed to load "${name}"`, err);
@@ -82,16 +93,15 @@
     const T = (name, fb) => (cs.getPropertyValue(name).trim() || fb);
 
     const P_STOPS = [
-      { p: 0.00, bg1: '--stop-0-bg1', bg2: '--stop-0-bg2', glow: '--stop-0-glow', fg: '--stop-0-fg' },
-      { p: 0.42, bg1: '--stop-1-bg1', bg2: '--stop-1-bg2', glow: '--stop-1-glow', fg: '--stop-1-fg' },
-      { p: 0.72, bg1: '--stop-2-bg1', bg2: '--stop-2-bg2', glow: '--stop-2-glow', fg: '--stop-2-fg' },
-      { p: 0.90, bg1: '--stop-3-bg1', bg2: '--stop-3-bg2', glow: '--stop-3-glow', fg: '--stop-3-fg' },
-      { p: 1.00, bg1: '--stop-4-bg1', bg2: '--stop-4-bg2', glow: '--stop-4-glow', fg: '--stop-4-fg' },
+      { p: 0.00, bg1: '--stop-0-bg1', bg2: '--stop-0-bg2', fg: '--stop-0-fg' },
+      { p: 0.42, bg1: '--stop-1-bg1', bg2: '--stop-1-bg2', fg: '--stop-1-fg' },
+      { p: 0.72, bg1: '--stop-2-bg1', bg2: '--stop-2-bg2', fg: '--stop-2-fg' },
+      { p: 0.90, bg1: '--stop-3-bg1', bg2: '--stop-3-bg2', fg: '--stop-3-fg' },
+      { p: 1.00, bg1: '--stop-4-bg1', bg2: '--stop-4-bg2', fg: '--stop-4-fg' },
     ].map(s => ({
       p: s.p,
       bg1:  parseColor(T(s.bg1,  '#22394A')),
       bg2:  parseColor(T(s.bg2,  '#182C3B')),
-      glow: parseColor(T(s.glow, 'rgba(232,163,61,.30)')),
       fg:   parseColor(T(s.fg,   '#F5F1E8')),
     }));
 
@@ -104,7 +114,6 @@
       const t = span > 0 ? Math.min(1, Math.max(0, (p - a.p) / span)) : 0;
       target.style.setProperty('--bg1',  fmtColor(lerpColor(a.bg1,  b.bg1,  t)));
       target.style.setProperty('--bg2',  fmtColor(lerpColor(a.bg2,  b.bg2,  t)));
-      target.style.setProperty('--glow', fmtColor(lerpColor(a.glow, b.glow, t)));
       target.style.setProperty('--fg',   fmtColor(lerpColor(a.fg,   b.fg,   t)));
     }
 
@@ -204,25 +213,6 @@
     });
 
     select.addEventListener('change', () => syncTo(select.value));
-  }
-
-  // ---------- Snackbar ----------
-  let snackbarEl = null;
-  let snackbarTimer = null;
-  function showSnackbar(text) {
-    if (!snackbarEl) {
-      snackbarEl = document.createElement('div');
-      snackbarEl.className = 'snackbar';
-      snackbarEl.setAttribute('role', 'status');
-      snackbarEl.setAttribute('aria-live', 'polite');
-      document.body.appendChild(snackbarEl);
-    }
-    snackbarEl.textContent = text;
-    // Force reflow so re-triggering the same message re-runs the transition.
-    void snackbarEl.offsetWidth;
-    snackbarEl.classList.add('show');
-    clearTimeout(snackbarTimer);
-    snackbarTimer = setTimeout(() => snackbarEl.classList.remove('show'), 2000);
   }
 
   function initEmailCopy() {
