@@ -64,17 +64,13 @@
   --ink-900: #1A2E40;
   --ink-800: #274156;
   --ink-700: #345670;
-  --ink-600: #4D6478;
 
   /* Paper & Sand — 暖中性大面積 */
   --paper:      #FAF6EF;     /* 頁面底 — 奶紙白 */
   --paper-2:    #F5EEDF;     /* 比 paper 再深一點，過渡用 */
   --sand:       #EDE3D3;     /* 區塊／卡片底 — 沙米 */
-  --sand-2:     #E2D5BF;
-  --sand-deep:  #C9B998;
 
   /* Amber — 主要強調（按鈕、重點） */
-  --amber-800: #8A6508;
   --amber-700: #C49C0C;      /* 文字級琥珀（對 paper 達 AA） C49C0C 原本色系badge fg 700 */
   --amber-600: #D4AF37;
   --amber-500: #FFBA49;      /* 按鈕主色 — 比舊版暖、少螢光 */
@@ -82,68 +78,56 @@
   --amber-300: #FDF3CF;      /*F5D097*/
 
   /* Clay — 陶土橘：給「人味」的標籤色（咖啡、宣教士故事） */
-  --clay-800:  #7A4530;
   --clay-700:  #9E5E3D;
   --clay-500:  #C77B52;
-  --clay-400:  #D69877;
   --clay-tint: rgba(199, 123, 82, .10);
 
 /* Coral  — 橘紅 Coral · 警示與急需:錯誤提示、急需關注、緊急代禱（比 amber 更紅，好區分） */
   --coral-800:  #A33B1E;
   --coral-700:  #D2502B;
-  --coral-500:  #E8663E;
   --coral-100:  #FBE3DA;
 
   /* Sage — 草綠 Green · 成功與成長:送出成功、進度達標、正向標籤 */
   --sage-700:  #4B6A2B;
-  --sage-600:  #6B9040;
   --sage-500:  #7FA64E;
   --sage-100:  #ECF2DC;
   --sage-tint: rgba(138, 162, 147, .12);
 
   /* Sky — 資訊與連結：提示框、次要連結、平靜標籤（呼應 navy-600 藍綠） */
   --sky-700:  #2A6076;
-  --sky-600:  #3E8DAB;
   --sky-500:  #5BA8C4;
-  --sky-100:  #E0EEF3;
 
   /* ---------------------------------------------------------
      Scroll flow field — 泉湧場：整站背景由 site.js 依捲動內插
-     每個 STOP 是一組 (bg1, bg2, glow, fg)；p=0 頁面頂，p=1 頁面底
+     每個 STOP 是一組 (bg1, bg2, fg)；p=0 頁面頂，p=1 頁面底
      --------------------------------------------------------- */
   /* STOP 0 — 頁首：暖琥珀霧的深藍 */
   --stop-0-bg1:  #22394A;
   --stop-0-bg2:  #182C3B;
-  --stop-0-glow: rgba(232, 163, 61, .30);
   --stop-0-fg:   #F5F1E8;
   /* STOP 1 — 深潛：最深的墨藍夜 */
   --stop-1-bg1:  #0E1A23;
   --stop-1-bg2:  #0A141C;
-  --stop-1-glow: rgba(232, 163, 61, .22);
   --stop-1-fg:   #F5F1E8;
   /* STOP 2 — 迴升：藍轉青，帶起 sky 微光 */
   --stop-2-bg1:  #16323d;
   --stop-2-bg2:  #0E1A23;
-  --stop-2-glow: rgba(110, 147, 168, .28);
   --stop-2-fg:   #F5F1E8;
   /* STOP 3 — 水面：泉湧霧綠 + sage 光暈 */
   --stop-3-bg1:  #7fa0a6;
   --stop-3-bg2:  #b9cdc9;
-  --stop-3-glow: rgba(140, 166, 121, .30);
   --stop-3-fg:   #33454f;
   /* STOP 4 — 出水：明亮乾淨、琥珀暖光收尾 */
   --stop-4-bg1:  #F4F6F1;
   --stop-4-bg2:  #E3ECE7;
-  --stop-4-glow: rgba(232, 163, 61, .30);
   --stop-4-fg:   #1A2E40;
 
   /* 全站 dynamic tokens：預設是「非 flow-field 頁面」用的淺色主題。
      home / donate 兩頁在下方 body[data-page] 覆寫成深色 STOP 0，
-     site.js 再依捲動每幀更新 --bg1 / --bg2 / --glow / --fg。
+     site.js 再依捲動每幀更新 --bg1 / --bg2 / --fg。
      其他頁面 JS 不會跑，所以 vars 就停在下面這組淺色預設。 */
   --bg1:  var(--paper);
   --bg2:  var(--paper-2);
-  --glow: transparent;
   --fg:   var(--text-2);
   --accent: var(--amber-700);
 
@@ -201,13 +185,12 @@
 
 /* ---------------------------------------------------------
    Flow-field 頁面（home / donate）：切成深色 STOP 0 起手，
-   捲動時 site.js 再逐幀更新 --bg1 / --bg2 / --glow / --fg。
+   捲動時 site.js 再逐幀更新 --bg1 / --bg2 / --fg。
    --------------------------------------------------------- */
 body[data-page="home"],
 body[data-page="donate"] {
   --bg1:  var(--stop-0-bg1);
   --bg2:  var(--stop-0-bg2);
-  --glow: var(--stop-0-glow);
   --fg:   var(--stop-0-fg);
   --accent: var(--amber-400);
 
@@ -271,8 +254,7 @@ img { max-width: 100%; display: block; }
 /* 全站照片：很淡的暖色濾鏡（略加暖、略降飽和），不影響 logo */
 img { filter: sepia(.06) saturate(.92) brightness(.99); }
 .logo img, .footer-brand img, .footer-social svg, .practice-card .icon svg,
-.step .icon svg, .contact-block .icon svg, .field select, .menu-toggle svg,
-.account-box .icon svg { filter: none; }
+.field select, .menu-toggle svg { filter: none; }
 
 a { color: inherit; text-decoration: none; cursor: pointer; }
 button { font-family: inherit; cursor: pointer; }
@@ -482,10 +464,12 @@ body[data-page="donate"] .logo .logo-dark { display: block; }
   0%, 100% { box-shadow: 0 0 0 0 rgba(232,163,61,.4); }
   50%      { box-shadow: 0 0 0 16px rgba(232,163,61,0); }
 }
+/* Eyebrow micro-label：跨多個區塊共用同一套斜體英文小標排版 */
+.hero-eyebrow, .page-hero .eyebrow, .section-eyebrow, .verse-ref,
+.feature-text .label, .cta-label, .newsletter-label {
+  font-family: var(--font-en); font-style: italic; font-weight: 400; font-size: 14px;
+}
 .hero-eyebrow {
-  font-family: var(--font-en);
-  font-style: italic; font-weight: 400;
-  font-size: 14px;
   color: var(--accent);
   letter-spacing: .25em;
   margin-bottom: 40px;
@@ -540,21 +524,21 @@ body[data-page="donate"] .logo .logo-dark { display: block; }
    ----------------------------------------------------------- */
   .budget{
     max-width:660px;
-    margin:48px auto;
+    margin-bottom: 40px;
     padding:0 24px;
     text-align:left;
   }
-  .budget h3{
-    font-size:1.5rem;
-    font-weight:600;
-    letter-spacing:.02em;
-    margin:0 0 16px;
-    color:var(--text-2);
+  .budget h3 {
+    font-family: var(--font-brand); font-weight: 600;
+    font-size: 24px; color: var(--text-1);
+    margin: 0 0 24px;
+    display: flex; align-items: baseline; gap: 14px;
+    letter-spacing: .02em;
+    line-height: 1.55;
   }
-  .budget h3 em{
-    font-style:normal;
-    color:var(--amber-500);
-    font-weight:700;
+  .budget h3 em {
+    font-family: var(--font-brand); font-style: italic; font-weight: 400;
+    font-size: 28px; color: var(--amber-700); letter-spacing: 0;
   }
   .budget > p{
     color:var(--text-2);
@@ -611,8 +595,7 @@ body[data-page="donate"] .logo .logo-dark { display: block; }
   background: var(--amber-500); border-radius: 50%;
 }
 .page-hero .eyebrow {
-  font-family: var(--font-en); font-style: italic; font-weight: 400;
-  font-size: 14px; color: var(--accent);
+  color: var(--accent);
   letter-spacing: .25em; margin-bottom: 28px;
 }
 .page-hero h1 {
@@ -677,7 +660,6 @@ body[data-page="donate"] .logo .logo-dark { display: block; }
    SECTION
    ----------------------------------------------------------- */
 .section { position: relative; padding: 120px 32px; }
-.section-narrow { padding: 100px 32px; }
 
 .section-head {
   max-width: 720px; margin: 0 auto 80px;
@@ -689,8 +671,7 @@ body[data-page="donate"] .logo .logo-dark { display: block; }
   line-height: 1; margin-bottom: 8px;
 }
 .section-eyebrow {
-  font-family: var(--font-en); font-style: italic; font-weight: 400;
-  font-size: 14px; color: var(--amber-700);
+  color: var(--amber-700);
   letter-spacing: .25em; margin-bottom: 24px;
 }
 .section-head h2 {
@@ -732,16 +713,19 @@ body[data-page="donate"] .logo .logo-dark { display: block; }
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
 }
 @media (max-width: 900px) { .practices { grid-template-columns: 1fr; } }
-.practice-card {
+/* Glass-card 底：paper 卡片共用的毛玻璃底 recipe */
+.practice-card, .contact-form, .verse-card {
   background: var(--card-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--card-border);
   border-radius: 24px;
+  box-shadow: var(--card-shadow);
+}
+.practice-card {
   padding: 48px 36px;
   transition: all .4s cubic-bezier(.16, 1, .3, 1);
   position: relative; overflow: hidden;
-  box-shadow: var(--card-shadow);
 }
 .practice-card::before {
   content: ""; position: absolute;
@@ -1057,8 +1041,7 @@ body[data-page="donate"] .logo .logo-dark { display: block; }
 .section-verse { padding: 140px 32px; text-align: center; position: relative; }
 .verse-wrap { max-width: 760px; margin: 0 auto; }
 .verse-ref {
-  font-family: var(--font-en); font-style: italic; font-weight: 400;
-  font-size: 14px; color: var(--sage-700);
+  color: var(--sage-700);
   letter-spacing: .3em; margin-bottom: 48px;
 }
 .verse-quote {
@@ -1070,11 +1053,6 @@ body[data-page="donate"] .logo .logo-dark { display: block; }
 .verse-quote strong {
   font-family: var(--font-en); font-style: italic; font-weight: 400;
   color: var(--accent); letter-spacing: 0;
-}
-.verse-cite {
-  font-family: var(--font-en); font-style: italic; font-weight: 400;
-  font-size: 13px; color: var(--fg); opacity: .65;
-  letter-spacing: .25em;
 }
 
 /* -----------------------------------------------------------
@@ -1116,8 +1094,7 @@ body[data-page="donate"] .logo .logo-dark { display: block; }
 }
 .feature-text .label {
   display: inline-flex; align-items: center; gap: 10px;
-  font-family: var(--font-en); font-style: italic; font-weight: 400;
-  font-size: 14px; color: var(--accent);
+  color: var(--accent);
   letter-spacing: .25em; margin-bottom: 24px;
 }
 .feature-text .label::before {
@@ -1155,53 +1132,12 @@ body[data-page="donate"] .logo .logo-dark { display: block; }
 .feature-text .link.sage { color: var(--sage-700); border-color: var(--sage-700); }
 
 /* -----------------------------------------------------------
-   STATS — 沙米腰帶
-   ----------------------------------------------------------- */
-.section-stats {
-  padding: 64px 32px;
-  border-top: 1px solid var(--stats-border);
-  border-bottom: 1px solid var(--stats-border);
-  background: var(--stats-bg);
-}
-.stats-grid {
-  max-width: 1180px; margin: 0 auto;
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px;
-  align-items: center;
-}
-@media (max-width: 700px) {
-  .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 40px 24px; }
-}
-.stat {
-  display: flex; flex-direction: column; align-items: center;
-  text-align: center; position: relative;
-}
-.stat:not(:last-child)::after {
-  content: ""; position: absolute;
-  right: -16px; top: 20%; height: 60%; width: 1px;
-  background: var(--line-mid);
-}
-@media (max-width: 700px) {
-  .stat:not(:last-child)::after { display: none; }
-}
-.stat .n {
-  font-family: var(--font-en); font-style: italic; font-weight: 300;
-  font-size: clamp(40px, 4.5vw, 52px); line-height: 1;
-  color: var(--accent); margin-bottom: 10px;
-  letter-spacing: -.02em;
-}
-.stat .l {
-  font-family: var(--font-zh); font-size: 13px;
-  color: var(--fg); opacity: .78; letter-spacing: .12em;
-}
-
-/* -----------------------------------------------------------
    CTA — 品牌定錨段落（深藍 + 極光由 .section--navy 提供）
    ----------------------------------------------------------- */
 .section-cta { padding: 160px 32px; text-align: center; }
 .cta-wrap { max-width: 720px; margin: 0 auto; }
 .cta-label {
-  font-family: var(--font-en); font-style: italic; font-weight: 400;
-  font-size: 14px; color: var(--amber-400);
+  color: var(--amber-400);
   letter-spacing: .3em; margin-bottom: 40px;
 }
 .cta-poem {
@@ -1218,10 +1154,6 @@ font-size: 24px; line-height: 1.95;
 }
 .cta-poem .line { display: block; }
 .cta-poem .indent { padding-left: 2em; }
-.cta-sub {
-  font-size: 16px; line-height: 1.95; color: rgba(245,241,232,.78);
-  font-weight: 400; margin-bottom: 48px;
-}
 .cta-actions {
   display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
 }
@@ -1256,22 +1188,23 @@ font-size: 24px; line-height: 1.95;
   to   { transform: translate(-6%, -8%) scale(1.1);}
 }
 
-/* 在 .section--navy 內的元件變體 */
-.section--navy .btn-ghost {
+/* 在 .section--navy 內的元件變體（首頁 hero 的 ghost button 也是同一套反白配色，見文末） */
+.section--navy .btn-ghost,
+body[data-page="home"] .hero .btn-ghost {
   background: rgba(255,255,255,.06);
   color: var(--text-on-dark);
   border: 1px solid rgba(255,255,255,.20);
 }
-.section--navy .btn-ghost:hover {
+.section--navy .btn-ghost:hover,
+body[data-page="home"] .hero .btn-ghost:hover {
   background: rgba(255,255,255,.12);
   border-color: rgba(255,255,255,.35);
 }
 
 /* 經文區套到 navy 時的文字色階 */
-.section-verse.section--navy .verse-ref          { color: var(--sage-400); }
+.section-verse.section--navy .verse-ref          { color: var(--sage-500); }
 .section-verse.section--navy .verse-quote        { color: var(--text-on-dark); }
 .section-verse.section--navy .verse-quote strong { color: var(--amber-400); }
-.section-verse.section--navy .verse-cite         { color: rgba(245,241,232,.55); }
 
 /* 系統「減少動態」時，極光靜止 */
 @media (prefers-reduced-motion: reduce) {
@@ -1291,8 +1224,7 @@ font-size: 24px; line-height: 1.95;
 }
 .newsletter-wrap { max-width: 560px; margin: 0 auto; }
 .newsletter-label {
-  font-family: var(--font-en); font-style: italic; font-weight: 400;
-  font-size: 14px; color: var(--sage-700);
+  color: var(--sage-700);
   letter-spacing: .3em; margin-bottom: 28px;
 }
 .newsletter h3 {
@@ -1425,105 +1357,9 @@ body.footer-reveal-ready .site-header { z-index: 100; }
 }
 
 /* -----------------------------------------------------------
-   DONATE PAGE
-   ----------------------------------------------------------- */
-.donate-grid {
-  display: grid; grid-template-columns: 1.4fr 1fr;
-  gap: 64px; align-items: start;
-}
-@media (max-width: 900px) {
-  .donate-grid { grid-template-columns: 1fr; }
-}
-.donate-quote {
-  padding: 32px;
-  background: rgba(237,227,211,.65);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--line-dim);
-  border-radius: 12px;
-  border-left: 3px solid var(--clay-500);
-  font-family: var(--font-brand); font-weight: 500;
-  font-size: 18px; line-height: 2;
-  color: var(--text-1); margin-bottom: 40px;
-  letter-spacing: .01em;
-}
-.budget { margin-bottom: 40px; }
-.budget h3 {
-  font-family: var(--font-brand); font-weight: 600;
-  font-size: 24px; color: var(--text-1);
-  margin: 0 0 24px;
-  display: flex; align-items: baseline; gap: 14px;
-  letter-spacing: .02em;
-  line-height: 1.55;
-}
-.budget h3 em {
-  font-family: var(--font-brand); font-style: italic; font-weight: 400;
-  font-size: 28px; color: var(--amber-700); letter-spacing: 0;
-}
-.budget-row {
-  display: grid; grid-template-columns: 1.4fr 2fr auto; gap: 20px;
-  align-items: center; padding: 14px 0;
-  border-bottom: 1px solid var(--line-dim);
-}
-.budget-row:last-child { border-bottom: 0; }
-.budget-row .lbl {
-  font-size: 15px; color: var(--text-2); font-weight: 400;
-}
-.budget-row .bar {
-  height: 6px; background: rgba(26,46,64,.08);
-  border-radius: 999px; overflow: hidden;
-}
-.budget-row .bar > div {
-  height: 100%;
-  background: linear-gradient(90deg, var(--amber-500), var(--amber-400));
-  border-radius: 999px;
-}
-.budget-row .amt {
-  font-family: var(--font-en); font-style: italic;
-  font-size: 16px; color: var(--text-1);
-  min-width: 90px; text-align: right;
-}
-
-.account-box {
-  background: rgba(237,227,211,.65);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--line-dim);
-  border-radius: 20px;
-  padding: 28px;
-  display: flex; flex-direction: column; gap: 14px;
-}
-.account-box h3 {
-  font-family: var(--font-brand); font-weight: 600;
-  font-size: 18px; color: var(--text-1); margin: 0;
-  display: flex; align-items: center; gap: 12px;
-  letter-spacing: .02em;
-  line-height: 1.55;
-}
-.account-box .icon {
-  width: 32px; height: 32px;
-  color: var(--amber-700);
-}
-.account-box .info {
-  font-family: var(--font-en); font-weight: 400;
-  font-size: 15px; line-height: 1.85;
-  color: var(--text-1);
-  background: rgba(250,246,239,.85);
-  padding: 14px 18px; border-radius: 12px;
-}
-.account-box .note {
-  font-size: 13px; line-height: 1.85;
-  color: var(--text-3); margin: 0;
-}
-.account-box .note a { color: var(--clay-700); border-bottom: 1px solid rgba(199,123,82,.4); }
-
-/* -----------------------------------------------------------
    CONTACT FORM
    ----------------------------------------------------------- */
 .contact-form {
-  background: var(--card-bg);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--card-border);
-  border-radius: 24px;
-  box-shadow: var(--card-shadow);
   padding: 36px;
   display: flex; flex-direction: column; gap: 18px;
 }
@@ -1583,49 +1419,6 @@ body.footer-reveal-ready .site-header { z-index: 100; }
 }
 
 /* -----------------------------------------------------------
-   VOLUNTEER STEPS
-   ----------------------------------------------------------- */
-.steps {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
-}
-@media (max-width: 900px) { .steps { grid-template-columns: 1fr; } }
-.step {
-  background: var(--card-bg);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--card-border);
-  box-shadow: var(--card-shadow);
-  border-radius: 24px;
-  padding: 40px 32px;
-  display: flex; flex-direction: column; gap: 16px;
-  transition: all .3s ease;
-}
-.step:hover {
-  background: var(--card-bg-hover);
-  border-color: rgba(232,163,61,.35);
-  transform: translateY(-4px);
-  box-shadow: var(--card-shadow-hover);
-}
-.step .icon {
-  width: 56px; height: 56px;
-  color: var(--amber-700);
-}
-.step .num {
-  font-family: var(--font-en); font-style: italic; font-weight: 300;
-  font-size: 48px; line-height: .9;
-  color: var(--amber-700);
-}
-.step h3 {
-  font-family: var(--font-brand); font-weight: 600;
-  font-size: 22px; color: var(--text-1); margin: 0;
-  letter-spacing: .02em;
-  line-height: 1.55;
-}
-.step p {
-  font-size: 15px; line-height: 1.95;
-  color: var(--text-2); margin: 0;
-}
-
-/* -----------------------------------------------------------
    CONTACT PAGE
    ----------------------------------------------------------- */
 .contact-page {
@@ -1636,40 +1429,6 @@ body.footer-reveal-ready .site-header { z-index: 100; }
   .contact-page { grid-template-columns: 1fr; gap: 40px; }
 }
 .contact-info { display: flex; flex-direction: column; gap: 32px; }
-.contact-block {
-  display: flex; gap: 18px; align-items: flex-start;
-}
-.contact-block .icon {
-  width: 48px; height: 48px; flex-shrink: 0;
-  color: var(--amber-700);
-  background: rgba(232,163,61,.10);
-  border: 1px solid rgba(232,163,61,.25);
-  border-radius: 14px;
-  display: flex; align-items: center; justify-content: center;
-}
-.contact-block.sage .icon {
-  color: var(--sage-700);
-  background: var(--sage-tint);
-  border-color: rgba(138,162,147,.30);
-}
-.contact-block.clay .icon {
-  color: var(--clay-700);
-  background: var(--clay-tint);
-  border-color: rgba(199,123,82,.30);
-}
-.contact-block .info-text { flex: 1; }
-.contact-block h4 {
-  font-family: var(--font-brand); font-weight: 500;
-  font-size: 17px; color: var(--fg); margin: 0 0 8px;
-  letter-spacing: .02em;
-  line-height: 1.55;
-}
-.contact-block p {
-  font-size: 15px; line-height: 1.85;
-  color: var(--fg); opacity: .82; margin: 0; white-space: pre-line;
-}
-.contact-block a { color: var(--accent); border-bottom: 1px solid rgba(232, 163, 61, .35); }
-.contact-block a:hover { color: var(--fg); border-color: var(--fg); }
 
 /* ----- Contact info cards (guide cards + Email card) -----
    Neutral white fill + amber outline so the same style works
@@ -1700,14 +1459,17 @@ body.footer-reveal-ready .site-header { z-index: 100; }
   transition: background 220ms ease, border-color 220ms ease,
               transform 220ms ease, box-shadow 220ms ease;
 }
-.guide-card .icon,
-.contact-card .icon {
-  width: 44px; height: 44px; flex-shrink: 0;
+/* Amber icon badge：圓/方形琥珀色徽章底，跨卡片與社群 icon 共用配色 */
+.guide-card .icon, .contact-card .icon, .social-circles a {
   color: var(--amber-700);
   background: rgba(232, 163, 61, .10);
   border: 1px solid rgba(232, 163, 61, .25);
-  border-radius: 12px;
   display: inline-flex; align-items: center; justify-content: center;
+}
+.guide-card .icon,
+.contact-card .icon {
+  width: 44px; height: 44px; flex-shrink: 0;
+  border-radius: 12px;
 }
 .guide-card:hover,
 .guide-card:focus-visible,
@@ -1777,10 +1539,6 @@ body.footer-reveal-ready .site-header { z-index: 100; }
 .social-circles a {
   width: 42px; height: 42px;
   border-radius: 50%;
-  display: inline-flex; align-items: center; justify-content: center;
-  color: var(--amber-700);
-  background: rgba(232, 163, 61, .10);
-  border: 1px solid rgba(232, 163, 61, .25);
   transition: background 200ms ease, color 200ms ease,
               border-color 200ms ease, transform 200ms ease;
 }
@@ -1789,27 +1547,6 @@ body.footer-reveal-ready .site-header { z-index: 100; }
   color: #fff;
   border-color: var(--amber-700);
   transform: translateY(-2px);
-}
-
-/* ----- Snackbar toast ----- */
-.snackbar {
-  position: fixed;
-  left: 50%; bottom: 32px;
-  transform: translateX(-50%) translateY(12px);
-  background: var(--fg);
-  color: #fff;
-  padding: 12px 22px;
-  border-radius: 999px;
-  font-size: 14px;
-  opacity: 0;
-  pointer-events: none;
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, .35);
-  transition: opacity 220ms ease, transform 220ms ease;
-  z-index: 1000;
-}
-.snackbar.show {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
 }
 
 /* -----------------------------------------------------------
@@ -1836,11 +1573,6 @@ body.footer-reveal-ready .site-header { z-index: 100; }
 .verse-card {
   max-width: 760px; margin: 0 auto;
   text-align: center; padding: 56px 48px;
-  background: var(--card-bg);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--card-border);
-  border-radius: 24px;
-  box-shadow: var(--card-shadow);
   position: relative;
 }
 .verse-card::before {
@@ -2016,13 +1748,7 @@ body[data-page="donate"] main > .section {
 }
 .donate-block p:last-child { margin-bottom: 0; }
 
-/* ---- Donate 頁：左欄三個區塊也統一為半透明白卡 ---- */
-body[data-page="donate"] .donate-quote {
-  background: rgba(255, 255, 255, .90);
-  border: 1px solid rgba(255, 255, 255, .35);
-  border-left: 3px solid var(--clay-500);
-  box-shadow: 0 10px 34px rgba(0, 0, 0, .18);
-}
+/* ---- Donate 頁：左欄的 .budget 也統一為半透明白卡 ---- */
 body[data-page="donate"] .budget {
   background: rgba(255, 255, 255, .90);
   backdrop-filter: blur(20px);
@@ -2033,14 +1759,6 @@ body[data-page="donate"] .budget {
   box-shadow: 0 10px 34px rgba(0, 0, 0, .18);
 }
 body[data-page="donate"] .budget h3 { margin-bottom: 18px; }
-body[data-page="donate"] .account-box {
-  background: rgba(255, 255, 255, .90);
-  border: 1px solid rgba(255, 255, 255, .35);
-  box-shadow: 0 10px 34px rgba(0, 0, 0, .18);
-}
-body[data-page="donate"] .account-box .info {
-  background: rgba(250, 246, 239, .92);
-}
 
 /* ---- 銀行匯款卡片（深色點睛） ---- */
 /* ---- 銀行匯款區塊：暖 sand tint + 深文字，收據 / 對帳表感 ---- */
@@ -2359,12 +2077,6 @@ body[data-page="home"] .feature-text .link:hover {
   color: var(--amber-300); border-color: var(--amber-300);
 }
 
-/* Stats 沙米腰帶 — 提高不透明度，避免與深流混濁 */
-body[data-page="home"] .section-stats {
-  background: rgba(237, 227, 211, .92);
-  border-color: rgba(245, 241, 232, .12);
-}
-
 /* Newsletter — 首頁讓區塊融入捲動漸層背景（不再蓋沙米卡片色）；
    text 顏色沿用基底：newsletter 落在捲動 ~90% 處，此時 --fg 為深色，讀得清楚 */
 body[data-page="home"] .newsletter {
@@ -2430,15 +2142,6 @@ body[data-page="home"] .newsletter {
   .ripple { animation: none; opacity: 0; }
 }
 
-/* Ghost button on 深流：深色版變不見 → 用反白版（比照 .section--navy） */
-body[data-page="home"] .hero .btn-ghost {
-  background: rgba(255, 255, 255, .06);
-  color: var(--home-text-1);
-  border: 1px solid rgba(255, 255, 255, .20);
-}
-body[data-page="home"] .hero .btn-ghost:hover {
-  background: rgba(255, 255, 255, .12);
-  border-color: rgba(255, 255, 255, .35);
-}
+/* Ghost button on 深流：已與 .section--navy .btn-ghost 合併在該規則區塊 */
 
 /* .section--navy 內建 ink-900 底 + 極光，在深流上照常運作，無需覆寫 */

@@ -15,17 +15,16 @@
 
 <div data-include="aurora"></div>
 
+<div data-include="icons"></div>
 <div data-include="header"></div>
 
 <main>
 
-<section class="page-hero donate-hero">
-  <div class="symbol-sm"></div>
-  <div class="eyebrow">奉獻支持</div>
+<div data-include="page-hero" data-eyebrow="奉獻支持" data-extra-class="donate-hero">
   <h1>你們要給人，就必有給你們的</h1>
   <div class="cta-label">路加福音 6:38</div>
   <p> 無論金額大小，您的支持都是與宣教士誠實同行的堅定力量。<br>不論是單次奉獻、或是設定每月定期定額轉帳，這份長流的泉源，都將成為宣教士最務實的後援。</p>
-</section>
+</div>
 
 <section class="section">
     <div class="section-head section-head--on-dark reveal">
@@ -53,7 +52,7 @@
 
     <a class="btn btn-text" href="about.html">
       了解事工
-      <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg>
+      <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg>
     </a>
   </div>
 
@@ -214,7 +213,7 @@
               <!-- 👉 刷卡連結：把 href="#REPLACE_WITH_YOUR_PAYMENT_LINK" 換成金流頁面網址 -->
               <a class="btn btn-text pay-cta" href="#REPLACE_WITH_YOUR_PAYMENT_LINK" target="_blank" rel="noopener">
                 前往刷卡頁面
-                <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg>
+                <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg>
               </a>
             </div>
 
@@ -260,7 +259,7 @@
 
             <button class="btn btn-primary" type="submit" id="donateSubmit">
               送出確認
-              <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg>
+              <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg>
             </button>
 
             <div class="form-status" id="donationStatus" role="status" aria-live="polite"></div>

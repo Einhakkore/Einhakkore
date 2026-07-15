@@ -134,6 +134,22 @@
       color: var(--text-1);
       position: relative;
     }
+    /* 只列出跟全站 .verse-card（styles.css）不同的深色主題差異值，
+       其餘 font-family / font-weight / line-height 等沿用全站規則。 */
+    .section-dark .verse-card {
+      max-width: 780px;
+    }
+    .section-dark .quote-mark {
+      font-size: 100px; line-height: 1;
+      color: var(--amber-400, #F2C36B);
+      margin-bottom: -20px;
+      opacity: .6;
+    }
+    .section-dark blockquote {
+      font-size: clamp(22px, 2.6vw, 30px);
+      color: var(--text-on-dark, #F5F1E8);
+      letter-spacing: .03em;
+      margin: 0 0 32px;
     .philosophy__inner {
       max-width: 1440px;
       margin: 0 auto;
@@ -185,6 +201,7 @@
       color: var(--amber-700, #C49C0C);
       letter-spacing: 0;
     }
+
     .philosophy__cite {
       margin-top: 40px;
       font-family: var(--font-en, serif);
@@ -480,6 +497,7 @@
 <body data-page="about">
 
 <div data-include="aurora"></div>
+<div data-include="icons"></div>
 <div data-include="header"></div>
 
 <main>
@@ -587,7 +605,7 @@
           <h2 class="sage" data-split-lines>長期的同行。</h2>
           <p data-split-lines>關顧不是短期的活動，而是持續的陪伴。我們相信宣教士的旅程需要可以一起走長路的夥伴。</p>
           <p data-split-lines>從預備期、出工場、再回國述職，每一個階段我們都希望以實際的方式同在。透過個別陪伴、家庭關懷與屬靈成長支持，建立穩固的後援。</p>
-          <a class="link sage" href="contact.html">與我們聊聊 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg></a>
+          <a class="link sage" href="contact.html">與我們聊聊 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg></a>
         </div>
       </div>
     </div>
@@ -606,7 +624,7 @@
           <h2 class="coral" data-split-lines>建立關係的支持。</h2>
           <p data-split-lines>不只提供資源，更建立關係。我們在差會、教會與宣教士家庭之間，搭建可信賴的支持網絡。</p>
           <p data-split-lines>每一杯咖啡、每一封代禱信、每一次線上會議，都是關係累積的證據。我們相信，當「人」被看見，工作才會被祝福。</p>
-          <a class="link coral" href="volunteer.html">加入我們 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg></a>
+          <a class="link coral" href="volunteer.html">加入我們 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg></a>
         </div>
       </div>
     </div>
