@@ -1280,7 +1280,7 @@ font-size: 24px; line-height: 1.95;
 }
 
 /* -----------------------------------------------------------
-   NEWSLETTER — 與「代禱信」相關，鼠尾草點綴
+   NEWSLETTER — 與「代禱信」相關，統一使用琥珀主題色
    ----------------------------------------------------------- */
 .newsletter {
   padding: 120px 32px; text-align: center;
@@ -1292,7 +1292,7 @@ font-size: 24px; line-height: 1.95;
 .newsletter-wrap { max-width: 560px; margin: 0 auto; }
 .newsletter-label {
   font-family: var(--font-en); font-style: italic; font-weight: 400;
-  font-size: 14px; color: var(--sage-700);
+  font-size: 14px; color: var(--amber-700);
   letter-spacing: .3em; margin-bottom: 28px;
 }
 .newsletter h3 {
@@ -1328,7 +1328,7 @@ font-size: 24px; line-height: 1.95;
 }
 .newsletter-form button:hover { background: var(--amber-400); }
 .newsletter-success {
-  color: var(--sage-700); font-family: var(--font-en); font-style: italic;
+  color: var(--amber-700); font-family: var(--font-en); font-style: italic;
   font-size: 16px; padding: 24px;
 }
 
