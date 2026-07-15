@@ -128,11 +128,10 @@
       background: radial-gradient(circle, rgba(199,123,82,.26), transparent 65%);
     }
 
-    /* ---------- Verse 深色區 ---------- */
-    .section-dark {
-      background: transparent;
-      color: var(--text-on-dark, #F5F1E8);
-      padding: 140px 32px;
+    /* ---------- Philosophy — novact-style 兩欄留白 ---------- */
+    .philosophy {
+      padding: clamp(140px, 20vh, 240px) 0;
+      color: var(--text-1);
       position: relative;
     }
     /* 只列出跟全站 .verse-card（styles.css）不同的深色主題差異值，
@@ -151,15 +150,75 @@
       color: var(--text-on-dark, #F5F1E8);
       letter-spacing: .03em;
       margin: 0 0 32px;
+    .philosophy__inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 clamp(32px, 6vw, 100px);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: clamp(48px, 8vw, 140px);
+      align-items: start;
     }
-    .section-dark blockquote strong {
+    /* 左欄只放一個超大英文標籤，透明度 10% 當成留白的水印 */
+    .philosophy__label {
       font-family: var(--font-en, serif);
-      font-style: italic; font-weight: 400;
-      color: var(--amber-400, #F2C36B);
+      font-style: normal;
+      font-weight: 400;
+      font-size: clamp(64px, 10vw, 144px);
+      line-height: 1;
+      letter-spacing: -.02em;
+      color: var(--text-1);
+      opacity: .10;
+      margin: 0;
     }
-    .section-dark cite {
+    /* 右欄：標題 → 大留白 → 內文 → 小 cite */
+    .philosophy__title {
+      font-family: var(--font-brand, serif);
+      font-weight: 500;
+      font-size: clamp(28px, 3vw, 44px);
+      line-height: 1.5;
+      letter-spacing: .04em;
+      color: var(--text-1);
+      margin: 0 0 clamp(24px, 3vw, 44px);
+    }
+    .philosophy__body {
+      font-family: var(--font-zh, sans-serif);
+      font-size: 16px;
+      line-height: 2;
+      color: var(--text-2);
+      max-width: 480px;
+    }
+    .philosophy__body p {
+      margin: 0 0 6px;
+    }
+    .philosophy__body p:last-child {
+      margin-bottom: 0;
+    }
+    .philosophy__body strong {
+      font-family: var(--font-en, serif);
+      font-style: italic;
+      font-weight: 400;
+      color: var(--amber-700, #C49C0C);
+      letter-spacing: 0;
+    }
+
+    .philosophy__cite {
+      margin-top: 40px;
+      font-family: var(--font-en, serif);
+      font-style: italic;
+      font-size: 13px;
       letter-spacing: .3em;
-      color: rgba(245,241,232,.65);
+      color: var(--text-3);
+    }
+    @media (max-width: 900px) {
+      .philosophy { padding: 120px 0; }
+      .philosophy__inner {
+        grid-template-columns: 1fr;
+        row-gap: 40px;
+        padding: 0 32px;
+      }
+      .philosophy__label { font-size: 32px; }
+      .philosophy__title { margin-bottom: 20px; }
     }
 
     /* ---------- 圖片 reveal ---------- */
@@ -241,6 +300,170 @@
       transform: translate3d(0, 40px, 0);
     }
 
+    /* ============================================================
+       PRACTICES · 版型重設（直向堆疊 · icon 在左 · 半透明白 + 光暈）
+       ============================================================ */
+
+    /* 覆寫預設 3 欄柵格 → 單欄直向堆疊 */
+    .section-practices .practices {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* 卡片改為 icon 左 · 文字右 的 grid 排版：
+       左欄放 icon（跨 2 列），右欄上排 h3、下排 p */
+    .section-practices .practice-card {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      grid-template-rows: auto auto;
+      column-gap: 32px;
+      row-gap: 8px;
+      align-items: start;
+      padding: 36px 40px;
+      /* 半透明白底 + backdrop blur，形成毛玻璃 */
+      background: rgba(255, 255, 255, 0.55);
+      backdrop-filter: blur(18px) saturate(1.15);
+      -webkit-backdrop-filter: blur(18px) saturate(1.15);
+      /* 光暈感邊框：內線亮白 + 外層琥珀光暈 */
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      border-radius: 20px;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),        /* 頂端內光 */
+        0 0 0 1px rgba(232, 163, 61, 0.08),            /* 環邊淡光 */
+        0 12px 40px rgba(232, 163, 61, 0.12),          /* 琥珀光暈 */
+        0 4px 20px rgba(24, 44, 59, 0.06);             /* 底層柔陰影 */
+    }
+
+    /* hover 時光暈更亮，微微上浮 */
+    .section-practices .practice-card:hover {
+      background: rgba(255, 255, 255, 0.72);
+      border-color: rgba(255, 255, 255, 0.9);
+      transform: translateY(-3px);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 1),
+        0 0 0 1px rgba(232, 163, 61, 0.16),
+        0 20px 56px rgba(232, 163, 61, 0.20),
+        0 8px 28px rgba(24, 44, 59, 0.08);
+    }
+
+    /* Icon 容器：占 grid 左欄，跨兩列（貼齊 h3+p 的整段高度） */
+    .section-practices .practice-card .icon {
+      grid-column: 1;
+      grid-row: 1 / span 2;
+      width: 72px;
+      height: 72px;
+      margin-bottom: 0;         /* 覆寫預設 margin-bottom: 28px */
+    }
+
+    /* 標題：右欄第一列，單行不換行 */
+    .section-practices .practice-card h3 {
+      grid-column: 2;
+      grid-row: 1;
+      margin: 4px 0 0;          /* 與 icon 頂端視覺對齊 */
+    }
+    /* 內文：右欄第二列 */
+    .section-practices .practice-card p {
+      grid-column: 2;
+      grid-row: 2;
+      margin: 0;
+      max-width: 62ch;          /* 舒服的閱讀寬度 */
+    }
+
+    /* sage 變體：icon 顏色沿用鼠尾草，卡片本體維持白底 */
+    .section-practices .practice-card.sage .icon { color: var(--sage-700); }
+
+    /* Mobile：icon 縮回上方、單欄直向堆疊（避免窄畫面左欄擠壓文字） */
+    @media (max-width: 640px) {
+      .section-practices .practice-card {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+        row-gap: 12px;
+        padding: 28px 24px;
+      }
+      .section-practices .practice-card .icon {
+        grid-column: 1;
+        grid-row: 1;
+        width: 56px;
+        height: 56px;
+      }
+      .section-practices .practice-card h3 { grid-column: 1; grid-row: 2; }
+      .section-practices .practice-card p  { grid-column: 1; grid-row: 3; }
+    }
+
+    /* ============================================================
+       PRACTICES · 滾動閱讀（Pin + Line-draw + Card stagger + Icon draw）
+       ============================================================ */
+
+    /* SectionTitle 中央裝飾線：以中心為軸，scaleX 0 -> 1 展開 */
+    .section-title-line {
+      display: block;
+      width: 120px;
+      height: 1px;
+      margin: 20px auto 28px;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        var(--amber-500, #E8A33D) 20%,
+        var(--amber-500, #E8A33D) 80%,
+        transparent
+      );
+      transform: scaleX(0);
+      transform-origin: center;
+      opacity: 0;
+    }
+
+    /* 給整段 practices 一個 stage，便於 pin 與圖層堆疊 */
+    .practices-stage {
+      position: relative;
+      isolation: isolate;
+    }
+
+    /* SVG 描邊裝飾線：跟隨滾動 scrub 從 0 -> 100% 繪出
+       透過 stroke-dasharray + stroke-dashoffset 實作 */
+    .practices-line-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: visible;
+    }
+    .practices-line-bg path {
+      fill: none;
+      stroke: var(--amber-500, #E8A33D);
+      stroke-width: 1;
+      stroke-linecap: round;
+      opacity: .35;
+      /* 由 JS 依實際長度覆寫 dasharray 與 dashoffset */
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+    }
+
+    /* 卡片初始狀態：下移 40px + 透明，配合直向堆疊改為垂直進場 */
+    .section-practices .practice-card.slideItem {
+      opacity: 0;
+      transform: translate3d(0, 40px, 0);
+      will-change: transform, opacity;
+    }
+
+    /* Icon 容器 —— 給 SVG 描邊動畫做支撐；動畫由 JS 控制 stroke-dashoffset */
+    .practice-card .icon[data-strength-icon] svg path,
+    .practice-card .icon[data-strength-icon] svg circle {
+      /* 由 JS 於每個 path 上量測長度後注入 */
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+    }
+
+    /* 卡片 hover 保留原本 transform 效果，但避免與初始 translate 衝突 */
+    .section-practices .practice-card.slideItem.is-in {
+      transform: translate3d(0, 0, 0);
+      opacity: 1;
+    }
+
     /* ---------- prefers-reduced-motion ---------- */
     @media (prefers-reduced-motion: reduce) {
       .parallax-deco { display: none; }
@@ -248,6 +471,19 @@
       .reveal-clip img { transform: none !important; }
       .scr-line, .scr-fade { transform: none !important; opacity: 1 !important; }
       .scr-hero__eyebrow, .scr-hero__sub { opacity: 1 !important; }
+      .section-title-line { transform: scaleX(1) !important; opacity: 1 !important; }
+      .section-practices .practice-card.slideItem {
+        transform: none !important; opacity: 1 !important;
+      }
+      .practice-card .icon[data-strength-icon] svg path,
+      .practice-card .icon[data-strength-icon] svg circle {
+        stroke-dasharray: none !important;
+        stroke-dashoffset: 0 !important;
+      }
+      .practices-line-bg path {
+        stroke-dasharray: none !important;
+        stroke-dashoffset: 0 !important;
+      }
     }
 
     /* ---------- Mobile ---------- */
@@ -284,57 +520,74 @@
     <div class="scr-hero__scroll-hint">SCROLL</div>
   </section>
 
-  <!-- ============================ Verse ============================ -->
-  <section class="section-dark" data-scene="verse">
-    <div class="verse-card">
-      <div class="quote-mark" data-scr-fade>&ldquo;</div>
-      <blockquote data-split-lines>神就使利希的窪處裂開，有水從其中湧出來。<br>參孫喝了精神復原。<br>因此那泉名叫 <strong>隱哈歌利</strong>。</blockquote>
-      <cite data-split-lines>— 士師記 15:19</cite>
+  <!-- ============================ Philosophy (novact-style) ============================ -->
+  <section class="philosophy" data-scene="philosophy">
+    <div class="philosophy__inner">
+      <div class="philosophy__col philosophy__col--label">
+        <div class="philosophy__label" data-split-lines>Enhakorre</div>
+      </div>
+      <div class="philosophy__col philosophy__col--body">
+        <h2 class="philosophy__title" data-split-lines>起源與異象</h2>
+        <div class="philosophy__body">
+          <p data-split-lines>神就使利希的窪處裂開，有水從其中湧出來。</p>
+          <p data-split-lines>參孫喝了精神復原。</p>
+          <p data-split-lines>因此那泉名叫 <strong>隱哈歌利</strong>。</p>
+        </div>
+        <div class="philosophy__cite" data-split-lines>— 士師記 15:19</div>
+      </div>
     </div>
   </section>
 
   <!-- ============================ Vision ============================ -->
-  <section class="section section-practices">
+  <section class="section section-practices" data-scene="practices">
     <div class="wrap">
-      <div class="section-head">
-        <div class="section-num" data-scr-fade>OUR VISION</div>
-        <div class="section-eyebrow" data-split-lines>我們的方向</div>
-        <h2 data-split-lines><em>3</em>個關鍵承諾</h2>
+      <hgroup class="section-head SectionTitle" data-section-title>
+        <div class="section-num title" data-scr-fade>OUR VISION</div>
+        <div class="section-eyebrow titleEn" data-split-lines>我們的方向</div>
+        <!-- 中央裝飾線：以中心為軸 scaleX 0→1，配合 cubic-bezier(.22,1,.36,1) 展開 -->
+        <span class="section-title-line line" data-section-title-line aria-hidden="true"></span>
+        <h2 class="title" data-split-lines><em>3</em>個關鍵承諾</h2>
         <p class="lead" data-split-lines>為宣教士提供全方位的支持與資源，回應大使命的後方守護。</p>
-      </div>
-      <div class="practices">
-        <article class="practice-card scr-fade">
-          <div class="icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M32 8c0 0 -10 14 -10 22a10 10 0 0 0 20 0c0 -8 -10 -22 -10 -22z"/>
-            <path d="M28 30a4 4 0 0 0 4 4" opacity=".6"/>
-            <path d="M14 50h36M18 56h28" opacity=".5"/>
-          </svg></div>
-          <div class="roman">VISION</div>
-          <h3>我們的異象</h3>
-          <p>為宣教士提供全方位的支持與資源，回應大使命的後方守護。讓神國工人在前線奔跑時，後方有人為他們築起堅固的支持網絡。</p>
-        </article>
-        <article class="practice-card scr-fade">
-          <div class="icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M6 40c8-12 16-12 26-12s18 0 26 12"/>
-            <path d="M6 40v8M58 40v8"/>
-            <path d="M14 40v8M22 40v8M32 38v10M42 40v8M50 40v8" opacity=".5"/>
-            <path d="M6 48h52"/>
-          </svg></div>
-          <div class="roman">RESOURCE</div>
-          <h3>資源整合</h3>
-          <p>建立完整的資源整合平台，連結教會、機構與個人，讓支持更有效率，讓關懷更加及時。盤點現有資源，使每一份心意都能精準到位。</p>
-        </article>
-        <article class="practice-card sage scr-fade">
-          <div class="icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="22" cy="22" r="6"/>
-            <circle cx="42" cy="22" r="6"/>
-            <path d="M10 48c0 -6 6 -10 12 -10s12 4 12 10"/>
-            <path d="M30 48c0 -6 6 -10 12 -10s12 4 12 10"/>
-          </svg></div>
-          <div class="roman">COMMUNITY</div>
-          <h3>關顧網絡</h3>
-          <p>打造溫暖的社群網絡，透過定期聚會、線上交流與實體支持，讓每位宣教士都能感受到陪伴。從心靈到實際生活，全方位的關顧。</p>
-        </article>
+      </hgroup>
+
+      <div class="practices-stage" data-practices-stage>
+        <!-- 背景 SVG 描邊裝飾線：ScrollTrigger scrub 帶動 stroke-dashoffset 100% → 0% -->
+        <svg class="practices-line-bg" data-value-line-bg
+             viewBox="0 0 1200 320" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M0,160 C200,60 400,260 600,160 C800,60 1000,260 1200,160" />
+        </svg>
+
+        <div class="practices">
+          <article class="practice-card slideItem" data-slide-item data-index="0">
+            <div class="icon" data-strength-icon><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M32 8c0 0 -10 14 -10 22a10 10 0 0 0 20 0c0 -8 -10 -22 -10 -22z"/>
+              <path d="M28 30a4 4 0 0 0 4 4" opacity=".6"/>
+              <path d="M14 50h36M18 56h28" opacity=".5"/>
+            </svg></div>
+            <h3>我們的異象</h3>
+            <p>為宣教士提供全方位的支持與資源，回應大使命的後方守護。讓神國工人在前線奔跑時，後方有人為他們築起堅固的支持網絡。</p>
+          </article>
+          <article class="practice-card slideItem" data-slide-item data-index="1">
+            <div class="icon" data-strength-icon><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 40c8-12 16-12 26-12s18 0 26 12"/>
+              <path d="M6 40v8M58 40v8"/>
+              <path d="M14 40v8M22 40v8M32 38v10M42 40v8M50 40v8" opacity=".5"/>
+              <path d="M6 48h52"/>
+            </svg></div>
+            <h3>資源整合</h3>
+            <p>建立完整的資源整合平台，連結教會、機構與個人，讓支持更有效率，讓關懷更加及時。盤點現有資源，使每一份心意都能精準到位。</p>
+          </article>
+          <article class="practice-card sage slideItem scr-fade" data-slide-item data-index="2">
+            <div class="icon" data-strength-icon><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="22" cy="22" r="6"/>
+              <circle cx="42" cy="22" r="6"/>
+              <path d="M10 48c0 -6 6 -10 12 -10s12 4 12 10"/>
+              <path d="M30 48c0 -6 6 -10 12 -10s12 4 12 10"/>
+            </svg></div>
+            <h3>關顧網絡</h3>
+            <p>打造溫暖的社群網絡，透過定期聚會、線上交流與實體支持，讓每位宣教士都能感受到陪伴。從心靈到實際生活，全方位的關顧。</p>
+          </article>
+        </div>
       </div>
     </div>
   </section>
@@ -457,6 +710,14 @@
       el.innerHTML = parts.map(p =>
         `<span class="scr-mask"><span class="scr-line">${p.trim()}</span></span>`
       ).join('');
+      el.dataset.splitDone = '1';
+      return [...el.querySelectorAll('.scr-line')];
+    }
+
+    // 含 <em> / <strong> 這類 inline 標籤 → 不做逐字切，整段一起包成一個 mask，
+    // 才不會把 <em>3</em> 的斜體琥珀樣式吃掉。單行內容視覺上一樣。
+    if (/<[a-z][^>]*>/i.test(original)) {
+      el.innerHTML = `<span class="scr-mask"><span class="scr-line">${original}</span></span>`;
       el.dataset.splitDone = '1';
       return [...el.querySelectorAll('.scr-line')];
     }
@@ -645,6 +906,167 @@
     });
   }
 
+  /* ============================================================
+     PRACTICES · 滾動閱讀（Section title line + Pin + Card stagger + Icon draw）
+     ============================================================
+     設計概念：
+       (1) SectionTitle 進場：h2/eyebrow 上移淡入 + 中央 line 由中心 scaleX 展開
+           - 動畫曲線：cubic-bezier(0.22, 1, 0.36, 1)（GSAP CustomEase 表達為 M0,0 C0.22,1 0.36,1 1,1）
+           - 持續時間：1.2s
+       (2) Value 區 Pin：ScrollTrigger.pin 讓整段停留在畫面中
+           - 卡片依 index 序列從右側 x:80px→0 淡入（Stacking + Slide-in 混合）
+           - 內容進場時，icon SVG 描邊 draw-in（stroke-dashoffset len→0）加 scale bounce
+       (3) 背景 SVG 線條 scrub：整段 pin 期間，dashoffset 100%→0% 線性繪出
+     ------------------------------------------------------------ */
+  function initPractices() {
+    const section = document.querySelector('.section-practices[data-scene="practices"]');
+    if (!section) return;
+
+    // 尊重使用者的 reduced-motion 偏好：CSS 已保底顯示終態，這裡直接放行
+    if (prefersReducedMotion) return;
+
+    /* --- (A) SectionTitle：h2 / eyebrow / line 一次觸發，不 scrub --- */
+    const titleLine = section.querySelector('[data-section-title-line]');
+    if (titleLine) {
+      // 中央線：以中心為軸，scaleX 從 0 展至 1，1.2s，cubic-bezier(.22,1,.36,1)
+      gsap.fromTo(titleLine,
+        { scaleX: 0, opacity: 0 },
+        {
+          scaleX: 1,
+          opacity: 1,
+          duration: 1.2,
+          // GSAP 對應 cubic-bezier(0.22, 1, 0.36, 1) 的近似：expo.out
+          // 若已註冊 CustomEase 可換成："0.22,1,0.36,1"；此處以 expo.out 保近似曲線
+          ease: 'expo.out',
+          scrollTrigger: {
+            trigger: section,
+            start: 'top 78%',
+            once: true,
+          },
+        }
+      );
+    }
+
+    /* --- (B) 背景 SVG 描邊：量測 path 長度作為 dasharray/dashoffset 起點 --- */
+    const lineBg = section.querySelector('[data-value-line-bg]');
+    let bgPathLen = 0;
+    if (lineBg) {
+      const bgPath = lineBg.querySelector('path');
+      if (bgPath) {
+        bgPathLen = bgPath.getTotalLength();
+        bgPath.style.strokeDasharray = bgPathLen;
+        bgPath.style.strokeDashoffset = bgPathLen;
+      }
+    }
+
+    /* --- (C) 圖示 SVG 描邊：為每個 icon 內每條 path/circle 量測長度 --- */
+    section.querySelectorAll('[data-strength-icon] svg path, [data-strength-icon] svg circle')
+      .forEach(node => {
+        const len = node.getTotalLength ? node.getTotalLength() : 0;
+        if (!len) return;
+        node.style.strokeDasharray = len;
+        node.style.strokeDashoffset = len;
+      });
+
+    const cards = section.querySelectorAll('[data-slide-item]');
+
+    /* --- 分支：mobile（單欄）不做 pin，改為分項 stagger 進場 --- */
+    const isMobile = window.matchMedia('(max-width: 900px)').matches;
+    if (isMobile) {
+      cards.forEach((card, i) => {
+        const iconNodes = card.querySelectorAll('[data-strength-icon] svg path, [data-strength-icon] svg circle');
+        const iconWrap  = card.querySelector('[data-strength-icon]');
+        const tlM = gsap.timeline({
+          scrollTrigger: { trigger: card, start: 'top 85%', once: true }
+        });
+        tlM.fromTo(card,
+          { y: 50, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.9, ease: 'power3.out' }, 0);
+        if (iconNodes.length) {
+          tlM.to(iconNodes,
+            { strokeDashoffset: 0, duration: 0.7, ease: 'power2.out', stagger: 0.05 }, 0.15);
+        }
+        if (iconWrap) {
+          tlM.fromTo(iconWrap,
+            { scale: 0.85 }, { scale: 1, duration: 0.5, ease: 'back.out(2.2)' }, 0.2);
+        }
+      });
+
+      if (bgPathLen > 0) {
+        gsap.to('[data-value-line-bg] path', {
+          strokeDashoffset: 0,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: section,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 0.4,
+          }
+        });
+      }
+      return;
+    }
+
+    /* --- (D) Desktop：Pin 卡片區塊（保留 section-head 正常上滑進場），
+       卡片依 index 序列滑入。pinTarget 使用 .practices-stage 讓標題留在頁面流中。 --- */
+    const pinTarget = section.querySelector('[data-practices-stage]') || section;
+
+    // 每張卡佔 timeline 1 個時間單位；pin 距離 ≈ (0.4 + 0.5×N) × vh
+    // N=3 時約 1.9×viewport，讓每張卡有喘息又不會太長
+    const pinDistance = () => window.innerHeight * (0.4 + 0.5 * cards.length);
+
+    const tl = gsap.timeline({
+      defaults: { ease: 'power3.out' },
+      scrollTrigger: {
+        trigger: pinTarget,
+        // 讓卡片區塊置中於視窗才定格：中線對視窗中線；早於此時，卡片仍是滑入前的隱藏狀態
+        start: 'top 30%',         // stage 頂端進入視窗上三分之一 → 立即 pin，減少「空卡」等待
+        end: () => '+=' + pinDistance(),
+        pin: pinTarget,
+        pinSpacing: true,
+        scrub: 0.6,               // 0.6s smoothing 讓卡片跟隨滾輪但不僵硬
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+      }
+    });
+
+    // (D1) 背景線條 stroke draw：於整條 timeline 期間 dashoffset len → 0
+    if (bgPathLen > 0) {
+      tl.to('[data-value-line-bg] path',
+        { strokeDashoffset: 0, ease: 'none', duration: cards.length },
+        0
+      );
+    }
+
+    // (D2) 每張卡片：y:40 → 0 淡入（配合直向堆疊），icon 描邊繪出，icon 容器 back.out 反彈
+    cards.forEach((card, i) => {
+      const start = i;
+      // 卡片本體：從下方 40px 上移淡入，符合上→下閱讀動線
+      tl.fromTo(card,
+        { y: 40, opacity: 0, scale: 0.98 },
+        { y: 0,  opacity: 1, scale: 1, duration: 0.6, ease: 'power3.out' },
+        start
+      );
+      const iconNodes = card.querySelectorAll('[data-strength-icon] svg path, [data-strength-icon] svg circle');
+      if (iconNodes.length) {
+        // icon 每段 stroke：從長度 → 0（描邊繪出），錯落 0.05s
+        tl.to(iconNodes,
+          { strokeDashoffset: 0, duration: 0.55, ease: 'power2.out', stagger: 0.05 },
+          start + 0.25
+        );
+      }
+      const iconWrap = card.querySelector('[data-strength-icon]');
+      if (iconWrap) {
+        // icon 容器：0.85 → 1，back.out(2.2) 彈性收尾（縮放反彈感）
+        tl.fromTo(iconWrap,
+          { scale: 0.85 },
+          { scale: 1, duration: 0.45, ease: 'back.out(2.2)' },
+          start + 0.3
+        );
+      }
+    });
+  }
+
   /* ---------- 視差 data-speed ---------- */
   function initParallax() {
     if (prefersReducedMotion) return;
@@ -670,6 +1092,7 @@
     initClipReveal();
     initMarquee();
     initParallax();
+    initPractices();
   }
 
   if (document.readyState === 'loading') {
