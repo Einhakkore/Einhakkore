@@ -1153,7 +1153,7 @@ body[data-page="donate"] .logo .logo-dark { display: block; }
   color: var(--text-on-dark); letter-spacing: .03em; margin-bottom: 48px;
 }
 .line-m{
-font-size: 24px; line-height: 1.95;
+font-size: 24px; line-height: 1.55;
 }
 .cta-poem em {
   font-family: var(--font-brand); font-style: italic; font-weight: 400;
