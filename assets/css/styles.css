@@ -1153,7 +1153,7 @@ body[data-page="donate"] .logo .logo-dark { display: block; }
   color: var(--text-on-dark); letter-spacing: .03em; margin-bottom: 48px;
 }
 .line-m{
-font-size: 24px; line-height: 1.95;
+font-size: 24px; line-height: 1.55;
 }
 .cta-poem em {
   font-family: var(--font-brand); font-style: italic; font-weight: 400;
@@ -1423,6 +1423,42 @@ body.footer-reveal-ready .site-header { z-index: 100; }
 }
 .form-success svg {
   flex-shrink: 0; margin-top: 2px; color: var(--amber-700);
+}
+
+/* -----------------------------------------------------------
+   FORM 通用 — 同意條款勾選 + honeypot 陷阱欄位
+   ----------------------------------------------------------- */
+/* honeypot：機器人才會亂填，對真人完全隱藏（含 screen reader）。
+   若送出時此欄非空即判定為機器人，靜默丟棄。 */
+.hp-field {
+  position: absolute;
+  left: -9999px;
+  width: 1px; height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+/* 送出前的同意條款：checkbox 必勾，帶入隱私權/服務條款連結 */
+.form-consent {
+  display: flex; align-items: flex-start; gap: 10px;
+  font-size: 14px; line-height: 1.75;
+  color: var(--text-2);
+  margin: 4px 0;
+  cursor: pointer;
+}
+.form-consent input[type="checkbox"] {
+  flex-shrink: 0;
+  margin: 4px 0 0;
+  width: 16px; height: 16px;
+  accent-color: var(--amber-500);
+  cursor: pointer;
+}
+.form-consent a {
+  color: var(--amber-700);
+  border-bottom: 1px solid rgba(232, 163, 61, .5);
+  transition: border-color .2s ease;
+}
+.form-consent a:hover {
+  border-bottom-color: var(--amber-700);
 }
 
 /* -----------------------------------------------------------
