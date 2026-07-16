@@ -354,7 +354,7 @@
 <!-- =========================================================
      Section C 表單 — Firebase 串接
      送出後寫入 Firestore「donations」集合，
-     由 Cloud Function 觸發自動寄信到 einhakkore@gmail.com
+     由 Cloud Function 觸發自動寄信到 enhakkore@gmail.com
      ========================================================= -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -437,7 +437,7 @@
       setStatus("已收到您的奉獻確認，感謝您的擺上！我們會盡快對帳並與您聯繫。", "ok");
     } catch (err) {
       console.error(err);
-      setStatus("送出失敗，請稍後再試，或直接來信 einhakkore@gmail.com。", "err");
+      setStatus("送出失敗，請稍後再試，或直接來信 enhakkore@gmail.com。", "err");
     } finally {
       submitBtn.disabled = false;
     }
