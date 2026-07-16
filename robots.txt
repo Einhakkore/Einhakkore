@@ -6,6 +6,7 @@ Allow: /
 
 # 明確 disallow：admin 後台不進 index
 Disallow: /admin.html
+Disallow: /admin-panel.html
 
 # 預留給未來
 # Disallow: /_drafts/
