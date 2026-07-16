@@ -4,11 +4,58 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>參與服事 · 隱哈歌利 En-hakkore</title>
-  <meta name="description" content="隱哈歌利 En-hakkore — 為宣教士提供支持與關懷的網絡。求告者之泉。">
-  <link rel="icon" href="assets/img/logo-on-light.png">
+  <meta name="description" content="用您的專業，成為宣教士的後盾。隱哈歌利招募志工：從申請與評估、裝備培訓、到媒合服事的三步驟流程。">
+  <meta name="theme-color" content="#1a2e40">
+  <meta name="robots" content="index,follow">
+  <link rel="icon" href="assets/img/favicon.png">
+
+  <!-- TODO: 上正式網域後把 https://enhakkore.org 全域替換 -->
+  <link rel="canonical" href="https://enhakkore.org/volunteer.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="隱哈歌利 En-hakkore">
+  <meta property="og:title" content="參與服事 · 隱哈歌利 En-hakkore">
+  <meta property="og:description" content="用您的時間、專業與恩賜，成為宣教士的後盾。">
+  <meta property="og:url" content="https://enhakkore.org/volunteer.html">
+  <meta property="og:locale" content="zh_TW">
+  <meta property="og:image" content="https://enhakkore.org/assets/img/og-default.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="參與服事 · 隱哈歌利">
+  <meta name="twitter:description" content="用您的專業成為宣教士的後盾。">
+  <meta name="twitter:image" content="https://enhakkore.org/assets/img/og-default.jpg">
+
   <link rel="preload" href="assets/fonts/ShiweiSiJiChun-Regular.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/FreightTextPro-Book.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="assets/css/styles.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "參與服事 · 隱哈歌利",
+    "url": "https://enhakkore.org/volunteer.html",
+    "inLanguage": "zh-Hant",
+    "description": "招募志工三步驟：申請與評估、裝備與加入、媒合服事。",
+    "about": { "@id": "https://enhakkore.org/#org" },
+    "mainEntity": {
+      "@type": "NGO",
+      "@id": "https://enhakkore.org/#org",
+      "name": "隱哈歌利",
+      "alternateName": ["En-hakkore", "En Hakkore"],
+      "url": "https://enhakkore.org/",
+      "logo": "https://enhakkore.org/assets/img/logo-on-light.png",
+      "email": "enhakkore@gmail.com",
+      "sameAs": [
+        "TODO_FACEBOOK_URL",
+        "TODO_INSTAGRAM_URL",
+        "TODO_YOUTUBE_URL"
+      ]
+    }
+  }
+  </script>
 </head>
 <body data-page="volunteer">
 
@@ -313,7 +360,16 @@
       <p class="lead">告訴我們您的恩賜與時間，我們會在三個工作天內回覆。</p>
     </div>
     <div style="max-width:720px;margin:0 auto" class="reveal">
+      <!--
+        TODO（上線前要補，同 contact 表單）：
+        1. form action / method（Firebase / Formspree / Cloud Function）
+        2. Cloudflare Turnstile 或 reCAPTCHA v3 驗證
+        3. Honeypot 陷阱欄位（下方隱藏 <input>）
+      -->
       <form class="contact-form">
+        <input type="text" name="website" tabindex="-1" autocomplete="off"
+               style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;"
+               aria-hidden="true">
         <h3>技能媒合表單</h3>
         <p class="desc">您的回覆只會用於志工媒合用途，不會做其他使用。</p>
         <div class="field-row">

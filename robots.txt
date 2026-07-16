@@ -1,0 +1,19 @@
+# robots.txt for enhakkore.org
+# TODO: 上正式網域後，把下方 Sitemap 的 host 換成正式 domain
+
+User-agent: *
+Allow: /
+
+# 明確 disallow：目前站上還沒有這些路徑，先預留
+# Disallow: /admin/
+# Disallow: /_drafts/
+
+# 針對常見的暴力抓取 bot，可選擇性收緊（若確定不需要它們的流量）
+# User-agent: SemrushBot
+# Disallow: /
+# User-agent: AhrefsBot
+# Disallow: /
+# User-agent: MJ12bot
+# Disallow: /
+
+Sitemap: https://enhakkore.org/sitemap.xml
