@@ -1975,9 +1975,6 @@ body[data-page="donate"] .btn.btn-text:hover {
 @media (max-width: 640px) {
   .bank-card dl { grid-template-columns: 1fr; row-gap: 4px; }
   .bank-card dt { margin-top: 8px; }
-  .donate-block { padding: 28px 22px; }
-  .page-hero.donate-hero { padding: 110px 24px 90px; }
-  body[data-page="donate"] .budget { padding: 22px; }
 }
 
 /* ============================================================
@@ -2145,3 +2142,43 @@ body[data-page="home"] .newsletter {
 /* Ghost button on 深流：已與 .section--navy .btn-ghost 合併在該規則區塊 */
 
 /* .section--navy 內建 ink-900 底 + 極光，在深流上照常運作，無需覆寫 */
+
+/* ============================================================
+   MOBILE — 手機版統一內縮
+   各 section / hero / footer 的水平 padding 一律收斂為 24px；
+   原本 .section (32) + .wrap (32) = 64 的雙層 padding 疊加，
+   會讓手機閱讀寬度過窄，這裡把 .wrap 的 padding 歸零，
+   由外層 .section 提供單層 24px。
+   ============================================================ */
+@media (max-width: 700px) {
+  /* --- Section / Wrap 統一水平 24px --- */
+  .section          { padding: 72px 24px; }
+  .wrap             { padding: 0; }
+  .section-verse    { padding: 88px 24px; }
+  .section-cta      { padding: 104px 24px; }
+  .newsletter       { padding: 72px 24px; }
+  .page-hero        { padding: 88px 24px 56px; }
+  .page-hero.donate-hero { padding: 96px 24px 72px; }
+
+  /* --- Footer --- */
+  /* 水平 32→24、底 32→24；並解除 sticky-reveal，避免內容比視窗高時 top 被截掉 */
+  .site-footer      { padding: 48px 24px 24px; }
+  body.footer-reveal-ready .site-footer {
+    position: static;
+  }
+  body.footer-reveal-ready main {
+    margin-bottom: 0 !important;
+  }
+  .footer-inner  { padding-bottom: 32px; }
+  .footer-bottom { margin: 24px 0 0; }
+
+  /* --- Contact / Donate 卡片內部 padding：與外層 24 對齊，避免內容偏右 --- */
+  .contact-form                    { padding: 24px 20px; }
+  .donate-block                    { padding: 24px 20px; }
+  body[data-page="donate"] .budget { padding: 22px 20px; }
+
+  /* --- Give-track 步驟軌道：縮小左內縮，讓 step body 內容不再明顯偏右 --- */
+  .give-step-body        { margin-left: 6px; padding: 12px 0 20px 20px; }
+  .give-step-body--last  { padding-bottom: 4px; }
+  .remit-note ol         { padding-left: 20px; }
+}
