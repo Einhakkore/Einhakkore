@@ -1115,8 +1115,6 @@ body[data-page="donate"] .logo .logo-dark { display: block; }
   font-size: clamp(28px, 3vw, 36px); line-height: 1.55;
   color: var(--text-1); letter-spacing: .02em; margin: 0 0 24px;
 }
-.feature-text h2.clay { color: var(--clay-700); }
-.feature-text h2.sage { color: var(--sage-700); }
 .feature-text h2 em {
   font-family: var(--font-brand); font-style: italic; font-weight: 400;
   color: var(--amber-700); letter-spacing: 0;
@@ -2106,32 +2104,18 @@ body[data-page="home"] .practice-card:hover {
   background: rgba(237, 227, 211, .98);
 }
 
-/* Feature 圖文段 — 深底上文字反白，強調色改用亮階 amber / clay / sage */
+/* Feature 圖文段 — 深底上文字反白，強調色改用亮階 amber */
 body[data-page="home"] .feature-text .label,
 body[data-page="home"] .feature-text .label.amber { color: var(--amber-400); }
-body[data-page="home"] .feature-text .label.clay  { color: var(--clay-500); }
-body[data-page="home"] .feature-text .label.sage  { color: var(--sage-500); }
 body[data-page="home"] .feature-text h2,
 body[data-page="home"] .feature-text h2.amber { color: var(--home-text-1); }
-body[data-page="home"] .feature-text h2.clay  { color: var(--clay-500); }
-body[data-page="home"] .feature-text h2.sage  { color: var(--sage-500); }
 body[data-page="home"] .feature-text h2 em,
 body[data-page="home"] .feature-text h2.amber em { color: var(--amber-400); }
-body[data-page="home"] .feature-text h2.clay em  { color: var(--clay-500); }
-body[data-page="home"] .feature-text h2.sage em  { color: var(--sage-500); }
 body[data-page="home"] .feature-text p { color: var(--home-text-2); }
 body[data-page="home"] .feature-text .link,
 body[data-page="home"] .feature-text .link.amber {
   color: var(--amber-400);
   border-color: rgba(242, 195, 107, .55);
-}
-body[data-page="home"] .feature-text .link.clay {
-  color: var(--clay-500);
-  border-color: rgba(199, 123, 82, .55);
-}
-body[data-page="home"] .feature-text .link.sage {
-  color: var(--sage-500);
-  border-color: rgba(127, 166, 78, .55);
 }
 body[data-page="home"] .feature-text .link:hover {
   color: var(--amber-300); border-color: var(--amber-300);
