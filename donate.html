@@ -285,6 +285,11 @@
               <p class="desc">完成轉帳或刷卡後，請填寫以下資訊，方便我們對帳與開立收據。</p>
 
               <form class="donate-form" id="donationForm" novalidate>
+            <!-- honeypot 陷阱欄位：對真人隱藏，機器人才會亂填。
+                 送出時若此欄非空即靜默丟棄，避免透露陷阱存在。 -->
+            <input type="text" name="website" class="hp-field"
+                   tabindex="-1" autocomplete="off" aria-hidden="true">
+
             <div class="field">
               <label>1. 奉獻者姓名（或建檔戶名）<span class="req">*</span></label>
               <input type="text" name="name" required placeholder="王小明">
@@ -316,6 +321,11 @@
               <label>6. 收據寄送地址<span class="hint">（第一次奉獻或需開立收據請務必提供）</span></label>
               <textarea name="address" placeholder="郵遞區號 + 完整地址"></textarea>
             </div>
+
+            <label class="form-consent">
+              <input type="checkbox" name="consent" required>
+              <span>我已閱讀並同意隱哈歌利的<a href="terms.html">隱私權政策及服務條款</a>，送出即視為同意。</span>
+            </label>
 
             <button class="btn btn-primary" type="submit" id="donateSubmit">
               送出確認
@@ -389,6 +399,12 @@
     e.preventDefault();
 
     const fd = new FormData(form);
+
+    // honeypot：真人不會填 website 這欄，若被填 → 判定為機器人並靜默丟棄
+    if ((fd.get("website") || "").trim() !== "") {
+      return;
+    }
+
     const data = {
       name:    (fd.get("name")    || "").trim(),
       date:     fd.get("date")    || "",
@@ -396,8 +412,13 @@
       last5:   (fd.get("last5")   || "").trim(),
       phone:   (fd.get("phone")   || "").trim(),
       address: (fd.get("address") || "").trim(),
+      consent: true,
     };
 
+    if (!fd.get("consent")) {
+      setStatus("請勾選同意隱私權及服務條款。", "err");
+      return;
+    }
     if (!data.name || !data.date || !data.amount || !/^\d{5}$/.test(data.last5)) {
       setStatus("請確認必填欄位是否完整，帳號末五碼需為 5 位數字。", "err");
       return;
