@@ -74,7 +74,7 @@
           <select id="filterKind">
             <option value="">全部</option>
             <option value="donate">奉獻</option>
-            <option value="volunteer">志願服事</option>
+            <option value="volunteer">參與服事</option>
           </select>
         </label>
         <label class="admin-filter">
@@ -145,8 +145,8 @@
     messagingSenderId: "YOUR_SENDER_ID",
     appId:             "YOUR_APP_ID"
   };
-  // TODO: 換成隱哈歌利同工共用的臨時密碼；上線後整個 gate 換 Firebase Auth
-  const ADMIN_PIN = "TODO_ADMIN_PIN";
+  // 暫時密碼；上線後整個 gate 換 Firebase Auth + custom claim admin==true
+  const ADMIN_PIN = "1111";
   const STORAGE_KEY = "enhakkore_admin_ok";
 
   const app = initializeApp(firebaseConfig);
@@ -230,7 +230,7 @@
     $body.innerHTML = '<tr><td colspan="7" class="admin-empty">載入中…</td></tr>';
     const [donations, volunteers] = await Promise.all([
       fetchCollection("donations",  "奉獻"),
-      fetchCollection("volunteers", "志願服事"),
+      fetchCollection("volunteers", "參與服事"),
     ]);
     rows = donations.concat(volunteers);
     $sync.textContent = "最後同步：" + new Date().toLocaleString("zh-TW");
@@ -243,7 +243,7 @@
     const from = $from.value ? new Date($from.value + "T00:00") : null;
     const to   = $to.value   ? new Date($to.value   + "T23:59") : null;
     return rows.filter(r => {
-      if (kind && (kind === "donate" ? r.kind !== "奉獻" : r.kind !== "志願服事")) return false;
+      if (kind && (kind === "donate" ? r.kind !== "奉獻" : r.kind !== "參與服事")) return false;
       if (from && (!r.createdAt || r.createdAt < from)) return false;
       if (to   && (!r.createdAt || r.createdAt > to))   return false;
       if (q) {
