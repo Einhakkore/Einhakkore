@@ -1136,6 +1136,7 @@ body[data-page="donate"] .logo .logo-dark { display: block; }
    ----------------------------------------------------------- */
 .section-cta { padding: 160px 32px; text-align: center; }
 .cta-wrap { max-width: 720px; margin: 0 auto; }
+.section-cta .section-num { color: var(--amber-400); }
 .cta-label {
   color: var(--amber-400);
   letter-spacing: .3em; margin-bottom: 40px;
@@ -1153,7 +1154,6 @@ font-size: 24px; line-height: 1.95;
   color: var(--amber-400); letter-spacing: 0;
 }
 .cta-poem .line { display: block; }
-.cta-poem .indent { padding-left: 2em; }
 .cta-actions {
   display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
 }
@@ -1202,7 +1202,7 @@ body[data-page="home"] .hero .btn-ghost:hover {
 }
 
 /* 經文區套到 navy 時的文字色階 */
-.section-verse.section--navy .verse-ref          { color: var(--sage-500); }
+.section-verse.section--navy .verse-ref          { color: var(--text-on-dark); }
 .section-verse.section--navy .verse-quote        { color: var(--text-on-dark); }
 .section-verse.section--navy .verse-quote strong { color: var(--amber-400); }
 
