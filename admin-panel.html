@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin 後台 · 隱哈歌利 En-hakkore</title>
+  <meta name="description" content="隱哈歌利內部後台，匯集表單資料。">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="icon" href="assets/img/favicon.png">
+  <link rel="preload" href="assets/fonts/ShiweiSiJiChun-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/FreightTextPro-Book.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <!--
+    未登入者直接跳回登入頁；用 inline <script> 放在 <head> 讓瀏覽器在
+    render <body> 前就導頁，避免面板內容閃現。
+  -->
+  <script>
+    if (localStorage.getItem("enhakkore_admin_ok") !== "1") {
+      location.replace("admin.html");
+    }
+  </script>
+</head>
+<body data-page="admin">
+
+<div data-include="icons"></div>
+<div data-include="header"></div>
+
+<main>
+  <div class="admin-shell">
+    <section class="admin-panel">
+      <header class="admin-header">
+        <div>
+          <div class="section-eyebrow">ADMIN · 後台</div>
+          <h1>表單匯集</h1>
+          <p class="lead">
+            <span id="rowCount">0</span> 筆資料
+            · <span id="lastSync">尚未同步</span>
+          </p>
+        </div>
+        <div class="admin-header-actions">
+          <button class="btn btn-ghost" id="btnRefresh" type="button">↻ 重新整理</button>
+          <button class="btn btn-primary" id="btnExport" type="button">
+            匯出 CSV
+            <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg>
+          </button>
+          <button class="btn btn-ghost" id="btnLogout" type="button">登出</button>
+        </div>
+      </header>
+
+      <div class="admin-filters">
+        <label class="admin-filter">
+          <span>分類</span>
+          <select id="filterKind">
+            <option value="">全部</option>
+            <option value="donate">奉獻</option>
+            <option value="volunteer">參與服事</option>
+          </select>
+        </label>
+        <label class="admin-filter">
+          <span>搜尋</span>
+          <input type="search" id="filterQuery" placeholder="姓名 / Email / 主旨…">
+        </label>
+        <label class="admin-filter">
+          <span>起始日</span>
+          <input type="date" id="filterFrom">
+        </label>
+        <label class="admin-filter">
+          <span>結束日</span>
+          <input type="date" id="filterTo">
+        </label>
+      </div>
+
+      <div class="admin-table-wrap">
+        <table class="admin-table" id="adminTable">
+          <thead>
+            <tr>
+              <th data-sort="createdAt">送出時間 <span class="sort-arrow"></span></th>
+              <th data-sort="kind">分類 <span class="sort-arrow"></span></th>
+              <th data-sort="name">姓名 <span class="sort-arrow"></span></th>
+              <th data-sort="email">Email <span class="sort-arrow"></span></th>
+              <th data-sort="subject">主旨 / 金額 <span class="sort-arrow"></span></th>
+              <th data-sort="phone">聯絡電話 <span class="sort-arrow"></span></th>
+              <th>訊息</th>
+            </tr>
+          </thead>
+          <tbody id="adminBody">
+            <tr><td colspan="7" class="admin-empty">載入中…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</main>
+
+<div data-include="footer"></div>
+
+<script src="assets/js/site.js"></script>
+
+<!-- ============================================================
+     Admin 資料層 — Firestore 讀取 + 排序 / 篩選 / CSV
+     ============================================================
+     TODO（上線前必補）：
+     1. 把下方 firebaseConfig 換成正式專案設定。
+     2. Firestore Security Rules 必須設成：
+          match /donations/{doc}   { allow read: if request.auth.token.admin==true; }
+          match /volunteers/{doc}  { allow read: if request.auth.token.admin==true; }
+        （current rules 若允許 anonymous read 則整個表單資料就外洩）
+     3. volunteer / contact 表單還沒接 Firestore（見各頁 TODO）。
+        接上後這頁的對應集合會自動有資料。
+     4. 目前 gate 只是 localStorage flag；正式上線務必改 Firebase Auth
+        + custom claim admin==true。
+============================================================ -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, query, orderBy, getDocs }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  // TODO: 換成正式 Firebase config
+  const firebaseConfig = {
+    apiKey:            "YOUR_API_KEY",
+    authDomain:        "YOUR_PROJECT_ID.firebaseapp.com",
+    projectId:         "YOUR_PROJECT_ID",
+    storageBucket:     "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId:             "YOUR_APP_ID"
+  };
+  const STORAGE_KEY = "enhakkore_admin_ok";
+  const LOGIN_URL   = "admin.html";
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getFirestore(app);
+
+  // ---- logout ----
+  document.getElementById("btnLogout").addEventListener("click", () => {
+    localStorage.removeItem(STORAGE_KEY);
+    location.replace(LOGIN_URL);
+  });
+
+  // ---- data ----
+  let rows = [];
+  let sortKey = "createdAt";
+  let sortAsc = false;
+
+  const $body    = document.getElementById("adminBody");
+  const $count   = document.getElementById("rowCount");
+  const $sync    = document.getElementById("lastSync");
+  const $kind    = document.getElementById("filterKind");
+  const $q       = document.getElementById("filterQuery");
+  const $from    = document.getElementById("filterFrom");
+  const $to      = document.getElementById("filterTo");
+  const $refresh = document.getElementById("btnRefresh");
+  const $export  = document.getElementById("btnExport");
+  const $table   = document.getElementById("adminTable");
+
+  async function fetchCollection(name, kindLabel) {
+    try {
+      const snap = await getDocs(query(collection(db, name), orderBy("createdAt", "desc")));
+      return snap.docs.map(d => {
+        const x = d.data();
+        return {
+          id: d.id,
+          kind: kindLabel,
+          createdAt: x.createdAt?.toDate?.() || null,
+          name:    x.name    || "",
+          email:   x.email   || "",
+          phone:   x.phone   || "",
+          subject: x.subject || (x.amount ? `NT$ ${x.amount}` : ""),
+          message: x.message || x.address || "",
+          raw: x,
+        };
+      });
+    } catch (e) {
+      console.warn(`fetch ${name} 失敗（可能 Rules 尚未給讀權，或還沒接）`, e);
+      return [];
+    }
+  }
+
+  async function load() {
+    $body.innerHTML = '<tr><td colspan="7" class="admin-empty">載入中…</td></tr>';
+    const [donations, volunteers] = await Promise.all([
+      fetchCollection("donations",  "奉獻"),
+      fetchCollection("volunteers", "參與服事"),
+    ]);
+    rows = donations.concat(volunteers);
+    $sync.textContent = "最後同步：" + new Date().toLocaleString("zh-TW");
+    render();
+  }
+
+  function filtered() {
+    const kind = $kind.value;
+    const q    = ($q.value || "").trim().toLowerCase();
+    const from = $from.value ? new Date($from.value + "T00:00") : null;
+    const to   = $to.value   ? new Date($to.value   + "T23:59") : null;
+    return rows.filter(r => {
+      if (kind && (kind === "donate" ? r.kind !== "奉獻" : r.kind !== "參與服事")) return false;
+      if (from && (!r.createdAt || r.createdAt < from)) return false;
+      if (to   && (!r.createdAt || r.createdAt > to))   return false;
+      if (q) {
+        const hay = [r.name, r.email, r.subject, r.message].join(" ").toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    });
+  }
+
+  function sorted(list) {
+    const key = sortKey, dir = sortAsc ? 1 : -1;
+    return list.slice().sort((a, b) => {
+      const va = a[key], vb = b[key];
+      if (va == null && vb == null) return 0;
+      if (va == null) return 1;
+      if (vb == null) return -1;
+      if (va instanceof Date && vb instanceof Date) return (va - vb) * dir;
+      return String(va).localeCompare(String(vb), "zh-Hant") * dir;
+    });
+  }
+
+  function render() {
+    const list = sorted(filtered());
+    $count.textContent = list.length;
+
+    // update sort arrows
+    $table.querySelectorAll("th[data-sort]").forEach(th => {
+      const arrow = th.querySelector(".sort-arrow");
+      arrow.textContent = th.dataset.sort === sortKey ? (sortAsc ? "▲" : "▼") : "";
+    });
+
+    if (list.length === 0) {
+      $body.innerHTML = '<tr><td colspan="7" class="admin-empty">目前沒有符合條件的資料。</td></tr>';
+      return;
+    }
+
+    $body.innerHTML = list.map(r => `
+      <tr>
+        <td>${r.createdAt ? r.createdAt.toLocaleString("zh-TW") : "—"}</td>
+        <td><span class="kind-badge kind-${r.kind === "奉獻" ? "donate" : "volunteer"}">${esc(r.kind)}</span></td>
+        <td>${esc(r.name)}</td>
+        <td>${esc(r.email)}</td>
+        <td>${esc(r.subject)}</td>
+        <td>${esc(r.phone)}</td>
+        <td class="cell-message">${esc(r.message)}</td>
+      </tr>
+    `).join("");
+  }
+  function esc(s) {
+    return String(s || "").replace(/[&<>"']/g, c => ({
+      "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+    }[c]));
+  }
+
+  // ---- interactions ----
+  [$kind, $q, $from, $to].forEach(el => el.addEventListener("input", render));
+  $refresh.addEventListener("click", load);
+  $table.querySelectorAll("th[data-sort]").forEach(th => {
+    th.addEventListener("click", () => {
+      const key = th.dataset.sort;
+      if (sortKey === key) sortAsc = !sortAsc;
+      else { sortKey = key; sortAsc = false; }
+      render();
+    });
+  });
+
+  $export.addEventListener("click", () => {
+    const list = sorted(filtered());
+    const headers = ["送出時間","分類","姓名","Email","主旨/金額","聯絡電話","訊息"];
+    const rowsCsv = list.map(r => [
+      r.createdAt ? r.createdAt.toISOString() : "",
+      r.kind, r.name, r.email, r.subject, r.phone, r.message,
+    ].map(csvCell).join(","));
+    const csv = "﻿" + [headers.join(","), ...rowsCsv].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const url  = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const stamp = new Date().toISOString().slice(0,10);
+    a.href = url;
+    a.download = `enhakkore-submissions-${stamp}.csv`;
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+  });
+  function csvCell(v) {
+    const s = String(v ?? "");
+    return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  }
+
+  // ---- kickoff ----
+  load();
+</script>
+</body>
+</html>
