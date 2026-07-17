@@ -1,12 +1,43 @@
 /* ============================================================
    ENHAKORRE — Site JavaScript
-   scroll flow field + stagger reveal + 表單
+   partials loader + scroll flow field + stagger reveal + 表單
    ============================================================ */
 
 (function () {
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const root = document.documentElement;
+
+  // ---------- Shared partials loader ----------
+  // 每頁把 <div data-include="header|footer|newsletter|aurora|page-hero"></div>
+  // 換成 assets/partials/*.html 的內容，nav / footer / 訂閱只要改一次。
+  // 支援兩種輕量樣板語法，讓 page-hero 這類「殼相同、內容不同」的區塊也能共用一份 partial：
+  //   {{attr}}      → 換成 include 節點的 data-attr 值
+  //   <slot></slot> → 換成 include 節點原本的子節點（頁面自己寫的 h1 / p 等）
+  //   data-extra-class → 加到 partial 根節點的 class（例如 donate 頁的 .donate-hero）
+  async function loadPartials() {
+    const nodes = document.querySelectorAll("[data-include]");
+    await Promise.all([...nodes].map(async node => {
+      const name = node.dataset.include;
+      try {
+        const res = await fetch(`assets/partials/${name}.html`, { cache: "no-cache" });
+        if (!res.ok) throw new Error(res.status);
+        const html = await res.text();
+        const filled = html.replace(/\{\{(\w+)\}\}/g, (_, key) => node.dataset[key] || "");
+        const tpl = document.createElement("template");
+        tpl.innerHTML = filled.trim();
+        const slot = tpl.content.querySelector("slot");
+        if (slot) slot.replaceWith(...node.childNodes);
+        if (node.dataset.extraClass) {
+          const root = tpl.content.firstElementChild;
+          if (root) root.classList.add(node.dataset.extraClass);
+        }
+        node.replaceWith(tpl.content);
+      } catch (err) {
+        console.warn(`[partials] failed to load "${name}"`, err);
+      }
+    }));
+  }
 
   // ---------- #flow-bg：只在 home / donate 兩頁注入 ----------
   function isFlowPage() {
@@ -350,11 +381,11 @@
     window.addEventListener('load', apply);
   }
 
-  // 進站流程：DOM 就緒後綁事件（partials 已內嵌到頁面，不需再 fetch）
+  // 進站流程：先把 partials 塞好，再綁事件（保證 header/footer 都能找到 DOM）
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initInteractivity);
+    document.addEventListener("DOMContentLoaded", () => loadPartials().then(initInteractivity));
   } else {
-    initInteractivity();
+    loadPartials().then(initInteractivity);
   }
 
 })();
