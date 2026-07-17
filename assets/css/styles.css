@@ -53,7 +53,8 @@
   src: url("../fonts/FreightTextPro-Bold.woff2") format("woff2");
   font-weight: 700; font-style: normal; font-display: swap;
 }
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600&display=swap");
+/* Noto Sans TC 由每頁 <head> 的 <link rel="stylesheet"> 直接載入，
+   避開 CSS 內 @import 造成的串行等待（header nav 用它）。 */
 
 /* -----------------------------------------------------------
    DESIGN TOKENS
