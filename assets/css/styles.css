@@ -1153,8 +1153,13 @@ body[data-page="donate"] .logo .logo-dark { display: block; }
   font-size: clamp(26px, 3vw, 36px); line-height: 1.95;
   color: var(--text-on-dark); letter-spacing: .03em; margin-bottom: 48px;
 }
-.line-m{
-font-size: 24px; line-height: 1.55;
+/* CTA 副文案：block 的 <p>，行高才真正生效（span inline 時會被
+   .cta-poem 1.95 的 strut 撐開）。字級用連續 clamp，任何寬度都與主標
+   維持明確對比；字體、字重、顏色沿用 .cta-poem 繼承，不另降階。 */
+.cta-sub {
+  font-size: clamp(15px, 2vw, 17px);
+  line-height: 1.55;
+  margin: 12px 0 0;
 }
 .cta-poem em {
   font-family: var(--font-brand); font-style: italic; font-weight: 400;
@@ -2399,7 +2404,4 @@ body[data-page="home"] .newsletter {
   .give-step-body--last  { padding-bottom: 4px; }
   .remit-note ol         { padding-left: 20px; }
 
-  /* --- CTA 詩體：手機版拉開標題與內文的字級對比 --- */
-  /* 主標 .line / .indent 保持 clamp min ~26px；內文 .line-m 縮到 16px */
-  .line-m { font-size: 16px; line-height: 1.85; }
 }
