@@ -284,21 +284,49 @@
     initContactGuides();
     initEmailCopy();
 
-    // ---------- Contact forms ----------
+    // ---------- Contact / Volunteer forms ----------
+    // 送出後不整段隱藏表單，改在表單下方顯示提示訊息（與 donate 頁一致）。
+    // 未勾選「我已同意…」時，擋下送出並提醒使用者勾選。
     document.querySelectorAll("form.contact-form").forEach(form => {
+      // 找到（或補上）表單下方的狀態訊息容器
+      let statusEl = form.querySelector(".form-status");
+      if (!statusEl) {
+        statusEl = document.createElement("div");
+        statusEl.className = "form-status";
+        statusEl.setAttribute("role", "status");
+        statusEl.setAttribute("aria-live", "polite");
+        form.appendChild(statusEl);
+      }
+      const setStatus = (msg, type) => {
+        statusEl.textContent = msg;
+        statusEl.className = "form-status show " + type;
+      };
+
       form.addEventListener("submit", e => {
         e.preventDefault();
-        form.innerHTML = `
-          <div class="form-success">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>
-            <div>
-              <strong style="color:var(--fg);font-weight:500;">感謝您的來信。</strong><br>
-              我們收到了。團隊會儘快回覆您。
-            </div>
-          </div>
-        `;
+
+        // honeypot：真人不會填 website 這欄，被填 → 判定為機器人，靜默丟棄
+        const hp = form.querySelector(".hp-field");
+        if (hp && hp.value.trim() !== "") return;
+
+        // 同意條款：未勾選 → 擋下並提醒
+        const consent = form.querySelector('input[name="consent"]');
+        if (consent && !consent.checked) {
+          setStatus("請先勾選並同意隱私權政策及服務條款，才能送出表單。", "err");
+          consent.focus();
+          return;
+        }
+
+        // 必填欄位（novalidate，改由此處觸發原生提示泡泡）
+        if (!form.checkValidity()) {
+          setStatus("請確認必填欄位是否已完整填寫。", "err");
+          form.reportValidity();
+          return;
+        }
+
+        // 成功：保留表單，訊息顯示在下方
+        setStatus("我們已收到您的訊息，感謝您！團隊會儘快回覆您。", "ok");
+        form.reset();
       });
     });
 

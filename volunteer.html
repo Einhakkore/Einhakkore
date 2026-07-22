@@ -371,7 +371,7 @@
         2. Cloudflare Turnstile 或 reCAPTCHA v3 驗證
         3. Honeypot 陷阱欄位（下方隱藏 <input>）
       -->
-      <form class="contact-form">
+      <form class="contact-form" novalidate>
         <!-- honeypot 陷阱欄位：對真人隱藏，機器人才會亂填。樣式見 styles.css 的 .hp-field。 -->
         <!-- TODO: 後端串接時需檢查 honeypot -->
         <input type="text" name="website" class="hp-field"
@@ -401,6 +401,8 @@
         </label>
 
         <button class="btn btn-primary" type="submit" style="margin-top:8px;align-self:flex-start;">送出 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg></button>
+
+        <div class="form-status" role="status" aria-live="polite"></div>
     </form>
     </div>
   </div>
