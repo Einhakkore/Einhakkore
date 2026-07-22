@@ -182,9 +182,10 @@
           3. Honeypot 陷阱欄位（範例：下方 <input name="website" hidden>）
         -->
         <form class="contact-form">
-        <input type="text" name="website" tabindex="-1" autocomplete="off"
-               style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;"
-               aria-hidden="true">
+        <!-- honeypot 陷阱欄位：對真人隱藏，機器人才會亂填。樣式見 styles.css 的 .hp-field。 -->
+        <!-- TODO: 後端串接時需檢查 honeypot -->
+        <input type="text" name="website" class="hp-field"
+               tabindex="-1" autocomplete="off" aria-hidden="true">
         <h2>給我們寫封信</h2>
         <p class="desc">所有訊息會直接送到我們的同工信箱。</p>
         <div class="field"><label>姓名 Name</label><input type="text" name="name" placeholder="您的姓名" required></div>

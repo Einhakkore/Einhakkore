@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Admin 登入 · 隱哈歌利 En-hakkore</title>
-  <meta name="description" content="隱哈歌利內部後台。">
-  <meta name="robots" content="noindex,nofollow">
+  <title>Admin 後台 · 隱哈歌利 En-hakkore</title>
+  <meta name="description" content="隱哈歌利內部後台，檢視奉獻紀錄。">
+  <meta name="robots" content="noindex, nofollow">
   <link rel="icon" href="assets/img/favicon.png">
   <link rel="preload" href="assets/fonts/ShiweiSiJiChun-Regular.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/FreightTextPro-Book.woff2" as="font" type="font/woff2" crossorigin>
@@ -21,38 +21,68 @@
 
 <main>
   <div class="admin-shell">
-    <!--
-      ============================================================
-      Admin 登入頁 — 只做密碼 gate
-      成功後：寫 localStorage flag → 導向 admin-panel.html
-      失敗後：不進面板頁，維持在此頁
-      TODO（上線前必補）：
-        1. 目前只是「前端 password gate」（PIN 存在 localStorage），
-           檔案本身可下載即可看，只擋一般人不擋技術者。
-           上線一定要換成 Firebase Authentication（Email + Password
-           或 Google Sign-In）+ Firestore Rules `request.auth.token.admin==true`
-           才擋得住。
-        2. Firestore Rules 未收緊前，不要把 admin.html / admin-panel.html
-           上到 GitHub Pages 對外環境，或用 Cloudflare Access 擋整條
-           /admin 路徑。
-      ============================================================
-    -->
-    <section class="admin-gate">
-      <div class="admin-gate-card">
+
+    <!-- ============================================================
+         未登入視圖：使用 Google 登入
+         ============================================================ -->
+    <section class="admin-auth" id="loginView" hidden>
+      <div class="admin-auth-card">
         <div class="hero-symbol"></div>
         <h1>後台登入</h1>
-        <p class="lead">此頁僅供隱哈歌利同工使用。</p>
-        <label class="field">
-          <span>管理員密碼</span>
-          <input type="password" id="adminPin" autocomplete="current-password" placeholder="請輸入密碼">
-        </label>
-        <button class="btn btn-primary" id="adminLogin" type="button">
-          進入後台
+        <p class="lead">此頁僅供隱哈歌利管理者使用。請以獲授權的 Google 帳號登入。</p>
+        <button class="btn btn-primary" id="btnGoogleLogin" type="button">
+          使用 Google 登入
           <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg>
         </button>
-        <p class="admin-gate-err" id="adminGateErr" role="alert"></p>
+        <p class="admin-auth-err" id="loginErr" role="alert"></p>
       </div>
     </section>
+
+    <!-- ============================================================
+         登入後視圖：奉獻紀錄表格
+         ============================================================ -->
+    <section class="admin-panel" id="panelView" hidden>
+      <header class="admin-header">
+        <div>
+          <div class="section-eyebrow">ADMIN · 後台</div>
+          <h1>奉獻紀錄</h1>
+          <p class="lead">
+            共 <span id="rowCount">0</span> 筆
+            · 登入者：<span id="currentUser" class="admin-user"></span>
+          </p>
+        </div>
+        <div class="admin-header-actions">
+          <button class="btn btn-primary" id="btnExport" type="button">
+            匯出 CSV
+            <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg>
+          </button>
+          <button class="btn btn-ghost" id="btnLogout" type="button">登出</button>
+        </div>
+      </header>
+
+      <!-- 友善錯誤訊息（例如無檢視權限） -->
+      <p class="admin-notice" id="adminNotice" role="alert" hidden></p>
+
+      <div class="admin-table-wrap">
+        <table class="admin-table" id="adminTable">
+          <thead>
+            <tr>
+              <th>姓名</th>
+              <th>轉帳日期</th>
+              <th>金額</th>
+              <th>末五碼</th>
+              <th>電話</th>
+              <th>地址</th>
+              <th>送出時間</th>
+            </tr>
+          </thead>
+          <tbody id="adminBody">
+            <tr><td colspan="7" class="admin-empty">載入中…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
   </div>
 </main>
 
@@ -60,35 +90,204 @@
 
 <script src="assets/js/site.js"></script>
 
-<script>
-  // 暫時密碼；上線後整個 gate 換 Firebase Auth + custom claim admin==true
-  const ADMIN_PIN = "1111";
-  const STORAGE_KEY = "enhakkore_admin_ok";
-  const PANEL_URL = "admin-panel.html";
+<!-- ============================================================
+     Admin 資料層 — Firebase Auth（Google 登入）+ Firestore 讀取
+     ------------------------------------------------------------
+     真正的把關一律以 Firestore Rules 為準：
+       - 只有白名單管理者（見 firestore.rules 的 isAdmin()）能 read
+         donations 集合，非白名單帳號會收到 permission-denied。
+     下方前端也存了一份白名單，但那只是「即時提示」用途，
+     不具安全性作用（前端陣列可被任意繞過）。
+     ============================================================ -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getFirestore, collection, query, orderBy, getDocs }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  // 共用 Firebase 設定（placeholder 值，實際安全性由 Firestore Rules + App Check 負責）
+  import { firebaseConfig } from "./assets/js/firebase-config.js";
 
-  const pin  = document.getElementById("adminPin");
-  const btn  = document.getElementById("adminLogin");
-  const err  = document.getElementById("adminGateErr");
+  const app  = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db   = getFirestore(app);
 
-  // 已登入過就直接跳面板
-  if (localStorage.getItem(STORAGE_KEY) === "1") {
-    location.replace(PANEL_URL);
+  /* ╔══════════════════════════════════════════════╗
+     ║  App Check（防機器人／垃圾請求）                            ║
+     ║  取得 reCAPTCHA v3 site key 後，解除下方註解即可啟用。      ║
+     ║  取得 site key 的步驟見專案根目錄的 FIREBASE_SETUP.md。     ║
+     ╚══════════════════════════════════════════════╝ */
+  // import { initializeAppCheck, ReCaptchaV3Provider }
+  //   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app-check.js";
+  // initializeAppCheck(app, {
+  //   provider: new ReCaptchaV3Provider("YOUR_RECAPTCHA_V3_SITE_KEY"),
+  //   isTokenAutoRefreshEnabled: true
+  // });
+
+  // 前端白名單：僅供「即時提示」，與 firestore.rules 一致。
+  // ⚠️ 這不是安全防線，真正的把關在 Firestore Rules。
+  const ADMIN_EMAILS = [
+    "einhakkore@gmail.com",
+    "s949391@gmail.com"
+  ];
+
+  const NO_PERMISSION_MSG = "此帳號沒有檢視權限，請聯繫管理者。";
+
+  // ---- DOM ----
+  const $loginView = document.getElementById("loginView");
+  const $panelView = document.getElementById("panelView");
+  const $loginErr  = document.getElementById("loginErr");
+  const $notice    = document.getElementById("adminNotice");
+  const $body      = document.getElementById("adminBody");
+  const $count     = document.getElementById("rowCount");
+  const $user      = document.getElementById("currentUser");
+
+  document.getElementById("btnGoogleLogin")
+    .addEventListener("click", async () => {
+      $loginErr.textContent = "";
+      try {
+        await signInWithPopup(auth, new GoogleAuthProvider());
+      } catch (err) {
+        console.warn("Google 登入失敗", err);
+        $loginErr.textContent = "登入失敗，請再試一次。";
+      }
+    });
+
+  document.getElementById("btnLogout")
+    .addEventListener("click", () => signOut(auth));
+
+  // ---- 依登入狀態切換視圖 ----
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      $loginView.hidden = true;
+      $panelView.hidden = false;
+      $user.textContent = user.email || "";
+      loadDonations(user);
+    } else {
+      $panelView.hidden = true;
+      $loginView.hidden = false;
+      rows = [];
+    }
+  });
+
+  // ---- 資料 ----
+  let rows = [];
+
+  function showNotice(msg) {
+    $notice.textContent = msg;
+    $notice.hidden = false;
+  }
+  function hideNotice() {
+    $notice.textContent = "";
+    $notice.hidden = true;
   }
 
-  function tryLogin() {
-    if ((pin.value || "") === ADMIN_PIN) {
-      localStorage.setItem(STORAGE_KEY, "1");
-      location.href = PANEL_URL;
-    } else {
-      err.textContent = "密碼不正確，請再試一次。";
-      pin.select();
+  async function loadDonations(user) {
+    hideNotice();
+    $body.innerHTML = '<tr><td colspan="7" class="admin-empty">載入中…</td></tr>';
+
+    // 前端即時提示：非白名單帳號先給友善訊息（真正把關仍在 Rules）
+    if (!ADMIN_EMAILS.includes(user.email)) {
+      showNotice(NO_PERMISSION_MSG);
+      $body.innerHTML = `<tr><td colspan="7" class="admin-empty">${NO_PERMISSION_MSG}</td></tr>`;
+      $count.textContent = "0";
+      rows = [];
+      return;
+    }
+
+    try {
+      const snap = await getDocs(
+        query(collection(db, "donations"), orderBy("createdAt", "desc"))
+      );
+      rows = snap.docs.map(d => {
+        const x = d.data();
+        return {
+          name:      x.name    || "",
+          date:      x.date    || "",
+          amount:    (x.amount != null) ? x.amount : "",
+          last5:     x.last5   || "",
+          phone:     x.phone   || "",
+          address:   x.address || "",
+          createdAt: x.createdAt?.toDate?.() || null,
+        };
+      });
+      render();
+    } catch (err) {
+      console.warn("讀取 donations 失敗", err);
+      // Firestore 權限錯誤 → 友善訊息（不在白名單即會落到這裡）
+      if (err && err.code === "permission-denied") {
+        showNotice(NO_PERMISSION_MSG);
+        $body.innerHTML = `<tr><td colspan="7" class="admin-empty">${NO_PERMISSION_MSG}</td></tr>`;
+      } else {
+        showNotice("讀取資料時發生錯誤，請稍後再試。");
+        $body.innerHTML = '<tr><td colspan="7" class="admin-empty">讀取失敗。</td></tr>';
+      }
+      $count.textContent = "0";
+      rows = [];
     }
   }
 
-  btn.addEventListener("click", tryLogin);
-  pin.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") { e.preventDefault(); tryLogin(); }
+  function fmtAmount(v) {
+    return (typeof v === "number") ? "NT$ " + v.toLocaleString("zh-TW") : esc(v);
+  }
+  function fmtTime(d) {
+    return d ? d.toLocaleString("zh-TW") : "—";
+  }
+
+  function render() {
+    $count.textContent = rows.length;
+    if (rows.length === 0) {
+      $body.innerHTML = '<tr><td colspan="7" class="admin-empty">目前沒有奉獻紀錄。</td></tr>';
+      return;
+    }
+    $body.innerHTML = rows.map(r => `
+      <tr>
+        <td data-label="姓名">${esc(r.name)}</td>
+        <td data-label="轉帳日期">${esc(r.date)}</td>
+        <td data-label="金額">${fmtAmount(r.amount)}</td>
+        <td data-label="末五碼">${esc(r.last5)}</td>
+        <td data-label="電話">${esc(r.phone)}</td>
+        <td data-label="地址" class="cell-address">${esc(r.address)}</td>
+        <td data-label="送出時間">${fmtTime(r.createdAt)}</td>
+      </tr>
+    `).join("");
+  }
+
+  function esc(s) {
+    return String(s ?? "").replace(/[&<>"']/g, c => ({
+      "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+    }[c]));
+  }
+
+  // ---- 匯出 CSV（純前端 Blob；含 UTF-8 BOM 避免 Excel 中文亂碼）----
+  document.getElementById("btnExport").addEventListener("click", () => {
+    if (rows.length === 0) return;
+    const headers = ["姓名","轉帳日期","金額","末五碼","電話","地址","送出時間"];
+    const lines = rows.map(r => [
+      r.name,
+      r.date,
+      (typeof r.amount === "number") ? r.amount : "",
+      r.last5,
+      r.phone,
+      r.address,
+      r.createdAt ? r.createdAt.toISOString() : "",
+    ].map(csvCell).join(","));
+    const csv = "﻿" + [headers.join(","), ...lines].join("\r\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const url  = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `enhakkore-donations-${new Date().toISOString().slice(0,10)}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
   });
+
+  function csvCell(v) {
+    const s = String(v ?? "");
+    return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  }
 </script>
 </body>
 </html>

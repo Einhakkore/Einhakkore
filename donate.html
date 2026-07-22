@@ -365,31 +365,24 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getFirestore, collection, addDoc, serverTimestamp }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-  /* ╔══════════════════════════════════════════════════════════╗
-     ║  Firebase 設定：把整段 firebaseConfig 換成你的專案設定      ║
-     ║                                                            ║
-     ║  TODO（防機器人／垃圾寫入，上線前要補）：                    ║
-     ║   1. 開 Firebase App Check（reCAPTCHA v3 或 Enterprise），  ║
-     ║      並在此檔載入 initializeAppCheck，Firestore 才會拒收    ║
-     ║      沒有 App Check token 的請求。                          ║
-     ║   2. 若走 Cloudflare Turnstile：把 site key 塞進送出前的    ║
-     ║      驗證流程，token 一起丟到 Cloud Function，後端 verify。 ║
-     ║   3. Firestore Security Rules 收緊：只允許 donations 集合   ║
-     ║      的 create、且欄位對得上 schema、且送出頻率限流。       ║
-     ╚══════════════════════════════════════════════════════════╝ */
-  const firebaseConfig = {
-    apiKey:            "YOUR_API_KEY",
-    authDomain:        "YOUR_PROJECT_ID.firebaseapp.com",
-    projectId:         "YOUR_PROJECT_ID",
-    storageBucket:     "YOUR_PROJECT_ID.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId:             "YOUR_APP_ID"
-  };
+  // 共用 Firebase 設定（placeholder 值，實際安全性由 Firestore Rules + App Check 負責）
+  import { firebaseConfig } from "./assets/js/firebase-config.js";
 
   const app = initializeApp(firebaseConfig);
   const db  = getFirestore(app);
-  // TODO: initializeAppCheck(app, { provider: new ReCaptchaV3Provider("TODO_RECAPTCHA_SITE_KEY"), isTokenAutoRefreshEnabled: true });
+
+  /* ╔══════════════════════════════════════════════════════════╗
+     ║  App Check（防機器人／垃圾寫入）                            ║
+     ║  取得 reCAPTCHA v3 site key 後，解除下方註解即可啟用；      ║
+     ║  啟用後 Firestore 會拒收沒有 App Check token 的請求。       ║
+     ║  取得 site key 的步驟見專案根目錄的 FIREBASE_SETUP.md。     ║
+     ╚══════════════════════════════════════════════════════════╝ */
+  // import { initializeAppCheck, ReCaptchaV3Provider }
+  //   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app-check.js";
+  // initializeAppCheck(app, {
+  //   provider: new ReCaptchaV3Provider("YOUR_RECAPTCHA_V3_SITE_KEY"),
+  //   isTokenAutoRefreshEnabled: true
+  // });
 
   const form      = document.getElementById("donationForm");
   const statusEl  = document.getElementById("donationStatus");
@@ -410,6 +403,8 @@
       return;
     }
 
+    // 注意：consent（同意條款）僅於前端驗證，不寫入 Firestore；
+    // 寫入的欄位需與 firestore.rules 的允許清單完全一致。
     const data = {
       name:    (fd.get("name")    || "").trim(),
       date:     fd.get("date")    || "",
@@ -417,7 +412,6 @@
       last5:   (fd.get("last5")   || "").trim(),
       phone:   (fd.get("phone")   || "").trim(),
       address: (fd.get("address") || "").trim(),
-      consent: true,
     };
 
     if (!fd.get("consent")) {
