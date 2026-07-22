@@ -61,6 +61,41 @@ service cloud.firestore {
     }
 
     // --------------------------------------------------------
+    // 志工／技能媒合表單（volunteer.html → volunteers 集合）欄位驗證
+    // --------------------------------------------------------
+    function isValidVolunteer() {
+      let data = request.resource.data;
+      return
+        data.keys().hasOnly(
+          ['name', 'email', 'subject', 'category', 'message', 'createdAt', 'source']
+        ) &&
+        data.name    is string && data.name.size()    > 0 && data.name.size()    < 100  &&
+        data.email   is string && data.email.size()   > 0 && data.email.size()   < 200  &&
+        data.message is string && data.message.size() > 0 && data.message.size() < 5000 &&
+        (!('subject'  in data) || (data.subject  is string && data.subject.size()  < 200)) &&
+        (!('category' in data) || (data.category is string && data.category.size() < 100)) &&
+        (!('source'    in data) || data.source    is string) &&
+        (!('createdAt' in data) || data.createdAt is timestamp);
+    }
+
+    // --------------------------------------------------------
+    // 聯絡表單（contact.html → contacts 集合）欄位驗證
+    // --------------------------------------------------------
+    function isValidContact() {
+      let data = request.resource.data;
+      return
+        data.keys().hasOnly(
+          ['name', 'email', 'category', 'message', 'createdAt', 'source']
+        ) &&
+        data.name    is string && data.name.size()    > 0 && data.name.size()    < 100  &&
+        data.email   is string && data.email.size()   > 0 && data.email.size()   < 200  &&
+        data.message is string && data.message.size() > 0 && data.message.size() < 5000 &&
+        (!('category' in data) || (data.category is string && data.category.size() < 100)) &&
+        (!('source'    in data) || data.source    is string) &&
+        (!('createdAt' in data) || data.createdAt is timestamp);
+    }
+
+    // --------------------------------------------------------
     // donations 集合
     //   create ── 開放任何人（含未登入訪客）新增，但必須通過欄位驗證。
     //   read   ── 僅限白名單管理者，避免奉獻者個資外洩。
@@ -69,6 +104,24 @@ service cloud.firestore {
     // --------------------------------------------------------
     match /donations/{docId} {
       allow create: if isValidDonation();
+      allow read:   if isAdmin();
+      allow update, delete: if false;
+    }
+
+    // --------------------------------------------------------
+    // volunteers / contacts 集合
+    //   與 donations 相同的把關策略：
+    //   任何人可 create（需通過欄位驗證），read 僅限管理者，
+    //   update / delete 一律禁止。
+    // --------------------------------------------------------
+    match /volunteers/{docId} {
+      allow create: if isValidVolunteer();
+      allow read:   if isAdmin();
+      allow update, delete: if false;
+    }
+
+    match /contacts/{docId} {
+      allow create: if isValidContact();
       allow read:   if isAdmin();
       allow update, delete: if false;
     }

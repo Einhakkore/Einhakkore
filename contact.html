@@ -9,23 +9,15 @@
   <meta name="robots" content="index,follow">
   <link rel="icon" href="assets/img/favicon.png">
 
-  <!-- TODO: 上正式網域後把 https://enhakkore.org 全域替換 -->
-  <link rel="canonical" href="https://enhakkore.org/contact.html">
-
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="隱哈歌利 En-hakkore">
   <meta property="og:title" content="聯絡我們 · 隱哈歌利 En-hakkore">
   <meta property="og:description" content="與我們聯繫，我們會在三個工作天內回覆您的訊息。">
-  <meta property="og:url" content="https://enhakkore.org/contact.html">
   <meta property="og:locale" content="zh_TW">
-  <meta property="og:image" content="https://enhakkore.org/assets/img/og-default.jpg">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="聯絡我們 · 隱哈歌利">
   <meta name="twitter:description" content="與我們聯繫，三個工作天內回覆。">
-  <meta name="twitter:image" content="https://enhakkore.org/assets/img/og-default.jpg">
 
   <link rel="preload" href="assets/fonts/ShiweiSiJiChun-Regular.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/FreightTextPro-Book.woff2" as="font" type="font/woff2" crossorigin>
@@ -39,21 +31,21 @@
     "@context": "https://schema.org",
     "@type": "ContactPage",
     "name": "聯絡我們 · 隱哈歌利",
-    "url": "https://enhakkore.org/contact.html",
+    "url": "contact.html",
     "inLanguage": "zh-Hant",
-    "about": { "@id": "https://enhakkore.org/#org" },
+    "about": { "@id": "#org" },
     "mainEntity": {
       "@type": "NGO",
-      "@id": "https://enhakkore.org/#org",
+      "@id": "#org",
       "name": "隱哈歌利",
       "alternateName": ["En-hakkore", "En Hakkore"],
-      "url": "https://enhakkore.org/",
-      "logo": "https://enhakkore.org/assets/img/logo-on-light.png",
-      "email": "enhakkore@gmail.com",
+      "url": "/",
+      "logo": "assets/img/logo-on-light.png",
+      "email": "einhakkore@gmail.com",
       "contactPoint": {
         "@type": "ContactPoint",
         "contactType": "customer support",
-        "email": "enhakkore@gmail.com",
+        "email": "einhakkore@gmail.com",
         "availableLanguage": ["zh-Hant"],
         "areaServed": "TW"
       },
@@ -156,11 +148,11 @@
           </div>
         </div>
 
-        <button type="button" class="contact-card email-card" data-email="enhakkore@gmail.com" aria-label="複製 Email 地址">
+        <button type="button" class="contact-card email-card" data-email="einhakkore@gmail.com" aria-label="複製 Email 地址">
           <div class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></div>
           <div class="info-text">
             <h4>Email</h4>
-            <p>enhakkore@gmail.com</p>
+            <p>einhakkore@gmail.com</p>
           </div>
           <span class="copy-hint" aria-hidden="true">點擊複製</span>
         </button>
@@ -175,15 +167,9 @@
         </div>
       </div>
             <div class="reveal">
-        <!--
-          TODO（上線前要補）：
-          1. form action / method（或改綁 Firebase / Formspree / Cloud Function endpoint）
-          2. Cloudflare Turnstile 或 reCAPTCHA v3 驗證（後端 verify）
-          3. Honeypot 陷阱欄位（範例：下方 <input name="website" hidden>）
-        -->
-        <form class="contact-form">
-        <!-- honeypot 陷阱欄位：對真人隱藏，機器人才會亂填。樣式見 styles.css 的 .hp-field。 -->
-        <!-- TODO: 後端串接時需檢查 honeypot -->
+        <form class="contact-form" id="contactForm" novalidate>
+        <!-- honeypot 陷阱欄位：對真人隱藏，機器人才會亂填。樣式見 styles.css 的 .hp-field。
+             送出時若此欄非空即靜默丟棄，避免透露陷阱存在。 -->
         <input type="text" name="website" class="hp-field"
                tabindex="-1" autocomplete="off" aria-hidden="true">
         <h2>給我們寫封信</h2>
@@ -191,7 +177,7 @@
         <div class="field"><label>姓名 Name</label><input type="text" name="name" placeholder="您的姓名" required></div>
         <div class="field"><label>Email 電子郵件</label><input type="email" name="email" placeholder="example@church.org" required></div>
         <div class="field"><label>主旨 Subject</label>
-            <select id="contact-category">
+            <select id="contact-category" name="category">
               <option>👋 想更多了解隱哈哥利</option>
               <option>代禱請求</option>
               <option>合作邀約</option>
@@ -199,8 +185,16 @@
               <option>💬 其他問題</option>
             </select>
         </div>
-        <div class="field"><label>留言 Message</label><textarea id="contact-message" placeholder="想對我們說的話…" required></textarea></div>
-        <button class="btn btn-primary" type="submit" style="margin-top:8px;align-self:flex-start;">送出 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg></button>
+        <div class="field"><label>留言 Message</label><textarea id="contact-message" name="message" placeholder="想對我們說的話…" required></textarea></div>
+
+        <label class="form-consent">
+          <input type="checkbox" name="consent" required>
+          <span>我已閱讀並同意隱哈歌利的<a href="terms.html">隱私權政策及服務條款</a>，送出即視為同意。</span>
+        </label>
+
+        <button class="btn btn-primary" type="submit" id="contactSubmit" style="margin-top:8px;align-self:flex-start;">送出 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg></button>
+
+        <div class="form-status" id="contactStatus" role="status" aria-live="polite"></div>
     </form>
       </div>
 
@@ -215,5 +209,85 @@
 <div data-include="footer"></div>
 
 <script src="assets/js/site.js"></script>
+
+<!-- =========================================================
+     聯絡表單 — Firebase 串接
+     送出後寫入 Firestore「contacts」集合。
+     App Check（reCAPTCHA v3）會為每個請求簽發 token，
+     Firestore 只接受帶有合法 token 的寫入，擋掉機器人。
+     ========================================================= -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { initializeAppCheck, ReCaptchaV3Provider }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app-check.js";
+  // 共用 Firebase 設定（placeholder 值，實際安全性由 Firestore Rules + App Check 負責）
+  import { firebaseConfig } from "./assets/js/firebase-config.js";
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getFirestore(app);
+
+  // App Check（防機器人／垃圾寫入）— 與 donate.html 使用同一把 reCAPTCHA v3 site key。
+  initializeAppCheck(app, {
+    provider: new ReCaptchaV3Provider("6LcXU18tAAAAAG50yNTaHpCQlwnF8hZXJl1VydWr"),
+    isTokenAutoRefreshEnabled: true
+  });
+
+  const form      = document.getElementById("contactForm");
+  const statusEl  = document.getElementById("contactStatus");
+  const submitBtn = document.getElementById("contactSubmit");
+
+  function setStatus(msg, type){
+    statusEl.textContent = msg;
+    statusEl.className = "form-status show " + type;
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const fd = new FormData(form);
+
+    // honeypot：真人不會填 website 這欄，若被填 → 判定為機器人並靜默丟棄
+    if ((fd.get("website") || "").trim() !== "") {
+      return;
+    }
+
+    // 寫入的欄位需與 firestore.rules 的允許清單完全一致。
+    const data = {
+      name:     (fd.get("name")     || "").trim(),
+      email:    (fd.get("email")    || "").trim(),
+      category: (fd.get("category") || "").trim(),
+      message:  (fd.get("message")  || "").trim(),
+    };
+
+    if (!fd.get("consent")) {
+      setStatus("請勾選同意隱私權及服務條款。", "err");
+      return;
+    }
+    if (!data.name || !data.email || !data.message) {
+      setStatus("請確認姓名、Email 與留言等必填欄位是否完整。", "err");
+      return;
+    }
+
+    submitBtn.disabled = true;
+    setStatus("送出中…", "ok");
+
+    try {
+      await addDoc(collection(db, "contacts"), {
+        ...data,
+        createdAt: serverTimestamp(),
+        source: "contact.html"
+      });
+      form.reset();
+      setStatus("感謝您的來信，我們收到了！團隊會在三個工作天內回覆您。", "ok");
+    } catch (err) {
+      console.error(err);
+      setStatus("送出失敗，請稍後再試，或直接來信 einhakkore@gmail.com。", "err");
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+</script>
 </body>
 </html>

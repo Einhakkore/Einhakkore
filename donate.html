@@ -9,23 +9,15 @@
   <meta name="robots" content="index,follow">
   <link rel="icon" href="assets/img/favicon.png">
 
-  <!-- TODO: 上正式網域後把 https://enhakkore.org 全域替換 -->
-  <link rel="canonical" href="https://enhakkore.org/donate.html">
-
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="隱哈歌利 En-hakkore">
   <meta property="og:title" content="奉獻支持 · 隱哈歌利 En-hakkore">
   <meta property="og:description" content="您們要給人，就必有給您們的。無論金額大小，都是與宣教士同行的堅定力量。">
-  <meta property="og:url" content="https://enhakkore.org/donate.html">
   <meta property="og:locale" content="zh_TW">
-  <meta property="og:image" content="https://enhakkore.org/assets/img/og-donate.jpg">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="奉獻支持 · 隱哈歌利">
   <meta name="twitter:description" content="支持宣教士的關顧事工。">
-  <meta name="twitter:image" content="https://enhakkore.org/assets/img/og-donate.jpg">
 
   <link rel="preload" href="assets/fonts/ShiweiSiJiChun-Regular.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/FreightTextPro-Book.woff2" as="font" type="font/woff2" crossorigin>
@@ -41,13 +33,13 @@
     "@graph": [
       {
         "@type": "NGO",
-        "@id": "https://enhakkore.org/#org",
+        "@id": "#org",
         "name": "隱哈歌利",
         "alternateName": ["En-hakkore", "En Hakkore"],
-        "url": "https://enhakkore.org/",
-        "logo": "https://enhakkore.org/assets/img/logo-on-light.png",
+        "url": "/",
+        "logo": "assets/img/logo-on-light.png",
         "description": "為跨文化宣教士提供陪伴、資源整合與關顧網絡的支持事工。",
-        "email": "enhakkore@gmail.com",
+        "email": "einhakkore@gmail.com",
         "areaServed": { "@type": "Country", "name": "Taiwan" },
         "sameAs": [
           "TODO_FACEBOOK_URL",
@@ -57,17 +49,17 @@
       },
       {
         "@type": "WebPage",
-        "@id": "https://enhakkore.org/donate.html#page",
-        "url": "https://enhakkore.org/donate.html",
+        "@id": "donate.html#page",
+        "url": "donate.html",
         "name": "奉獻支持 · 隱哈歌利",
         "inLanguage": "zh-Hant",
-        "about": { "@id": "https://enhakkore.org/#org" },
+        "about": { "@id": "#org" },
         "potentialAction": {
           "@type": "DonateAction",
           "name": "奉獻支持隱哈歌利",
-          "recipient": { "@id": "https://enhakkore.org/#org" },
+          "recipient": { "@id": "#org" },
           "description": "透過銀行匯款或線上刷卡，支持隱哈歌利的宣教關顧事工。",
-          "target": "https://enhakkore.org/donate.html"
+          "target": "donate.html"
         }
       }
     ]
@@ -212,7 +204,6 @@
   svg.appendChild(c1);
   svg.appendChild(c2);
 </script>
-
 
       </aside>
 
@@ -359,7 +350,7 @@
 <!-- =========================================================
      Section C 表單 — Firebase 串接
      送出後寫入 Firestore「donations」集合，
-     由 Cloud Function 觸發自動寄信到 enhakkore@gmail.com
+     由 Cloud Function 觸發自動寄信到 einhakkore@gmail.com
      ========================================================= -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -436,7 +427,7 @@ initializeAppCheck(app, {
       setStatus("已收到您的奉獻確認，感謝您的擺上！我們會盡快對帳並與您聯繫。", "ok");
     } catch (err) {
       console.error(err);
-      setStatus("送出失敗，請稍後再試，或直接來信 enhakkore@gmail.com。", "err");
+      setStatus("送出失敗，請稍後再試，或直接來信 einhakkore@gmail.com。", "err");
     } finally {
       submitBtn.disabled = false;
     }

@@ -57,7 +57,7 @@ firebase deploy --only firestore:rules
 2. 上方分頁「Sign-in method」→ 供應商清單中點「Google」。
 3. 開啟「啟用」開關，選擇專案對外顯示名稱與支援用 email，按「儲存」。
 4. 上方分頁「Settings」→「Authorized domains（授權網域）」，
-   確認正式網域（例如 `enhakkore.org`）與測試用網域已列入；
+   確認正式網域與測試用網域已列入；
    本機測試時 `localhost` 預設已允許。
 
 > 白名單的 email 必須與 `firestore.rules` 的 `isAdmin()` 陣列一致。
@@ -74,7 +74,7 @@ App Check 會為每個請求簽發 token，讓 Firestore 只接受「來自本�
 
 1. 前往 reCAPTCHA 管理台：<https://www.google.com/recaptcha/admin/create>
 2. 標籤自訂；類型選 **reCAPTCHA v3**。
-3. 「網域」填入正式網域（例如 `enhakkore.org`）；本機測試可加 `localhost`。
+3. 「網域」填入你的正式網域；本機測試可加 `localhost`。
 4. 建立後會得到兩把金鑰：
    - **網站金鑰（site key）** → 前端使用（就是我們要填的）。
    - **密鑰（secret key）** → 交給 Firebase Console 註冊，**不要放進前端**。

@@ -1,5 +1,5 @@
 /* ============================================================
-   ENHAKORRE — Site JavaScript
+   EINHAKKORE — Site JavaScript
    partials loader + scroll flow field + stagger reveal + 表單
    ============================================================ */
 
@@ -284,23 +284,10 @@
     initContactGuides();
     initEmailCopy();
 
-    // ---------- Contact forms ----------
-    document.querySelectorAll("form.contact-form").forEach(form => {
-      form.addEventListener("submit", e => {
-        e.preventDefault();
-        form.innerHTML = `
-          <div class="form-success">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>
-            <div>
-              <strong style="color:var(--fg);font-weight:500;">感謝您的來信。</strong><br>
-              我們收到了。團隊會儘快回覆您。
-            </div>
-          </div>
-        `;
-      });
-    });
+    // ---------- Contact / volunteer forms ----------
+    // 表單送出改由各頁面底部的 Firebase module（volunteer.html / contact.html）
+    // 直接處理：寫入 Firestore、App Check 驗證、honeypot 檢查與狀態訊息。
+    // 這裡不再攔截 submit，以免覆蓋掉真正的送出邏輯。
 
     injectFlowBg();
     initFlowField();

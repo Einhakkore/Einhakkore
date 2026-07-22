@@ -14,7 +14,7 @@
 ## 檔案結構
 
 ```
-enhakorre-site/
+einhakkore-site/
 ├── index.html              # 首頁
 ├── about.html              # 關於我們
 ├── donate.html             # 奉獻支持
@@ -35,7 +35,7 @@ enhakorre-site/
 **請用本地伺服器**（雙擊 HTML 開可能會被瀏覽器擋字型）：
 
 ```bash
-cd enhakorre-site
+cd einhakkore-site
 python3 -m http.server 8000
 # 開 http://localhost:8000
 ```

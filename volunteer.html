@@ -9,23 +9,15 @@
   <meta name="robots" content="index,follow">
   <link rel="icon" href="assets/img/favicon.png">
 
-  <!-- TODO: 上正式網域後把 https://enhakkore.org 全域替換 -->
-  <link rel="canonical" href="https://enhakkore.org/volunteer.html">
-
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="隱哈歌利 En-hakkore">
   <meta property="og:title" content="參與服事 · 隱哈歌利 En-hakkore">
   <meta property="og:description" content="用您的時間、專業與恩賜，成為宣教士的後盾。">
-  <meta property="og:url" content="https://enhakkore.org/volunteer.html">
   <meta property="og:locale" content="zh_TW">
-  <meta property="og:image" content="https://enhakkore.org/assets/img/og-default.jpg">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="參與服事 · 隱哈歌利">
   <meta name="twitter:description" content="用您的專業成為宣教士的後盾。">
-  <meta name="twitter:image" content="https://enhakkore.org/assets/img/og-default.jpg">
 
   <link rel="preload" href="assets/fonts/ShiweiSiJiChun-Regular.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/FreightTextPro-Book.woff2" as="font" type="font/woff2" crossorigin>
@@ -39,18 +31,18 @@
     "@context": "https://schema.org",
     "@type": "WebPage",
     "name": "參與服事 · 隱哈歌利",
-    "url": "https://enhakkore.org/volunteer.html",
+    "url": "volunteer.html",
     "inLanguage": "zh-Hant",
     "description": "招募同工三步驟：申請與評估、裝備與加入、媒合服事。",
-    "about": { "@id": "https://enhakkore.org/#org" },
+    "about": { "@id": "#org" },
     "mainEntity": {
       "@type": "NGO",
-      "@id": "https://enhakkore.org/#org",
+      "@id": "#org",
       "name": "隱哈歌利",
       "alternateName": ["En-hakkore", "En Hakkore"],
-      "url": "https://enhakkore.org/",
-      "logo": "https://enhakkore.org/assets/img/logo-on-light.png",
-      "email": "enhakkore@gmail.com",
+      "url": "/",
+      "logo": "assets/img/logo-on-light.png",
+      "email": "einhakkore@gmail.com",
       "sameAs": [
         "TODO_FACEBOOK_URL",
         "TODO_INSTAGRAM_URL",
@@ -365,24 +357,18 @@
       <p class="lead">告訴我們您的恩賜與時間，我們會在三個工作天內回覆。</p>
     </div>
     <div style="max-width:720px;margin:0 auto" class="reveal">
-      <!--
-        TODO（上線前要補，同 contact 表單）：
-        1. form action / method（Firebase / Formspree / Cloud Function）
-        2. Cloudflare Turnstile 或 reCAPTCHA v3 驗證
-        3. Honeypot 陷阱欄位（下方隱藏 <input>）
-      -->
-      <form class="contact-form">
-        <!-- honeypot 陷阱欄位：對真人隱藏，機器人才會亂填。樣式見 styles.css 的 .hp-field。 -->
-        <!-- TODO: 後端串接時需檢查 honeypot -->
+      <form class="contact-form" id="volunteerForm" novalidate>
+        <!-- honeypot 陷阱欄位：對真人隱藏，機器人才會亂填。樣式見 styles.css 的 .hp-field。
+             送出時若此欄非空即靜默丟棄，避免透露陷阱存在。 -->
         <input type="text" name="website" class="hp-field"
                tabindex="-1" autocomplete="off" aria-hidden="true">
         <h3>技能媒合表單</h3>
         <p class="desc">您的回覆只會用於同工媒合用途，不會做其他使用。</p>
         <div class="field"><label>姓名 Name</label><input type="text" name="name" placeholder="您的姓名" required></div>
         <div class="field"><label>電子郵件 Email</label><input type="email" name="email" placeholder="example@church.org" required></div>
-        <div class="field"><label>主旨 Subject</label><input type="text" placeholder="申請加入隱哈哥利_王大明" required></div>
+        <div class="field"><label>主旨 Subject</label><input type="text" name="subject" placeholder="申請加入隱哈哥利_王大明" required></div>
         <div class="field"><label>類別 Category</label>
-            <select>
+            <select name="category">
               <option>行政／文書</option>
               <option>媒體／設計</option>
               <option>諮商／關顧</option>
@@ -393,14 +379,16 @@
               <option>其他</option>
             </select>
         </div>
-        <div class="field"><label>留言 Message</label><textarea placeholder="想對我們說的話…" required></textarea></div>
+        <div class="field"><label>留言 Message</label><textarea name="message" placeholder="想對我們說的話…" required></textarea></div>
 
         <label class="form-consent">
           <input type="checkbox" name="consent" required>
           <span>我已閱讀並同意隱哈歌利的<a href="terms.html">隱私權政策及服務條款</a>，送出即視為同意。</span>
         </label>
 
-        <button class="btn btn-primary" type="submit" style="margin-top:8px;align-self:flex-start;">送出 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg></button>
+        <button class="btn btn-primary" type="submit" id="volunteerSubmit" style="margin-top:8px;align-self:flex-start;">送出 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg></button>
+
+        <div class="form-status" id="volunteerStatus" role="status" aria-live="polite"></div>
     </form>
     </div>
   </div>
@@ -413,5 +401,86 @@
 <div data-include="footer"></div>
 
 <script src="assets/js/site.js"></script>
+
+<!-- =========================================================
+     技能媒合表單 — Firebase 串接
+     送出後寫入 Firestore「volunteers」集合。
+     App Check（reCAPTCHA v3）會為每個請求簽發 token，
+     Firestore 只接受帶有合法 token 的寫入，擋掉機器人。
+     ========================================================= -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { initializeAppCheck, ReCaptchaV3Provider }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app-check.js";
+  // 共用 Firebase 設定（placeholder 值，實際安全性由 Firestore Rules + App Check 負責）
+  import { firebaseConfig } from "./assets/js/firebase-config.js";
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getFirestore(app);
+
+  // App Check（防機器人／垃圾寫入）— 與 donate.html 使用同一把 reCAPTCHA v3 site key。
+  initializeAppCheck(app, {
+    provider: new ReCaptchaV3Provider("6LcXU18tAAAAAG50yNTaHpCQlwnF8hZXJl1VydWr"),
+    isTokenAutoRefreshEnabled: true
+  });
+
+  const form      = document.getElementById("volunteerForm");
+  const statusEl  = document.getElementById("volunteerStatus");
+  const submitBtn = document.getElementById("volunteerSubmit");
+
+  function setStatus(msg, type){
+    statusEl.textContent = msg;
+    statusEl.className = "form-status show " + type;
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const fd = new FormData(form);
+
+    // honeypot：真人不會填 website 這欄，若被填 → 判定為機器人並靜默丟棄
+    if ((fd.get("website") || "").trim() !== "") {
+      return;
+    }
+
+    // 寫入的欄位需與 firestore.rules 的允許清單完全一致（consent 僅前端驗證）。
+    const data = {
+      name:     (fd.get("name")     || "").trim(),
+      email:    (fd.get("email")    || "").trim(),
+      subject:  (fd.get("subject")  || "").trim(),
+      category: (fd.get("category") || "").trim(),
+      message:  (fd.get("message")  || "").trim(),
+    };
+
+    if (!fd.get("consent")) {
+      setStatus("請勾選同意隱私權及服務條款。", "err");
+      return;
+    }
+    if (!data.name || !data.email || !data.message) {
+      setStatus("請確認姓名、Email 與留言等必填欄位是否完整。", "err");
+      return;
+    }
+
+    submitBtn.disabled = true;
+    setStatus("送出中…", "ok");
+
+    try {
+      await addDoc(collection(db, "volunteers"), {
+        ...data,
+        createdAt: serverTimestamp(),
+        source: "volunteer.html"
+      });
+      form.reset();
+      setStatus("已收到您的意願表，感謝您！我們會在三個工作天內與您聯繫。", "ok");
+    } catch (err) {
+      console.error(err);
+      setStatus("送出失敗，請稍後再試，或直接來信 einhakkore@gmail.com。", "err");
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+</script>
 </body>
 </html>

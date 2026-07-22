@@ -45,7 +45,15 @@
       <header class="admin-header">
         <div>
           <div class="section-eyebrow">ADMIN · 後台</div>
-          <h1>奉獻紀錄</h1>
+          <!-- 標題右側 dropdown：切換表單來源（奉獻／志工／聯絡） -->
+          <div class="admin-title-row">
+            <h1 id="adminTitle">奉獻紀錄</h1>
+            <select id="sourceSelect" class="admin-source-select" aria-label="切換表單來源">
+              <option value="donations">奉獻 Donations</option>
+              <option value="volunteers">志工報名 Volunteers</option>
+              <option value="contacts">聯絡訊息 Contacts</option>
+            </select>
+          </div>
           <p class="lead">
             共 <span id="rowCount">0</span> 筆
             · 登入者：<span id="currentUser" class="admin-user"></span>
@@ -65,19 +73,9 @@
 
       <div class="admin-table-wrap">
         <table class="admin-table" id="adminTable">
-          <thead>
-            <tr>
-              <th>姓名</th>
-              <th>轉帳日期</th>
-              <th>金額</th>
-              <th>末五碼</th>
-              <th>電話</th>
-              <th>地址</th>
-              <th>送出時間</th>
-            </tr>
-          </thead>
+          <thead id="adminHead"></thead>
           <tbody id="adminBody">
-            <tr><td colspan="7" class="admin-empty">載入中…</td></tr>
+            <tr><td class="admin-empty">載入中…</td></tr>
           </tbody>
         </table>
       </div>
@@ -133,14 +131,75 @@ initializeAppCheck(app, {
 
   const NO_PERMISSION_MSG = "此帳號沒有檢視權限，請聯繫管理者。";
 
+  // ============================================================
+  //  表單來源設定（donations / volunteers / contacts）
+  //  每個來源定義：Firestore 集合名、標題、CSV 檔名前綴、欄位。
+  //  欄位 fmt 可選（金額、時間格式化）；cls 用於套用既有欄位樣式。
+  // ============================================================
+  function fmtAmount(v) {
+    return (typeof v === "number") ? "NT$ " + v.toLocaleString("zh-TW") : esc(v);
+  }
+  function fmtTime(d) {
+    return d ? d.toLocaleString("zh-TW") : "—";
+  }
+
+  const SOURCES = {
+    donations: {
+      title: "奉獻紀錄",
+      csv:   "donations",
+      empty: "目前沒有奉獻紀錄。",
+      columns: [
+        { key: "name",      label: "姓名" },
+        { key: "date",      label: "轉帳日期" },
+        { key: "amount",    label: "金額",     fmt: fmtAmount, raw: v => (typeof v === "number" ? v : "") },
+        { key: "last5",     label: "末五碼" },
+        { key: "phone",     label: "電話" },
+        { key: "address",   label: "地址",     cls: "cell-message" },
+        { key: "createdAt", label: "送出時間", fmt: fmtTime, time: true },
+      ],
+    },
+    volunteers: {
+      title: "志工報名",
+      csv:   "volunteers",
+      empty: "目前沒有志工報名紀錄。",
+      columns: [
+        { key: "name",      label: "姓名" },
+        { key: "email",     label: "Email" },
+        { key: "subject",   label: "主旨" },
+        { key: "category",  label: "類別" },
+        { key: "message",   label: "留言",     cls: "cell-message" },
+        { key: "createdAt", label: "送出時間", fmt: fmtTime, time: true },
+      ],
+    },
+    contacts: {
+      title: "聯絡訊息",
+      csv:   "contacts",
+      empty: "目前沒有聯絡訊息。",
+      columns: [
+        { key: "name",      label: "姓名" },
+        { key: "email",     label: "Email" },
+        { key: "category",  label: "類別" },
+        { key: "message",   label: "留言",     cls: "cell-message" },
+        { key: "createdAt", label: "送出時間", fmt: fmtTime, time: true },
+      ],
+    },
+  };
+
   // ---- DOM ----
   const $loginView = document.getElementById("loginView");
   const $panelView = document.getElementById("panelView");
   const $loginErr  = document.getElementById("loginErr");
   const $notice    = document.getElementById("adminNotice");
+  const $head      = document.getElementById("adminHead");
   const $body      = document.getElementById("adminBody");
   const $count     = document.getElementById("rowCount");
   const $user      = document.getElementById("currentUser");
+  const $title     = document.getElementById("adminTitle");
+  const $source    = document.getElementById("sourceSelect");
+
+  let currentSource = $source.value || "donations";
+  let currentUser   = null;
+  let rows          = [];
 
   document.getElementById("btnGoogleLogin")
     .addEventListener("click", async () => {
@@ -156,22 +215,27 @@ initializeAppCheck(app, {
   document.getElementById("btnLogout")
     .addEventListener("click", () => signOut(auth));
 
+  // 切換表單來源 → 重新載入對應集合
+  $source.addEventListener("change", () => {
+    currentSource = $source.value;
+    if (currentUser) loadData();
+  });
+
   // ---- 依登入狀態切換視圖 ----
   onAuthStateChanged(auth, (user) => {
     if (user) {
+      currentUser = user;
       $loginView.hidden = true;
       $panelView.hidden = false;
       $user.textContent = user.email || "";
-      loadDonations(user);
+      loadData();
     } else {
+      currentUser = null;
       $panelView.hidden = true;
       $loginView.hidden = false;
       rows = [];
     }
   });
-
-  // ---- 資料 ----
-  let rows = [];
 
   function showNotice(msg) {
     $notice.textContent = msg;
@@ -182,75 +246,75 @@ initializeAppCheck(app, {
     $notice.hidden = true;
   }
 
-  async function loadDonations(user) {
+  function cfg() { return SOURCES[currentSource]; }
+  function colCount() { return cfg().columns.length; }
+
+  function renderHead() {
+    $title.textContent = cfg().title;
+    $head.innerHTML =
+      "<tr>" + cfg().columns.map(c => `<th>${esc(c.label)}</th>`).join("") + "</tr>";
+  }
+  function bodyMessage(msg) {
+    $body.innerHTML =
+      `<tr><td colspan="${colCount()}" class="admin-empty">${esc(msg)}</td></tr>`;
+  }
+
+  async function loadData() {
     hideNotice();
-    $body.innerHTML = '<tr><td colspan="7" class="admin-empty">載入中…</td></tr>';
+    renderHead();
+    bodyMessage("載入中…");
+    $count.textContent = "0";
+    rows = [];
 
     // 前端即時提示：非白名單帳號先給友善訊息（真正把關仍在 Rules）
-    if (!ADMIN_EMAILS.includes(user.email)) {
+    if (!ADMIN_EMAILS.includes(currentUser.email)) {
       showNotice(NO_PERMISSION_MSG);
-      $body.innerHTML = `<tr><td colspan="7" class="admin-empty">${NO_PERMISSION_MSG}</td></tr>`;
-      $count.textContent = "0";
-      rows = [];
+      bodyMessage(NO_PERMISSION_MSG);
       return;
     }
 
+    const source = currentSource;
     try {
       const snap = await getDocs(
-        query(collection(db, "donations"), orderBy("createdAt", "desc"))
+        query(collection(db, source), orderBy("createdAt", "desc"))
       );
+      // 使用者可能在載入期間又切換來源；只採用仍相符的結果
+      if (source !== currentSource) return;
       rows = snap.docs.map(d => {
         const x = d.data();
-        return {
-          name:      x.name    || "",
-          date:      x.date    || "",
-          amount:    (x.amount != null) ? x.amount : "",
-          last5:     x.last5   || "",
-          phone:     x.phone   || "",
-          address:   x.address || "",
-          createdAt: x.createdAt?.toDate?.() || null,
-        };
+        const row = {};
+        cfg().columns.forEach(c => {
+          if (c.time) row[c.key] = x[c.key]?.toDate?.() || null;
+          else        row[c.key] = (x[c.key] != null) ? x[c.key] : "";
+        });
+        return row;
       });
       render();
     } catch (err) {
-      console.warn("讀取 donations 失敗", err);
-      // Firestore 權限錯誤 → 友善訊息（不在白名單即會落到這裡）
+      if (source !== currentSource) return;
+      console.warn(`讀取 ${source} 失敗`, err);
       if (err && err.code === "permission-denied") {
         showNotice(NO_PERMISSION_MSG);
-        $body.innerHTML = `<tr><td colspan="7" class="admin-empty">${NO_PERMISSION_MSG}</td></tr>`;
+        bodyMessage(NO_PERMISSION_MSG);
       } else {
         showNotice("讀取資料時發生錯誤，請稍後再試。");
-        $body.innerHTML = '<tr><td colspan="7" class="admin-empty">讀取失敗。</td></tr>';
+        bodyMessage("讀取失敗。");
       }
-      $count.textContent = "0";
-      rows = [];
     }
-  }
-
-  function fmtAmount(v) {
-    return (typeof v === "number") ? "NT$ " + v.toLocaleString("zh-TW") : esc(v);
-  }
-  function fmtTime(d) {
-    return d ? d.toLocaleString("zh-TW") : "—";
   }
 
   function render() {
     $count.textContent = rows.length;
     if (rows.length === 0) {
-      $body.innerHTML = '<tr><td colspan="7" class="admin-empty">目前沒有奉獻紀錄。</td></tr>';
+      bodyMessage(cfg().empty);
       return;
     }
-    $body.innerHTML = rows.map(r => `
-      <tr>
-        <td data-label="姓名">${esc(r.name)}</td>
-        <td data-label="轉帳日期">${esc(r.date)}</td>
-        <td data-label="金額">${fmtAmount(r.amount)}</td>
-        <td data-label="末五碼">${esc(r.last5)}</td>
-        <td data-label="電話">${esc(r.phone)}</td>
-        <td data-label="地址" class="cell-address">${esc(r.address)}</td>
-        <td data-label="送出時間">${fmtTime(r.createdAt)}</td>
-      </tr>
-    `).join("");
+    const cols = cfg().columns;
+    $body.innerHTML = rows.map(r => "<tr>" + cols.map(c => {
+      const val = c.fmt ? c.fmt(r[c.key]) : esc(r[c.key]);
+      const cls = c.cls ? ` class="${c.cls}"` : "";
+      return `<td data-label="${esc(c.label)}"${cls}>${val}</td>`;
+    }).join("") + "</tr>").join("");
   }
 
   function esc(s) {
@@ -262,22 +326,19 @@ initializeAppCheck(app, {
   // ---- 匯出 CSV（純前端 Blob；含 UTF-8 BOM 避免 Excel 中文亂碼）----
   document.getElementById("btnExport").addEventListener("click", () => {
     if (rows.length === 0) return;
-    const headers = ["姓名","轉帳日期","金額","末五碼","電話","地址","送出時間"];
-    const lines = rows.map(r => [
-      r.name,
-      r.date,
-      (typeof r.amount === "number") ? r.amount : "",
-      r.last5,
-      r.phone,
-      r.address,
-      r.createdAt ? r.createdAt.toISOString() : "",
-    ].map(csvCell).join(","));
+    const cols = cfg().columns;
+    const headers = cols.map(c => c.label);
+    const lines = rows.map(r => cols.map(c => {
+      if (c.time)     return r[c.key] ? r[c.key].toISOString() : "";
+      if (c.raw)      return c.raw(r[c.key]);
+      return r[c.key];
+    }).map(csvCell).join(","));
     const csv = "﻿" + [headers.join(","), ...lines].join("\r\n");
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
     const url  = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `enhakkore-donations-${new Date().toISOString().slice(0,10)}.csv`;
+    a.download = `einhakkore-${cfg().csv}-${new Date().toISOString().slice(0,10)}.csv`;
     document.body.appendChild(a);
     a.click();
     a.remove();
