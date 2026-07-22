@@ -372,9 +372,10 @@
         3. Honeypot 陷阱欄位（下方隱藏 <input>）
       -->
       <form class="contact-form">
-        <input type="text" name="website" tabindex="-1" autocomplete="off"
-               style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;"
-               aria-hidden="true">
+        <!-- honeypot 陷阱欄位：對真人隱藏，機器人才會亂填。樣式見 styles.css 的 .hp-field。 -->
+        <!-- TODO: 後端串接時需檢查 honeypot -->
+        <input type="text" name="website" class="hp-field"
+               tabindex="-1" autocomplete="off" aria-hidden="true">
         <h3>技能媒合表單</h3>
         <p class="desc">您的回覆只會用於同工媒合用途，不會做其他使用。</p>
         <div class="field"><label>姓名 Name</label><input type="text" name="name" placeholder="您的姓名" required></div>
