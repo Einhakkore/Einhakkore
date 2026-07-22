@@ -46,7 +46,7 @@
         "alternateName": ["En-hakkore", "En Hakkore"],
         "url": "https://enhakkore.org/",
         "logo": "https://enhakkore.org/assets/img/logo-on-light.png",
-        "description": "為跨文化宣教士提供陪伴、資源整合與關顧網絡的支持事工。",
+        "description": "為跨文化宣教士提供陳伴、資源整合與關顧網絡的支持事工。",
         "email": "enhakkore@gmail.com",
         "areaServed": { "@type": "Country", "name": "Taiwan" },
         "sameAs": [
@@ -94,9 +94,9 @@
 <section class="section">
     <div class="section-head section-head--on-dark reveal">
       <div class="section-num">WHY</div>
-      <div class="cta-label">您的奉獻，將轉化為第一線宣教士生命中具體可行的資源與陪伴。</div>
+      <div class="cta-label">您的奉獻，將轉化為第一線宣教士生命中具體可行的資源與陳伴。</div>
       <h2>為什麼我們需要您的支持？</h2>
-      <p>宣教士在跨文化的環境中前行，常需面對複雜與不易。隱哈歌利相信，真誠的關懷會先接住情緒，再帶出方向與實際步驟。我們尊重每個生命的節奏，不給標準答案，但在關鍵時刻，我們希望具體、務實地陪著他們一起走過。</p>
+      <p>宣教士在跨文化的環境中前行，常需面對複雜與不易。隱哈歌利相信，真誠的關懷會先接住情緒，再帶出方向與實際步驟。我們尊重每個生命的節奏，不給標準答案，但在關鍵時刻，我們希望具體、務實地陳著他們一起走過。</p>
     </div>
   <div class="wrap">
     <div class="donate-layout">
@@ -226,7 +226,7 @@
           <h2>📣 重要公告——關於我們的合作夥伴</h2>
           <h3>隱哈歌利 × 台灣好地方社區發展協會</h3>
           <p>為了讓財務流程更完善、提供支持者更放心的奉獻管道，隱哈歌利目前與「社團法人台灣好地方社區發展協會」展開正式的專案合作。</p>
-          <p>目前隱哈歌利的所有奉獻將由「好地方協會」協助統籌收款、管理帳務並協助開立正式的奉獻收據。請大家放心，您的每一分奉獻，都將專款專用於隱哈歌利的事工推動中，陪伴我們走穩每一步。</p>
+          <p>目前隱哈歌利的所有奉獻將由「好地方協會」協助統籌收款、管理帳務並協助開立正式的奉獻收據。請大家放心，您的每一分奉獻，都將專款專用於隱哈歌利的事工推動中，陳伴我們走穩每一步。</p>
         </div>
 
         <!-- ---------- Section B：匯款與奉獻確認（Step 1 選匯款方式 / Step 2 填表） ---------- -->
@@ -365,31 +365,24 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getFirestore, collection, addDoc, serverTimestamp }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-  /* ╔══════════════════════════════════════════════════════════╗
-     ║  Firebase 設定：把整段 firebaseConfig 換成你的專案設定      ║
-     ║                                                            ║
-     ║  TODO（防機器人／垃圾寫入，上線前要補）：                    ║
-     ║   1. 開 Firebase App Check（reCAPTCHA v3 或 Enterprise），  ║
-     ║      並在此檔載入 initializeAppCheck，Firestore 才會拒收    ║
-     ║      沒有 App Check token 的請求。                          ║
-     ║   2. 若走 Cloudflare Turnstile：把 site key 塞進送出前的    ║
-     ║      驗證流程，token 一起丟到 Cloud Function，後端 verify。 ║
-     ║   3. Firestore Security Rules 收緊：只允許 donations 集合   ║
-     ║      的 create、且欄位對得上 schema、且送出頻率限流。       ║
-     ╚══════════════════════════════════════════════════════════╝ */
-  const firebaseConfig = {
-    apiKey:            "YOUR_API_KEY",
-    authDomain:        "YOUR_PROJECT_ID.firebaseapp.com",
-    projectId:         "YOUR_PROJECT_ID",
-    storageBucket:     "YOUR_PROJECT_ID.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId:             "YOUR_APP_ID"
-  };
+  // 共用 Firebase 設定（placeholder 值，實際安全性由 Firestore Rules + App Check 負責）
+  import { firebaseConfig } from "./assets/js/firebase-config.js";
 
   const app = initializeApp(firebaseConfig);
   const db  = getFirestore(app);
-  // TODO: initializeAppCheck(app, { provider: new ReCaptchaV3Provider("TODO_RECAPTCHA_SITE_KEY"), isTokenAutoRefreshEnabled: true });
+
+  /* ╔══════════════════════════════════════════════╗
+     ║  App Check（防機器人／垃圾寫入）                            ║
+     ║  取得 reCAPTCHA v3 site key 後，解除下方註解即可啟用；      ║
+     ║  啟用後 Firestore 會拒收沒有 App Check token 的請求。       ║
+     ║  取得 site key 的步驟見專案根目錄的 FIREBASE_SETUP.md。     ║
+     ╚══════════════════════════════════════════════╝ */
+  // import { initializeAppCheck, ReCaptchaV3Provider }
+  //   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app-check.js";
+  // initializeAppCheck(app, {
+  //   provider: new ReCaptchaV3Provider("YOUR_RECAPTCHA_V3_SITE_KEY"),
+  //   isTokenAutoRefreshEnabled: true
+  // });
 
   const form      = document.getElementById("donationForm");
   const statusEl  = document.getElementById("donationStatus");
@@ -410,6 +403,8 @@
       return;
     }
 
+    // 注意：consent（同意條款）僅於前端驗證，不寫入 Firestore；
+    // 寫入的欄位需與 firestore.rules 的允許清單完全一致。
     const data = {
       name:    (fd.get("name")    || "").trim(),
       date:     fd.get("date")    || "",
@@ -417,7 +412,6 @@
       last5:   (fd.get("last5")   || "").trim(),
       phone:   (fd.get("phone")   || "").trim(),
       address: (fd.get("address") || "").trim(),
-      consent: true,
     };
 
     if (!fd.get("consent")) {
