@@ -117,12 +117,12 @@
      ║  取得 reCAPTCHA v3 site key 後，解除下方註解即可啟用。      ║
      ║  取得 site key 的步驟見專案根目錄的 FIREBASE_SETUP.md。     ║
      ╚══════════════════════════════════════════════╝ */
-  // import { initializeAppCheck, ReCaptchaV3Provider }
-  //   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app-check.js";
-  // initializeAppCheck(app, {
-  //   provider: new ReCaptchaV3Provider("YOUR_RECAPTCHA_V3_SITE_KEY"),
-  //   isTokenAutoRefreshEnabled: true
-  // });
+import { initializeAppCheck, ReCaptchaV3Provider }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app-check.js";
+initializeAppCheck(app, {
+  provider: new ReCaptchaV3Provider("6LcXU18tAAAAAG50yNTaHpCQlwnF8hZXJl1VydWr"),
+  isTokenAutoRefreshEnabled: true
+});
 
   // 前端白名單：僅供「即時提示」，與 firestore.rules 一致。
   // ⚠️ 這不是安全防線，真正的把關在 Firestore Rules。
