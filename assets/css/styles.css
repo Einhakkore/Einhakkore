@@ -2283,6 +2283,24 @@ body[data-page="home"] .newsletter {
   font-size: 32px; color: var(--text-1);
   margin: 8px 0 4px; letter-spacing: .02em; line-height: 1.4;
 }
+/* 標題右側 dropdown：切換表單來源 */
+.admin-title-row {
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+}
+.admin-source-select {
+  height: 38px; padding: 0 34px 0 14px; border-radius: 10px;
+  border: 1px solid var(--line-mid);
+  background: rgba(250, 246, 239, .85);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a06a2c' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat; background-position: right 12px center;
+  -webkit-appearance: none; -moz-appearance: none; appearance: none;
+  font-family: var(--font-brand); font-size: 14px; font-weight: 500;
+  color: var(--text-1); letter-spacing: .02em;
+  cursor: pointer; outline: none;
+}
+.admin-source-select:focus {
+  border-color: var(--amber-500); background-color: var(--paper);
+}
 .admin-header .lead {
   font-size: 14px; color: var(--text-3); margin: 0;
 }
