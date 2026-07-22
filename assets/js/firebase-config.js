@@ -5,7 +5,7 @@
    此檔案的內容「會公開於前端」，任何人打開瀏覽器原始碼都看得到，
    這是 Firebase Web SDK 的正常設計，並非漏洞。
 
-   真正的安全防線由以下兩者負責，「不可」在此檔存放任何真正的密鑰：
+   真正的安全防線由以下兩者負責，「不可」在此存放任何真正的密鑰：
      1. Firestore Security Rules（firestore.rules）— 決定誰能讀寫資料
      2. Firebase App Check（reCAPTCHA v3）— 擋掉非本站發出的請求
 
