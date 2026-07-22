@@ -377,12 +377,12 @@
      ║  啟用後 Firestore 會拒收沒有 App Check token 的請求。       ║
      ║  取得 site key 的步驟見專案根目錄的 FIREBASE_SETUP.md。     ║
      ╚══════════════════════════════════════════════════════════╝ */
-  // import { initializeAppCheck, ReCaptchaV3Provider }
-  //   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app-check.js";
-  // initializeAppCheck(app, {
-  //   provider: new ReCaptchaV3Provider("YOUR_RECAPTCHA_V3_SITE_KEY"),
-  //   isTokenAutoRefreshEnabled: true
-  // });
+import { initializeAppCheck, ReCaptchaV3Provider }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app-check.js";
+initializeAppCheck(app, {
+  provider: new ReCaptchaV3Provider("6LcXU18tAAAAAG50yNTaHpCQlwnF8hZXJl1VydWr"),
+  isTokenAutoRefreshEnabled: true
+});
 
   const form      = document.getElementById("donationForm");
   const statusEl  = document.getElementById("donationStatus");
