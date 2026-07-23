@@ -403,6 +403,9 @@
 <script src="assets/js/site.js"></script>
 
 <!-- =========================================================
+     技能媒合表單 — Firebase 串接（比照 donate.html）
+     送出後寫入 Firestore「volunteers」集合。
+     欄位需與 firestore.rules 的 isValidVolunteer() 允許清單一致。
      技能媒合表單 — Firebase 串接
      送出後寫入 Firestore「volunteers」集合。
      App Check（reCAPTCHA v3）會為每個請求簽發 token，
@@ -420,12 +423,17 @@
   const app = initializeApp(firebaseConfig);
   const db  = getFirestore(app);
 
-  // App Check（防機器人／垃圾寫入）— 與 donate.html 使用同一把 reCAPTCHA v3 site key。
+  // App Check（防機器人／垃圾寫入）— 與 donate / admin 共用同一組 site key
+  import { initializeAppCheck, ReCaptchaV3Provider }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app-check.js";
   initializeAppCheck(app, {
     provider: new ReCaptchaV3Provider("6LcXU18tAAAAAG50yNTaHpCQlwnF8hZXJl1VydWr"),
     isTokenAutoRefreshEnabled: true
   });
 
+  const form      = document.querySelector("form.contact-form");
+  const statusEl  = form.querySelector(".form-status");
+  const submitBtn = form.querySelector('button[type="submit"]');
   const form      = document.getElementById("volunteerForm");
   const statusEl  = document.getElementById("volunteerStatus");
   const submitBtn = document.getElementById("volunteerSubmit");
@@ -440,12 +448,16 @@
 
     const fd = new FormData(form);
 
-    // honeypot：真人不會填 website 這欄，若被填 → 判定為機器人並靜默丟棄
-    if ((fd.get("website") || "").trim() !== "") {
+    // honeypot：真人不會填 website 這欄，被填 → 判定為機器人，靜默丟棄
+    if ((fd.get("website") || "").trim() !== "") return;
+
+    // 同意條款：僅前端驗證，不寫入 Firestore
+    if (!fd.get("consent")) {
+      setStatus("請先勾選並同意隱私權政策及服務條款，才能送出表單。", "err");
       return;
     }
 
-    // 寫入的欄位需與 firestore.rules 的允許清單完全一致（consent 僅前端驗證）。
+    // 寫入的欄位需與 firestore.rules 的允許清單完全一致
     const data = {
       name:     (fd.get("name")     || "").trim(),
       email:    (fd.get("email")    || "").trim(),

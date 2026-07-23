@@ -167,6 +167,15 @@
         </div>
       </div>
             <div class="reveal">
+        <!--
+          TODO（上線前要補）：
+          1. form action / method（或改綁 Firebase / Formspree / Cloud Function endpoint）
+          2. Cloudflare Turnstile 或 reCAPTCHA v3 驗證（後端 verify）
+          3. Honeypot 陷阱欄位（範例：下方 <input name="website" hidden>）
+        -->
+        <form class="contact-form" data-backend="firebase" novalidate>
+        <!-- honeypot 陷阱欄位：對真人隱藏，機器人才會亂填。樣式見 styles.css 的 .hp-field。 -->
+        <!-- 送出時若此欄非空即靜默丟棄（見頁尾 Firebase module）。 -->
         <form class="contact-form" id="contactForm" novalidate>
         <!-- honeypot 陷阱欄位：對真人隱藏，機器人才會亂填。樣式見 styles.css 的 .hp-field。
              送出時若此欄非空即靜默丟棄，避免透露陷阱存在。 -->
@@ -234,6 +243,9 @@
     isTokenAutoRefreshEnabled: true
   });
 
+  const form      = document.querySelector("form.contact-form");
+  const statusEl  = form.querySelector(".form-status");
+  const submitBtn = form.querySelector('button[type="submit"]');
   const form      = document.getElementById("contactForm");
   const statusEl  = document.getElementById("contactStatus");
   const submitBtn = document.getElementById("contactSubmit");

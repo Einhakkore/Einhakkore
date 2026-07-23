@@ -61,6 +61,16 @@ service cloud.firestore {
     }
 
     // --------------------------------------------------------
+    // 建立聯絡表單資料時的欄位驗證（contact.html → contacts 集合）
+    //   同 donations 的思路：只允許白名單欄位、限制型別與長度上限，
+    //   擋掉惡意灌入的巨大字串／不合法型別。
+    //   name / email / message 為必填；category 選填。
+    // --------------------------------------------------------
+    function isValidContact() {
+      let data = request.resource.data;
+      return
+        data.keys().hasOnly(
+          ['name', 'email', 'category', 'message', 'createdAt', 'source']
     // 志工／技能媒合表單（volunteer.html → volunteers 集合）欄位驗證
     // --------------------------------------------------------
     function isValidVolunteer() {
@@ -79,6 +89,14 @@ service cloud.firestore {
     }
 
     // --------------------------------------------------------
+    // 建立技能媒合資料時的欄位驗證（volunteer.html → volunteers 集合）
+    //   name / email / message 為必填；subject / category 選填。
+    // --------------------------------------------------------
+    function isValidVolunteer() {
+      let data = request.resource.data;
+      return
+        data.keys().hasOnly(
+          ['name', 'email', 'subject', 'category', 'message', 'createdAt', 'source']
     // 聯絡表單（contact.html → contacts 集合）欄位驗證
     // --------------------------------------------------------
     function isValidContact() {
@@ -109,6 +127,13 @@ service cloud.firestore {
     }
 
     // --------------------------------------------------------
+    // contacts 集合（聯絡表單）
+    //   create ── 開放任何人新增，但必須通過欄位驗證。
+    //   read   ── 僅限白名單管理者，避免來信者個資外洩。
+    //   update / delete ── 一律禁止（保留完整稽核紀錄）。
+    // --------------------------------------------------------
+    match /contacts/{docId} {
+      allow create: if isValidContact();
     // volunteers / contacts 集合
     //   與 donations 相同的把關策略：
     //   任何人可 create（需通過欄位驗證），read 僅限管理者，
@@ -120,6 +145,14 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
+    // --------------------------------------------------------
+    // volunteers 集合（技能媒合意願表）
+    //   create ── 開放任何人新增，但必須通過欄位驗證。
+    //   read   ── 僅限白名單管理者，避免報名者個資外洩。
+    //   update / delete ── 一律禁止（保留完整稽核紀錄）。
+    // --------------------------------------------------------
+    match /volunteers/{docId} {
+      allow create: if isValidVolunteer();
     match /contacts/{docId} {
       allow create: if isValidContact();
       allow read:   if isAdmin();

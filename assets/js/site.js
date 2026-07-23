@@ -284,6 +284,53 @@
     initContactGuides();
     initEmailCopy();
 
+    // ---------- Contact / Volunteer forms ----------
+    // 送出後不整段隱藏表單，改在表單下方顯示提示訊息（與 donate 頁一致）。
+    // 未勾選「我已同意…」時，擋下送出並提醒使用者勾選。
+    // 有自帶後端（data-backend，例如 Firebase）的表單由該頁自己的 module
+    // 處理送出，這裡略過，避免兩個 submit handler 互相打架。
+    document.querySelectorAll("form.contact-form:not([data-backend])").forEach(form => {
+      // 找到（或補上）表單下方的狀態訊息容器
+      let statusEl = form.querySelector(".form-status");
+      if (!statusEl) {
+        statusEl = document.createElement("div");
+        statusEl.className = "form-status";
+        statusEl.setAttribute("role", "status");
+        statusEl.setAttribute("aria-live", "polite");
+        form.appendChild(statusEl);
+      }
+      const setStatus = (msg, type) => {
+        statusEl.textContent = msg;
+        statusEl.className = "form-status show " + type;
+      };
+
+      form.addEventListener("submit", e => {
+        e.preventDefault();
+
+        // honeypot：真人不會填 website 這欄，被填 → 判定為機器人，靜默丟棄
+        const hp = form.querySelector(".hp-field");
+        if (hp && hp.value.trim() !== "") return;
+
+        // 同意條款：未勾選 → 擋下並提醒
+        const consent = form.querySelector('input[name="consent"]');
+        if (consent && !consent.checked) {
+          setStatus("請先勾選並同意隱私權政策及服務條款，才能送出表單。", "err");
+          consent.focus();
+          return;
+        }
+
+        // 必填欄位（novalidate，改由此處觸發原生提示泡泡）
+        if (!form.checkValidity()) {
+          setStatus("請確認必填欄位是否已完整填寫。", "err");
+          form.reportValidity();
+          return;
+        }
+
+        // 成功：保留表單，訊息顯示在下方
+        setStatus("我們已收到您的訊息，感謝您！團隊會儘快回覆您。", "ok");
+        form.reset();
+      });
+    });
     // ---------- Contact / volunteer forms ----------
     // 表單送出改由各頁面底部的 Firebase module（volunteer.html / contact.html）
     // 直接處理：寫入 Firestore、App Check 驗證、honeypot 檢查與狀態訊息。

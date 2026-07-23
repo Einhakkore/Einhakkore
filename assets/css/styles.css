@@ -1538,25 +1538,26 @@ body.footer-reveal-ready .site-header { z-index: 100; }
   border-color: rgba(232, 163, 61, .70);
 }
 
-/* Guide cards: normal state centers icon + title (both vertically and
-   horizontally); hover reveals the helper text WITHOUT changing card height.
-   The card has a fixed height and its content is vertically centered, so when
-   the helper expands the group just tightens up inside the same box — the row
-   of cards never reflows. */
+/* Guide cards: normal state shows the icon + title side by side as one
+   horizontally-centered group; hover reveals the helper text below the title
+   WITHOUT changing card height. The card has a fixed height and its content is
+   vertically centered, so when the helper expands the group just tightens up
+   inside the same box — the row of cards never reflows. */
 .guide-card {
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  gap: 8px;
-  height: 140px;
-  padding: 16px 18px;
+  text-align: left;
+  gap: 14px;
+  height: 100px;
+  padding: 12px 20px;
   overflow: hidden;
 }
-.guide-card .icon { margin: 0 auto; }
+.guide-card .icon { flex: 0 0 auto; }
 
-/* Card text stays dark on both themes since the fill is always white-ish. */
-.guide-card .text { flex: 0 0 auto; width: 100%; min-width: 0; }
+/* Text block sizes to its content so the icon + title pair stays centered
+   (not stretched full-width). Dark text works on both light and flow themes. */
+.guide-card .text { flex: 0 1 auto; min-width: 0; }
 .guide-card .title {
   display: block;
   font-family: var(--font-brand); font-weight: 500;
@@ -1581,7 +1582,7 @@ body.footer-reveal-ready .site-header { z-index: 100; }
 /* Touch devices have no hover — show the helper for the selected card only,
    and keep the resting cards compact-but-centered. */
 @media (hover: none) {
-  .guide-card { height: auto; min-height: 116px; }
+  .guide-card { height: auto; min-height: 76px; }
 }
 
 .contact-card .info-text { flex: 1; min-width: 0; }
