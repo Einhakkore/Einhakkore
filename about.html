@@ -149,7 +149,7 @@
     /* ---------- 視差裝飾（blur 從 70 降到 32，opacity 從 .55 降到 .45） ---------- */
     .parallax-deco {
       position: absolute;
-      border-radius: 50%;
+      border-radius: var(--radius-round);
       pointer-events: none;
       filter: blur(32px);
       z-index: 2;
@@ -306,7 +306,7 @@
       flex: 0 0 auto;
       width: clamp(280px, 30vw, 440px);
       aspect-ratio: 4 / 5;
-      border-radius: 24px;
+      border-radius: var(--radius-card);
       overflow: hidden;
       position: relative;
       background: var(--sand, #EDE3D3);
@@ -373,7 +373,7 @@
       -webkit-backdrop-filter: blur(18px) saturate(1.15);
       /* 光暈感邊框：內線亮白 + 外層琥珀光暈 */
       border: 1px solid rgba(255, 255, 255, 0.75);
-      border-radius: 20px;
+      border-radius: var(--radius-card);
       box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.9),        /* 頂端內光 */
         0 0 0 1px rgba(232, 163, 61, 0.08),            /* 環邊淡光 */
