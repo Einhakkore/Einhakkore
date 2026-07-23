@@ -1394,6 +1394,18 @@ body[data-page="home"] .hero .btn-ghost:hover {
   transition: all .2s ease;
 }
 .field input::placeholder, .field textarea::placeholder { color: var(--text-4); }
+/* input[type=date]：iOS Safari 會給日期欄位一個內在最小寬度、且不隨 width:100%
+   收縮，導致在雙欄 .field-row 裡溢出容器。關掉原生外觀並允許收縮即可貼齊其他
+   欄位；桌機 Chromium 仍保留右側日曆圖示。 */
+.field input[type="date"] {
+  -webkit-appearance: none;
+  appearance: none;
+  min-width: 0;
+}
+.field input[type="date"]::-webkit-date-and-time-value {
+  text-align: left;
+  margin: 0;
+}
 .field textarea {
   height: auto; padding: 14px 16px; resize: vertical;
   min-height: 110px; line-height: 1.8;
