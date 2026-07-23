@@ -243,7 +243,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
   position: relative;
+  /* Sticky footer：body 為 flex 直欄、撐滿至少一個視窗高，
+     main 伸展佔滿剩餘空間，短頁面時 footer 也會貼在視窗最底部。
+     .aurora / #flow-bg 為 fixed、icons 為 display:none，皆不參與此排版。 */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
 }
+/* main 吃掉 header 與 footer 以外的剩餘高度，把 footer 推到最底 */
+main { flex: 1 0 auto; }
 
 /* ---------------------------------------------------------
    #flow-bg — 固定的整站背景場（由 site.js 只在 home / donate 注入）
