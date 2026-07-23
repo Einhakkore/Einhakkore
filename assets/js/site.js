@@ -287,7 +287,9 @@
     // ---------- Contact / Volunteer forms ----------
     // 送出後不整段隱藏表單，改在表單下方顯示提示訊息（與 donate 頁一致）。
     // 未勾選「我已同意…」時，擋下送出並提醒使用者勾選。
-    document.querySelectorAll("form.contact-form").forEach(form => {
+    // 有自帶後端（data-backend，例如 Firebase）的表單由該頁自己的 module
+    // 處理送出，這裡略過，避免兩個 submit handler 互相打架。
+    document.querySelectorAll("form.contact-form:not([data-backend])").forEach(form => {
       // 找到（或補上）表單下方的狀態訊息容器
       let statusEl = form.querySelector(".form-status");
       if (!statusEl) {

@@ -181,9 +181,9 @@
           2. Cloudflare Turnstile 或 reCAPTCHA v3 驗證（後端 verify）
           3. Honeypot 陷阱欄位（範例：下方 <input name="website" hidden>）
         -->
-        <form class="contact-form" novalidate>
+        <form class="contact-form" data-backend="firebase" novalidate>
         <!-- honeypot 陷阱欄位：對真人隱藏，機器人才會亂填。樣式見 styles.css 的 .hp-field。 -->
-        <!-- TODO: 後端串接時需檢查 honeypot -->
+        <!-- 送出時若此欄非空即靜默丟棄（見頁尾 Firebase module）。 -->
         <input type="text" name="website" class="hp-field"
                tabindex="-1" autocomplete="off" aria-hidden="true">
         <h2>給我們寫封信</h2>
@@ -191,7 +191,7 @@
         <div class="field"><label>姓名 Name</label><input type="text" name="name" placeholder="您的姓名" required></div>
         <div class="field"><label>Email 電子郵件</label><input type="email" name="email" placeholder="example@church.org" required></div>
         <div class="field"><label>主旨 Subject</label>
-            <select id="contact-category">
+            <select id="contact-category" name="category">
               <option>👋 想更多了解隱哈哥利</option>
               <option>代禱請求</option>
               <option>合作邀約</option>
@@ -199,7 +199,7 @@
               <option>💬 其他問題</option>
             </select>
         </div>
-        <div class="field"><label>留言 Message</label><textarea id="contact-message" placeholder="想對我們說的話…" required></textarea></div>
+        <div class="field"><label>留言 Message</label><textarea id="contact-message" name="message" placeholder="想對我們說的話…" required></textarea></div>
 
         <label class="form-consent">
           <input type="checkbox" name="consent" required>
@@ -223,5 +223,84 @@
 <div data-include="footer"></div>
 
 <script src="assets/js/site.js"></script>
+
+<!-- =========================================================
+     聯絡表單 — Firebase 串接（比照 donate.html）
+     送出後寫入 Firestore「contacts」集合。
+     欄位需與 firestore.rules 的 isValidContact() 允許清單一致。
+     ========================================================= -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  // 共用 Firebase 設定（placeholder 值，實際安全性由 Firestore Rules + App Check 負責）
+  import { firebaseConfig } from "./assets/js/firebase-config.js";
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getFirestore(app);
+
+  // App Check（防機器人／垃圾寫入）— 與 donate / admin 共用同一組 site key
+  import { initializeAppCheck, ReCaptchaV3Provider }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app-check.js";
+  initializeAppCheck(app, {
+    provider: new ReCaptchaV3Provider("6LcXU18tAAAAAG50yNTaHpCQlwnF8hZXJl1VydWr"),
+    isTokenAutoRefreshEnabled: true
+  });
+
+  const form      = document.querySelector("form.contact-form");
+  const statusEl  = form.querySelector(".form-status");
+  const submitBtn = form.querySelector('button[type="submit"]');
+
+  function setStatus(msg, type){
+    statusEl.textContent = msg;
+    statusEl.className = "form-status show " + type;
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const fd = new FormData(form);
+
+    // honeypot：真人不會填 website 這欄，被填 → 判定為機器人，靜默丟棄
+    if ((fd.get("website") || "").trim() !== "") return;
+
+    // 同意條款：僅前端驗證，不寫入 Firestore
+    if (!fd.get("consent")) {
+      setStatus("請先勾選並同意隱私權政策及服務條款，才能送出表單。", "err");
+      return;
+    }
+
+    // 寫入的欄位需與 firestore.rules 的允許清單完全一致
+    const data = {
+      name:     (fd.get("name")     || "").trim(),
+      email:    (fd.get("email")    || "").trim(),
+      category: (fd.get("category") || "").trim(),
+      message:  (fd.get("message")  || "").trim(),
+    };
+
+    if (!data.name || !data.email || !data.message) {
+      setStatus("請確認姓名、Email 與留言都已填寫。", "err");
+      return;
+    }
+
+    submitBtn.disabled = true;
+    setStatus("送出中…", "ok");
+
+    try {
+      await addDoc(collection(db, "contacts"), {
+        ...data,
+        createdAt: serverTimestamp(),
+        source: "contact.html"
+      });
+      form.reset();
+      setStatus("我們已收到您的訊息，感謝您！團隊會儘快回覆您。", "ok");
+    } catch (err) {
+      console.error(err);
+      setStatus("送出失敗，請稍後再試，或直接來信 enhakkore@gmail.com。", "err");
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+</script>
 </body>
 </html>

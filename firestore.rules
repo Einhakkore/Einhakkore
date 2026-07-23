@@ -61,6 +61,45 @@ service cloud.firestore {
     }
 
     // --------------------------------------------------------
+    // 建立聯絡表單資料時的欄位驗證（contact.html → contacts 集合）
+    //   同 donations 的思路：只允許白名單欄位、限制型別與長度上限，
+    //   擋掉惡意灌入的巨大字串／不合法型別。
+    //   name / email / message 為必填；category 選填。
+    // --------------------------------------------------------
+    function isValidContact() {
+      let data = request.resource.data;
+      return
+        data.keys().hasOnly(
+          ['name', 'email', 'category', 'message', 'createdAt', 'source']
+        ) &&
+        data.name    is string && data.name.size()    > 0 && data.name.size()    < 100  &&
+        data.email   is string && data.email.size()   > 0 && data.email.size()   < 200  &&
+        data.message is string && data.message.size() > 0 && data.message.size() < 5000 &&
+        (!('category' in data)  || (data.category is string && data.category.size() < 100)) &&
+        (!('source'    in data) || data.source    is string) &&
+        (!('createdAt' in data) || data.createdAt is timestamp);
+    }
+
+    // --------------------------------------------------------
+    // 建立技能媒合資料時的欄位驗證（volunteer.html → volunteers 集合）
+    //   name / email / message 為必填；subject / category 選填。
+    // --------------------------------------------------------
+    function isValidVolunteer() {
+      let data = request.resource.data;
+      return
+        data.keys().hasOnly(
+          ['name', 'email', 'subject', 'category', 'message', 'createdAt', 'source']
+        ) &&
+        data.name    is string && data.name.size()    > 0 && data.name.size()    < 100  &&
+        data.email   is string && data.email.size()   > 0 && data.email.size()   < 200  &&
+        data.message is string && data.message.size() > 0 && data.message.size() < 5000 &&
+        (!('subject'  in data)  || (data.subject  is string && data.subject.size()  < 200)) &&
+        (!('category' in data)  || (data.category is string && data.category.size() < 100)) &&
+        (!('source'    in data) || data.source    is string) &&
+        (!('createdAt' in data) || data.createdAt is timestamp);
+    }
+
+    // --------------------------------------------------------
     // donations 集合
     //   create ── 開放任何人（含未登入訪客）新增，但必須通過欄位驗證。
     //   read   ── 僅限白名單管理者，避免奉獻者個資外洩。
@@ -69,6 +108,30 @@ service cloud.firestore {
     // --------------------------------------------------------
     match /donations/{docId} {
       allow create: if isValidDonation();
+      allow read:   if isAdmin();
+      allow update, delete: if false;
+    }
+
+    // --------------------------------------------------------
+    // contacts 集合（聯絡表單）
+    //   create ── 開放任何人新增，但必須通過欄位驗證。
+    //   read   ── 僅限白名單管理者，避免來信者個資外洩。
+    //   update / delete ── 一律禁止（保留完整稽核紀錄）。
+    // --------------------------------------------------------
+    match /contacts/{docId} {
+      allow create: if isValidContact();
+      allow read:   if isAdmin();
+      allow update, delete: if false;
+    }
+
+    // --------------------------------------------------------
+    // volunteers 集合（技能媒合意願表）
+    //   create ── 開放任何人新增，但必須通過欄位驗證。
+    //   read   ── 僅限白名單管理者，避免報名者個資外洩。
+    //   update / delete ── 一律禁止（保留完整稽核紀錄）。
+    // --------------------------------------------------------
+    match /volunteers/{docId} {
+      allow create: if isValidVolunteer();
       allow read:   if isAdmin();
       allow update, delete: if false;
     }
