@@ -1,5 +1,5 @@
 /* ============================================================
-   ENHAKORRE — Site JavaScript
+   EINHAKKORE — Site JavaScript
    partials loader + scroll flow field + stagger reveal + 表單
    ============================================================ */
 
@@ -331,6 +331,10 @@
         form.reset();
       });
     });
+    // ---------- Contact / volunteer forms ----------
+    // 表單送出改由各頁面底部的 Firebase module（volunteer.html / contact.html）
+    // 直接處理：寫入 Firestore、App Check 驗證、honeypot 檢查與狀態訊息。
+    // 這裡不再攔截 submit，以免覆蓋掉真正的送出邏輯。
 
     injectFlowBg();
     initFlowField();

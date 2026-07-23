@@ -1,5 +1,4 @@
-# robots.txt for enhakkore.org
-# TODO: 上正式網域後，把下方 Sitemap 的 host 換成正式 domain
+# robots.txt
 
 User-agent: *
 Allow: /
@@ -18,4 +17,3 @@ Disallow: /admin.html
 # User-agent: MJ12bot
 # Disallow: /
 
-Sitemap: https://enhakkore.org/sitemap.xml
