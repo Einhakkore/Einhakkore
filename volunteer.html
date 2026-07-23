@@ -357,7 +357,7 @@
       <p class="lead">告訴我們您的恩賜與時間，我們會在三個工作天內回覆。</p>
     </div>
     <div style="max-width:720px;margin:0 auto" class="reveal">
-      <form class="contact-form" id="volunteerForm" novalidate>
+      <form class="contact-form" id="volunteerForm" data-backend="firebase" novalidate>
         <!-- honeypot 陷阱欄位：對真人隱藏，機器人才會亂填。樣式見 styles.css 的 .hp-field。
              送出時若此欄非空即靜默丟棄，避免透露陷阱存在。 -->
         <input type="text" name="website" class="hp-field"
@@ -424,16 +424,11 @@
   const db  = getFirestore(app);
 
   // App Check（防機器人／垃圾寫入）— 與 donate / admin 共用同一組 site key
-  import { initializeAppCheck, ReCaptchaV3Provider }
-    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app-check.js";
   initializeAppCheck(app, {
     provider: new ReCaptchaV3Provider("6LcXU18tAAAAAG50yNTaHpCQlwnF8hZXJl1VydWr"),
     isTokenAutoRefreshEnabled: true
   });
 
-  const form      = document.querySelector("form.contact-form");
-  const statusEl  = form.querySelector(".form-status");
-  const submitBtn = form.querySelector('button[type="submit"]');
   const form      = document.getElementById("volunteerForm");
   const statusEl  = document.getElementById("volunteerStatus");
   const submitBtn = document.getElementById("volunteerSubmit");
@@ -451,13 +446,13 @@
     // honeypot：真人不會填 website 這欄，被填 → 判定為機器人，靜默丟棄
     if ((fd.get("website") || "").trim() !== "") return;
 
-    // 同意條款：僅前端驗證，不寫入 Firestore
+    // 同意條款：僅前端驗證，不寫入 Firestore；
+    // 寫入的欄位需與 firestore.rules 的允許清單完全一致。
     if (!fd.get("consent")) {
       setStatus("請先勾選並同意隱私權政策及服務條款，才能送出表單。", "err");
       return;
     }
 
-    // 寫入的欄位需與 firestore.rules 的允許清單完全一致
     const data = {
       name:     (fd.get("name")     || "").trim(),
       email:    (fd.get("email")    || "").trim(),
@@ -466,10 +461,6 @@
       message:  (fd.get("message")  || "").trim(),
     };
 
-    if (!fd.get("consent")) {
-      setStatus("請勾選同意隱私權及服務條款。", "err");
-      return;
-    }
     if (!data.name || !data.email || !data.message) {
       setStatus("請確認姓名、Email 與留言等必填欄位是否完整。", "err");
       return;
