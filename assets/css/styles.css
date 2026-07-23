@@ -1373,7 +1373,7 @@ body.footer-reveal-ready .site-header { z-index: 100; }
    CONTACT FORM
    ----------------------------------------------------------- */
 .contact-form {
-  padding: 36px;
+  padding: 32px;
   display: flex; flex-direction: column; gap: 18px;
 }
 .contact-form h2,
@@ -1479,7 +1479,7 @@ body.footer-reveal-ready .site-header { z-index: 100; }
 @media (max-width: 900px) {
   .contact-page { grid-template-columns: 1fr; gap: 40px; }
 }
-.contact-info { display: flex; flex-direction: column; gap: 32px; }
+.contact-info { display: flex; flex-direction: column; gap: 24px; }
 
 /* ----- Contact info cards (guide cards + Email card) -----
    Neutral white fill + amber outline so the same style works
@@ -1493,7 +1493,7 @@ body.footer-reveal-ready .site-header { z-index: 100; }
 .help-guides .lead {
   font-size: 15px; line-height: 1.85;
   color: var(--fg); opacity: .78;
-  margin: 0 0 18px;
+  margin: 0 0 24px;
 }
 .guide-list { display: flex; flex-direction: column; gap: 10px; }
 
@@ -1546,10 +1546,11 @@ body.footer-reveal-ready .site-header { z-index: 100; }
 .guide-card {
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   text-align: left;
-  gap: 14px;
-  height: 100px;
+  gap: 20px;
+  height: 76px;
+  border-radius: 20px;
   padding: 12px 20px;
   overflow: hidden;
 }
@@ -1585,6 +1586,7 @@ body.footer-reveal-ready .site-header { z-index: 100; }
   .guide-card { height: auto; min-height: 76px; }
 }
 
+.contact-card.email-card { align-items: center; }
 .contact-card .info-text { flex: 1; min-width: 0; }
 .contact-card h4 {
   font-family: var(--font-brand); font-weight: 500;
