@@ -2099,15 +2099,6 @@ body[data-page="home"] .hero::before {
   z-index: 0;
 }
 
-/* Scrim：斜向深藍加深，保住 hero 文字對比 */
-body[data-page="home"] .hero::after {
-  background: linear-gradient(
-    175deg,
-    rgba(26, 46, 64, .20) 0%,
-    rgba(14, 26, 35, .70) 100%
-  );
-  z-index: 1;
-}
 
 /* ---- HERO 文字：改為深底上的淺色階 ---- */
 body[data-page="home"] .hero-eyebrow { color: var(--amber-400); }
