@@ -3,7 +3,7 @@ rules_version = '2';
 // ============================================================
 //  隱哈歌利 En-hakkore — Firestore 安全規則
 // ============================================================
-//  這份規則是奉獻資料（donations 集合）真正的守門人。
+//  這份規則是表單資料真正的守門人。
 //  前端任何 JS 陣列、localStorage、隱藏欄位都只是「使用者體驗」，
 //  不具安全性；真正決定誰能讀、能寫的是這份 Rules。
 //
@@ -12,6 +12,11 @@ rules_version = '2';
 //  再重新部署規則（firebase deploy --only firestore:rules 或
 //  直接貼到 Firebase Console → Firestore → 規則）即可，
 //  不必更動其他任何邏輯。
+//
+//  ── 三個集合 ──
+//  donations  奉獻紀錄
+//  contacts   聯絡表單
+//  volunteers 志工／技能媒合意願表
 // ============================================================
 
 service cloud.firestore {
@@ -33,7 +38,7 @@ service cloud.firestore {
     }
 
     // --------------------------------------------------------
-    // 建立奉獻資料時的欄位驗證
+    // 建立奉獻資料時的欄位驗證（donate.html → donations 集合）
     // 目的：擋掉惡意灌入的巨大字串／不合法型別，避免有人塞垃圾
     //       資料灌爆 Firestore 配額。
     //   - hasOnly([...])：只允許白名單內的欄位，多一個都拒收。
@@ -48,10 +53,10 @@ service cloud.firestore {
           ['name', 'date', 'amount', 'last5', 'phone', 'address', 'createdAt', 'source']
         ) &&
         // 必填欄位型別與長度上限
-        data.name  is string && data.name.size()  < 50   &&
-        data.date  is string && data.date.size()  < 20   &&
+        data.name   is string && data.name.size() < 50 &&
+        data.date   is string && data.date.size() < 20 &&
         data.amount is number && data.amount > 0 && data.amount < 10000000 &&
-        data.last5 is string && data.last5.size() == 5   &&
+        data.last5  is string && data.last5.size() == 5 &&
         // 選填欄位：若有帶值則需符合型別與長度上限
         (!('phone'   in data) || (data.phone   is string && data.phone.size()   < 30))  &&
         (!('address' in data) || (data.address is string && data.address.size() < 200)) &&
@@ -61,9 +66,8 @@ service cloud.firestore {
     }
 
     // --------------------------------------------------------
-    // 建立聯絡表單資料時的欄位驗證（contact.html → contacts 集合）
-    //   同 donations 的思路：只允許白名單欄位、限制型別與長度上限，
-    //   擋掉惡意灌入的巨大字串／不合法型別。
+    // 聯絡表單欄位驗證（contact.html → contacts 集合）
+    //   同 donations 的思路：只允許白名單欄位、限制型別與長度上限。
     //   name / email / message 為必填；category 選填。
     // --------------------------------------------------------
     function isValidContact() {
@@ -71,44 +75,31 @@ service cloud.firestore {
       return
         data.keys().hasOnly(
           ['name', 'email', 'category', 'message', 'createdAt', 'source']
-    // 志工／技能媒合表單（volunteer.html → volunteers 集合）欄位驗證
-    // --------------------------------------------------------
-    function isValidVolunteer() {
-      let data = request.resource.data;
-      return
-        data.keys().hasOnly(
-          ['name', 'email', 'subject', 'category', 'message', 'createdAt', 'source']
         ) &&
         data.name    is string && data.name.size()    > 0 && data.name.size()    < 100  &&
         data.email   is string && data.email.size()   > 0 && data.email.size()   < 200  &&
         data.message is string && data.message.size() > 0 && data.message.size() < 5000 &&
-        (!('subject'  in data) || (data.subject  is string && data.subject.size()  < 200)) &&
-        (!('category' in data) || (data.category is string && data.category.size() < 100)) &&
+        (!('category'  in data) || (data.category is string && data.category.size() < 100)) &&
         (!('source'    in data) || data.source    is string) &&
         (!('createdAt' in data) || data.createdAt is timestamp);
     }
 
     // --------------------------------------------------------
-    // 建立技能媒合資料時的欄位驗證（volunteer.html → volunteers 集合）
+    // 技能媒合欄位驗證（volunteer.html → volunteers 集合）
     //   name / email / message 為必填；subject / category 選填。
+    //   與 contacts 的差別只在多一個 subject 欄位。
     // --------------------------------------------------------
     function isValidVolunteer() {
       let data = request.resource.data;
       return
         data.keys().hasOnly(
           ['name', 'email', 'subject', 'category', 'message', 'createdAt', 'source']
-    // 聯絡表單（contact.html → contacts 集合）欄位驗證
-    // --------------------------------------------------------
-    function isValidContact() {
-      let data = request.resource.data;
-      return
-        data.keys().hasOnly(
-          ['name', 'email', 'category', 'message', 'createdAt', 'source']
         ) &&
         data.name    is string && data.name.size()    > 0 && data.name.size()    < 100  &&
         data.email   is string && data.email.size()   > 0 && data.email.size()   < 200  &&
         data.message is string && data.message.size() > 0 && data.message.size() < 5000 &&
-        (!('category' in data) || (data.category is string && data.category.size() < 100)) &&
+        (!('subject'   in data) || (data.subject  is string && data.subject.size()  < 200)) &&
+        (!('category'  in data) || (data.category is string && data.category.size() < 100)) &&
         (!('source'    in data) || data.source    is string) &&
         (!('createdAt' in data) || data.createdAt is timestamp);
     }
@@ -120,7 +111,7 @@ service cloud.firestore {
     //   update ── 一律禁止（奉獻紀錄不可被竄改）。
     //   delete ── 一律禁止（保留完整稽核紀錄）。
     // --------------------------------------------------------
-    match /donations/{docId} {
+    match /donations/{donationId} {
       allow create: if isValidDonation();
       allow read:   if isAdmin();
       allow update, delete: if false;
@@ -128,40 +119,27 @@ service cloud.firestore {
 
     // --------------------------------------------------------
     // contacts 集合（聯絡表單）
-    //   create ── 開放任何人新增，但必須通過欄位驗證。
-    //   read   ── 僅限白名單管理者，避免來信者個資外洩。
-    //   update / delete ── 一律禁止（保留完整稽核紀錄）。
+    //   把關策略與 donations 相同。
     // --------------------------------------------------------
-    match /contacts/{docId} {
+    match /contacts/{contactId} {
       allow create: if isValidContact();
-    // volunteers / contacts 集合
-    //   與 donations 相同的把關策略：
-    //   任何人可 create（需通過欄位驗證），read 僅限管理者，
-    //   update / delete 一律禁止。
-    // --------------------------------------------------------
-    match /volunteers/{docId} {
-      allow create: if isValidVolunteer();
       allow read:   if isAdmin();
       allow update, delete: if false;
     }
 
     // --------------------------------------------------------
     // volunteers 集合（技能媒合意願表）
-    //   create ── 開放任何人新增，但必須通過欄位驗證。
-    //   read   ── 僅限白名單管理者，避免報名者個資外洩。
-    //   update / delete ── 一律禁止（保留完整稽核紀錄）。
+    //   把關策略與 donations 相同。
     // --------------------------------------------------------
-    match /volunteers/{docId} {
+    match /volunteers/{volunteerId} {
       allow create: if isValidVolunteer();
-    match /contacts/{docId} {
-      allow create: if isValidContact();
       allow read:   if isAdmin();
       allow update, delete: if false;
     }
 
     // --------------------------------------------------------
     // 其餘所有路徑：預設全部拒絕（deny by default）。
-    // 日後若新增可公開的集合，再於此明確開放。
+    // 日後若新增可公開的集合，再於此上方明確開放。
     // --------------------------------------------------------
     match /{document=**} {
       allow read, write: if false;
