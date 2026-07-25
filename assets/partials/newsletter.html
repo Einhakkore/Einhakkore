@@ -3,12 +3,22 @@
     <div class="newsletter-label">STAY CONNECTED · 保持連結</div>
     <h3>訂閱我們的代禱信</h3>
     <p>定期收到宣教士代禱信、事工更新與感恩見證，與我們一起關心神國度的擴展。</p>
+    <!-- 送出交由 assets/js/newsletter.js（Firebase module）處理：
+         寫入 Firestore subscribers（真正的成功依據）→ 跳出 Success Modal。
+         action 保留為「無 JS 時的優雅降級」：沒有 JS 的瀏覽器仍會整頁 POST 到 Substack。 -->
     <form class="newsletter-form"
+          id="newsletterForm"
+          data-backend="firebase"
+          data-substack="https://enhakkore.substack.com/api/v1/free?nojs=true"
           action="https://enhakkore.substack.com/api/v1/free?nojs=true"
-          method="post">
+          method="post"
+          novalidate>
       <input type="email" name="email" placeholder="您的電子郵件" required autocomplete="email">
       <input type="hidden" name="source" value="embed">
+      <!-- honeypot：真人不會填此欄，被填 → 判定為機器人並靜默丟棄 -->
+      <input class="hp-field" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
       <button type="submit">訂閱</button>
     </form>
+    <div class="form-status" id="newsletterStatus" role="status" aria-live="polite"></div>
   </div>
 </section>

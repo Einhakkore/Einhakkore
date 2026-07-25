@@ -114,3 +114,42 @@ initializeAppCheck(app, {
 - [ ] App Check 已註冊並在前端解除註解；確認奉獻表單仍能正常送出後，
       再於 Console 切換為 Enforce。
 - [ ] 測試送出一筆奉獻，確認資料進到 Firestore 的 `donations` 集合。
+- [ ] 測試訂閱一次電子報，確認資料進到 `subscribers` 集合、且畫面跳出 Success Modal。
+
+---
+
+## 5. 電子報訂閱（Newsletter）
+
+### 為什麼改寫？
+
+舊版訂閱表單在前端用 `fetch(..., { mode:"no-cors" })` 直接打 Substack，
+拿到的是 **opaque response**（讀不到狀態），程式再「無條件」顯示成功畫面——
+於是**畫面說成功、實際卻沒訂閱**。這是先前「訂閱一直沒成功」的根因。
+
+### 現在的流程
+
+```
+自己的表單 → 寫入 Firestore subscribers（真正的成功依據）
+          → 成功才跳出 Success Modal
+          → 另外對 Substack 發一次 best-effort 請求（碰運氣，不影響成功判定）
+```
+
+- 前端邏輯在 `assets/js/newsletter.js`（Firebase module），由 Firestore Rules
+  的 `isValidSubscriber()` + App Check 把關。
+- `subscribers` 集合規則已寫在 `firestore.rules`：任何人可 **create**（僅
+  `email` / `createdAt` / `source` 三欄），**read** 僅限管理者，**update / delete** 禁止。
+- 後台 `admin.html` 的來源下拉已新增「電子報訂閱 Subscribers」，可檢視與**匯出 CSV**。
+
+### 關於 Substack（重要限制）
+
+免費 Spark 方案**禁止** Cloud Function 對外呼叫非 Google 服務（含 substack.com），
+因此無法在免費方案下自動、可靠地把訂閱同步進 Substack。目前兩條路：
+
+1. **（免費，建議）** 定期到 `admin.html` 匯出 `subscribers` 的 CSV，
+   於 Substack 後台 **Subscribers → Import** 匯入。Firestore 是你自有、完整的名單。
+2. **（需付費）** 升級 Blaze 方案後，改用 Cloud Function 於伺服器端呼叫 Substack。
+   屆時把 `newsletter.js` 裡的 `bestEffortSubstack()` 換成呼叫該 Function 即可，
+   前端其餘邏輯不動。
+
+> 注意：Substack 為 double opt-in，訂閱者仍需至信箱點擊確認連結才算完成，
+> 因此 Success Modal 的文案是「請至信箱點擊確認連結」。

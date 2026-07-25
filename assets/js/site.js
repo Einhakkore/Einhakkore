@@ -260,25 +260,10 @@
       });
     }
 
-    // ---------- Newsletter forms (Substack no-cors POST) ----------
-    document.querySelectorAll("form.newsletter-form").forEach(form => {
-      form.addEventListener("submit", e => {
-        e.preventDefault();
-        const body = new URLSearchParams();
-        new FormData(form).forEach((v, k) => body.append(k, v));
-        fetch(form.action, { method: "POST", mode: "no-cors", body })
-          .catch(() => { /* opaque response 讀不到，失敗也吞 */ });
-        const div = document.createElement("div");
-        div.className = "newsletter-success";
-        div.innerHTML = `
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:10px;">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-          已收到！請至信箱點擊確認連結，完成訂閱。
-        `;
-        form.replaceWith(div);
-      });
-    });
+    // ---------- Newsletter forms ----------
+    // 訂閱表單改由 assets/js/newsletter.js（Firebase module）處理：
+    // 寫入 Firestore subscribers 成功後才跳 Success Modal，不再無條件顯示假成功。
+    // 這裡不攔截 submit，避免與該 module 的送出邏輯打架。
 
     // ---------- Contact guide cards ↔ Category select ----------
     initContactGuides();
@@ -394,10 +379,17 @@
   }
 
   // 進站流程：先把 partials 塞好，再綁事件（保證 header/footer 都能找到 DOM）
+  // partials 注入的 <script> 不會執行，因此注入完成後派發 'partials:loaded'
+  // 事件，讓 newsletter.js 等 module 知道 newsletter/footer 等 DOM 已就緒可綁定。
+  function boot() {
+    return loadPartials()
+      .then(initInteractivity)
+      .finally(() => document.dispatchEvent(new CustomEvent("partials:loaded")));
+  }
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => loadPartials().then(initInteractivity));
+    document.addEventListener("DOMContentLoaded", boot);
   } else {
-    loadPartials().then(initInteractivity);
+    boot();
   }
 
 })();

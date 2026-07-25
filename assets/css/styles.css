@@ -1299,6 +1299,64 @@ body[data-page="home"] .hero .btn-ghost:hover {
 }
 
 /* -----------------------------------------------------------
+   Newsletter Success Modal（訂閱成功後跳出）
+   由 assets/js/newsletter.js 動態建立、各頁共用一份。
+   ----------------------------------------------------------- */
+body.nl-modal-open { overflow: hidden; }
+.nl-modal {
+  position: fixed; inset: 0; z-index: 1000;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+}
+.nl-modal[hidden] { display: none; }
+.nl-modal-backdrop {
+  position: absolute; inset: 0;
+  background: rgba(26, 46, 64, .55);
+  backdrop-filter: blur(2px);
+  animation: nl-fade .18s ease;
+}
+.nl-modal-card {
+  position: relative;
+  width: min(420px, 100%);
+  background: var(--paper);
+  border-radius: var(--radius-card);
+  padding: 40px 32px 32px;
+  text-align: center;
+  box-shadow: 0 24px 60px rgba(26, 46, 64, .28);
+  animation: nl-pop .22s cubic-bezier(.2, .8, .3, 1);
+}
+.nl-modal-check {
+  width: 64px; height: 64px; margin: 0 auto 20px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: var(--radius-round);
+  background: var(--sage-100); color: var(--sage-700);
+}
+.nl-modal-card h3 {
+  font-size: 24px; color: var(--text-1);
+  margin: 0 0 12px;
+}
+.nl-modal-body {
+  color: var(--text-2, var(--text-1)); font-size: 15px; line-height: 1.75;
+  margin: 0 0 26px;
+}
+.nl-modal-btn {
+  height: 46px; padding: 0 32px;
+  border: none; border-radius: var(--radius-pill);
+  background: var(--amber-500); color: var(--ink-900);
+  font-size: 15px; font-weight: 600; cursor: pointer;
+  transition: background .15s ease;
+}
+.nl-modal-btn:hover { background: var(--amber-400); }
+@keyframes nl-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes nl-pop {
+  from { opacity: 0; transform: translateY(12px) scale(.97); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nl-modal-backdrop, .nl-modal-card { animation: none; }
+}
+
+/* -----------------------------------------------------------
    FOOTER — 平面深藍（不套 .section--navy，刻意維持沉穩、無極光）
    ----------------------------------------------------------- */
 .site-footer {

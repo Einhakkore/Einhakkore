@@ -52,6 +52,7 @@
               <option value="donations">奉獻 Donations</option>
               <option value="volunteers">志工報名 Volunteers</option>
               <option value="contacts">聯絡訊息 Contacts</option>
+              <option value="subscribers">電子報訂閱 Subscribers</option>
             </select>
           </div>
           <p class="lead">
@@ -181,6 +182,16 @@ initializeAppCheck(app, {
         { key: "category",  label: "類別" },
         { key: "message",   label: "留言",     cls: "cell-message" },
         { key: "createdAt", label: "送出時間", fmt: fmtTime, time: true },
+      ],
+    },
+    subscribers: {
+      title: "電子報訂閱",
+      csv:   "subscribers",
+      empty: "目前沒有電子報訂閱者。",
+      columns: [
+        { key: "email",     label: "Email" },
+        { key: "source",    label: "來源" },
+        { key: "createdAt", label: "訂閱時間", fmt: fmtTime, time: true },
       ],
     },
   };

@@ -105,6 +105,20 @@ service cloud.firestore {
     }
 
     // --------------------------------------------------------
+    // 訂閱電子報欄位驗證（newsletter partial → subscribers 集合）
+    //   只收 email 一個必填欄位，外加系統欄位 createdAt / source。
+    //   email 長度上限擋掉惡意灌入的巨大字串。
+    // --------------------------------------------------------
+    function isValidSubscriber() {
+      let data = request.resource.data;
+      return
+        data.keys().hasOnly(['email', 'createdAt', 'source']) &&
+        data.email is string && data.email.size() > 3 && data.email.size() < 200 &&
+        (!('source'    in data) || data.source    is string) &&
+        (!('createdAt' in data) || data.createdAt is timestamp);
+    }
+
+    // --------------------------------------------------------
     // donations 集合
     //   create ── 開放任何人（含未登入訪客）新增，但必須通過欄位驗證。
     //   read   ── 僅限白名單管理者，避免奉獻者個資外洩。
@@ -133,6 +147,18 @@ service cloud.firestore {
     // --------------------------------------------------------
     match /volunteers/{volunteerId} {
       allow create: if isValidVolunteer();
+      allow read:   if isAdmin();
+      allow update, delete: if false;
+    }
+
+    // --------------------------------------------------------
+    // subscribers 集合（電子報訂閱）
+    //   create ── 開放任何人（含未登入訪客）新增，但必須通過欄位驗證。
+    //   read   ── 僅限白名單管理者，避免訂閱者 email 外洩。
+    //   update / delete ── 一律禁止。
+    // --------------------------------------------------------
+    match /subscribers/{subscriberId} {
+      allow create: if isValidSubscriber();
       allow read:   if isAdmin();
       allow update, delete: if false;
     }
