@@ -379,11 +379,6 @@
       transform: translate3d(0, 40px, 0);
       will-change: transform, opacity;
     }
-    .practice-card .icon[data-strength-icon] svg path,
-    .practice-card .icon[data-strength-icon] svg circle {
-      stroke-dasharray: 1;
-      stroke-dashoffset: 1;
-    }
     .section-practices .practice-card.slideItem.is-in {
       transform: translate3d(0, 0, 0);
       opacity: 1;
@@ -802,11 +797,6 @@
       transform: scaleX(1) !important;
     }
     html.no-anim .practices-line-bg path,
-    html.no-anim .practice-card .icon[data-strength-icon] svg path,
-    html.no-anim .practice-card .icon[data-strength-icon] svg circle {
-      stroke-dasharray: none !important;
-      stroke-dashoffset: 0 !important;
-    }
     /* 沒有 pin 就不需要 100vh 的舞台高度，收掉多餘留白 */
     html.no-anim .practices-stage { min-height: 0; }
 
@@ -818,11 +808,6 @@
       .section-title-line { transform: scaleX(1) !important; opacity: 1 !important; }
       .section-practices .practice-card.slideItem {
         transform: none !important; opacity: 1 !important;
-      }
-      .practice-card .icon[data-strength-icon] svg path,
-      .practice-card .icon[data-strength-icon] svg circle {
-        stroke-dasharray: none !important;
-        stroke-dashoffset: 0 !important;
       }
       .practices-line-bg path {
         stroke-dasharray: none !important;
@@ -1441,37 +1426,18 @@
       }
     }
 
-    /* --- (C) 圖示 SVG 描邊：為每個 icon 內每條 path/circle 量測長度 --- */
-    section.querySelectorAll('[data-strength-icon] svg path, [data-strength-icon] svg circle')
-      .forEach(node => {
-        const len = node.getTotalLength ? node.getTotalLength() : 0;
-        if (!len) return;
-        node.style.strokeDasharray = len;
-        node.style.strokeDashoffset = len;
-      });
-
     const cards = section.querySelectorAll('[data-slide-item]');
 
     /* --- 分支：mobile（單欄）不做 pin，改為分項 stagger 進場 --- */
     const isMobile = window.matchMedia('(max-width: 900px)').matches;
     if (isMobile) {
       cards.forEach((card) => {
-        const iconNodes = card.querySelectorAll('[data-strength-icon] svg path, [data-strength-icon] svg circle');
-        const iconWrap  = card.querySelector('[data-strength-icon]');
-        const tlM = gsap.timeline({
-          scrollTrigger: { trigger: card, start: 'top 85%', once: true }
-        });
-        tlM.fromTo(card,
+        gsap.fromTo(card,
           { y: 50, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.9, ease: 'power3.out' }, 0);
-        if (iconNodes.length) {
-          tlM.to(iconNodes,
-            { strokeDashoffset: 0, duration: 0.7, ease: 'power2.out', stagger: 0.05 }, 0.15);
-        }
-        if (iconWrap) {
-          tlM.fromTo(iconWrap,
-            { scale: 0.85 }, { scale: 1, duration: 0.5, ease: 'back.out(2.2)' }, 0.2);
-        }
+          {
+            y: 0, opacity: 1, duration: 0.9, ease: 'power3.out',
+            scrollTrigger: { trigger: card, start: 'top 85%', once: true }
+          });
       });
 
       if (bgPathLen > 0) {
@@ -1493,29 +1459,14 @@
     const pinTarget = section.querySelector('[data-practices-stage]') || section;
 
     gsap.set(cards, { y: 40, opacity: 0, scale: 0.98 });
-    cards.forEach(card => {
-      const iconWrap = card.querySelector('[data-strength-icon]');
-      if (iconWrap) gsap.set(iconWrap, { scale: 0.85 });
-    });
 
     // (D0) 第一張卡：進入視窗即進場（once），從靜態標題直接接到卡片
     const firstCard = cards[0];
     if (firstCard) {
-      const iconNodes = firstCard.querySelectorAll('[data-strength-icon] svg path, [data-strength-icon] svg circle');
-      const iconWrap  = firstCard.querySelector('[data-strength-icon]');
-      const tlFirst = gsap.timeline({
+      gsap.to(firstCard, {
+        y: 0, opacity: 1, scale: 1, duration: 0.8, ease: 'power3.out',
         scrollTrigger: { trigger: firstCard, start: 'top 88%', once: true }
       });
-      tlFirst.to(firstCard,
-        { y: 0, opacity: 1, scale: 1, duration: 0.8, ease: 'power3.out' }, 0);
-      if (iconNodes.length) {
-        tlFirst.to(iconNodes,
-          { strokeDashoffset: 0, duration: 0.6, ease: 'power2.out', stagger: 0.05 }, 0.2);
-      }
-      if (iconWrap) {
-        tlFirst.to(iconWrap,
-          { scale: 1, duration: 0.5, ease: 'back.out(2.2)' }, 0.25);
-      }
     }
 
     // 後續卡片走 pin + scrub；每張卡佔 timeline 1 個時間單位
@@ -1545,29 +1496,16 @@
       );
     }
 
-    // (D2) 每張卡片：y:40 → 0 淡入，icon 描邊繪出，icon 容器 back.out 反彈
+    // (D2) 每張卡片：y:40 → 0 淡入。
+    // 卡片不再有 icon（設計稿拿掉了），原本 icon 描邊會把每張卡的時間軸
+    // 填到 ~0.8，只留淡入會空掉後半段、捲起來像卡住，所以把補間拉長補回節拍。
     restCards.forEach((card, i) => {
       const start = i;
       tl.fromTo(card,
         { y: 40, opacity: 0, scale: 0.98 },
-        { y: 0, opacity: 1, scale: 1, duration: 0.6, ease: 'power3.out', immediateRender: false },
+        { y: 0, opacity: 1, scale: 1, duration: 0.8, ease: 'power3.out', immediateRender: false },
         start
       );
-      const iconNodes = card.querySelectorAll('[data-strength-icon] svg path, [data-strength-icon] svg circle');
-      if (iconNodes.length) {
-        tl.to(iconNodes,
-          { strokeDashoffset: 0, duration: 0.55, ease: 'power2.out', stagger: 0.05 },
-          start + 0.25
-        );
-      }
-      const iconWrap = card.querySelector('[data-strength-icon]');
-      if (iconWrap) {
-        tl.fromTo(iconWrap,
-          { scale: 0.85 },
-          { scale: 1, duration: 0.45, ease: 'back.out(2.2)', immediateRender: false },
-          start + 0.3
-        );
-      }
     });
   }
 
