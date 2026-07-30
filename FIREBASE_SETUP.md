@@ -1,6 +1,6 @@
 # Firebase 部署與設定指南
 
-本文件說明如何把奉獻表單（`donate.html`）與後台（`admin.html`）串上 Firebase，
+本文件說明如何把奉獻表單（`give.html`）與後台（`admin.html`）串上 Firebase，
 並在上線前完成三道安全設定：**Firestore 規則**、**Google 登入**、**App Check**。
 
 > 所有步驟以「Firebase Console」（<https://console.firebase.google.com/>）操作為主。
@@ -89,7 +89,7 @@ App Check 會為每個請求簽發 token，讓 Firestore 只接受「來自本�
 ### 3-3. 在前端解除註解
 
 1. 打開 `assets/js/firebase-config.js` 旁的頁面程式：
-   `donate.html` 與 `admin.html` 各有一段被註解的 App Check 初始化區塊。
+   `give.html` 與 `admin.html` 各有一段被註解的 App Check 初始化區塊。
 2. 解除該區塊的註解，並把 `YOUR_RECAPTCHA_V3_SITE_KEY` 換成 **site key**。
 3. 兩個檔案都要改（奉獻表單與後台都需要 App Check 保護）。
 

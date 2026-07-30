@@ -38,7 +38,7 @@ service cloud.firestore {
     }
 
     // --------------------------------------------------------
-    // 建立奉獻資料時的欄位驗證（donate.html → donations 集合）
+    // 建立奉獻資料時的欄位驗證（give.html → donations 集合）
     // 目的：擋掉惡意灌入的巨大字串／不合法型別，避免有人塞垃圾
     //       資料灌爆 Firestore 配額。
     //   - hasOnly([...])：只允許白名單內的欄位，多一個都拒收。
@@ -85,7 +85,7 @@ service cloud.firestore {
     }
 
     // --------------------------------------------------------
-    // 技能媒合欄位驗證（volunteer.html → volunteers 集合）
+    // 技能媒合欄位驗證（serve.html → volunteers 集合）
     //   name / email / message 為必填；subject / category 選填。
     //   與 contacts 的差別只在多一個 subject 欄位。
     // --------------------------------------------------------

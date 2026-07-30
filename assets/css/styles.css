@@ -124,7 +124,7 @@
   --stop-4-fg:   #1A2E40;
 
   /* 全站 dynamic tokens：預設是「非 flow-field 頁面」用的淺色主題。
-     home / donate 兩頁在下方 body[data-page] 覆寫成深色 STOP 0，
+     home / give 兩頁在下方 body[data-page] 覆寫成深色 STOP 0，
      site.js 再依捲動每幀更新 --bg1 / --bg2 / --fg。
      其他頁面 JS 不會跑，所以 vars 就停在下面這組淺色預設。 */
   --bg1:  var(--paper);
@@ -163,7 +163,7 @@
 /* ---------------------------------------------------------
    淺色主題（非 flow-field 頁面）的元件級 tokens：
    header、卡片、newsletter、section-stats 都在下面繫到這幾個變數，
-   home / donate 兩頁再覆寫成深色版本。
+   home / give 兩頁再覆寫成深色版本。
    --------------------------------------------------------- */
 :root {
   --header-bg:     rgba(250, 246, 239, .78);
@@ -180,8 +180,6 @@
   --stats-border:     var(--line-dim);
   --newsletter-bg:    rgba(237, 227, 211, .55);
   --newsletter-border: var(--line-dim);
-  --newsletter-form-bg: var(--paper);
-  --newsletter-form-border: var(--line-mid);
 
   /* ---- 圓角 tokens（全站統一）----
      card  : 所有卡片 / 面板容器
@@ -197,13 +195,13 @@
 }
 
 /* ---------------------------------------------------------
-   Flow-field 頁面（home / donate / about）：切成深色 STOP 0 起手，
+   Flow-field 頁面（home / give / about）：切成深色 STOP 0 起手，
    捲動時 site.js 再逐幀更新 --bg1 / --bg2 / --fg。
    about 頁另外在該頁 <style> 內把五個 STOP 全鎖在深色域，
    讓文字色階固定為淺色、對比可預期。
    --------------------------------------------------------- */
 body[data-page="home"],
-body[data-page="donate"],
+body[data-page="give"],
 body[data-page="about"] {
   --bg1:  var(--stop-0-bg1);
   --bg2:  var(--stop-0-bg2);
@@ -224,8 +222,6 @@ body[data-page="about"] {
   --stats-border:          rgba(255, 255, 255, .10);
   --newsletter-bg:         transparent;
   --newsletter-border:     rgba(255, 255, 255, .10);
-  --newsletter-form-bg:    rgba(255, 255, 255, .90);
-  --newsletter-form-border: rgba(255, 255, 255, .35);
 }
 
 /* -----------------------------------------------------------
@@ -258,7 +254,7 @@ body {
 main { flex: 1 0 auto; }
 
 /* ---------------------------------------------------------
-   #flow-bg — 固定的整站背景場（由 site.js 只在 home / donate / about 注入）
+   #flow-bg — 固定的整站背景場（由 site.js 只在 home / give / about 注入）
    顏色隨捲動由 --bg1 / --bg2 動態變化。
    舊版有個 --glow 徑向光暈落在左上，會讓 hero 照片顯得更亮，已拿掉。
    --------------------------------------------------------- */
@@ -286,14 +282,14 @@ button { font-family: inherit; cursor: pointer; }
 
 /* -----------------------------------------------------------
    AURORA BACKGROUND — 淺色主題（非 flow-field 頁面）用的暖光柔霧
-   home / donate 兩頁改用 #flow-bg，所以下面把 aurora 藏起來。
+   home / give 兩頁改用 #flow-bg，所以下面把 aurora 藏起來。
    ----------------------------------------------------------- */
 .aurora {
   position: fixed; inset: 0; z-index: 0;
   pointer-events: none; overflow: hidden;
 }
 body[data-page="home"] .aurora,
-body[data-page="donate"] .aurora {
+body[data-page="give"] .aurora {
   display: none;
 }
 .aurora-blob {
@@ -372,13 +368,13 @@ body[data-page="donate"] .aurora {
 .logo { display: flex; align-items: center; cursor: pointer; }
 .logo img { height: 44px; width: auto; display: block; }
 /* 兩支 logo 依 header 色主題切換：預設淺色 header → 用深字 logo；
-   home / donate 深色 header → 換成亮字 logo。 */
+   home / give 深色 header → 換成亮字 logo。 */
 .logo .logo-dark { display: none; }
 body[data-page="home"] .logo .logo-light,
-body[data-page="donate"] .logo .logo-light,
+body[data-page="give"] .logo .logo-light,
 body[data-page="about"] .logo .logo-light { display: none; }
 body[data-page="home"] .logo .logo-dark,
-body[data-page="donate"] .logo .logo-dark,
+body[data-page="give"] .logo .logo-dark,
 body[data-page="about"] .logo .logo-dark { display: block; }
 
 .nav { display: flex; align-items: center; gap: 4px; }
@@ -1275,33 +1271,8 @@ body[data-page="home"] .hero .btn-ghost:hover {
   font-size: 15px; line-height: 1.9;
   color: var(--fg); opacity: .85; font-weight: 400; margin: 0 0 36px;
 }
-.newsletter-form {
-  display: flex; gap: 8px;
-  background: var(--newsletter-form-bg);
-  border: 1px solid var(--newsletter-form-border);
-  border-radius: var(--radius-pill); padding: 6px;
-  transition: border-color .25s ease;
-}
-.newsletter-form:focus-within { border-color: var(--amber-500); }
-.newsletter-form input {
-  flex: 1 1 auto; min-width: 0; width: 100%; height: 48px; padding: 0 20px;
-  background: transparent; border: 0; outline: none;
-  font-family: var(--font-zh); font-size: 15px; color: var(--text-1);
-}
-.newsletter-form input::placeholder { color: var(--text-4); }
-.newsletter-form button {
-  flex: 0 0 auto; white-space: nowrap;
-  height: 48px; padding: 0 24px;
-  background: var(--amber-500); color: var(--ink-900);
-  border: 0; border-radius: var(--radius-pill);
-  font-family: var(--font-zh); font-size: 14px; font-weight: 500;
-  transition: background .2s ease;
-}
-.newsletter-form button:hover { background: var(--amber-400); }
-.newsletter-success {
-  color: var(--amber-700); font-family: var(--font-en); font-style: italic;
-  font-size: 16px; padding: 24px;
-}
+/* 訂閱改為外連 Substack（平台限制，站內無法直接收單） */
+.newsletter-cta { min-width: 180px; }
 
 /* -----------------------------------------------------------
    FOOTER — 平面深藍（不套 .section--navy，刻意維持沉穩、無極光）
@@ -1739,8 +1710,8 @@ body[data-page="home"] .hero .btn-ghost:hover {
 /* ---- 頁面級變數：header 高度供左欄 sticky 定位使用 ---- */
 :root { --header-h: 64px; }
 
-/* ---- Donate 頁的深底由全站 #flow-bg 接手，此處不再單獨覆寫 ---- */
-body[data-page="donate"] main > .section {
+/* ---- Give 頁的深底由全站 #flow-bg 接手，此處不再單獨覆寫 ---- */
+body[data-page="give"] main > .section {
   position: relative;
   isolation: isolate;
 }
@@ -1825,7 +1796,7 @@ body[data-page="donate"] main > .section {
   font-size: 22px; line-height: 1.55; letter-spacing: .02em;
   margin: 0 0 18px; color: var(--text-1);
 }
-/* Donate 頁的合作副標，白卡上要有足夠對比 —— 用 amber-700 深金，AAA-friendly */
+/* Give 頁的合作副標，白卡上要有足夠對比 —— 用 amber-700 深金，AAA-friendly */
 .donate-block h3 {
   font-family: var(--font-brand); font-weight: 500;
   font-size: 20px; line-height: 1.55; letter-spacing: .02em;
@@ -1837,8 +1808,8 @@ body[data-page="donate"] main > .section {
 }
 .donate-block p:last-child { margin-bottom: 0; }
 
-/* ---- Donate 頁：左欄的 .budget 也統一為半透明白卡 ---- */
-body[data-page="donate"] .budget {
+/* ---- Give 頁：左欄的 .budget 也統一為半透明白卡 ---- */
+body[data-page="give"] .budget {
   background: rgba(255, 255, 255, .90);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -1847,7 +1818,7 @@ body[data-page="donate"] .budget {
   padding: 28px;
   box-shadow: 0 10px 34px rgba(0, 0, 0, .18);
 }
-body[data-page="donate"] .budget h3 { margin-bottom: 18px; }
+body[data-page="give"] .budget h3 { margin-bottom: 18px; }
 
 /* ---- 銀行匯款卡片（深色點睛） ---- */
 /* ---- 銀行匯款區塊：暖 sand tint + 深文字，收據 / 對帳表感 ---- */
@@ -1951,12 +1922,12 @@ body[data-page="donate"] .budget h3 { margin-bottom: 18px; }
 .remit-note b { color: var(--ink-900); font-weight: 700; }
 
 .pay-cta { margin-top: 4px; align-self: flex-start; }
-/* Donate 頁的 .btn-text 全數改用深藍主色（.btn-text 預設是琥珀底線） */
-body[data-page="donate"] .btn.btn-text {
+/* Give 頁的 .btn-text 全數改用深藍主色（.btn-text 預設是琥珀底線） */
+body[data-page="give"] .btn.btn-text {
   color: var(--ink-800);
   border-bottom-color: var(--ink-800);
 }
-body[data-page="donate"] .btn.btn-text:hover {
+body[data-page="give"] .btn.btn-text:hover {
   color: var(--ink-900);
   border-bottom-color: var(--ink-900);
 }
@@ -2425,8 +2396,6 @@ body[data-page="home"] .newsletter {
   .section-verse    { padding: 88px 24px; }
   .section-cta      { padding: 104px 24px; }
   .newsletter       { padding: 72px 24px; }
-  .newsletter-form input  { padding: 0 16px; }
-  .newsletter-form button { padding: 0 18px; }
   .page-hero        { padding: 88px 24px 56px; }
   .page-hero.donate-hero { padding: 96px 24px 72px; }
 
@@ -2439,7 +2408,7 @@ body[data-page="home"] .newsletter {
   /* --- Contact / Donate 卡片內部 padding：與外層 24 對齊，避免內容偏右 --- */
   .contact-form                    { padding: 24px 20px; }
   .donate-block                    { padding: 24px 20px; }
-  body[data-page="donate"] .budget { padding: 22px 20px; }
+  body[data-page="give"] .budget { padding: 22px 20px; }
 
   /* --- Give-track 步驟軌道：縮小左內縮，讓 step body 內容不再明顯偏右 --- */
   .give-step-body        { margin-left: 6px; padding: 12px 0 20px 20px; }

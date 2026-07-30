@@ -39,10 +39,10 @@
     }));
   }
 
-  // ---------- #flow-bg：只在 home / donate / about 三頁注入 ----------
+  // ---------- #flow-bg：只在 home / give / about 三頁注入 ----------
   function isFlowPage() {
     const p = document.body.getAttribute('data-page');
-    return p === 'home' || p === 'donate' || p === 'about';
+    return p === 'home' || p === 'give' || p === 'about';
   }
   function injectFlowBg() {
     if (!isFlowPage()) return;
@@ -83,7 +83,7 @@
   }
   const fmtColor = c => `rgba(${c.r | 0},${c.g | 0},${c.b | 0},${(+c.a).toFixed(3)})`;
 
-  // ---------- Scroll flow field：只在 home / donate / about 跑 ----------
+  // ---------- Scroll flow field：只在 home / give / about 跑 ----------
   function initFlowField() {
     if (!isFlowPage()) return;
     const cs = getComputedStyle(root);
@@ -260,25 +260,8 @@
       });
     }
 
-    // ---------- Newsletter forms (Substack no-cors POST) ----------
-    document.querySelectorAll("form.newsletter-form").forEach(form => {
-      form.addEventListener("submit", e => {
-        e.preventDefault();
-        const body = new URLSearchParams();
-        new FormData(form).forEach((v, k) => body.append(k, v));
-        fetch(form.action, { method: "POST", mode: "no-cors", body })
-          .catch(() => { /* opaque response 讀不到，失敗也吞 */ });
-        const div = document.createElement("div");
-        div.className = "newsletter-success";
-        div.innerHTML = `
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:10px;">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-          已收到！請至信箱點擊確認連結，完成訂閱。
-        `;
-        form.replaceWith(div);
-      });
-    });
+    // ---------- Newsletter ----------
+    // 訂閱改為直接外連 https://enhakkore.substack.com/（平台限制，站內不再收單）
 
     // ---------- Contact guide cards ↔ Category select ----------
     initContactGuides();
@@ -332,7 +315,7 @@
       });
     });
     // ---------- Contact / volunteer forms ----------
-    // 表單送出改由各頁面底部的 Firebase module（volunteer.html / contact.html）
+    // 表單送出改由各頁面底部的 Firebase module（serve.html / contact.html）
     // 直接處理：寫入 Firestore、App Check 驗證、honeypot 檢查與狀態訊息。
     // 這裡不再攔截 submit，以免覆蓋掉真正的送出邏輯。
 
