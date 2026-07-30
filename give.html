@@ -11,7 +11,7 @@
   <link rel="preload" href="assets/img/donate_bg.webp" as="image" type="image/webp">
   <link rel="stylesheet" href="assets/css/styles.css">
 </head>
-<body data-page="donate">
+<body data-page="give">
 
 <div data-include="aurora"></div>
 
@@ -341,7 +341,7 @@
       await addDoc(collection(db, "donations"), {
         ...data,
         createdAt: serverTimestamp(),
-        source: "donate.html"
+        source: "give.html"
       });
       form.reset();
       setStatus("已收到您的奉獻確認，感謝您的擺上！我們會盡快對帳並與您聯繫。", "ok");
