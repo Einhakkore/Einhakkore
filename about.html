@@ -740,11 +740,11 @@
         color-mix(in srgb, #E9EEEA 60%, transparent) 150px,
         #E9EEEA 250px,
         #E9EEEA 100%);
-      /* 亮底上仍讀得清楚的深金（對 #E9EEEA 為 7.4:1） */
-      --amber-deep: #5A4404;
     }
     .about-cta__wrap { max-width: 720px; margin: 0 auto; position: relative; }
-    .about-cta .section-num { color: var(--amber-deep); opacity: .9; }
+    /* 點綴色用全站在淺底上慣用的 --amber-700（section-eyebrow、newsletter-label
+       等淺色頁面元件都是這支） */
+    .about-cta .section-num { color: var(--amber-700); opacity: .9; }
     .about-cta .cta-actions {
       display: flex; justify-content: center; flex-wrap: wrap; gap: 16px;
     }
@@ -757,7 +757,7 @@
     }
     .about-cta h2 em {
       font-family: var(--font-brand); font-style: italic; font-weight: 400;
-      color: var(--amber-deep); letter-spacing: 0;
+      color: var(--amber-700); letter-spacing: 0;
     }
     .about-cta p {
       font-size: 16px; line-height: 2;
