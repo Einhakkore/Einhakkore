@@ -31,7 +31,7 @@
     "@context": "https://schema.org",
     "@type": "WebPage",
     "name": "參與服事 · 隱哈歌利",
-    "url": "serve.html",
+    "url": "volunteer.html",
     "inLanguage": "zh-Hant",
     "description": "招募同工三步驟：申請與評估、裝備與加入、媒合服事。",
     "about": { "@id": "#org" },
@@ -403,7 +403,7 @@
 <script src="assets/js/site.js"></script>
 
 <!-- =========================================================
-     技能媒合表單 — Firebase 串接（比照 give.html）
+     技能媒合表單 — Firebase 串接（比照 donate.html）
      送出後寫入 Firestore「volunteers」集合。
      欄位需與 firestore.rules 的 isValidVolunteer() 允許清單一致。
      技能媒合表單 — Firebase 串接
@@ -473,7 +473,7 @@
       await addDoc(collection(db, "volunteers"), {
         ...data,
         createdAt: serverTimestamp(),
-        source: "serve.html"
+        source: "volunteer.html"
       });
       form.reset();
       setStatus("已收到您的意願表，感謝您！我們會在三個工作天內與您聯繫。", "ok");
@@ -487,3 +487,4 @@
 </script>
 </body>
 </html>
+
