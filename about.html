@@ -56,22 +56,25 @@
   <style>
     /* ============================================================
        ABOUT — 頁面級樣式
-       背景沿用首頁的 scroll flow field（#flow-bg，由 site.js 注入），
-       但 about 頁把五個 STOP 全部鎖在深色域，讓「文字永遠是淺色、
-       背景永遠是深色」，對比可預期（內文 AAA、輔助色 ≥ AA）。
+       背景沿用首頁那套 scroll flow field（#flow-bg，由 site.js 注入），
+       設計稿的走向是「深藍起手 → 最深墨藍 → 逐漸回升 → 頁尾轉亮」。
+
+       這裡把「轉亮」拆成兩段做：
+       1. flow field 只負責深藍 → 板岩藍的回升（五個 STOP 都還在深色域），
+       2. 最後的明亮收尾由 .about-cta 自己畫一道漸層。
+       原因是 flow field 是依「捲動進度」內插的，同一個區塊在不同視窗高度
+       會落在不同亮度上——實測手機版的頁尾 CTA 會剛好卡在深淺交界，
+       前景與背景同時是中間調，對比掉到 3.4。把亮區綁在區塊上就與視窗
+       高度無關，文字對比在任何裝置上都是固定的。
        ============================================================ */
 
-    /* ---------- Flow field stops · about 專用 ----------
-       initFlowField() 是從 :root 讀 --stop-* 的，所以這裡用 :has()
-       把覆寫掛在 html 上、但只在 about 頁生效。
-       亮度由上而下：起手深藍 → 最深墨藍 → 藍轉青 → 微微回升的青藍，
-       全程不進入淺色域，避免捲到某個位置時文字對比掉下來。 */
+    /* initFlowField() 從 :root 讀 --stop-*，用 :has() 讓覆寫只在 about 生效 */
     :root:has(body[data-page="about"]) {
       --stop-0-bg1: #22394A;  --stop-0-bg2: #182C3B;  --stop-0-fg: #F5F1E8;
       --stop-1-bg1: #14232E;  --stop-1-bg2: #0E1A23;  --stop-1-fg: #F5F1E8;
       --stop-2-bg1: #16323D;  --stop-2-bg2: #0F1F29;  --stop-2-fg: #F5F1E8;
-      --stop-3-bg1: #1B3A44;  --stop-3-bg2: #12252E;  --stop-3-fg: #F5F1E8;
-      --stop-4-bg1: #1E3B43;  --stop-4-bg2: #14282F;  --stop-4-fg: #F5F1E8;
+      --stop-3-bg1: #2C4854;  --stop-3-bg2: #1D3038;  --stop-3-fg: #F5F1E8;
+      --stop-4-bg1: #33505C;  --stop-4-bg2: #22323C;  --stop-4-fg: #F5F1E8;
     }
 
     html.lenis, html.lenis body { scroll-behavior: auto !important; }
@@ -221,7 +224,7 @@
       font-size: clamp(28px, 3vw, 44px);
       line-height: 1.5;
       letter-spacing: .04em;
-      color: var(--text-on-dark);
+      color: var(--amber-400);
       margin: 0 0 clamp(24px, 3vw, 44px);
     }
     .philosophy__body {
@@ -283,22 +286,19 @@
        PRACTICES（OUR VISION · 3 個關鍵承諾）
        深底上的奶紙卡片：直向堆疊 · icon 在左 · 光暈邊框
        ============================================================ */
+    /* 卡片堆：三張卡上下各疊 14px，像一疊被翻開的紙 —— 後面的卡蓋在前面之上
+       （皆為 position: relative，靠 DOM 順序決定堆疊，不需要 z-index） */
     .section-practices .practices {
       display: flex;
       flex-direction: column;
-      gap: 24px;
       max-width: 900px;
       margin: 0 auto;
     }
     .section-practices .practice-card {
-      display: grid;
-      grid-template-columns: 72px 1fr;
-      grid-template-rows: auto auto;
-      column-gap: 32px;
-      row-gap: 8px;
-      align-items: start;
-      padding: 36px 40px;
-      /* 深底上改用高不透明度的奶紙底，卡內文字維持 ink 深色（AAA） */
+      position: relative;
+      display: block;
+      /* 左側大留白是版面刻意留的縮排，不是 icon 的位置 */
+      padding: 40px 48px 40px 145px;
       background: rgba(245, 241, 232, 0.94);
       backdrop-filter: blur(18px) saturate(1.15);
       -webkit-backdrop-filter: blur(18px) saturate(1.15);
@@ -310,51 +310,25 @@
         0 12px 40px rgba(0, 0, 0, 0.18),
         0 4px 20px rgba(24, 44, 59, 0.10);
     }
+    .section-practices .practice-card + .practice-card { margin-top: -14px; }
     .section-practices .practice-card:hover {
       background: rgba(250, 246, 239, 0.98);
       border-color: rgba(242, 195, 107, 0.55);
-      transform: translateY(-3px);
       box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 1),
         0 0 0 1px rgba(232, 163, 61, 0.20),
         0 20px 56px rgba(0, 0, 0, 0.24),
         0 8px 28px rgba(24, 44, 59, 0.12);
     }
-    .section-practices .practice-card .icon {
-      grid-column: 1;
-      grid-row: 1 / span 2;
-      width: 72px;
-      height: 72px;
-      margin-bottom: 0;
-    }
-    .section-practices .practice-card h3 {
-      grid-column: 2;
-      grid-row: 1;
-      margin: 4px 0 0;
-    }
-    .section-practices .practice-card p {
-      grid-column: 2;
-      grid-row: 2;
-      margin: 0;
-      max-width: 62ch;
-    }
-    .section-practices .practice-card.sage .icon { color: var(--sage-700); }
+    .section-practices .practice-card h3 { margin: 0 0 14px; }
+    .section-practices .practice-card p  { margin: 0; max-width: 62ch; }
 
+    @media (max-width: 900px) {
+      .section-practices .practice-card { padding: 32px 32px 32px 72px; }
+    }
     @media (max-width: 640px) {
-      .section-practices .practice-card {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto auto auto;
-        row-gap: 12px;
-        padding: 28px 24px;
-      }
-      .section-practices .practice-card .icon {
-        grid-column: 1;
-        grid-row: 1;
-        width: 56px;
-        height: 56px;
-      }
-      .section-practices .practice-card h3 { grid-column: 1; grid-row: 2; }
-      .section-practices .practice-card p  { grid-column: 1; grid-row: 3; }
+      .section-practices .practice-card { padding: 28px 24px; }
+      .section-practices .practice-card + .practice-card { margin-top: -10px; }
     }
 
     /* ---------- PRACTICES 滾動閱讀（Pin + Line-draw + stagger） ---------- */
@@ -405,11 +379,6 @@
       transform: translate3d(0, 40px, 0);
       will-change: transform, opacity;
     }
-    .practice-card .icon[data-strength-icon] svg path,
-    .practice-card .icon[data-strength-icon] svg circle {
-      stroke-dasharray: 1;
-      stroke-dashoffset: 1;
-    }
     .section-practices .practice-card.slideItem.is-in {
       transform: translate3d(0, 0, 0);
       opacity: 1;
@@ -446,16 +415,6 @@
       border-color: rgba(242, 195, 107, .38);
       transform: translateY(-3px);
     }
-    .person-card__mark {
-      width: 56px; height: 56px;
-      margin-bottom: 24px;
-      border-radius: var(--radius-round);
-      border: 1px solid var(--amber-400);
-      color: var(--amber-400);
-      font-family: var(--font-en); font-style: italic;
-      font-size: 22px; line-height: 1;
-      display: flex; align-items: center; justify-content: center;
-    }
     .person-card__name {
       font-family: var(--font-brand); font-weight: 600;
       font-size: 26px; line-height: 1.4;
@@ -469,36 +428,42 @@
       color: var(--amber-400);
       margin-bottom: 22px;
     }
-    .person-card blockquote {
+    .person-card__quote { margin: 0; }
+    .person-card__quote p {
       margin: 0;
       font-size: 15.5px;
       line-height: 2.05;
       color: rgba(245, 241, 232, .88);
     }
+    /* 引號：開頭靠左、結尾靠右，用 FreightText 的斜體引號當裝飾 */
+    .quote-mark {
+      display: block;
+      font-family: var(--font-en); font-style: italic;
+      font-size: 40px; line-height: .8;
+      color: rgba(242, 195, 107, .45);
+    }
+    .quote-mark--open  { margin-bottom: 14px; }
+    .quote-mark--close { margin-top: 18px; text-align: right; }
     @media (max-width: 640px) { .person-card { padding: 32px 24px; } }
 
     /* 團隊規模 —— 數據列 */
+    /* 團隊規模：四個數字一排，無框無底，直接落在漸層背景上 */
     .stat-row {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
       max-width: 620px;
-      margin: 40px auto 0;
-      background: rgba(255, 255, 255, .12);
-      border: 1px solid rgba(255, 255, 255, .12);
-      border-radius: var(--radius-card);
-      overflow: hidden;
+      margin: 0 auto 64px;
     }
-    .stat-cell {
-      padding: 30px 24px;
-      text-align: center;
-      background: rgba(14, 26, 35, .32);
-    }
+    .stat-cell { text-align: center; }
     .stat-cell__num {
       font-family: var(--font-en); font-style: italic; font-weight: 400;
-      font-size: 46px; line-height: 1;
+      font-size: 42px; line-height: 1;
       color: var(--amber-400);
       font-variant-numeric: tabular-nums;
+    }
+    @media (max-width: 560px) {
+      .stat-row { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 32px; }
     }
     .stat-cell__num .unit {
       font-family: var(--font-zh); font-style: normal;
@@ -507,7 +472,7 @@
       margin-left: 8px;
     }
     .stat-cell__label {
-      margin-top: 12px;
+      margin-top: 14px;
       font-size: 14px; letter-spacing: .1em;
       color: rgba(245, 241, 232, .82);
     }
@@ -547,23 +512,25 @@
       max-width: 60ch;
       margin: 0 0 28px;
     }
-    .net-actions { margin-top: 28px; }
-
-    /* 合作教會／差會：數據 + 灰階透明 logo 牆 */
-    .count-inline {
-      display: flex; flex-wrap: wrap; gap: 10px 32px;
-      margin: 0 0 24px;
+    .net-actions {
+      margin-top: 32px;
+      display: flex; justify-content: center;
     }
-    .count-inline__item {
-      display: flex; align-items: baseline; gap: 10px;
-      font-size: 15px; color: rgba(245, 241, 232, .82);
-    }
-    .count-inline__num {
-      font-family: var(--font-en); font-style: italic;
-      font-size: 30px; line-height: 1;
+    /* 區塊層級的 CTA 用文字連結，把實心按鈕留給頁尾主 CTA */
+    .net-link {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 8px 0;
+      font-size: 15px; letter-spacing: .04em;
       color: var(--amber-400);
-      font-variant-numeric: tabular-nums;
+      border-bottom: 1px solid rgba(242, 195, 107, .55);
+      transition: color .25s ease, border-color .25s ease;
     }
+    .net-link:hover {
+      color: var(--amber-300);
+      border-color: var(--amber-300);
+    }
+    .net-link .arr { transition: transform .25s ease; }
+    .net-link:hover .arr { transform: translateX(3px); }
 
     /* 8 格 logo：桌機 4 欄（2 排整齊）、平板 3 欄、手機 2 欄 */
     .logo-wall {
@@ -598,29 +565,19 @@
     .logo-wall__ph svg { width: 26px; height: 26px; }
     .logo-wall__ph span { font-size: 11px; letter-spacing: .18em; }
 
-    /* 專業夥伴：依領域分類的 icon grid
-       5 張卡在 6 欄柵格上各佔 2 欄 → 每排 3 張，最後兩張往中間對齊，
-       不會出現右側單獨落單的空格。 */
+    /* 專業夥伴：直式卡片（icon 在上、名稱在中、數字在下），寬螢幕一排 5 個 */
     .field-grid {
       display: grid;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 14px;
     }
-    .field-card { grid-column: span 2; }
-    .field-card:nth-child(4) { grid-column: 2 / span 2; }
-    .field-card:nth-child(5) { grid-column: 4 / span 2; }
-    @media (max-width: 860px) {
-      .field-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .field-card,
-      .field-card:nth-child(4),
-      .field-card:nth-child(5) { grid-column: auto; }
-    }
-    @media (max-width: 520px) {
-      .field-grid { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 900px) { .field-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    @media (max-width: 560px) { .field-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
     .field-card {
-      display: flex; align-items: center; gap: 16px;
-      padding: 20px 22px;
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center;
+      padding: 22px 14px 26px;
       border-radius: var(--radius-card);
       background: rgba(255, 255, 255, .05);
       border: 1px solid rgba(255, 255, 255, .12);
@@ -632,6 +589,7 @@
     }
     .field-card .icon {
       width: 42px; height: 42px; flex: 0 0 auto;
+      margin-bottom: 16px;
       border-radius: var(--radius-icon);
       display: flex; align-items: center; justify-content: center;
       color: var(--amber-400);
@@ -642,17 +600,18 @@
     .field-card__name {
       font-size: 15px; letter-spacing: .04em;
       color: var(--text-on-dark);
+      margin-bottom: 14px;
     }
     .field-card__count {
-      margin-left: auto;
       font-size: 14px;
       color: rgba(245, 241, 232, .82);
       white-space: nowrap;
     }
     .field-card__count b {
       font-family: var(--font-en); font-style: italic; font-weight: 400;
-      font-size: 22px; color: var(--amber-400);
-      margin-right: 4px;
+      font-size: 38px; line-height: 1;
+      color: var(--amber-400);
+      margin-right: 5px;
       font-variant-numeric: tabular-nums;
     }
 
@@ -678,15 +637,20 @@
       border: 1px solid rgba(242, 195, 107, .25);
     }
     .host-card .icon svg { width: 22px; height: 22px; }
+    .host-card__body { flex: 1; min-width: 0; }
+    .host-card__row {
+      display: flex; align-items: baseline; justify-content: space-between;
+      gap: 16px;
+    }
     .host-card__name {
       font-family: var(--font-brand); font-weight: 500;
       font-size: 18px; line-height: 1.5; letter-spacing: .03em;
       color: var(--text-on-dark);
-      margin: 0 0 6px;
+      margin: 0;
     }
     .host-card__num {
       font-family: var(--font-en); font-style: italic;
-      font-size: 26px; line-height: 1.2;
+      font-size: 26px; line-height: 1.2; white-space: nowrap;
       color: var(--amber-400);
       font-variant-numeric: tabular-nums;
     }
@@ -696,7 +660,7 @@
       margin-left: 6px;
     }
     .host-card__desc {
-      margin: 8px 0 0;
+      margin: 10px 0 0;
       font-size: 14.5px; line-height: 1.9;
       color: rgba(245, 241, 232, .84);
     }
@@ -704,13 +668,18 @@
     /* ============================================================
        SECTION 3 · 關於隱哈歌利（組織資訊）
        ============================================================ */
+    /* 這張卡落在背景由深轉亮的交界，用不透明的奶紙底 + ink 深色文字，
+       不論背後是深藍還是霧白，卡內對比都固定（AAA）。 */
     .org-panel {
       max-width: 900px;
       margin: 0 auto;
       padding: clamp(28px, 4vw, 48px);
       border-radius: var(--radius-card);
-      background: rgba(255, 255, 255, .04);
-      border: 1px solid rgba(255, 255, 255, .12);
+      background: #F5F1E8;
+      border: 1px solid rgba(255, 255, 255, .35);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .9),
+        0 12px 40px rgba(0, 0, 0, .18);
     }
     .org-list {
       margin: 0;
@@ -720,16 +689,16 @@
     .org-list dt,
     .org-list dd {
       padding: 18px 0;
-      border-top: 1px solid rgba(255, 255, 255, .10);
+      border-top: 1px solid var(--line-dim);
     }
     .org-list dt {
       font-size: 14px; letter-spacing: .1em;
-      color: rgba(245, 241, 232, .82);
+      color: var(--text-3);
     }
     .org-list dd {
       margin: 0;
       font-size: 16px; line-height: 1.8;
-      color: var(--text-on-dark);
+      color: var(--text-1);
     }
     .org-list dt:first-of-type,
     .org-list dd:first-of-type { border-top: 0; padding-top: 0; }
@@ -737,13 +706,15 @@
       display: block;
       margin-top: 4px;
       font-size: 13.5px;
-      color: rgba(245, 241, 232, .82);
+      color: var(--text-3);
     }
+    /* 註腳放在卡內：卡片是不透明奶紙底，色階不受背景漸層影響 */
     .org-note {
-      max-width: 900px;
-      margin: 20px auto 0;
+      margin: 24px 0 0;
+      padding-top: 20px;
+      border-top: 1px solid var(--line-dim);
       font-size: 13.5px; line-height: 1.9;
-      color: rgba(245, 241, 232, .82);
+      color: var(--text-2);
     }
     @media (max-width: 640px) {
       .org-list { grid-template-columns: 1fr; }
@@ -751,13 +722,29 @@
       .org-list dd { padding: 4px 0 18px; border-top: 0; }
       .org-list dd:first-of-type { padding-top: 4px; }
     }
+    /* INFORMATION 的標題還在深底區，維持反白 */
+    .section-org .section-head h2 { color: var(--text-on-dark); }
 
     /* ============================================================
        頁尾 CTA
        ============================================================ */
-    .about-cta { padding: clamp(120px, 16vh, 180px) 32px; text-align: center; }
-    .about-cta__wrap { max-width: 720px; margin: 0 auto; }
-    .about-cta .section-num { color: var(--amber-400); opacity: .85; }
+    /* 頁尾 CTA —— 整頁的明亮收尾。
+       漸層畫在區塊上（頂端 240px 由透明淡入到霧白），content 一律落在
+       亮底上，所以文字用固定的 ink 色階，對比與捲動位置無關（AAA）。 */
+    .about-cta {
+      position: relative;
+      padding: clamp(200px, 24vh, 280px) 32px clamp(120px, 16vh, 180px);
+      text-align: center;
+      background: linear-gradient(180deg,
+        transparent 0,
+        color-mix(in srgb, #E9EEEA 60%, transparent) 150px,
+        #E9EEEA 250px,
+        #E9EEEA 100%);
+    }
+    .about-cta__wrap { max-width: 720px; margin: 0 auto; position: relative; }
+    /* 點綴色用全站在淺底上慣用的 --amber-700（section-eyebrow、newsletter-label
+       等淺色頁面元件都是這支） */
+    .about-cta .section-num { color: var(--amber-700); opacity: .9; }
     .about-cta .cta-actions {
       display: flex; justify-content: center; flex-wrap: wrap; gap: 16px;
     }
@@ -765,16 +752,16 @@
       font-family: var(--font-brand); font-weight: 600;
       font-size: clamp(26px, 3.2vw, 40px);
       line-height: 1.65; letter-spacing: .03em;
-      color: var(--text-on-dark);
+      color: var(--text-1);
       margin: 0 0 24px;
     }
     .about-cta h2 em {
       font-family: var(--font-brand); font-style: italic; font-weight: 400;
-      color: var(--amber-400); letter-spacing: 0;
+      color: var(--amber-700); letter-spacing: 0;
     }
     .about-cta p {
       font-size: 16px; line-height: 2;
-      color: rgba(245, 241, 232, .86);
+      color: var(--text-2);
       margin: 0 0 32px;
     }
     .cta-ways {
@@ -786,15 +773,11 @@
     .cta-ways li {
       padding: 9px 20px;
       border-radius: var(--radius-pill);
-      border: 1px solid rgba(255, 255, 255, .20);
-      background: rgba(255, 255, 255, .05);
+      border: 1px solid var(--line-mid);
+      background: rgba(255, 255, 255, .45);
       font-size: 14px; letter-spacing: .04em;
-      color: rgba(245, 241, 232, .88);
+      color: var(--text-2);
     }
-
-    /* ---------- Newsletter 在深底上的色階覆寫 ---------- */
-    body[data-page="about"] .newsletter-label { color: var(--amber-400); }
-    body[data-page="about"] .newsletter h3    { color: var(--text-on-dark); }
 
     /* ---------- 無動畫保底 ----------
        html.no-anim 由頁尾腳本在「GSAP / ScrollTrigger 載入失敗」或
@@ -814,11 +797,6 @@
       transform: scaleX(1) !important;
     }
     html.no-anim .practices-line-bg path,
-    html.no-anim .practice-card .icon[data-strength-icon] svg path,
-    html.no-anim .practice-card .icon[data-strength-icon] svg circle {
-      stroke-dasharray: none !important;
-      stroke-dashoffset: 0 !important;
-    }
     /* 沒有 pin 就不需要 100vh 的舞台高度，收掉多餘留白 */
     html.no-anim .practices-stage { min-height: 0; }
 
@@ -831,11 +809,6 @@
       .section-practices .practice-card.slideItem {
         transform: none !important; opacity: 1 !important;
       }
-      .practice-card .icon[data-strength-icon] svg path,
-      .practice-card .icon[data-strength-icon] svg circle {
-        stroke-dasharray: none !important;
-        stroke-dashoffset: 0 !important;
-      }
       .practices-line-bg path {
         stroke-dasharray: none !important;
         stroke-dashoffset: 0 !important;
@@ -845,6 +818,19 @@
     /* ---------- Mobile ---------- */
     @media (max-width: 720px) {
       .scr-hero { padding: 120px 24px; }
+      /* 英文大標 64px 在窄螢幕會折成兩行，縮小並補上行距與間距 */
+      .section-head .section-num {
+        font-size: 40px; line-height: 1.15; margin-bottom: 14px;
+      }
+      .about-cta {
+        padding-top: clamp(160px, 22vh, 220px);
+        /* 手機的 padding-top 較小，漸層也要更早收斂到亮底 */
+        background: linear-gradient(180deg,
+          transparent 0,
+          color-mix(in srgb, #E9EEEA 60%, transparent) 60px,
+          #E9EEEA 110px,
+          #E9EEEA 100%);
+      }
       .parallax-deco { opacity: .28; filter: blur(24px); }
       .about-cta { padding: 96px 24px; }
     }
@@ -864,9 +850,10 @@
     <path d="M21 11.5a7.5 7.5 0 0 1-7.5 7.5H9l-4.5 3v-4.2A7.5 7.5 0 0 1 3 11.5 7.5 7.5 0 0 1 10.5 4h3A7.5 7.5 0 0 1 21 11.5z"/>
     <path d="M12 15.2 9.7 13a1.7 1.7 0 0 1 2.3-2.5 1.7 1.7 0 0 1 2.3 2.5L12 15.2z"/>
   </symbol>
-  <symbol id="ic-medical" viewBox="0 0 24 24">
-    <rect x="3" y="3" width="18" height="18" rx="5.5"/>
-    <path d="M12 8v8M8 12h8"/>
+  <symbol id="ic-web" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="9"/>
+    <path d="M3 12h18"/>
+    <path d="M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18z"/>
   </symbol>
   <symbol id="ic-finance" viewBox="0 0 24 24">
     <ellipse cx="12" cy="6" rx="7.5" ry="3"/>
@@ -892,7 +879,6 @@
     <path d="M12 18.2 9.5 15.9a1.8 1.8 0 0 1 2.5-2.6 1.8 1.8 0 0 1 2.5 2.6L12 18.2z"/>
   </symbol>
 </svg>
-
 <main>
 
   <!-- ============================ HERO ============================ -->
@@ -907,7 +893,7 @@
     <div class="scr-hero__content">
       <div class="scr-hero__eyebrow" data-hero-fade>ABOUT US · 關於我們</div>
       <h1 class="scr-hero__title" data-split-lines>我們是誰，為什麼在這裡</h1>
-      <p class="scr-hero__sub" data-hero-fade>隱哈歌利是一個支持跨文化宣教士與其家庭的服事團隊。<br>從陪伴、專業資源到接待，我們留在後方，把需要接住。</p>
+      <p class="scr-hero__sub" data-hero-fade>隱哈歌利是一個支持宣教士與其家庭的服事團隊。<br>從陪伴、專業資源到接待，我們留在後方，把需要接住。</p>
     </div>
 
     <div class="scr-hero__scroll-hint">SCROLL</div>
@@ -928,8 +914,7 @@
         </div>
         <div class="philosophy__cite" data-split-lines>— 士師記 15:19</div>
         <div class="philosophy__note" data-scr-fade>
-          <p>隱哈歌利的意思是「求告者之泉」。我們用這個名字，是因為相信宣教路上真正的枯竭，往往不是體力，而是無人可說。</p>
-          <p>所以我們存在的理由很單純：讓求告有人聽見，讓需要有人接住——在差派之後，仍然記得、仍然回應。</p>
+          <p>我們相信宣教路上真正的枯竭，往往不是體力，而是無人可說。</p>
         </div>
       </div>
     </div>
@@ -938,12 +923,10 @@
   <!-- ============================ OUR VISION ============================ -->
   <section class="section section-practices" data-scene="practices">
     <div class="wrap">
-      <hgroup class="section-head section-head--on-dark SectionTitle" data-section-title>
-        <div class="section-num title" data-scr-fade>OUR VISION</div>
-        <div class="section-eyebrow titleEn" data-split-lines>我們的方向</div>
-        <span class="section-title-line line" data-section-title-line aria-hidden="true"></span>
-        <h2 class="title" data-split-lines><em>3</em>個關鍵承諾</h2>
-        <p class="lead" data-split-lines>不談口號，只說我們把力氣放在哪裡：陪伴、資源與關係。</p>
+      <hgroup class="section-head section-head--on-dark" data-section-title>
+        <div class="section-num" data-scr-fade>OUR VISION</div>
+        <h2 data-split-lines><em>3</em>個關鍵承諾</h2>
+        <span class="section-title-line" data-section-title-line aria-hidden="true"></span>
       </hgroup>
 
       <div class="practices-stage" data-practices-stage>
@@ -954,31 +937,14 @@
 
         <div class="practices">
           <article class="practice-card slideItem" data-slide-item data-index="0">
-            <div class="icon" data-strength-icon><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M32 8c0 0 -10 14 -10 22a10 10 0 0 0 20 0c0 -8 -10 -22 -10 -22z"/>
-              <path d="M28 30a4 4 0 0 0 4 4" opacity=".6"/>
-              <path d="M14 50h36M18 56h28" opacity=".5"/>
-            </svg></div>
             <h3>長期的陪伴</h3>
             <p>關顧不是一次性的活動，而是持續的同行。從預備期、在工場、到回國述職，我們希望每個階段都有人記得、有人回應，讓神國工人在前線奔跑時，後方是穩的。</p>
           </article>
           <article class="practice-card slideItem" data-slide-item data-index="1">
-            <div class="icon" data-strength-icon><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M6 40c8-12 16-12 26-12s18 0 26 12"/>
-              <path d="M6 40v8M58 40v8"/>
-              <path d="M14 40v8M22 40v8M32 38v10M42 40v8M50 40v8" opacity=".5"/>
-              <path d="M6 48h52"/>
-            </svg></div>
             <h3>資源整合</h3>
             <p>連結教會、差會與各領域的專業夥伴，把散落各處的善意接成一張可用的網。我們盤點現有資源、主動媒合，讓求助不必難以啟齒，也讓每一份心意精準到位。</p>
           </article>
-          <article class="practice-card sage slideItem" data-slide-item data-index="2">
-            <div class="icon" data-strength-icon><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="22" cy="22" r="6"/>
-              <circle cx="42" cy="22" r="6"/>
-              <path d="M10 48c0 -6 6 -10 12 -10s12 4 12 10"/>
-              <path d="M30 48c0 -6 6 -10 12 -10s12 4 12 10"/>
-            </svg></div>
+          <article class="practice-card slideItem" data-slide-item data-index="2">
             <h3>關顧網絡</h3>
             <p>透過定期聯繫、線上交流與實體接待，讓宣教士與家庭都被看見。從心靈到日常生活，我們希望關顧不是單向的服務，而是彼此有名有姓的關係。</p>
           </article>
@@ -987,37 +953,15 @@
     </div>
   </section>
 
-  <!-- ============================ SECTION 1 · 我們的團隊 ============================ -->
+  <!-- ============================ TEAM & NETWORK · 我們的服事 ============================ -->
   <section class="section section-team" id="team" data-scene="team">
     <div class="wrap">
       <hgroup class="section-head section-head--on-dark">
-        <div class="section-num" data-scr-fade>OUR TEAM</div>
-        <div class="section-eyebrow" data-split-lines>我們的團隊</div>
+        <div class="section-num" data-scr-fade>TEAM &amp; NETWORK</div>
+        <h2 data-split-lines>我們的服事</h2>
         <span class="section-title-line" aria-hidden="true" data-team-line></span>
-        <h2 data-split-lines>是<em>哪些人</em>在服事</h2>
-        <p class="lead" data-split-lines>隱哈歌利目前由兩位核心同工推動，並與各領域的專業夥伴一起服事。我們人不多，但盡量把每一次陪伴做得踏實、可被信任。</p>
+        <p class="lead" data-split-lines>隱哈歌利目前由兩位核心同工推動，並與各領域的專業夥伴一起服事。<br>我們人不多，但盡量把每一次陪伴做得踏實、可被信任。</p>
       </hgroup>
-
-      <!-- TODO: 以下兩段自述為文案草稿，請 Ewan、Yu 兩位同工親自確認或改寫後再上線 -->
-      <div class="team-grid">
-        <article class="person-card" data-scr-fade>
-          <div class="person-card__mark" aria-hidden="true">E</div>
-          <h3 class="person-card__name">Ewan</h3>
-          <div class="person-card__role">CO-FOUNDER · 核心同工</div>
-          <blockquote>
-            我看過宣教士在前線耗盡，回到家鄉卻找不到可以說話的人。隱哈歌利的起點很單純：讓需要被聽見。我希望我們建立的不是一套流程，而是一種文化——差派之後仍然記得、仍然回應，讓每一位工人知道自己不是獨自站著。
-          </blockquote>
-        </article>
-
-        <article class="person-card" data-scr-fade>
-          <div class="person-card__mark" aria-hidden="true">Y</div>
-          <h3 class="person-card__name">Yu</h3>
-          <div class="person-card__role">CO-FOUNDER · 核心同工</div>
-          <blockquote>
-            支持宣教不該只停在奉獻與代禱信。當一個家庭需要諮商、醫療或法律協助時，應該有人接得住。我想做的，是把散落各處的專業與善意連成網絡，讓開口求助不必難以啟齒，也讓每一份陪伴都能長久地走下去。
-          </blockquote>
-        </article>
-      </div>
 
       <!-- 團隊規模 —— 數字由頁面底部的 ABOUT_FACTS 統一渲染 -->
       <div class="stat-row" data-scr-fade aria-label="團隊規模">
@@ -1029,42 +973,46 @@
           <div class="stat-cell__num"><span data-fact="proPartners">—</span><span class="unit">位</span></div>
           <div class="stat-cell__label">專業夥伴</div>
         </div>
+        <div class="stat-cell">
+          <div class="stat-cell__num"><span data-fact="churches">—</span><span class="unit">間</span></div>
+          <div class="stat-cell__label">合作教會</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-cell__num"><span data-fact="hosting">—</span><span class="unit">組</span></div>
+          <div class="stat-cell__label">接待資源</div>
+        </div>
       </div>
 
-      <div class="section-actions">
-        <a class="btn btn-primary" href="serve.html">參與服事 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg></a>
-      </div>
-    </div>
-  </section>
+      <!-- TODO: 以下兩段自述為文案草稿，請 Ewan、Yu 兩位同工親自確認或改寫後再上線 -->
+      <div class="team-grid">
+        <article class="person-card" data-scr-fade>
+          <h3 class="person-card__name">Ewan</h3>
+          <div class="person-card__role">CO-FOUNDER · 核心同工</div>
+          <blockquote class="person-card__quote">
+            <span class="quote-mark quote-mark--open" aria-hidden="true">“</span>
+            <p>我看過宣教士在前線耗盡，回到家鄉卻找不到可以說話的人。隱哈歌利的起點很單純：讓需要被聽見。我希望我們建立的不是一套流程，而是一種文化——差派之後仍然記得、仍然回應，讓每一位工人知道自己不是獨自站著。</p>
+            <span class="quote-mark quote-mark--close" aria-hidden="true">”</span>
+          </blockquote>
+        </article>
 
-  <!-- ============================ SECTION 2 · 合作網絡 ============================ -->
-  <section class="section section-network" id="network" data-scene="network">
-    <div class="wrap">
-      <hgroup class="section-head section-head--on-dark">
-        <div class="section-num" data-scr-fade>OUR NETWORK</div>
-        <div class="section-eyebrow" data-split-lines>合作網絡</div>
-        <span class="section-title-line" aria-hidden="true" data-team-line></span>
-        <h2 data-split-lines>這不是<em>兩個人</em>的工作</h2>
-        <p class="lead" data-split-lines>是一群教會、差會與不同專業的人，各自出一點力，撐起同一張網。</p>
-      </hgroup>
+        <article class="person-card" data-scr-fade>
+          <h3 class="person-card__name">Yu</h3>
+          <div class="person-card__role">CO-FOUNDER · 核心同工</div>
+          <blockquote class="person-card__quote">
+            <span class="quote-mark quote-mark--open" aria-hidden="true">“</span>
+            <p>支持宣教不該只停在奉獻與代禱信。當一個家庭需要諮商、醫療或法律協助時，應該有人接得住。我想做的，是把散落各處的專業與善意連成網絡，讓開口求助不必難以啟齒，也讓每一份陪伴都能長久地走下去。</p>
+            <span class="quote-mark quote-mark--close" aria-hidden="true">”</span>
+          </blockquote>
+        </article>
+      </div>
 
       <div class="net-stack">
 
         <!-- A · 合作差會、教會 -->
         <section class="net-block" data-scr-fade>
           <div class="net-block__head">
-            <span class="net-block__en">CHURCHES &amp; AGENCIES</span>
             <h3>合作差會、教會</h3>
-          </div>
-          <p class="net-block__note">與我們同行的教會與差會，在代禱、轉介與接待上一起承擔。名單持續增加中。</p>
-
-          <div class="count-inline">
-            <div class="count-inline__item">
-              <span class="count-inline__num" data-fact="churches">—</span><span>間合作教會</span>
-            </div>
-            <div class="count-inline__item">
-              <span class="count-inline__num" data-fact="agencies">—</span><span>間合作差會</span>
-            </div>
+            <span class="net-block__en">CHURCHES &amp; AGENCIES</span>
           </div>
 
           <!-- TODO: 取得授權後，把每個 <li> 內的 .logo-wall__ph 換成
@@ -1085,8 +1033,8 @@
         <!-- B · 專業夥伴 -->
         <section class="net-block" data-scr-fade>
           <div class="net-block__head">
-            <span class="net-block__en">PROFESSIONAL PARTNERS</span>
             <h3>專業夥伴</h3>
+            <span class="net-block__en">PROFESSIONAL PARTNERS</span>
           </div>
           <p class="net-block__note">來自不同領域的基督徒工作者，願意在需要出現時提供專業協助。我們負責接住需求、進行媒合，並在過程中保護當事人的隱私。</p>
 
@@ -1097,9 +1045,9 @@
               <span class="field-card__count"><b data-fact="counseling">—</b>位</span>
             </div>
             <div class="field-card">
-              <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#ic-medical"></use></svg></span>
-              <span class="field-card__name">醫療</span>
-              <span class="field-card__count"><b data-fact="medical">—</b>位</span>
+              <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#ic-web"></use></svg></span>
+              <span class="field-card__name">網站</span>
+              <span class="field-card__count"><b data-fact="web">—</b>位</span>
             </div>
             <div class="field-card">
               <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#ic-finance"></use></svg></span>
@@ -1119,39 +1067,43 @@
           </div>
 
           <div class="net-actions">
-            <a class="btn btn-primary" href="serve.html">我願意專業服事 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg></a>
+            <a class="net-link" href="serve.html">我願意專業服事 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg></a>
           </div>
         </section>
 
         <!-- C · 接待資源 -->
         <section class="net-block" data-scr-fade>
           <div class="net-block__head">
-            <span class="net-block__en">HOSPITALITY</span>
             <h3>接待資源</h3>
+            <span class="net-block__en">Mission BnB</span>
           </div>
           <p class="net-block__note">回國述職、轉換期或短期停留時，有一處可以安心落腳的地方，往往比什麼都實際。</p>
 
           <div class="host-grid">
             <div class="host-card">
               <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#ic-bnb"></use></svg></span>
-              <div>
-                <h4 class="host-card__name">Mission BnB</h4>
-                <div class="host-card__num"><span data-fact="bnb">—</span><span class="unit">處</span></div>
+              <div class="host-card__body">
+                <div class="host-card__row">
+                  <h4 class="host-card__name">Mission BnB</h4>
+                  <div class="host-card__num"><span data-fact="bnb">—</span><span class="unit">處</span></div>
+                </div>
                 <p class="host-card__desc">為宣教士預備的中長期住宿空間，讓身心有地方安穩下來。</p>
               </div>
             </div>
             <div class="host-card">
               <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#ic-host"></use></svg></span>
-              <div>
-                <h4 class="host-card__name">短期接待家庭</h4>
-                <div class="host-card__num"><span data-fact="hostFamilies">—</span><span class="unit">戶</span></div>
+              <div class="host-card__body">
+                <div class="host-card__row">
+                  <h4 class="host-card__name">短期接待家庭</h4>
+                  <div class="host-card__num"><span data-fact="hostFamilies">—</span><span class="unit">戶</span></div>
+                </div>
                 <p class="host-card__desc">願意開放家中空房、以家庭的方式短期接待宣教士與其家人。</p>
               </div>
             </div>
           </div>
 
           <div class="net-actions">
-            <a class="btn btn-primary" href="serve.html">我可以提供資源 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg></a>
+            <a class="net-link" href="serve.html">我可以提供資源 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg></a>
           </div>
         </section>
 
@@ -1159,15 +1111,13 @@
     </div>
   </section>
 
-  <!-- ============================ SECTION 3 · 關於隱哈歌利 ============================ -->
+  <!-- ============================ INFORMATION · 關於隱哈歌利 ============================ -->
   <section class="section section-org" id="org" data-scene="org">
     <div class="wrap">
       <hgroup class="section-head section-head--on-dark">
         <div class="section-num" data-scr-fade>INFORMATION</div>
-        <div class="section-eyebrow" data-split-lines>組織資訊</div>
         <span class="section-title-line" aria-hidden="true" data-team-line></span>
         <h2 data-split-lines>關於隱哈歌利</h2>
-        <p class="lead" data-split-lines>我們把現況誠實地寫下來，包含還沒完成的部分。</p>
       </hgroup>
 
       <div class="org-panel" data-scr-fade>
@@ -1199,14 +1149,14 @@
           <dt>服務對象</dt>
           <dd>宣教士與家庭</dd>
         </dl>
+        <p class="org-note">目前尚未獨立立案，所有奉獻由上述財務受託單位代收與開立收據，收支獨立列帳。</p>
       </div>
-      <p class="org-note">目前尚未獨立立案，所有奉獻由上述財務受託單位代收與開立收據，收支獨立列帳。</p>
     </div>
   </section>
 
   <!-- ============================ 頁尾 CTA ============================ -->
-  <!-- .section--navy 只為了沿用全站「深底上的 ghost button」配色，本身背景是透明的 -->
-  <section class="about-cta section--navy" data-scene="cta">
+  <!-- 這一段落在 scroll flow field 的最亮處，文字色階改吃 --fg（會隨背景由淺轉深） -->
+  <section class="about-cta" data-scene="cta">
     <div class="about-cta__wrap">
       <div class="section-num" data-scr-fade>JOIN US</div>
       <h2 data-split-lines>一起成為宣教路上的<em>同行者</em></h2>
@@ -1219,12 +1169,9 @@
       </ul>
       <div class="cta-actions">
         <a class="btn btn-primary" href="serve.html">參與服事 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg></a>
-        <a class="btn btn-ghost" href="contact.html">先聊聊</a>
       </div>
     </div>
   </section>
-
-  <div data-include="newsletter"></div>
 
 </main>
 
@@ -1243,9 +1190,9 @@
     coreTeam:     2,       // 核心同工（位）
     proPartners:  12,      // 專業夥伴總數（位）＝ 下面五個領域相加
     churches:     8,       // 合作教會（間）
-    agencies:     3,       // 合作差會（間）
+    hosting:      7,       // 接待資源（組）＝ bnb + hostFamilies
     counseling:   4,       // 諮商／心理（位）
-    medical:      3,       // 醫療（位）
+    web:          3,       // 網站（位）
     finance:      2,       // 財務（位）
     legal:        1,       // 法律（位）
     education:    2,       // 教育（位）
@@ -1479,37 +1426,18 @@
       }
     }
 
-    /* --- (C) 圖示 SVG 描邊：為每個 icon 內每條 path/circle 量測長度 --- */
-    section.querySelectorAll('[data-strength-icon] svg path, [data-strength-icon] svg circle')
-      .forEach(node => {
-        const len = node.getTotalLength ? node.getTotalLength() : 0;
-        if (!len) return;
-        node.style.strokeDasharray = len;
-        node.style.strokeDashoffset = len;
-      });
-
     const cards = section.querySelectorAll('[data-slide-item]');
 
     /* --- 分支：mobile（單欄）不做 pin，改為分項 stagger 進場 --- */
     const isMobile = window.matchMedia('(max-width: 900px)').matches;
     if (isMobile) {
       cards.forEach((card) => {
-        const iconNodes = card.querySelectorAll('[data-strength-icon] svg path, [data-strength-icon] svg circle');
-        const iconWrap  = card.querySelector('[data-strength-icon]');
-        const tlM = gsap.timeline({
-          scrollTrigger: { trigger: card, start: 'top 85%', once: true }
-        });
-        tlM.fromTo(card,
+        gsap.fromTo(card,
           { y: 50, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.9, ease: 'power3.out' }, 0);
-        if (iconNodes.length) {
-          tlM.to(iconNodes,
-            { strokeDashoffset: 0, duration: 0.7, ease: 'power2.out', stagger: 0.05 }, 0.15);
-        }
-        if (iconWrap) {
-          tlM.fromTo(iconWrap,
-            { scale: 0.85 }, { scale: 1, duration: 0.5, ease: 'back.out(2.2)' }, 0.2);
-        }
+          {
+            y: 0, opacity: 1, duration: 0.9, ease: 'power3.out',
+            scrollTrigger: { trigger: card, start: 'top 85%', once: true }
+          });
       });
 
       if (bgPathLen > 0) {
@@ -1531,29 +1459,14 @@
     const pinTarget = section.querySelector('[data-practices-stage]') || section;
 
     gsap.set(cards, { y: 40, opacity: 0, scale: 0.98 });
-    cards.forEach(card => {
-      const iconWrap = card.querySelector('[data-strength-icon]');
-      if (iconWrap) gsap.set(iconWrap, { scale: 0.85 });
-    });
 
     // (D0) 第一張卡：進入視窗即進場（once），從靜態標題直接接到卡片
     const firstCard = cards[0];
     if (firstCard) {
-      const iconNodes = firstCard.querySelectorAll('[data-strength-icon] svg path, [data-strength-icon] svg circle');
-      const iconWrap  = firstCard.querySelector('[data-strength-icon]');
-      const tlFirst = gsap.timeline({
+      gsap.to(firstCard, {
+        y: 0, opacity: 1, scale: 1, duration: 0.8, ease: 'power3.out',
         scrollTrigger: { trigger: firstCard, start: 'top 88%', once: true }
       });
-      tlFirst.to(firstCard,
-        { y: 0, opacity: 1, scale: 1, duration: 0.8, ease: 'power3.out' }, 0);
-      if (iconNodes.length) {
-        tlFirst.to(iconNodes,
-          { strokeDashoffset: 0, duration: 0.6, ease: 'power2.out', stagger: 0.05 }, 0.2);
-      }
-      if (iconWrap) {
-        tlFirst.to(iconWrap,
-          { scale: 1, duration: 0.5, ease: 'back.out(2.2)' }, 0.25);
-      }
     }
 
     // 後續卡片走 pin + scrub；每張卡佔 timeline 1 個時間單位
@@ -1583,29 +1496,16 @@
       );
     }
 
-    // (D2) 每張卡片：y:40 → 0 淡入，icon 描邊繪出，icon 容器 back.out 反彈
+    // (D2) 每張卡片：y:40 → 0 淡入。
+    // 卡片不再有 icon（設計稿拿掉了），原本 icon 描邊會把每張卡的時間軸
+    // 填到 ~0.8，只留淡入會空掉後半段、捲起來像卡住，所以把補間拉長補回節拍。
     restCards.forEach((card, i) => {
       const start = i;
       tl.fromTo(card,
         { y: 40, opacity: 0, scale: 0.98 },
-        { y: 0, opacity: 1, scale: 1, duration: 0.6, ease: 'power3.out', immediateRender: false },
+        { y: 0, opacity: 1, scale: 1, duration: 0.8, ease: 'power3.out', immediateRender: false },
         start
       );
-      const iconNodes = card.querySelectorAll('[data-strength-icon] svg path, [data-strength-icon] svg circle');
-      if (iconNodes.length) {
-        tl.to(iconNodes,
-          { strokeDashoffset: 0, duration: 0.55, ease: 'power2.out', stagger: 0.05 },
-          start + 0.25
-        );
-      }
-      const iconWrap = card.querySelector('[data-strength-icon]');
-      if (iconWrap) {
-        tl.fromTo(iconWrap,
-          { scale: 0.85 },
-          { scale: 1, duration: 0.45, ease: 'back.out(2.2)', immediateRender: false },
-          start + 0.3
-        );
-      }
     });
   }
 
