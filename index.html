@@ -1,72 +1,59 @@
+
 <!doctype html>
 <html lang="zh-Hant">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>奉獻支持 · 隱哈歌利 En-hakkore</title>
-  <meta name="description" content="支持隱哈歌利的關顧事工。透過銀行匯款或線上刷卡，成為宣教士誠實同行的堅定力量。2026 年度總預算 67.7 萬，財務公開透明。">
+  <title>隱哈歌利 En-hakkore · 為宣教士築起後方支持網絡</title>
+  <meta name="description" content="隱哈歌利 En-hakkore 是為跨文化宣教士提供陪伴、資源整合與關顧網絡的支持事工。回應大使命的後方守護，讓神國工人在前線更穩健。">
+  <meta name="keywords" content="隱哈歌利,En-hakkore,宣教士,關顧,支持,陪伴,資源整合,基督教,福音,大使命">
+  <meta name="author" content="隱哈歌利 En-hakkore">
   <meta name="theme-color" content="#1a2e40">
   <meta name="robots" content="index,follow">
   <link rel="icon" href="assets/img/favicon.png">
 
+  <!-- Open Graph（Facebook / LINE / Slack 預覽） -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="隱哈歌利 En-hakkore">
-  <meta property="og:title" content="奉獻支持 · 隱哈歌利 En-hakkore">
-  <meta property="og:description" content="您們要給人，就必有給您們的。無論金額大小，都是與宣教士同行的堅定力量。">
+  <meta property="og:title" content="隱哈歌利 En-hakkore · 為宣教士築起後方支持網絡">
+  <meta property="og:description" content="為跨文化宣教士提供陪伴、資源整合與關顧網絡的支持事工。回應大使命的後方守護。">
   <meta property="og:locale" content="zh_TW">
 
+  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="奉獻支持 · 隱哈歌利">
-  <meta name="twitter:description" content="支持宣教士的關顧事工。">
+  <meta name="twitter:title" content="隱哈歌利 En-hakkore">
+  <meta name="twitter:description" content="為跨文化宣教士築起後方支持網絡的關顧事工。">
 
   <link rel="preload" href="assets/fonts/ShiweiSiJiChun-Regular.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/FreightTextPro-Book.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="assets/img/donate_bg.webp" as="image" type="image/webp">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600&display=swap">
   <link rel="stylesheet" href="assets/css/styles.css">
 
+  <!-- 結構化資料：NGO / Organization。之後 sameAs 填入社群連結 -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "NGO",
-        "@id": "#org",
-        "name": "隱哈歌利",
-        "alternateName": ["En-hakkore", "En Hakkore"],
-        "url": "/",
-        "logo": "assets/img/logo-on-light.png",
-        "description": "為跨文化宣教士提供陪伴、資源整合與關顧網絡的支持事工。",
-        "email": "einhakkore@gmail.com",
-        "areaServed": { "@type": "Country", "name": "Taiwan" },
-        "sameAs": [
-          "TODO_FACEBOOK_URL",
-          "TODO_INSTAGRAM_URL",
-          "TODO_YOUTUBE_URL"
-        ]
-      },
-      {
-        "@type": "WebPage",
-        "@id": "donate.html#page",
-        "url": "donate.html",
-        "name": "奉獻支持 · 隱哈歌利",
-        "inLanguage": "zh-Hant",
-        "about": { "@id": "#org" },
-        "potentialAction": {
-          "@type": "DonateAction",
-          "name": "奉獻支持隱哈歌利",
-          "recipient": { "@id": "#org" },
-          "description": "透過銀行匯款或線上刷卡，支持隱哈歌利的宣教關顧事工。",
-          "target": "donate.html"
-        }
-      }
+    "@type": "NGO",
+    "@id": "#org",
+    "name": "隱哈歌利",
+    "alternateName": ["En-hakkore", "En Hakkore"],
+    "url": "/",
+    "logo": "assets/img/logo-on-light.png",
+    "description": "為跨文化宣教士提供陪伴、資源整合與關顧網絡的支持事工。",
+    "email": "einhakkore@gmail.com",
+    "areaServed": { "@type": "Country", "name": "Taiwan" },
+    "inLanguage": "zh-Hant",
+    "sameAs": [
+      "TODO_FACEBOOK_URL",
+      "TODO_INSTAGRAM_URL",
+      "TODO_YOUTUBE_URL"
     ]
   }
   </script>
 </head>
-<body data-page="give">
+<body data-page="home">
 
 <div data-include="aurora"></div>
 
@@ -75,364 +62,190 @@
 
 <main>
 
-<section class="page-hero donate-hero">
-  <div class="symbol-sm"></div>
-  <div class="eyebrow">奉獻支持</div>
-  <h1>你們要給人，就必有給你們的</h1>
-  <div class="cta-label">路加福音 6:38</div>
-  <p> 無論金額大小，您的支持都是與宣教士誠實同行的堅定力量。<br>不論是單次奉獻、或是設定每月定期定額轉帳，這份長流的泉源，都將成為宣教士最務實的後援。</p>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-symbol"></div>
+    <div class="hero-eyebrow">EN HAKKORE · 求告者之泉</div>
+    <h1>支持神國工人</h1>
+    <h3>與我們一起築起宣教士的支持網絡</h3>
+    <p class="hero-sub">回應大使命不僅是前線工人的奮鬥，<br>更是後方團隊的支持與守護。</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="https://gooodplace.dobtor.com/donate">一起守望 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg></a>
+      <a class="btn btn-ghost" href="about.html">瞭解異象</a>
+    </div>
+  </div>
+  <div class="scroll-hint">SCROLL</div>
+</section>
+  
+<!-- VERSE -->
+<section class="section-verse section--navy">
+  <div class="verse-wrap reveal">
+    <div class="verse-ref">JUDGES 15:19 · 士師記</div>
+    <div class="verse-quote">
+      神就使利希的窪處裂開，<br>
+      有水從其中湧出來。<br>
+      參孫喝了精神復原。<br>
+      因此那泉名叫 <strong>隱哈歌利</strong>。
+    </div>
+  </div>
 </section>
 
-<section class="section">
-    <div class="section-head section-head--on-dark reveal">
-      <div class="section-num">WHY</div>
-      <div class="cta-label">您的奉獻，將轉化為第一線宣教士生命中具體可行的資源與陪伴。</div>
-      <h2>為什麼我們需要您的支持？</h2>
-      <p>宣教士在跨文化的環境中前行，常需面對複雜與不易。隱哈歌利相信，真誠的關懷會先接住情緒，再帶出方向與實際步驟。我們尊重每個生命的節奏，不給標準答案，但在關鍵時刻，我們希望具體、務實地陪著他們一起走過。</p>
-    </div>
+<!-- THREE PRACTICES -->
+<section class="section section-practices">
   <div class="wrap">
-    <div class="donate-layout">
-
-      <!-- ============================================================
-           左欄（>1068px 時固定 sticky）        
-           ============================================================ -->
-      <aside class="donate-left reveal">
-
-  <div class="budget">
-    <h3>2026 年度預算 共<em>67.7 萬</em></h3>
-    <p>我們尊重神的主權，也誠實面對機構運作的有限與需要。<br>
-       隱哈歌利堅持財務公開透明，以下是我們 2026 年度的整體預算規劃與分佈：</p>
-
-    <div class="donut-wrap">
-      <svg id="donut" viewBox="0 0 560 400" role="img" aria-label="2026 年度預算分佈圓環圖"></svg>
+    <div class="section-head reveal">
+      <div class="section-num">About Us</div>
+      <div class="section-eyebrow">關於我們</div>
+      <h2>透過穩定的陪伴與資源整合，<br>與你一起在宣教路上走得更遠、更穩健。</h2>
+      <p class="lead">我們是一群關心宣教士的同工夥伴組成的支持網絡。透過穩定的陪伴與資源整合，與你一起在宣教路上走得更遠、更穩健。</p>
     </div>
 
-    <a class="btn btn-text" href="about.html">
-      了解事工
-      <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg>
-    </a>
+    <div class="orbit reveal">
+      <div class="orbit-stage">
+        <svg class="orbit-svg" viewBox="0 0 800 800" role="img" aria-label="三個環繞核心運轉的節點：RESEARCH、INTEGRATE、ACCOMPANY">
+          <circle class="orbit-ring" cx="400" cy="400" r="260"/>
+
+          <circle class="orbit-core-halo" cx="400" cy="400" r="126"/>
+          <circle class="orbit-core" cx="400" cy="400" r="96"/>
+          <text class="core-en"    x="400" y="380">EN HAKKORE</text>
+          <text class="core-brand" x="400" y="416">隱哈歌利</text>
+
+          <g class="orbit-rotate">
+            <line class="spoke" x1="400" y1="400" x2="400"    y2="140"/>
+            <line class="spoke" x1="400" y1="400" x2="625.17" y2="530"/>
+            <line class="spoke" x1="400" y1="400" x2="174.83" y2="530"/>
+
+            <g class="node-group node-r n1" tabindex="0" role="button"
+               aria-label="RESEARCH — 推廣與了解現況"
+               data-node="r" transform="translate(400 140)">
+              <g class="node-counter">
+                <circle class="node-halo" r="78"/>
+                <circle class="node-disc" r="55"/>
+                <text class="node-en" y="-14">RESEARCH</text>
+                <text class="node-zh" y="12">推廣了解</text>
+              </g>
+            </g>
+
+            <g class="node-group node-i n2" tabindex="0" role="button"
+               aria-label="INTEGRATE — 資源整合平台"
+               data-node="i" transform="translate(625.17 530)">
+              <g class="node-counter">
+                <circle class="node-halo" r="78"/>
+                <circle class="node-disc" r="55"/>
+                <text class="node-en" y="-14">INTEGRATE</text>
+                <text class="node-zh" y="12">資源整合</text>
+              </g>
+            </g>
+
+            <g class="node-group node-a n3" tabindex="0" role="button"
+               aria-label="ACCOMPANY — 關顧支持網絡"
+               data-node="a" transform="translate(174.83 530)">
+              <g class="node-counter">
+                <circle class="node-halo" r="78"/>
+                <circle class="node-disc" r="55"/>
+                <text class="node-en" y="-14">ACCOMPANY</text>
+                <text class="node-zh" y="12">關顧陪伴</text>
+              </g>
+            </g>
+          </g>
+        </svg>
+      </div>
+
+      <div class="orbit-copy">
+        <article class="copy-item c-r" tabindex="0" data-node="r">
+          <div class="roman">RESEARCH</div>
+          <h3>推廣與了解現況</h3>
+          <p>透過社群分享與推廣，讓更多人看見宣教士關顧的重要性。</p>
+        </article>
+        <article class="copy-item c-i" tabindex="0" data-node="i">
+          <div class="roman">INTEGRATE</div>
+          <h3>資源整合平台</h3>
+          <p>整合不同專業領域的資源，提供宣教士合適專業的支持。</p>
+        </article>
+        <article class="copy-item c-a" tabindex="0" data-node="a">
+          <div class="roman">ACCOMPANY</div>
+          <h3>關顧支持網絡</h3>
+          <p>長期陪伴與資源媒合，讓需要能被聽見、被理解、被回應。</p>
+        </article>
+      </div>
+    </div>
+    <div class="section-actions reveal">
+      <a class="btn btn-primary" href="about.html">認識隱哈歌利 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg></a>
+    </div>
   </div>
+</section>
 
-<script>
-  const data = [
-    { name:'倡議與調研',value:20, note:'約 20%',            color:'var(--ink-900)' },
-    { name:'資源整合平台', value:54, note:'約 54%',            color:'var(--ink-700)' },
-    { name:'關顧支持網絡', value:8,  note:'約 8%',             color:'var(--sky-700)' },
-    { name:'行政管理費用',value:18, note:'117,280（約 18%）', color:'var(--sky-500)' },
-  ];
-
-  const cx = 280, cy = 190;   // 圓心
-  const r  = 100;             // 圓環中線半徑
-  const sw = 42;              // 圓環厚度
-  const pad = 1.3;            // 每段之間的空隙（角度）
-  const total = data.reduce((s,d)=>s+d.value,0);
-
-  const NS = 'http://www.w3.org/2000/svg';
-  const svg = document.getElementById('donut');
-
-  const rad = a => (a - 90) * Math.PI / 180;           // 0° 從正上方開始
-  const pt  = (radius, ang) => ({
-    x: cx + radius * Math.cos(rad(ang)),
-    y: cy + radius * Math.sin(rad(ang))
-  });
-  const el = (tag, attrs) => {
-    const n = document.createElementNS(NS, tag);
-    for (const k in attrs) n.setAttribute(k, attrs[k]);
-    return n;
-  };
-
-  let cum = 0;
-
-  data.forEach(d => {
-    const a0 = cum / total * 360;
-    cum += d.value;
-    const a1 = cum / total * 360;
-    const mid = (a0 + a1) / 2;
-
-    const g = el('g', { class:'seg' });
-
-    // ── 圓弧 ──
-    const s = pt(r, a0 + pad);
-    const e = pt(r, a1 - pad);
-    const large = (a1 - a0) > 180 ? 1 : 0;
-    const arc = el('path', {
-      class:'seg-arc',
-      d:`M ${s.x} ${s.y} A ${r} ${r} 0 ${large} 1 ${e.x} ${e.y}`,
-      fill:'none',
-      stroke:d.color,
-      'stroke-width':sw,
-      'stroke-linecap':'butt'
-    });
-    g.appendChild(arc);
-
-    // ── 引導線 ──
-    const edge  = pt(r + sw/2, mid);          // 圓環外緣
-    const elbow = pt(r + sw/2 + 20, mid);     // 轉折點
-    const right = pt(r, mid).x >= cx;         // 判斷在左半還右半
-    const labelX = right ? 430 : 130;
-    const lineEndX = right ? labelX - 8 : labelX + 8;
-
-    g.appendChild(el('path', {
-      class:'lead',
-      d:`M ${edge.x} ${edge.y} L ${elbow.x} ${elbow.y} L ${lineEndX} ${elbow.y}`
-    }));
-
-    // 顏色小圓點
-    const dot = el('circle', { class:'dot', cx:lineEndX, cy:elbow.y, r:3 });
-    dot.style.color = d.color;
-    g.appendChild(dot);
-
-    // ── 文字（兩行）──
-    const anchor = right ? 'start' : 'end';
-    const name = el('text', { x:labelX, y:elbow.y - 4, 'text-anchor':anchor, class:'lbl-name' });
-    name.textContent = d.name;
-    const note = el('text', { x:labelX, y:elbow.y + 14, 'text-anchor':anchor, class:'lbl-note' });
-    note.textContent = d.note;
-    g.appendChild(name);
-    g.appendChild(note);
-
-    svg.appendChild(g);
-  });
-
-  // ── 中間總金額 ──
-  const c1 = el('text', { x:cx, y:cy - 16, 'text-anchor':'middle', class:'center-sub' });
-  c1.textContent = '2026 年度總預算';
-  const c2 = el('text', { x:cx, y:cy + 20, 'text-anchor':'middle' });
-  const big  = el('tspan', { class:'center-big' }); big.textContent = '67.7';
-  const unit = el('tspan', { class:'center-unit', dx:'4' }); unit.textContent = '萬';
-  c2.appendChild(big); c2.appendChild(unit);
-  svg.appendChild(c1);
-  svg.appendChild(c2);
-</script>
-
-      </aside>
-
-      <!-- ============================================================
-           右欄（可滾動）＝ Section A / B / C
-           ============================================================ -->
-      <div class="donate-right">
-
-        <!-- ---------- Section A ---------- -->
-        <div class="donate-block reveal">
-          <h2>📣 重要公告——關於我們的合作夥伴</h2>
-          <h3>隱哈歌利 × 台灣好地方社區發展協會</h3>
-          <p>為了讓財務流程更完善、提供支持者更放心的奉獻管道，隱哈歌利目前與「社團法人台灣好地方社區發展協會」展開正式的專案合作。</p>
-          <p>目前隱哈歌利的所有奉獻將由「好地方協會」協助統籌收款、管理帳務並協助開立正式的奉獻收據。請大家放心，您的每一分奉獻，都將專款專用於隱哈歌利的事工推動中，陪伴我們走穩每一步。</p>
-        </div>
-
-        <!-- ---------- Section B：匯款與奉獻確認（Step 1 選匯款方式 / Step 2 填表） ---------- -->
-        <div class="donate-block reveal">
-          <h2>匯款與奉獻資訊</h2>
-          <p>您可以單次奉獻，或在您的網路銀行設定每月固定轉帳（定期定額），成為我們長期的關顧夥伴。</p>
-
-          <div class="give-track">
-            <div class="give-step">
-              <span class="give-step-num">1</span>
-              <span class="give-step-title">選擇匯款方式</span>
-            </div>
-            <div class="give-step-body">
-              <p class="desc">以下兩種方式擇一即可，銀行匯款或線上刷卡都能完成奉獻。</p>
-
-              <h4 class="give-option-name">
-                <span class="give-option-tag">A</span>銀行匯款
-              </h4>
-              <div class="remit-note">
-                <p>為了確保您的款項順利進入隱哈歌利的專案，請務必在匯款時協助以下備註：</p>
-                <ol>
-                  <li><b>網路銀行轉帳：</b>請於「備註欄」或「轉帳附言」務必填寫：<b>為隱哈歌利奉獻</b></li>
-                  <li><b>臨櫃匯款：</b>請在解款行備註註明：<b>為隱哈歌利奉獻</b></li>
-                </ol>
-              </div>
-
-              <div class="bank-card">
-                <dl>
-                  <dt>戶名</dt><dd>台灣好地方協會</dd>
-                  <dt>銀行</dt><dd>808（玉山銀行／忠孝分行）</dd>
-                  <dt>帳號</dt>
-                  <dd>
-                    <button type="button" class="copy-btn" data-copy="0875940142895" data-label="帳號" title="點擊複製帳號">
-                      0875940142895
-                      <svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <rect x="9" y="9" width="13" height="13" rx="2"/>
-                        <path d="M5 15V5a2 2 0 0 1 2-2h10"/>
-                      </svg>
-                    </button>
-                  </dd>
-                  <dt>統編</dt><dd>60291512</dd>
-                </dl>
-              </div>
-
-              <h4 class="give-option-name">
-                <span class="give-option-tag">B</span>線上刷卡
-              </h4>
-              <p>透過信用卡連結，也能快速完成單次或定期奉獻。</p>
-              <!-- 👉 刷卡連結：把 href="#REPLACE_WITH_YOUR_PAYMENT_LINK" 換成金流頁面網址 -->
-              <a class="btn btn-text pay-cta" href="#REPLACE_WITH_YOUR_PAYMENT_LINK" target="_blank" rel="noopener">
-                前往刷卡頁面
-                <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg>
-              </a>
-            </div>
-
-            <div class="give-step">
-              <span class="give-step-num">2</span>
-              <span class="give-step-title">填寫奉獻確認表單</span>
-            </div>
-            <div class="give-step-body give-step-body--last">
-              <p class="desc">完成轉帳或刷卡後，請填寫以下資訊，方便我們對帳與開立收據。</p>
-
-              <form class="donate-form" id="donationForm" novalidate>
-            <!-- honeypot 陷阱欄位：對真人隱藏，機器人才會亂填。
-                 送出時若此欄非空即靜默丟棄，避免透露陷阱存在。 -->
-            <input type="text" name="website" class="hp-field"
-                   tabindex="-1" autocomplete="off" aria-hidden="true">
-
-            <div class="field">
-              <label>1. 奉獻者姓名（或建檔戶名）<span class="req">*</span></label>
-              <input type="text" name="name" required placeholder="王小明">
-            </div>
-
-            <div class="field-row">
-              <div class="field">
-                <label>2. 轉帳日期 <span class="req">*</span></label>
-                <input type="date" name="date" required>
-              </div>
-              <div class="field">
-                <label>3. 奉獻金額 <span class="req">*</span></label>
-                <input type="number" name="amount" min="1" required placeholder="1000">
-              </div>
-            </div>
-
-            <div class="field-row">
-              <div class="field">
-                <label>4. 轉帳帳號末五碼 <span class="req">*</span></label>
-                <input type="text" name="last5" required inputmode="numeric" pattern="\d{5}" maxlength="5" placeholder="12345">
-              </div>
-              <div class="field">
-                <label>5. 聯絡電話</label>
-                <input type="tel" name="phone" placeholder="09xx-xxx-xxx">
-              </div>
-            </div>
-
-            <div class="field">
-              <label>6. 收據寄送地址<span class="hint">（第一次奉獻或需開立收據請務必提供）</span></label>
-              <textarea name="address" placeholder="郵遞區號 + 完整地址"></textarea>
-            </div>
-
-            <label class="form-consent">
-              <input type="checkbox" name="consent" required>
-              <span>我已閱讀並同意隱哈歌利的<a href="terms.html">隱私權政策及服務條款</a></span>
-            </label>
-
-            <button class="btn btn-primary" type="submit" id="donateSubmit">
-              送出確認
-              <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg>
-            </button>
-
-            <div class="form-status" id="donationStatus" role="status" aria-live="polite"></div>
-          </form>
-            </div>
-          </div>
-        </div>
-
+<!-- FEATURE: COFFEE CONNECTION -->
+<section class="section" id="mission-bnb">
+  <div class="wrap">
+    <div class="feature-grid reveal">
+      <div class="feature-img">
+        <img src="https://images.unsplash.com/photo-1632935190508-bd46801c14af?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="宣教士住宿" loading="lazy">
+        <div class="caption">這裡不只是暫時的住所，更是一個充滿接納、供身心靈安穩甦醒的港灣。</div>
+      </div>
+      <div class="feature-text">
+        <div class="label amber">Mission BnB ． 宣教士住宿</div>
+        <h2 class="amber">一處安穩身心的<br><em>歇腳之處</em>。</h2>
+        <p>透過「Mission BnB」計畫，我們為跨文化宣教士回國述職或處於轉換期的宣教夥伴，提供一處安心落腳的居住空間。這裡不只是暫時的住所，更是一個充滿接納、供身心靈安穩甦醒的港灣。</p>
+        <p>用踏實的關懷，接住前線的疲憊。每一處空間的背後，都凝聚著後方群體的支持，讓宣教士在轉換的脆弱期中，能誠實地面對自我的節奏，好好休息、重新出發。</p>
+        <a class="link amber" href="give.html">了解宣教住宿<svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg></a>
       </div>
     </div>
   </div>
 </section>
 
-<div data-include="newsletter"></div>
+<!-- FEATURE: FROM THE FIELD -->
+<section class="section">
+  <div class="wrap">
+    <div class="feature-grid reverse reveal">
+      <div class="feature-img">
+        <img src="https://plus.unsplash.com/premium_photo-1679429320552-ec9038ccd550?q=80&w=2338&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="資源整合平台" loading="lazy">
+        <div class="caption">透過主動式的資源媒合，將你的專業傳遞到個別宣教夥伴的需求上，免除他們在疲憊中反覆篩選資訊的負擔。</div>
+      </div>
+      <div class="feature-text">
+        <div class="label amber">資源整合平台</div>
+        <h2 class="amber">讓你的專業，<br>成為前線<em>同行者的力量</em>。</h2>
+        <p>「我們深信，溫柔的關懷需要專業的支撐。隱哈歌利不只是提供陪伴，更致力於連結心理、醫療、財務規劃等各領域的基督徒工作者，將後方的專業力量，轉化為前線最具體的支持。」</p>
+        <p>在這裡，我們擔任『關顧小幫手』的角色。透過主動式的資源媒合，將你的專業傳遞到個別宣教夥伴的需求上，免除他們在疲憊中反覆篩選資訊的負擔。</p>
+        <a class="link amber" href="serve.html">投入你的專業 / 加入我們<svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section-cta section--navy">
+  <div class="cta-wrap reveal">
+   <div class="section-num">JOIN US </div>
+     <div class="cta-label">共同守望</div>
+    <div class="cta-poem">
+      <span class="line">守護前線的熱忱，</span>
+      <span class="line indent">讓福音的腳步<em>穩健前行</em>。</span>
+      <p class="cta-sub">匯聚後方的專業，支持每一位跨文化神國工人，<br>在身心靈健康中，更有韌性地推動神的工。</p>
+    </div>
+    <div class="cta-actions">
+      <a class="btn btn-primary" href="serve.html">看看目前需要 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h12m-5-5 5 5-5 5"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<div class="newsletter-scene">
+  <div class="ripple-field" aria-hidden="true">
+    <span class="ripple-origin"></span>
+    <span class="ripple r1"></span>
+    <span class="ripple r2"></span>
+    <span class="ripple r3"></span>
+    <span class="ripple r4"></span>
+  </div>
+  <div data-include="newsletter"></div>
+</div>
 
 </main>
 
 <div data-include="footer"></div>
 
 <script src="assets/js/site.js"></script>
-
-<!-- =========================================================
-     Section C 表單 — Firebase 串接
-     送出後寫入 Firestore「donations」集合，
-     由 Cloud Function 觸發自動寄信到 einhakkore@gmail.com
-     ========================================================= -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, serverTimestamp }
-    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-  // 共用 Firebase 設定（placeholder 值，實際安全性由 Firestore Rules + App Check 負責）
-  import { firebaseConfig } from "./assets/js/firebase-config.js";
-
-  const app = initializeApp(firebaseConfig);
-  const db  = getFirestore(app);
-
-  /* ╔══════════════════════════════════════════════════════════╗
-     ║  App Check（防機器人／垃圾寫入）                            ║
-     ║  取得 reCAPTCHA v3 site key 後，解除下方註解即可啟用；      ║
-     ║  啟用後 Firestore 會拒收沒有 App Check token 的請求。       ║
-     ║  取得 site key 的步驟見專案根目錄的 FIREBASE_SETUP.md。     ║
-     ╚══════════════════════════════════════════════════════════╝ */
-import { initializeAppCheck, ReCaptchaV3Provider }
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app-check.js";
-initializeAppCheck(app, {
-  provider: new ReCaptchaV3Provider("6LcXU18tAAAAAG50yNTaHpCQlwnF8hZXJl1VydWr"),
-  isTokenAutoRefreshEnabled: true
-});
-
-  const form      = document.getElementById("donationForm");
-  const statusEl  = document.getElementById("donationStatus");
-  const submitBtn = document.getElementById("donateSubmit");
-
-  function setStatus(msg, type){
-    statusEl.textContent = msg;
-    statusEl.className = "form-status show " + type;
-  }
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const fd = new FormData(form);
-
-    // honeypot：真人不會填 website 這欄，若被填 → 判定為機器人並靜默丟棄
-    if ((fd.get("website") || "").trim() !== "") {
-      return;
-    }
-
-    // 注意：consent（同意條款）僅於前端驗證，不寫入 Firestore；
-    // 寫入的欄位需與 firestore.rules 的允許清單完全一致。
-    const data = {
-      name:    (fd.get("name")    || "").trim(),
-      date:     fd.get("date")    || "",
-      amount:  Number(fd.get("amount") || 0),
-      last5:   (fd.get("last5")   || "").trim(),
-      phone:   (fd.get("phone")   || "").trim(),
-      address: (fd.get("address") || "").trim(),
-    };
-
-    if (!fd.get("consent")) {
-      setStatus("請勾選同意隱私權及服務條款。", "err");
-      return;
-    }
-    if (!data.name || !data.date || !data.amount || !/^\d{5}$/.test(data.last5)) {
-      setStatus("請確認必填欄位是否完整，帳號末五碼需為 5 位數字。", "err");
-      return;
-    }
-
-    submitBtn.disabled = true;
-    setStatus("送出中…", "ok");
-
-    try {
-      await addDoc(collection(db, "donations"), {
-        ...data,
-        createdAt: serverTimestamp(),
-        source: "give.html"
-      });
-      form.reset();
-      setStatus("已收到您的奉獻確認，感謝您的擺上！我們會盡快對帳並與您聯繫。", "ok");
-    } catch (err) {
-      console.error(err);
-      setStatus("送出失敗，請稍後再試，或直接來信 einhakkore@gmail.com。", "err");
-    } finally {
-      submitBtn.disabled = false;
-    }
-  });
-</script>
 </body>
 </html>
 
