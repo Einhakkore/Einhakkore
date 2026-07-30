@@ -197,11 +197,14 @@
 }
 
 /* ---------------------------------------------------------
-   Flow-field 頁面（home / donate）：切成深色 STOP 0 起手，
+   Flow-field 頁面（home / donate / about）：切成深色 STOP 0 起手，
    捲動時 site.js 再逐幀更新 --bg1 / --bg2 / --fg。
+   about 頁另外在該頁 <style> 內把五個 STOP 全鎖在深色域，
+   讓文字色階固定為淺色、對比可預期。
    --------------------------------------------------------- */
 body[data-page="home"],
-body[data-page="donate"] {
+body[data-page="donate"],
+body[data-page="about"] {
   --bg1:  var(--stop-0-bg1);
   --bg2:  var(--stop-0-bg2);
   --fg:   var(--stop-0-fg);
@@ -255,7 +258,7 @@ body {
 main { flex: 1 0 auto; }
 
 /* ---------------------------------------------------------
-   #flow-bg — 固定的整站背景場（由 site.js 只在 home / donate 注入）
+   #flow-bg — 固定的整站背景場（由 site.js 只在 home / donate / about 注入）
    顏色隨捲動由 --bg1 / --bg2 動態變化。
    舊版有個 --glow 徑向光暈落在左上，會讓 hero 照片顯得更亮，已拿掉。
    --------------------------------------------------------- */
@@ -372,9 +375,11 @@ body[data-page="donate"] .aurora {
    home / donate 深色 header → 換成亮字 logo。 */
 .logo .logo-dark { display: none; }
 body[data-page="home"] .logo .logo-light,
-body[data-page="donate"] .logo .logo-light { display: none; }
+body[data-page="donate"] .logo .logo-light,
+body[data-page="about"] .logo .logo-light { display: none; }
 body[data-page="home"] .logo .logo-dark,
-body[data-page="donate"] .logo .logo-dark { display: block; }
+body[data-page="donate"] .logo .logo-dark,
+body[data-page="about"] .logo .logo-dark { display: block; }
 
 .nav { display: flex; align-items: center; gap: 4px; }
 .nav a {

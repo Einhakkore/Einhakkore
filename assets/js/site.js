@@ -39,10 +39,10 @@
     }));
   }
 
-  // ---------- #flow-bg：只在 home / donate 兩頁注入 ----------
+  // ---------- #flow-bg：只在 home / donate / about 三頁注入 ----------
   function isFlowPage() {
     const p = document.body.getAttribute('data-page');
-    return p === 'home' || p === 'donate';
+    return p === 'home' || p === 'donate' || p === 'about';
   }
   function injectFlowBg() {
     if (!isFlowPage()) return;
@@ -83,7 +83,7 @@
   }
   const fmtColor = c => `rgba(${c.r | 0},${c.g | 0},${c.b | 0},${(+c.a).toFixed(3)})`;
 
-  // ---------- Scroll flow field：只在 home / donate 跑 ----------
+  // ---------- Scroll flow field：只在 home / donate / about 跑 ----------
   function initFlowField() {
     if (!isFlowPage()) return;
     const cs = getComputedStyle(root);
