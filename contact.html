@@ -182,7 +182,7 @@
         <div class="field"><label>姓名 Name</label><input type="text" name="name" placeholder="您的姓名" required></div>
         <div class="field"><label>電子郵件 Email</label><input type="email" name="email" placeholder="example@church.org" required></div>
         <div class="field"><label>主旨 Subject</label>
-            <select id="contact-category" name="category">
+            <select id="contact-category">
               <option>👋 想更多了解隱哈歌利</option>
               <option>代禱請求</option>
               <option>合作邀約</option>
@@ -233,7 +233,7 @@
   const app = initializeApp(firebaseConfig);
   const db  = getFirestore(app);
 
-  // App Check（防機器人／垃圾寫入）— 與 give.html 使用同一把 reCAPTCHA v3 site key。
+  // App Check（防機器人／垃圾寫入）— 與 donate.html 使用同一把 reCAPTCHA v3 site key。
   initializeAppCheck(app, {
     provider: new ReCaptchaV3Provider("6LcXU18tAAAAAG50yNTaHpCQlwnF8hZXJl1VydWr"),
     isTokenAutoRefreshEnabled: true
@@ -296,3 +296,4 @@
 </script>
 </body>
 </html>
+
