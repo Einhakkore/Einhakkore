@@ -11,7 +11,7 @@
 
    ── 使用方式 ──
    本檔僅「匯出」設定物件；實際的 initializeApp() 由各頁面
-   （admin.html / donate.html）自行呼叫，並統一使用 gstatic CDN 的
+   （admin.html / give.html）自行呼叫，並統一使用 gstatic CDN 的
    Firebase ES 模組。切勿在此加入 `import ... from "firebase/app"`
    之類的 bare specifier，瀏覽器無法解析，會導致整個模組載入失敗、
    讓引用它的頁面整頁空白。

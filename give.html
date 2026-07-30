@@ -49,8 +49,8 @@
       },
       {
         "@type": "WebPage",
-        "@id": "donate.html#page",
-        "url": "donate.html",
+        "@id": "give.html#page",
+        "url": "give.html",
         "name": "奉獻支持 · 隱哈歌利",
         "inLanguage": "zh-Hant",
         "about": { "@id": "#org" },
@@ -59,14 +59,14 @@
           "name": "奉獻支持隱哈歌利",
           "recipient": { "@id": "#org" },
           "description": "透過銀行匯款或線上刷卡，支持隱哈歌利的宣教關顧事工。",
-          "target": "donate.html"
+          "target": "give.html"
         }
       }
     ]
   }
   </script>
 </head>
-<body data-page="donate">
+<body data-page="give">
 
 <div data-include="aurora"></div>
 
@@ -421,7 +421,7 @@ initializeAppCheck(app, {
       await addDoc(collection(db, "donations"), {
         ...data,
         createdAt: serverTimestamp(),
-        source: "donate.html"
+        source: "give.html"
       });
       form.reset();
       setStatus("已收到您的奉獻確認，感謝您的擺上！我們會盡快對帳並與您聯繫。", "ok");

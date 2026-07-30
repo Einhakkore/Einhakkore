@@ -17,8 +17,8 @@
 einhakkore-site/
 ├── index.html              # 首頁
 ├── about.html              # 關於我們
-├── donate.html             # 奉獻支持
-├── volunteer.html          # 參與服事
+├── give.html             # 奉獻支持
+├── serve.html          # 參與服事
 ├── contact.html            # 聯絡我們
 ├── terms.html              # 服務條款 / 隱私
 │
