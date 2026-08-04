@@ -158,6 +158,82 @@
   --font-zh:    "Noto Sans TC", system-ui, sans-serif;
   --font-brand: "ShiweiSiJiChun", "Noto Serif TC", serif;
   --font-en:    "FreightText", "Fraunces", Georgia, serif;
+
+  /* ---------------------------------------------------------
+     TYPE SCALE — 統一字級／行高／字距／字重
+     盤點與合併對照見 /DESIGN_TOKENS.md。這一層是「新增」，
+     既有 call site 尚未全面遷移，畫面維持不變。
+     --------------------------------------------------------- */
+
+  /* 靜態字級 —— 12 階（原本 27 階，含 12.5/13.5/14.5/15.5 等半格） */
+  --fs-3xs:  11px;   /* SVG 微標籤（node-en、core-en） */
+  --fs-2xs:  12px;   /* hint、badge、scroll-hint */
+  --fs-xs:   13px;   /* 表單 label、cite、表格 */
+  --fs-sm:   14px;   /* 次要內文、eyebrow、desc */
+  --fs-md:   15px;   /* 內文基準 — 站內最常用 */
+  --fs-base: 16px;   /* body、長文 */
+  --fs-lg:   17px;   /* 導引段落 */
+  --fs-xl:   18px;   /* hero 副標、卡片名 */
+  --fs-2xl:  20px;   /* h3 */
+  --fs-3xl:  22px;   /* 區塊／卡片主標 — 最常用的標題級 */
+  --fs-4xl:  26px;   /* 大卡片標題 */
+  --fs-5xl:  32px;   /* 頁內最大靜態標題 */
+
+  /* 流體字級 —— 6 組（原本 15 組各自手寫的 clamp） */
+  --fs-fluid-hero:    clamp(36px, 5.6vw, 72px);  /* home / about hero h1 */
+  --fs-fluid-display: clamp(32px, 4.4vw, 52px);  /* page-hero h1 */
+  --fs-fluid-h2:      clamp(28px, 3.4vw, 38px);  /* 所有區塊主標 */
+  --fs-fluid-h3:      clamp(22px, 2.6vw, 30px);  /* 次級標、經文 */
+  --fs-fluid-lead:    clamp(15px, 2vw, 17px);    /* 導引段落 */
+  --fs-fluid-numeral: clamp(36px, 4vw, 48px);    /* section-num、統計數字 */
+  --fs-watermark:     clamp(56px, 7vw, 104px);   /* philosophy 浮水印（特例） */
+
+  /* 行高 —— 6 種（原本 21 種） */
+  --lh-flat:    1;      /* 數字、icon 標籤 */
+  --lh-tight:   1.2;    /* 收 1.05 / 1.15 / 1.2 */
+  --lh-heading: 1.4;    /* 小標 */
+  --lh-title:   1.55;   /* 收 1.5 / 1.55 / 1.6 / 1.65 — 中文標題主力 */
+  --lh-body:    1.85;   /* 收 1.7 / 1.75 / 1.8 / 1.85 / 1.9 */
+  --lh-loose:   2;      /* 收 1.95 / 2 / 2.05 — 長文 */
+
+  /* 字距 —— 8 種（原本 18 種） */
+  --ls-tight:   -.02em; /* 英文大字浮水印 */
+  --ls-none:    0;      /* 英文斜體 em、數字 */
+  --ls-cjk:     .02em;  /* 中文標題主力 */
+  --ls-wide:    .04em;  /* 收 .03 / .04 / .05 */
+  --ls-label:   .1em;   /* 收 .08 / .1 / .12 */
+  --ls-caps:    .18em;  /* 收 .15 / .18 / .2 */
+  --ls-eyebrow: .25em;  /* 收 .25 / .28 */
+  --ls-track:   .3em;   /* 收 .3 / .32 / .35 / .4 */
+
+  /* 字重 */
+  --fw-light:    300;
+  --fw-regular:  400;
+  --fw-medium:   500;
+  --fw-semibold: 600;
+  --fw-bold:     700;
+
+  /* ---------------------------------------------------------
+     孤兒色收編 — 這幾支色值全站大量使用，但過去不在 palette 裡。
+     先給名字（值等同現況，畫面不變）；要不要併進既有色階見 DESIGN_TOKENS.md。
+     --------------------------------------------------------- */
+  --amber-550: #E8A33D;   /* 27 處：所有琥珀色光暈／邊框／tint 的實際基底 */
+  --sage-mist: #8AA293;   /* 6 處：practice-card.sage 的灰綠，非 --sage-500 */
+  --cream:     #E9EEEA;   /* 6 處：about 頁尾 CTA 亮底 */
+
+  /* 深色面上的白色層 — surface / hairline alpha 階梯（原本 40 處手寫 rgba） */
+  --surface-1:  rgba(255, 255, 255, .05);
+  --surface-2:  rgba(255, 255, 255, .09);
+  --surface-3:  rgba(255, 255, 255, .45);
+  --surface-4:  rgba(255, 255, 255, .90);
+  --hairline-1: rgba(255, 255, 255, .10);
+  --hairline-2: rgba(255, 255, 255, .20);
+  --hairline-3: rgba(255, 255, 255, .35);
+
+  /* 深色面上的文字三階（通用命名；--home-text-* 是首頁的既有別名） */
+  --on-dark-1: var(--text-on-dark);
+  --on-dark-2: rgba(245, 241, 232, .85);
+  --on-dark-3: rgba(245, 241, 232, .65);
 }
 
 /* ---------------------------------------------------------
@@ -587,7 +663,9 @@ body[data-page="about"] .logo .logo-dark { display: block; }
   .donut-wrap:hover .seg-arc{ opacity:.35; }
   .donut-wrap .seg:hover .seg-arc{ opacity:1; }
 
-  .lead{ stroke:var(--line); stroke-width:1; fill:none; }
+  /* 圓餅圖引線。原本寫 var(--line)，但全站從未定義該變數，宣告在計算值
+     階段即失效、stroke 退回繼承值 —— 改綁真正存在的 --line-mid。 */
+  .lead{ stroke:var(--line-mid); stroke-width:1; fill:none; }
   .dot{ fill:currentColor; }
 
 
