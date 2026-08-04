@@ -5,14 +5,15 @@
 
 /* -----------------------------------------------------------
    FONTS
-   WOFF2 — Chinese 字體已 subset 到站內實際使用的字元，大小由
-   ~26 MB/weight 壓到 ~180 KB；Latin 字體也轉成 WOFF2 加速載入。
+   ShiweiSiJiChun 已由 tools/subset-fonts.py 子集化到站內實際用到的
+   字元（1,065 字），每支由 ~8 MB 壓到 ~240 KB。原始檔留在
+   assets/fonts/_src/ ——「新增中文文案後要重跑一次子集化」。
+
+   只宣告站內真正請求到的字重／字形：
+     ShiweiSiJiChun  500 / 600 / italic     （400 normal 全站從未請求）
+     FreightText     300 / 400 / 500        （600 / 700 全站從未請求）
+   body 另設 font-synthesis: none，缺檔會直接顯現而非被合成矇混。
    ----------------------------------------------------------- */
-@font-face {
-  font-family: "ShiweiSiJiChun";
-  src: url("../fonts/ShiweiSiJiChun-Regular.woff2") format("woff2");
-  font-weight: 400; font-style: normal; font-display: swap;
-}
 @font-face {
   font-family: "ShiweiSiJiChun";
   src: url("../fonts/ShiweiSiJiChun-Medium.woff2") format("woff2");
@@ -43,16 +44,6 @@
   src: url("../fonts/FreightTextPro-Medium.woff2") format("woff2");
   font-weight: 500; font-style: normal; font-display: swap;
 }
-@font-face {
-  font-family: "FreightText";
-  src: url("../fonts/FreightTextPro-Semibold.woff2") format("woff2");
-  font-weight: 600; font-style: normal; font-display: swap;
-}
-@font-face {
-  font-family: "FreightText";
-  src: url("../fonts/FreightTextPro-Bold.woff2") format("woff2");
-  font-weight: 700; font-style: normal; font-display: swap;
-}
 /* Noto Sans TC 由每頁 <head> 的 <link rel="stylesheet"> 直接載入，
    避開 CSS 內 @import 造成的串行等待（header nav 用它）。 */
 
@@ -71,17 +62,17 @@
   --paper-2:    #F5EEDF;     /* 比 paper 再深一點，過渡用 */
   --sand:       #EDE3D3;     /* 區塊／卡片底 — 沙米 */
 
-  /* Amber — 主要強調（按鈕、重點） */
-  --amber-700: #C49C0C;      /* 文字級琥珀（對 paper 達 AA） C49C0C 原本色系badge fg 700 */
+  /* Amber — 主要強調（按鈕、重點）
+     amber-700(var(--amber-500)) 與未命名的 var(--amber-500) 都已併入 amber-500，全站只剩一支金。
+     ⚠️ amber-500 對 paper 只有 1.6:1，僅適合深底文字與裝飾；淺底上的文字請用 ink 階。 */
   --amber-600: #D4AF37;
-  --amber-500: #FFBA49;      /* 按鈕主色 — 比舊版暖、少螢光 */
+  --amber-500: #FFBA49;      /* 唯一主色 — 按鈕、光暈、邊框、tint */
   --amber-400: #F2C36B;      /* hover、柔性高光 */
-  --amber-300: #FDF3CF;      /*F5D097*/
+  --amber-300: #FDF3CF;
 
-  /* Clay — 陶土橘：給「人味」的標籤色（咖啡、宣教士故事） */
+  /* Clay — 陶土橘：給「人味」的標籤色（咖啡、宣教士故事）
+     clay-500 已併入 amber-500，僅保留 clay-700 作為深色標籤字 */
   --clay-700:  #9E5E3D;
-  --clay-500:  #C77B52;
-  --clay-tint: rgba(199, 123, 82, .10);
 
 /* Coral  — 橘紅 Coral · 警示與急需:錯誤提示、急需關注、緊急代禱（比 amber 更紅，好區分） */
   --coral-800:  #A33B1E;
@@ -92,7 +83,6 @@
   --sage-700:  #4B6A2B;
   --sage-500:  #7FA64E;
   --sage-100:  #ECF2DC;
-  --sage-tint: rgba(138, 162, 147, .12);
 
   /* Sky — 資訊與連結：提示框、次要連結、平靜標籤（呼應 navy-600 藍綠） */
   --sky-700:  #2A6076;
@@ -130,7 +120,7 @@
   --bg1:  var(--paper);
   --bg2:  var(--paper-2);
   --fg:   var(--text-2);
-  --accent: var(--amber-700);
+  --accent: var(--amber-500);
 
   /* Text — 對 paper(#FAF6EF) 校正 */
   --text-1: #1A2E40;        /* 主要標題    對比 12.8:1 — AAA */
@@ -143,7 +133,7 @@
   --home-navy-top:   #243D4F;                 /* 頁頂淺 navy（介於 ink-800 與 ink-700 之間） */
   --home-navy-mid:   var(--ink-900);          /* #1A2E40，40% 位置 */
   --home-navy-deep:  #0E1A23;                 /* 頁尾深底，比 ink-900 再沉一階 */
-  --home-glow-amber: rgba(232, 163, 61, .16); /* 左上暖光（原設計稿 amber） */
+  --home-glow-amber: rgba(255, 186, 73, .16); /* 左上暖光 — amber-500 */
   --home-glow-sky:   rgba(110, 147, 168, .14);/* 右下冷光（比 sky-500 更灰藍） */
   --home-text-1:     var(--text-on-dark);           /* 主標題，AAA 對比 */
   --home-text-2:     rgba(245, 241, 232, .82);     /* 內文，AA+ */
@@ -158,6 +148,63 @@
   --font-zh:    "Noto Sans TC", system-ui, sans-serif;
   --font-brand: "ShiweiSiJiChun", "Noto Serif TC", serif;
   --font-en:    "FreightText", "Fraunces", Georgia, serif;
+
+  /* ---------------------------------------------------------
+     TYPE SCALE — 統一字級／行高／字距／字重
+     盤點與合併對照見 /DESIGN_TOKENS.md。這一層是「新增」，
+     既有 call site 尚未全面遷移，畫面維持不變。
+     --------------------------------------------------------- */
+
+  /* 字級 —— 10 階，全部靜態。原本是 27 階靜態 + 15 組各自手寫的 clamp；
+     流體字級已全數移除，改由下方 @media (max-width: 700px) 統一降階。 */
+  --fs-3xs:  11px;   /* SVG 微標籤（node-en、core-en）      收 10 / 11 */
+  --fs-2xs:  12px;   /* hint、badge、scroll-hint            收 12 / 12.5 */
+  --fs-sm:   14px;   /* 次要內文、eyebrow、desc、表單 label 收 13 / 13.5 / 14 / 14.5 */
+  --fs-md:   16px;   /* 內文基準                            收 15 / 15.5 / 16 */
+  --fs-xl:   18px;   /* 導引段落、hero 副標、卡片名         收 17 / 18 / 19 */
+  --fs-2xl:  20px;   /* 區塊 h3 */
+  --fs-3xl:  22px;   /* 卡片主標 — 最常用的標題級 */
+  --fs-4xl:  28px;   /* 次級大標、經文                      收 24 / 26 / 28 / 30 */
+  --fs-5xl:  36px;   /* 區塊主標、裝飾數字                  收 32 / 34 / 38 / 40 / 42 / 48 / 64 */
+  --fs-6xl:  56px;   /* hero h1、philosophy 浮水印          收 56 / 72 / 88 / 104 */
+
+  /* 行高 —— 6 種（原本 21 種） */
+  --lh-flat:    1;      /* 數字、icon 標籤 */
+  --lh-tight:   1.2;    /* 收 1.05 / 1.15 / 1.2 */
+  --lh-heading: 1.4;    /* 小標 */
+  --lh-title:   1.55;   /* 收 1.5 / 1.55 / 1.6 / 1.65 — 中文標題主力 */
+  --lh-body:    1.85;   /* 收 1.7 / 1.75 / 1.8 / 1.85 / 1.9 */
+  --lh-loose:   2;      /* 收 1.95 / 2 / 2.05 — 長文 */
+
+  /* 字距 —— 8 種（原本 18 種） */
+  --ls-tight:   -.02em; /* 英文大字浮水印 */
+  --ls-none:    0;      /* 英文斜體 em、數字 */
+  --ls-cjk:     .02em;  /* 中文標題主力 */
+  --ls-wide:    .04em;  /* 收 .03 / .04 / .05 */
+  --ls-label:   .1em;   /* 收 .08 / .1 / .12 */
+  --ls-caps:    .18em;  /* 收 .15 / .18 / .2 */
+  --ls-eyebrow: .25em;  /* 收 .25 / .28 */
+  --ls-track:   .3em;   /* 收 .3 / .32 / .35 / .4 */
+
+  /* 字重 */
+  --fw-light:    300;
+  --fw-regular:  400;
+  --fw-medium:   500;
+  --fw-semibold: 600;
+  --fw-bold:     700;
+
+  /* 深色面上的白色層 — surface / hairline alpha 階梯（原本 40 處手寫 rgba） */
+  --surface-1:  var(--surface-1);
+  --surface-2:  var(--surface-2);
+  --surface-3:  var(--surface-3);
+  --surface-4:  var(--surface-4);
+  --hairline-1: var(--hairline-1);
+  --hairline-2: var(--hairline-2);
+  --hairline-3: var(--hairline-3);
+
+  /* 深色面上的文字三階（通用命名；--home-text-* 是首頁的既有別名） */
+  --on-dark-2: var(--on-dark-2);
+  --on-dark-3: var(--on-dark-3);
 }
 
 /* ---------------------------------------------------------
@@ -175,9 +222,6 @@
   --card-border:   var(--line-dim);
   --card-shadow:   none;
   --card-shadow-hover: none;
-
-  --stats-bg:         rgba(237, 227, 211, .55);
-  --stats-border:     var(--line-dim);
   --newsletter-bg:    rgba(237, 227, 211, .55);
   --newsletter-border: var(--line-dim);
 
@@ -212,16 +256,13 @@ body[data-page="about"] {
   --header-fg:     var(--stop-0-fg);
   --header-border: rgba(245, 241, 232, .08);
 
-  --card-bg:       rgba(255, 255, 255, .90);
+  --card-bg:       var(--surface-4);
   --card-bg-hover: rgba(255, 255, 255, 1);
-  --card-border:   rgba(255, 255, 255, .35);
+  --card-border:   var(--hairline-3);
   --card-shadow:   0 10px 34px rgba(0, 0, 0, .10);
   --card-shadow-hover: 0 16px 44px rgba(0, 0, 0, .14);
-
-  --stats-bg:              transparent;
-  --stats-border:          rgba(255, 255, 255, .10);
   --newsletter-bg:         transparent;
-  --newsletter-border:     rgba(255, 255, 255, .10);
+  --newsletter-border:     var(--hairline-1);
 }
 
 /* -----------------------------------------------------------
@@ -235,11 +276,15 @@ body {
   background: var(--bg1);
   color: var(--fg);
   font-family: var(--font-zh);
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 1.8;
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-md);
+  line-height: var(--lh-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* 三支字型的每個字重／字形都有實體檔案，不需要也不允許瀏覽器合成。
+     關掉 synthesis 之後，任何漏掉實體檔的組合會直接露出來，而不是
+     偷偷以合成假斜體／假粗體矇混過去。 */
+  font-synthesis: none;
   overflow-x: hidden;
   position: relative;
   /* Sticky footer：body 為 flex 直欄、撐滿至少一個視窗高，
@@ -266,7 +311,7 @@ main { flex: 1 0 auto; }
   background: linear-gradient(175deg, var(--bg1), var(--bg2));
   will-change: background;
 }
-h1, h2, h3 { font-weight: 600; }
+h1, h2, h3 { font-weight: var(--fw-semibold); }
 p { margin: 0 0 1.4em; }
 p:last-child { margin-bottom: 0; }
 
@@ -301,28 +346,28 @@ body[data-page="give"] .aurora {
 .aurora-1 {
   width: 600px; height: 600px;
   top: -120px; left: -120px;
-  background: radial-gradient(circle, rgba(232,163,61,.22), transparent 65%);
+  background: radial-gradient(circle, rgba(255, 186, 73, .22), transparent 65%);
   opacity: .85;
   animation: drift1 32s ease-in-out infinite;
 }
 .aurora-2 {
   width: 720px; height: 720px;
   top: 28%; right: -220px;
-  background: radial-gradient(circle, rgba(199,123,82,.16), transparent 65%);
+  background: radial-gradient(circle, rgba(255, 186, 73, .16), transparent 65%);
   opacity: .8;
   animation: drift2 28s ease-in-out infinite;
 }
 .aurora-3 {
   width: 520px; height: 520px;
   bottom: 22%; left: 12%;
-  background: radial-gradient(circle, rgba(242,195,107,.18), transparent 65%);
+  background: radial-gradient(circle, rgba(242, 195, 107, .18), transparent 65%);
   opacity: .85;
   animation: drift3 36s ease-in-out infinite;
 }
 .aurora-4 {
   width: 780px; height: 780px;
   bottom: -220px; right: 4%;
-  background: radial-gradient(circle, rgba(138,162,147,.16), transparent 65%);
+  background: radial-gradient(circle, rgba(127, 166, 78, .16), transparent 65%);
   opacity: .85;
   animation: drift4 40s ease-in-out infinite;
 }
@@ -379,10 +424,10 @@ body[data-page="about"] .logo .logo-dark { display: block; }
 
 .nav { display: flex; align-items: center; gap: 4px; }
 .nav a {
-  font-size: 15px; padding: 8px 16px;
+  font-size: var(--fs-md); padding: 8px 16px;
   color: var(--header-fg);
   opacity: .85;
-  transition: color .2s ease, opacity .2s ease; font-weight: 400;
+  transition: color .2s ease, opacity .2s ease; font-weight: var(--fw-regular);
   border-radius: var(--radius-pill);
 }
 .nav a:hover { opacity: 1; color: var(--header-fg); }
@@ -394,8 +439,8 @@ body[data-page="about"] .logo .logo-dark { display: block; }
   border: 1px solid var(--amber-500);
   color: var(--ink-900);
   padding: 9px 20px;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
   transition: all .2s ease;
   display: inline-flex;
   align-items: center;
@@ -481,48 +526,48 @@ body[data-page="about"] .logo .logo-dark { display: block; }
 .hero-symbol::after {
   content: ""; width: 14px; height: 14px;
   background: var(--amber-500); border-radius: var(--radius-round);
-  box-shadow: 0 0 24px rgba(232,163,61,.6);
+  box-shadow: 0 0 24px rgba(255, 186, 73, .6);
 }
 @keyframes pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(232,163,61,.4); }
-  50%      { box-shadow: 0 0 0 16px rgba(232,163,61,0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 186, 73, .4); }
+  50%      { box-shadow: 0 0 0 16px rgba(255, 186, 73, 0); }
 }
 /* Eyebrow micro-label：跨多個區塊共用同一套斜體英文小標排版 */
 .hero-eyebrow, .page-hero .eyebrow, .section-eyebrow, .verse-ref,
 .feature-text .label, .cta-label, .newsletter-label {
-  font-family: var(--font-en); font-style: italic; font-weight: 400; font-size: 14px;
+  font-family: var(--font-en); font-weight: var(--fw-regular); font-size: var(--fs-sm);
 }
 .hero-eyebrow {
   color: var(--accent);
-  letter-spacing: .25em;
+  letter-spacing: var(--ls-eyebrow);
   margin-bottom: 40px;
 }
 .hero h1 {
   font-family: var(--font-brand);
-  font-weight: 600;
-  font-size: clamp(36px, 4.6vw, 56px);
-  line-height: 1.55;
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-6xl);
+  line-height: var(--lh-title);
   color: var(--text-1);
-  letter-spacing: .02em;
+  letter-spacing: var(--ls-cjk);
   margin-bottom: 40px;
 }
 .hero h1 em {
   font-family: var(--font-brand);
-  font-style: italic; font-weight: 400;
-  color: var(--amber-700);
-  letter-spacing: 0;
+  font-style: italic; font-weight: var(--fw-regular);
+  color: var(--amber-500);
+  letter-spacing: var(--ls-none);
 }
 .hero .hero-tagline {
-  font-family: var(--font-brand); font-weight: 500;
-  font-size: 22px; line-height: 1.6;
-  color: var(--text-1); letter-spacing: .02em;
+  font-family: var(--font-brand); font-weight: var(--fw-medium);
+  font-size: var(--fs-3xl); line-height: var(--lh-title);
+  color: var(--text-1); letter-spacing: var(--ls-cjk);
   margin: 0 0 24px;
 }
 .hero-sub {
-  font-size: 18px;
-  line-height: 2;
+  font-size: var(--fs-xl);
+  line-height: var(--lh-loose);
   color: var(--fg); opacity: .88;
-  font-weight: 400;
+  font-weight: var(--fw-regular);
   max-width: 600px;
   margin: 0 auto 56px;
 }
@@ -534,8 +579,8 @@ body[data-page="about"] .logo .logo-dark { display: block; }
   position: absolute; bottom: 24px; left: 50%;
   transform: translateX(-50%);
   display: flex; flex-direction: column; align-items: center; gap: 10px;
-  font-family: var(--font-en); font-style: italic;
-  font-size: 12px; color: var(--text-4); letter-spacing: .3em;
+  font-family: var(--font-en);
+  font-size: var(--fs-2xs); color: var(--text-4); letter-spacing: var(--ls-track);
   animation: hint-fade 3s ease-in-out infinite;
   z-index: 2;
 }
@@ -558,20 +603,20 @@ body[data-page="about"] .logo .logo-dark { display: block; }
     text-align:left;
   }
   .budget h3 {
-    font-family: var(--font-brand); font-weight: 600;
-    font-size: 24px; color: var(--text-1);
+    font-family: var(--font-brand); font-weight: var(--fw-semibold);
+    font-size: var(--fs-4xl); color: var(--text-1);
     margin: 0 0 24px;
     display: flex; align-items: baseline; gap: 14px;
-    letter-spacing: .02em;
-    line-height: 1.55;
+    letter-spacing: var(--ls-cjk);
+    line-height: var(--lh-title);
   }
   .budget h3 em {
-    font-family: var(--font-brand); font-style: italic; font-weight: 400;
-    font-size: 28px; color: var(--amber-700); letter-spacing: 0;
+    font-family: var(--font-brand); font-style: italic; font-weight: var(--fw-regular);
+    font-size: var(--fs-4xl); color: var(--amber-500); letter-spacing: var(--ls-none);
   }
   .budget > p{
     color:var(--text-2);
-    font-size:.95rem;
+    font-size: var(--fs-md);
     max-width:560px;
     margin:0 0 8px;
   }
@@ -587,22 +632,24 @@ body[data-page="about"] .logo .logo-dark { display: block; }
   .donut-wrap:hover .seg-arc{ opacity:.35; }
   .donut-wrap .seg:hover .seg-arc{ opacity:1; }
 
-  .lead{ stroke:var(--line); stroke-width:1; fill:none; }
+  /* 圓餅圖引線。原本寫 var(--line)，但全站從未定義該變數，宣告在計算值
+     階段即失效、stroke 退回繼承值 —— 改綁真正存在的 --line-mid。 */
+  .lead{ stroke:var(--line-mid); stroke-width:1; fill:none; }
   .dot{ fill:currentColor; }
 
 
-  .lbl-name{ font-size:14px; font-weight:600; fill:var(--text-1); }
-  .lbl-note{ font-size:12.5px; fill:var(--text-3); }
+  .lbl-name{ font-size: var(--fs-sm); font-weight: var(--fw-semibold); fill:var(--text-1); }
+  .lbl-note{ font-size: var(--fs-2xs); fill:var(--text-3); }
 
-  .center-sub{ font-size:13px; fill:var(--text-3); letter-spacing:.05em; }
-  .center-big{ font-size:34px; font-weight:700; fill:var(--text-1); }
-  .center-unit{ font-size:16px; font-weight:600; fill:var(--text-2); }
+  .center-sub{ font-size: var(--fs-sm); fill:var(--text-3); letter-spacing: var(--ls-wide); }
+  .center-big{ font-size: var(--fs-5xl); font-weight: var(--fw-bold); fill:var(--text-1); }
+  .center-unit{ font-size: var(--fs-md); font-weight: var(--fw-semibold); fill:var(--text-2); }
 
 
   @media(max-width:520px){
-    .lbl-name{ font-size:12px; }
-    .lbl-note{ font-size:11px; }
-    .center-big{ font-size:28px; }
+    .lbl-name{ font-size: var(--fs-2xs); }
+    .lbl-note{ font-size: var(--fs-3xs); }
+    .center-big{ font-size: var(--fs-4xl); }
   }
 /* -----------------------------------------------------------
    PAGE HERO (內頁、較小)
@@ -625,21 +672,21 @@ body[data-page="about"] .logo .logo-dark { display: block; }
 }
 .page-hero .eyebrow {
   color: var(--accent);
-  letter-spacing: .25em; margin-bottom: 28px;
+  letter-spacing: var(--ls-eyebrow); margin-bottom: 28px;
 }
 .page-hero h1 {
-  font-family: var(--font-brand); font-weight: 600;
-  font-size: clamp(32px, 4vw, 48px); line-height: 1.55;
-  color: var(--text-1); letter-spacing: .02em; margin: 0 auto 28px;
+  font-family: var(--font-brand); font-weight: var(--fw-semibold);
+  font-size: var(--fs-5xl); line-height: var(--lh-title);
+  color: var(--text-1); letter-spacing: var(--ls-cjk); margin: 0 auto 28px;
   max-width: 800px;
 }
 .page-hero h1 em {
-  font-family: var(--font-brand); font-style: italic; font-weight: 400;
-  color: var(--amber-700);
+  font-family: var(--font-brand); font-style: italic; font-weight: var(--fw-regular);
+  color: var(--amber-500);
 }
 .page-hero p {
-  font-size: 17px; line-height: 2; color: var(--fg); opacity: .88;
-  margin: 0 auto; max-width: 640px; font-weight: 400;
+  font-size: var(--fs-xl); line-height: var(--lh-loose); color: var(--fg); opacity: .88;
+  margin: 0 auto; max-width: 640px; font-weight: var(--fw-regular);
 }
 
 /* -----------------------------------------------------------
@@ -649,8 +696,8 @@ body[data-page="about"] .logo .logo-dark { display: block; }
   display: inline-flex; align-items: center; justify-content: center;
   gap: 10px;
   padding: 16px 28px; border-radius: var(--radius-pill); border: 0;
-  font-family: var(--font-zh); font-size: 15px; font-weight: 500;
-  letter-spacing: .02em;
+  font-family: var(--font-zh); font-size: var(--fs-md); font-weight: var(--fw-medium);
+  letter-spacing: var(--ls-cjk);
   transition: all .25s ease;
   cursor: pointer;
 }
@@ -659,22 +706,22 @@ body[data-page="about"] .logo .logo-dark { display: block; }
 }
 .btn-primary:hover {
   background: var(--amber-400); transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(232,163,61,.25);
+  box-shadow: 0 8px 24px rgba(255, 186, 73, .25);
 }
 .btn-ghost {
-  background: rgba(26,46,64,.04);
+  background: rgba(26, 46, 64, .04);
   color: var(--ink-900);
   border: 1px solid var(--line-mid);
 }
 .btn-ghost:hover {
-  background: rgba(26,46,64,.08);
+  background: rgba(26, 46, 64, .08);
   border-color: var(--line-strong);
 }
 .btn-text {
-  font-family: var(--font-en); font-style: italic;
-  font-size: 16px; color: var(--amber-700);
+  font-family: var(--font-en);
+  font-size: var(--fs-md); color: var(--amber-500);
   padding: 6px 0;
-  border-bottom: 1px solid var(--amber-700);
+  border-bottom: 1px solid var(--amber-500);
   background: transparent;
   border-radius: 0;
   transition: all .25s ease;
@@ -695,26 +742,26 @@ body[data-page="about"] .logo .logo-dark { display: block; }
   text-align: center;
 }
 .section-num {
-  font-family: var(--font-en); font-style: italic; font-weight: 300;
-  font-size: 64px; color: rgba(232,163,61,.28);
-  line-height: 1; margin-bottom: 8px;
+  font-family: var(--font-en); font-weight: var(--fw-light);
+  font-size: var(--fs-6xl); color: rgba(255, 186, 73, .28);
+  line-height: var(--lh-flat); margin-bottom: 8px;
 }
 .section-eyebrow {
-  color: var(--amber-700);
-  letter-spacing: .25em; margin-bottom: 24px;
+  color: var(--amber-500);
+  letter-spacing: var(--ls-eyebrow); margin-bottom: 24px;
 }
 .section-head h2 {
-  font-family: var(--font-brand); font-weight: 600;
-  font-size: clamp(28px, 3.4vw, 38px); line-height: 1.6;
-  color: var(--text-1); letter-spacing: .02em; margin: 0 0 20px;
+  font-family: var(--font-brand); font-weight: var(--fw-semibold);
+  font-size: var(--fs-5xl); line-height: var(--lh-title);
+  color: var(--text-1); letter-spacing: var(--ls-cjk); margin: 0 0 20px;
 }
 .section-head h2 em {
-  font-family: var(--font-brand); font-style: italic; font-weight: 400;
-  color: var(--amber-700); letter-spacing: 0;
+  font-family: var(--font-brand); font-style: italic; font-weight: var(--fw-regular);
+  color: var(--amber-500); letter-spacing: var(--ls-none);
 }
 .section-head .lead {
-  font-size: 16px; line-height: 2; color: var(--fg); opacity: .82;
-  font-weight: 400; max-width: 600px; margin: 0 auto;
+  font-size: var(--fs-md); line-height: var(--lh-loose); color: var(--fg); opacity: .82;
+  font-weight: var(--fw-regular); max-width: 600px; margin: 0 auto;
 }
 
 /* section-head 在深色背景上的變體 */
@@ -724,7 +771,7 @@ body[data-page="about"] .logo .logo-dark { display: block; }
 .section-head--on-dark h2 em        { color: var(--amber-400); }
 .section-head--on-dark > p {
   color: var(--text-on-dark);
-  font-size: 16px; line-height: 2; font-weight: 400;
+  font-size: var(--fs-md); line-height: var(--lh-loose); font-weight: var(--fw-regular);
   max-width: 600px; margin: 0 auto;
 }
 
@@ -759,12 +806,12 @@ body[data-page="about"] .logo .logo-dark { display: block; }
 .practice-card::before {
   content: ""; position: absolute;
   top: -50%; left: -50%; width: 200%; height: 200%;
-  background: radial-gradient(circle at center, rgba(232,163,61,.10), transparent 50%);
+  background: radial-gradient(circle at center, rgba(255, 186, 73, .10), transparent 50%);
   opacity: 0; transition: opacity .5s ease;
 }
 .practice-card:hover {
   background: var(--card-bg-hover);
-  border-color: rgba(232,163,61,.35);
+  border-color: rgba(255, 186, 73, .35);
   transform: translateY(-4px);
   box-shadow: var(--card-shadow-hover);
 }
@@ -772,28 +819,28 @@ body[data-page="about"] .logo .logo-dark { display: block; }
 .practice-card > * { position: relative; z-index: 1; }
 .practice-card .icon {
   width: 56px; height: 56px;
-  color: var(--amber-700);
+  color: var(--amber-500);
   margin-bottom: 28px;
 }
 .practice-card .icon svg { width: 100%; height: 100%; }
 .practice-card .roman {
-  font-family: var(--font-en); font-style: italic; font-weight: 300;
-  font-size: 16px; color: var(--amber-700);
-  letter-spacing: .15em; margin-bottom: 16px;
+  font-family: var(--font-en); font-weight: var(--fw-light);
+  font-size: var(--fs-md); color: var(--amber-500);
+  letter-spacing: var(--ls-caps); margin-bottom: 16px;
   display: flex; align-items: center; gap: 12px;
 }
 .practice-card .roman::after {
   content: ""; flex: 1; height: 1px;
-  background: linear-gradient(90deg, rgba(232,163,61,.35), transparent);
+  background: linear-gradient(90deg, rgba(255, 186, 73, .35), transparent);
 }
 .practice-card h3 {
-  font-family: var(--font-brand); font-weight: 600;
-  font-size: 24px; color: var(--text-1);
-  margin: 0 0 18px; letter-spacing: .02em; line-height: 1.55;
+  font-family: var(--font-brand); font-weight: var(--fw-semibold);
+  font-size: var(--fs-4xl); color: var(--text-1);
+  margin: 0 0 18px; letter-spacing: var(--ls-cjk); line-height: var(--lh-title);
 }
 .practice-card p {
-  font-size: 15px; line-height: 1.95;
-  color: var(--text-2); font-weight: 400; margin: 0;
+  font-size: var(--fs-md); line-height: var(--lh-loose);
+  color: var(--text-2); font-weight: var(--fw-regular); margin: 0;
 }
 
 /* 區段下方置中按鈕（例如三大實踐後的「認識我們」CTA） */
@@ -806,21 +853,21 @@ body[data-page="about"] .logo .logo-dark { display: block; }
 .practice-card.clay .icon,
 .practice-card.clay .roman { color: var(--clay-700); }
 .practice-card.clay .roman::after {
-  background: linear-gradient(90deg, rgba(199,123,82,.35), transparent);
+  background: linear-gradient(90deg, rgba(255, 186, 73, .35), transparent);
 }
-.practice-card.clay:hover { border-color: rgba(199,123,82,.35); }
+.practice-card.clay:hover { border-color: rgba(255, 186, 73, .35); }
 .practice-card.clay:hover::before {
-  background: radial-gradient(circle at center, rgba(199,123,82,.10), transparent 50%);
+  background: radial-gradient(circle at center, rgba(255, 186, 73, .10), transparent 50%);
 }
 
 .practice-card.sage .icon,
 .practice-card.sage .roman { color: var(--sage-700); }
 .practice-card.sage .roman::after {
-  background: linear-gradient(90deg, rgba(138,162,147,.35), transparent);
+  background: linear-gradient(90deg, rgba(127, 166, 78, .35), transparent);
 }
-.practice-card.sage:hover { border-color: rgba(138,162,147,.35); }
+.practice-card.sage:hover { border-color: rgba(127, 166, 78, .35); }
 .practice-card.sage:hover::before {
-  background: radial-gradient(circle at center, rgba(138,162,147,.12), transparent 50%);
+  background: radial-gradient(circle at center, rgba(127, 166, 78, .12), transparent 50%);
 }
 
 /* -----------------------------------------------------------
@@ -873,14 +920,14 @@ body[data-page="about"] .logo .logo-dark { display: block; }
   stroke-width: 1;
 }
 .core-en {
-  font-family: var(--font-en); font-style: italic;
-  font-size: 11px; letter-spacing: .4em;
-  fill: rgba(245, 241, 232, .65);
+  font-family: var(--font-en);
+  font-size: var(--fs-3xs); letter-spacing: var(--ls-track);
+  fill: var(--on-dark-3);
   text-anchor: middle; dominant-baseline: central;
 }
 .core-brand {
-  font-family: var(--font-brand); font-weight: 600;
-  font-size: 26px; letter-spacing: .28em;
+  font-family: var(--font-brand); font-weight: var(--fw-semibold);
+  font-size: var(--fs-4xl); letter-spacing: var(--ls-eyebrow);
   fill: var(--text-on-dark);
   text-anchor: middle; dominant-baseline: central;
 }
@@ -922,15 +969,15 @@ body[data-page="about"] .logo .logo-dark { display: block; }
   transition: r .35s ease, fill .35s ease;
 }
 .node-en {
-  font-family: var(--font-en); font-style: italic;
-  font-size: 10px; letter-spacing: .3em;
+  font-family: var(--font-en);
+  font-size: var(--fs-3xs); letter-spacing: var(--ls-track);
   fill: var(--text-on-dark);
   text-anchor: middle; dominant-baseline: central;
   pointer-events: none;
 }
 .node-zh {
-  font-family: var(--font-brand); font-weight: 600;
-  font-size: 19px; letter-spacing: .15em;
+  font-family: var(--font-brand); font-weight: var(--fw-semibold);
+  font-size: var(--fs-xl); letter-spacing: var(--ls-caps);
   fill: var(--text-on-dark);
   text-anchor: middle; dominant-baseline: central;
   pointer-events: none;
@@ -956,8 +1003,8 @@ body[data-page="about"] .logo .logo-dark { display: block; }
   outline: none;
 }
 .copy-item .roman {
-  font-family: var(--font-en); font-style: italic; font-weight: 400;
-  font-size: 12px; letter-spacing: .32em;
+  font-family: var(--font-en); font-weight: var(--fw-regular);
+  font-size: var(--fs-2xs); letter-spacing: var(--ls-track);
   color: var(--amber-400);
   display: flex; align-items: center; gap: 12px;
   margin-bottom: 10px;
@@ -966,13 +1013,13 @@ body[data-page="about"] .logo .logo-dark { display: block; }
   content: ""; width: 22px; height: 1px; background: currentColor;
 }
 .copy-item h3 {
-  font-family: var(--font-brand); font-weight: 600;
-  font-size: 22px; color: var(--text-on-dark);
-  letter-spacing: .05em; line-height: 1.55;
+  font-family: var(--font-brand); font-weight: var(--fw-semibold);
+  font-size: var(--fs-3xl); color: var(--text-on-dark);
+  letter-spacing: var(--ls-wide); line-height: var(--lh-title);
   margin: 0 0 8px;
 }
 .copy-item p {
-  font-size: 14.5px; line-height: 1.9;
+  font-size: var(--fs-sm); line-height: var(--lh-body);
   color: var(--home-text-2);
   margin: 0;
 }
@@ -1048,13 +1095,13 @@ body[data-page="about"] .logo .logo-dark { display: block; }
   .node-counter { animation: none; }
   .orbit-copy { gap: 14px; }
   .copy-item { padding: 12px 14px 12px 16px; border-left-width: 3px; }
-  .copy-item .roman { font-size: 11px; margin-bottom: 6px; }
+  .copy-item .roman { font-size: var(--fs-3xs); margin-bottom: 6px; }
   .copy-item .roman::before { width: 16px; }
-  .copy-item h3 { font-size: 18px; margin-bottom: 6px; }
-  .copy-item p { font-size: 13px; line-height: 1.7; }
-  .core-brand { font-size: 30px; }
-  .node-zh { font-size: 20px; }
-  .node-en { font-size: 11px; }
+  .copy-item h3 { font-size: var(--fs-xl); margin-bottom: 6px; }
+  .copy-item p { font-size: var(--fs-sm); line-height: var(--lh-body); }
+  .core-brand { font-size: var(--fs-4xl); }
+  .node-zh { font-size: var(--fs-2xl); }
+  .node-en { font-size: var(--fs-3xs); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1071,17 +1118,17 @@ body[data-page="about"] .logo .logo-dark { display: block; }
 .verse-wrap { max-width: 760px; margin: 0 auto; }
 .verse-ref {
   color: var(--sage-700);
-  letter-spacing: .3em; margin-bottom: 48px;
+  letter-spacing: var(--ls-track); margin-bottom: 48px;
 }
 .verse-quote {
-  font-family: var(--font-brand); font-weight: 500;
-  font-size: clamp(22px, 2.6vw, 30px); line-height: 2;
-  color: var(--fg); letter-spacing: .03em;
+  font-family: var(--font-brand); font-weight: var(--fw-medium);
+  font-size: var(--fs-4xl); line-height: var(--lh-loose);
+  color: var(--fg); letter-spacing: var(--ls-cjk);
   margin-bottom: 40px;
 }
 .verse-quote strong {
-  font-family: var(--font-en); font-style: italic; font-weight: 400;
-  color: var(--accent); letter-spacing: 0;
+  font-family: var(--font-en); font-weight: var(--fw-regular);
+  color: var(--accent); letter-spacing: var(--ls-none);
 }
 
 /* -----------------------------------------------------------
@@ -1110,21 +1157,21 @@ body[data-page="about"] .logo .logo-dark { display: block; }
 .feature-img::after {
   content: ""; position: absolute; inset: 0;
   background:
-    linear-gradient(180deg, transparent 55%, rgba(26,46,64,.55) 100%),
-    linear-gradient(135deg, rgba(199,123,82,.10), transparent 50%);
+    linear-gradient(180deg, transparent 55%, rgba(26, 46, 64, .55) 100%),
+    linear-gradient(135deg, rgba(255, 186, 73, .10), transparent 50%);
 }
 .feature-img .caption {
   position: absolute; bottom: 24px; left: 24px; right: 24px;
-  font-family: var(--font-en); font-style: italic;
-  font-size: 13px; color: rgba(255,255,255,.92);
-  letter-spacing: .04em; padding-top: 16px;
-  border-top: 1px solid rgba(255,255,255,.30);
+  font-family: var(--font-en);
+  font-size: var(--fs-sm); color: rgba(255, 255, 255, .92);
+  letter-spacing: var(--ls-wide); padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, .30);
   z-index: 1;
 }
 .feature-text .label {
   display: inline-flex; align-items: center; gap: 10px;
   color: var(--accent);
-  letter-spacing: .25em; margin-bottom: 24px;
+  letter-spacing: var(--ls-eyebrow); margin-bottom: 24px;
 }
 .feature-text .label::before {
   content: ""; width: 32px; height: 1px; background: currentColor; opacity: .6;
@@ -1134,24 +1181,24 @@ body[data-page="about"] .logo .logo-dark { display: block; }
 .feature-text .label.sage { color: var(--sage-700); }
 
 .feature-text h2 {
-  font-family: var(--font-brand); font-weight: 600;
-  font-size: clamp(28px, 3vw, 36px); line-height: 1.55;
-  color: var(--text-1); letter-spacing: .02em; margin: 0 0 24px;
+  font-family: var(--font-brand); font-weight: var(--fw-semibold);
+  font-size: var(--fs-5xl); line-height: var(--lh-title);
+  color: var(--text-1); letter-spacing: var(--ls-cjk); margin: 0 0 24px;
 }
 .feature-text h2 em {
-  font-family: var(--font-brand); font-style: italic; font-weight: 400;
-  color: var(--amber-700); letter-spacing: 0;
+  font-family: var(--font-brand); font-style: italic; font-weight: var(--fw-regular);
+  color: var(--amber-500); letter-spacing: var(--ls-none);
 }
 .feature-text h2.clay em { color: var(--clay-700); }
 .feature-text h2.sage em { color: var(--sage-700); }
 .feature-text p {
-  font-size: 16px; line-height: 1.95;
-  color: var(--fg); opacity: .85; font-weight: 400; margin: 0 0 1.4em;
+  font-size: var(--fs-md); line-height: var(--lh-loose);
+  color: var(--fg); opacity: .85; font-weight: var(--fw-regular); margin: 0 0 1.4em;
 }
 .feature-text .link {
   display: inline-flex; align-items: center; gap: 10px;
   margin-top: 16px; padding: 6px 0;
-  font-family: var(--font-en); font-style: italic; font-size: 16px;
+  font-family: var(--font-en); font-size: var(--fs-md);
   color: var(--accent);
   border-bottom: 1px solid var(--accent);
   transition: all .25s ease;
@@ -1168,24 +1215,24 @@ body[data-page="about"] .logo .logo-dark { display: block; }
 .section-cta .section-num { color: var(--amber-400); }
 .cta-label {
   color: var(--amber-400);
-  letter-spacing: .3em; margin-bottom: 40px;
+  letter-spacing: var(--ls-track); margin-bottom: 40px;
 }
 .cta-poem {
-  font-family: var(--font-brand); font-weight: 500;
-  font-size: clamp(26px, 3vw, 36px); line-height: 1.95;
-  color: var(--text-on-dark); letter-spacing: .03em; margin-bottom: 48px;
+  font-family: var(--font-brand); font-weight: var(--fw-medium);
+  font-size: var(--fs-5xl); line-height: var(--lh-loose);
+  color: var(--text-on-dark); letter-spacing: var(--ls-cjk); margin-bottom: 48px;
 }
 /* CTA 副文案：block 的 <p>，行高才真正生效（span inline 時會被
    .cta-poem 1.95 的 strut 撐開）。字級用連續 clamp，任何寬度都與主標
    維持明確對比；字體、字重、顏色沿用 .cta-poem 繼承，不另降階。 */
 .cta-sub {
-  font-size: clamp(15px, 2vw, 17px);
-  line-height: 1.55;
+  font-size: var(--fs-md);
+  line-height: var(--lh-title);
   margin: 12px 0 0;
 }
 .cta-poem em {
-  font-family: var(--font-brand); font-style: italic; font-weight: 400;
-  color: var(--amber-400); letter-spacing: 0;
+  font-family: var(--font-brand); font-style: italic; font-weight: var(--fw-regular);
+  color: var(--amber-400); letter-spacing: var(--ls-none);
 }
 .cta-poem .line { display: block; }
 .cta-actions {
@@ -1225,14 +1272,14 @@ body[data-page="about"] .logo .logo-dark { display: block; }
 /* 在 .section--navy 內的元件變體（首頁 hero 的 ghost button 也是同一套反白配色，見文末） */
 .section--navy .btn-ghost,
 body[data-page="home"] .hero .btn-ghost {
-  background: rgba(255,255,255,.06);
+  background: rgba(255, 255, 255, .06);
   color: var(--text-on-dark);
-  border: 1px solid rgba(255,255,255,.20);
+  border: 1px solid var(--hairline-2);
 }
 .section--navy .btn-ghost:hover,
 body[data-page="home"] .hero .btn-ghost:hover {
-  background: rgba(255,255,255,.12);
-  border-color: rgba(255,255,255,.35);
+  background: rgba(255, 255, 255, .12);
+  border-color: var(--hairline-3);
 }
 
 /* 經文區套到 navy 時的文字色階 */
@@ -1258,18 +1305,18 @@ body[data-page="home"] .hero .btn-ghost:hover {
 }
 .newsletter-wrap { max-width: 560px; margin: 0 auto; }
 .newsletter-label {
-  color: var(--amber-700);
-  letter-spacing: .3em; margin-bottom: 28px;
+  color: var(--amber-500);
+  letter-spacing: var(--ls-track); margin-bottom: 28px;
 }
 .newsletter h3 {
-  font-family: var(--font-brand); font-weight: 600;
-  font-size: 28px; color: var(--text-1);
-  letter-spacing: .02em; margin: 0 0 20px;
-  line-height: 1.55;
+  font-family: var(--font-brand); font-weight: var(--fw-semibold);
+  font-size: var(--fs-4xl); color: var(--text-1);
+  letter-spacing: var(--ls-cjk); margin: 0 0 20px;
+  line-height: var(--lh-title);
 }
 .newsletter p {
-  font-size: 15px; line-height: 1.9;
-  color: var(--fg); opacity: .85; font-weight: 400; margin: 0 0 36px;
+  font-size: var(--fs-md); line-height: var(--lh-body);
+  color: var(--fg); opacity: .85; font-weight: var(--fw-regular); margin: 0 0 36px;
 }
 /* 訂閱改為外連 Substack（平台限制，站內無法直接收單） */
 .newsletter-cta { min-width: 180px; }
@@ -1291,7 +1338,7 @@ body[data-page="home"] .hero .btn-ghost:hover {
   display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr;
   gap: 48px;
   padding-bottom: 48px;
-  border-bottom: 1px solid rgba(255,255,255,.10);
+  border-bottom: 1px solid var(--hairline-1);
 }
 @media (max-width: 900px) {
   .footer-inner { grid-template-columns: 1fr 1fr; gap: 32px; }
@@ -1302,7 +1349,7 @@ body[data-page="home"] .hero .btn-ghost:hover {
 .footer-brand { display: flex; flex-direction: column; gap: 20px; }
 .footer-brand img { height: 56px; }
 .footer-brand p {
-  font-size: 14px; line-height: 1.95;
+  font-size: var(--fs-sm); line-height: var(--lh-loose);
   color: rgba(245, 241, 232, .70); max-width: 320px;
 }
 .footer-social { display: flex; gap: 10px; margin-top: 4px; }
@@ -1317,25 +1364,25 @@ body[data-page="home"] .hero .btn-ghost:hover {
   transform: translateY(-2px);
 }
 .footer-col h3 {
-  font-family: var(--font-brand); font-weight: 500;
-  font-size: 15px; color: var(--amber-400);
-  letter-spacing: .12em; margin: 0 0 18px;
+  font-family: var(--font-brand); font-weight: var(--fw-medium);
+  font-size: var(--fs-md); color: var(--amber-400);
+  letter-spacing: var(--ls-label); margin: 0 0 18px;
 }
 .footer-col ul {
   list-style: none; padding: 0; margin: 0;
   display: flex; flex-direction: column; gap: 12px;
 }
 .footer-col a {
-  font-size: 14px; color: rgba(245, 241, 232, .85);
+  font-size: var(--fs-sm); color: var(--on-dark-2);
   transition: color .2s ease; cursor: pointer;
 }
 .footer-col a:hover { color: var(--amber-400); }
 .footer-bottom {
   max-width: 1180px; margin: 32px auto 0;
   display: flex; justify-content: space-between; align-items: center;
-  font-family: var(--font-en); font-style: italic;
-  font-size: 13px; color: rgba(245, 241, 232, .55);
-  letter-spacing: .08em; flex-wrap: wrap; gap: 12px;
+  font-family: var(--font-en);
+  font-size: var(--fs-sm); color: rgba(245, 241, 232, .55);
+  letter-spacing: var(--ls-label); flex-wrap: wrap; gap: 12px;
 }
 
 /* -----------------------------------------------------------
@@ -1347,25 +1394,25 @@ body[data-page="home"] .hero .btn-ghost:hover {
 }
 .contact-form h2,
 .contact-form h3 {
-  font-family: var(--font-brand); font-weight: 600;
-  font-size: 22px; color: var(--text-1);
-  margin: 0 0 4px; letter-spacing: .02em;
-  line-height: 1.55;
+  font-family: var(--font-brand); font-weight: var(--fw-semibold);
+  font-size: var(--fs-3xl); color: var(--text-1);
+  margin: 0 0 4px; letter-spacing: var(--ls-cjk);
+  line-height: var(--lh-title);
 }
 .contact-form .desc {
-  font-size: 14px; color: var(--text-3); margin: 0 0 8px;
+  font-size: var(--fs-sm); color: var(--text-3); margin: 0 0 8px;
 }
 .field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .field label {
-  font-size: 13px; font-weight: 500;
-  color: var(--text-2); letter-spacing: .04em;
+  font-size: var(--fs-sm); font-weight: var(--fw-medium);
+  color: var(--text-2); letter-spacing: var(--ls-wide);
 }
 .field input, .field textarea, .field select {
   width: 100%; min-width: 0;
   height: 48px; padding: 0 16px; border-radius: var(--radius-input);
   border: 1px solid var(--line-mid);
-  background: rgba(250,246,239,.85);
-  font-family: var(--font-zh); font-size: 15px;
+  background: rgba(250, 246, 239, .85);
+  font-family: var(--font-zh); font-size: var(--fs-md);
   color: var(--text-1); outline: none;
   transition: all .2s ease;
 }
@@ -1384,7 +1431,7 @@ body[data-page="home"] .hero .btn-ghost:hover {
 }
 .field textarea {
   height: auto; padding: 14px 16px; resize: vertical;
-  min-height: 110px; line-height: 1.8;
+  min-height: 110px; line-height: var(--lh-body);
 }
 .field input:focus, .field textarea:focus, .field select:focus {
   border-color: var(--amber-500);
@@ -1405,13 +1452,13 @@ body[data-page="home"] .hero .btn-ghost:hover {
 }
 .form-success {
   padding: 24px; border-radius: var(--radius-card);
-  background: rgba(232,163,61,.10);
-  color: var(--text-1); font-size: 15px; line-height: 1.85;
-  border: 1px solid rgba(232,163,61,.3);
+  background: rgba(255, 186, 73, .10);
+  color: var(--text-1); font-size: var(--fs-md); line-height: var(--lh-body);
+  border: 1px solid rgba(255, 186, 73, .3);
   display: flex; gap: 12px; align-items: flex-start;
 }
 .form-success svg {
-  flex-shrink: 0; margin-top: 2px; color: var(--amber-700);
+  flex-shrink: 0; margin-top: 2px; color: var(--amber-500);
 }
 
 /* -----------------------------------------------------------
@@ -1429,7 +1476,7 @@ body[data-page="home"] .hero .btn-ghost:hover {
 /* 送出前的同意條款：checkbox 必勾，帶入隱私權/服務條款連結 */
 .form-consent {
   display: flex; align-items: flex-start; gap: 10px;
-  font-size: 14px; line-height: 1.75;
+  font-size: var(--fs-sm); line-height: var(--lh-body);
   color: var(--text-2);
   margin: 4px 0;
   cursor: pointer;
@@ -1442,12 +1489,12 @@ body[data-page="home"] .hero .btn-ghost:hover {
   cursor: pointer;
 }
 .form-consent a {
-  color: var(--amber-700);
-  border-bottom: 1px solid rgba(232, 163, 61, .5);
+  color: var(--amber-500);
+  border-bottom: 1px solid rgba(255, 186, 73, .5);
   transition: border-color .2s ease;
 }
 .form-consent a:hover {
-  border-bottom-color: var(--amber-700);
+  border-bottom-color: var(--amber-500);
 }
 
 /* -----------------------------------------------------------
@@ -1467,12 +1514,12 @@ body[data-page="home"] .hero .btn-ghost:hover {
    on both the light paper theme and the dark flow-field theme. */
 .help-guides h2,
 .help-guides h3 {
-  font-family: var(--font-brand); font-weight: 500;
-  font-size: 22px; color: var(--fg);
-  margin: 0 0 10px; letter-spacing: .02em; line-height: 1.4;
+  font-family: var(--font-brand); font-weight: var(--fw-medium);
+  font-size: var(--fs-3xl); color: var(--fg);
+  margin: 0 0 10px; letter-spacing: var(--ls-cjk); line-height: var(--lh-heading);
 }
 .help-guides .lead {
-  font-size: 15px; line-height: 1.85;
+  font-size: var(--fs-md); line-height: var(--lh-body);
   color: var(--fg); opacity: .78;
   margin: 0 0 24px;
 }
@@ -1483,7 +1530,7 @@ body[data-page="home"] .hero .btn-ghost:hover {
   display: flex; gap: 16px; align-items: flex-start;
   width: 100%;
   background: rgba(255, 255, 255, .55);
-  border: 1px solid rgba(232, 163, 61, .30);
+  border: 1px solid rgba(255, 186, 73, .30);
   border-radius: var(--radius-card);
   padding: 14px 18px;
   text-align: left; color: inherit;
@@ -1494,9 +1541,9 @@ body[data-page="home"] .hero .btn-ghost:hover {
 }
 /* Amber icon badge：圓/方形琥珀色徽章底，跨卡片與社群 icon 共用配色 */
 .guide-card .icon, .contact-card .icon, .social-circles a {
-  color: var(--amber-700);
-  background: rgba(232, 163, 61, .10);
-  border: 1px solid rgba(232, 163, 61, .25);
+  color: var(--amber-500);
+  background: rgba(255, 186, 73, .10);
+  border: 1px solid rgba(255, 186, 73, .25);
   display: inline-flex; align-items: center; justify-content: center;
 }
 .guide-card .icon,
@@ -1509,14 +1556,14 @@ body[data-page="home"] .hero .btn-ghost:hover {
 .contact-card:hover,
 .contact-card:focus-visible {
   background: rgba(255, 255, 255, .82);
-  border-color: rgba(232, 163, 61, .55);
+  border-color: rgba(255, 186, 73, .55);
   transform: translateY(-1px);
   box-shadow: 0 6px 16px -10px rgba(0, 0, 0, .18);
   outline: none;
 }
 .guide-card.is-selected {
   background: rgba(255, 255, 255, .82);
-  border-color: rgba(232, 163, 61, .70);
+  border-color: rgba(255, 186, 73, .70);
 }
 
 /* Guide cards: normal state shows the icon + title side by side as one
@@ -1542,13 +1589,13 @@ body[data-page="home"] .hero .btn-ghost:hover {
 .guide-card .text { flex: 0 1 auto; min-width: 0; }
 .guide-card .title {
   display: block;
-  font-family: var(--font-brand); font-weight: 500;
-  font-size: 16px; color: var(--ink-800);
-  letter-spacing: .02em; line-height: 1.5;
+  font-family: var(--font-brand); font-weight: var(--fw-medium);
+  font-size: var(--fs-md); color: var(--ink-800);
+  letter-spacing: var(--ls-cjk); line-height: var(--lh-title);
 }
 .guide-card .helper {
   display: block;
-  font-size: 14px; line-height: 1.6;
+  font-size: var(--fs-sm); line-height: var(--lh-title);
   color: var(--ink-800);
   opacity: 0; max-height: 0; overflow: hidden;
   margin-top: 0;
@@ -1570,16 +1617,16 @@ body[data-page="home"] .hero .btn-ghost:hover {
 .contact-card.email-card { align-items: center; }
 .contact-card .info-text { flex: 1; min-width: 0; }
 .contact-card h4 {
-  font-family: var(--font-brand); font-weight: 500;
-  font-size: 17px; color: var(--ink-800); margin: 0 0 4px;
-  letter-spacing: .02em; line-height: 1.55;
+  font-family: var(--font-brand); font-weight: var(--fw-medium);
+  font-size: var(--fs-xl); color: var(--ink-800); margin: 0 0 4px;
+  letter-spacing: var(--ls-cjk); line-height: var(--lh-title);
 }
 .contact-card p {
-  font-size: 15px; line-height: 1.6;
+  font-size: var(--fs-md); line-height: var(--lh-title);
   color: var(--ink-800); opacity: .82; margin: 0;
 }
 .contact-card .copy-hint {
-  font-size: 12px; color: var(--ink-800); opacity: 0;
+  font-size: var(--fs-2xs); color: var(--ink-800); opacity: 0;
   transition: opacity 200ms ease;
   white-space: nowrap; margin-left: 8px;
   align-self: center;
@@ -1589,9 +1636,9 @@ body[data-page="home"] .hero .btn-ghost:hover {
 
 /* ----- Social block with circular icons ----- */
 .social-block h4 {
-  font-family: var(--font-brand); font-weight: 500;
-  font-size: 17px; color: var(--fg); margin: 0 0 12px;
-  letter-spacing: .02em; line-height: 1.55;
+  font-family: var(--font-brand); font-weight: var(--fw-medium);
+  font-size: var(--fs-xl); color: var(--fg); margin: 0 0 12px;
+  letter-spacing: var(--ls-cjk); line-height: var(--lh-title);
 }
 .social-circles { display: flex; gap: 12px; }
 .social-circles a {
@@ -1601,9 +1648,9 @@ body[data-page="home"] .hero .btn-ghost:hover {
               border-color 200ms ease, transform 200ms ease;
 }
 .social-circles a:hover {
-  background: var(--amber-700);
+  background: var(--amber-500);
   color: #fff;
-  border-color: var(--amber-700);
+  border-color: var(--amber-500);
   transform: translateY(-2px);
 }
 
@@ -1612,20 +1659,20 @@ body[data-page="home"] .hero .btn-ghost:hover {
    ----------------------------------------------------------- */
 .terms-content {
   max-width: 760px; margin: 0 auto;
-  font-size: 16px; line-height: 1.95;
+  font-size: var(--fs-md); line-height: var(--lh-loose);
   color: var(--text-2);
 }
 .terms-content h2,
 .terms-content h3 {
-  font-family: var(--font-brand); font-weight: 600;
-  font-size: 22px; color: var(--text-1);
-  margin: 40px 0 16px; letter-spacing: .02em;
-  line-height: 1.55;
+  font-family: var(--font-brand); font-weight: var(--fw-semibold);
+  font-size: var(--fs-3xl); color: var(--text-1);
+  margin: 40px 0 16px; letter-spacing: var(--ls-cjk);
+  line-height: var(--lh-title);
 }
 .terms-content h2:first-child,
 .terms-content h3:first-child { margin-top: 0; }
 .terms-content p { margin: 0 0 1.4em; }
-.terms-content a { color: var(--accent); border-bottom: 1px solid rgba(232, 163, 61, .35); }
+.terms-content a { color: var(--accent); border-bottom: 1px solid rgba(255, 186, 73, .35); }
 
 /* -----------------------------------------------------------
    ABOUT VERSE CARD
@@ -1642,23 +1689,23 @@ body[data-page="home"] .hero .btn-ghost:hover {
   background: var(--sage-500); border-radius: 0 0 4px 4px;
 }
 .verse-card .quote-mark {
-  font-family: var(--font-en); font-style: italic;
-  font-size: 88px; line-height: .6;
+  font-family: var(--font-en);
+  font-size: var(--fs-6xl); line-height: .6;
   color: var(--sage-500); margin-bottom: 16px;
 }
 .verse-card blockquote {
-  font-family: var(--font-brand); font-weight: 500;
-  font-size: 22px; line-height: 2;
+  font-family: var(--font-brand); font-weight: var(--fw-medium);
+  font-size: var(--fs-3xl); line-height: var(--lh-loose);
   color: var(--text-1); margin: 0 0 24px;
-  letter-spacing: .02em;
+  letter-spacing: var(--ls-cjk);
 }
 .verse-card blockquote strong {
-  font-weight: 500; color: var(--amber-700);
+  font-weight: var(--fw-medium); color: var(--amber-500);
 }
 .verse-card cite {
-  display: block; font-family: var(--font-en); font-style: italic;
-  font-size: 14px; color: var(--sage-700);
-  letter-spacing: .15em;
+  display: block; font-family: var(--font-en);
+  font-size: var(--fs-sm); color: var(--sage-700);
+  letter-spacing: var(--ls-caps);
 }
 
 /* -----------------------------------------------------------
@@ -1748,7 +1795,7 @@ body[data-page="give"] main > .section {
 .page-hero.donate-hero .symbol-sm::after {
   background: var(--amber-400);
 }
-.page-hero.donate-hero .eyebrow { color: rgba(245, 241, 232, .85); }
+.page-hero.donate-hero .eyebrow { color: var(--on-dark-2); }
 .page-hero.donate-hero h1 { color: var(--text-on-dark); text-shadow: 0 2px 20px rgba(26, 46, 64, .35); }
 .page-hero.donate-hero h1 em { color: var(--amber-400); }
 .page-hero.donate-hero p { color: rgba(245, 241, 232, .92); text-shadow: 0 1px 12px rgba(26, 46, 64, .35); }
@@ -1783,37 +1830,37 @@ body[data-page="give"] main > .section {
 
 /* ---- 卡片區塊（半透明白，襯托深色底） ---- */
 .donate-block {
-  background: rgba(255, 255, 255, .90);
+  background: var(--surface-4);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, .35);
+  border: 1px solid var(--hairline-3);
   border-radius: var(--radius-card);
   padding: 36px 34px;
   box-shadow: 0 10px 34px rgba(0, 0, 0, .18);
 }
 .donate-block h2 {
-  font-family: var(--font-brand); font-weight: 600;
-  font-size: 22px; line-height: 1.55; letter-spacing: .02em;
+  font-family: var(--font-brand); font-weight: var(--fw-semibold);
+  font-size: var(--fs-3xl); line-height: var(--lh-title); letter-spacing: var(--ls-cjk);
   margin: 0 0 18px; color: var(--text-1);
 }
 /* Give 頁的合作副標，白卡上要有足夠對比 —— 用 amber-700 深金，AAA-friendly */
 .donate-block h3 {
-  font-family: var(--font-brand); font-weight: 500;
-  font-size: 20px; line-height: 1.55; letter-spacing: .02em;
-  margin: 0 0 16px; color: var(--amber-700);
+  font-family: var(--font-brand); font-weight: var(--fw-medium);
+  font-size: var(--fs-2xl); line-height: var(--lh-title); letter-spacing: var(--ls-cjk);
+  margin: 0 0 16px; color: var(--amber-500);
 }
 .donate-block p {
-  font-size: 15px; line-height: 1.95;
+  font-size: var(--fs-md); line-height: var(--lh-loose);
   color: var(--text-2); margin: 0 0 14px;
 }
 .donate-block p:last-child { margin-bottom: 0; }
 
 /* ---- Give 頁：左欄的 .budget 也統一為半透明白卡 ---- */
 body[data-page="give"] .budget {
-  background: rgba(255, 255, 255, .90);
+  background: var(--surface-4);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, .35);
+  border: 1px solid var(--hairline-3);
   border-radius: var(--radius-card);
   padding: 28px;
   box-shadow: 0 10px 34px rgba(0, 0, 0, .18);
@@ -1836,15 +1883,15 @@ body[data-page="give"] .budget h3 { margin-bottom: 18px; }
   row-gap: 12px; column-gap: 20px;
 }
 .bank-card dt {
-  font-size: 13px; white-space: nowrap;
+  font-size: var(--fs-sm); white-space: nowrap;
   color: var(--text-3);
-  font-weight: 400;
-  letter-spacing: .04em;
+  font-weight: var(--fw-regular);
+  letter-spacing: var(--ls-wide);
 }
 .bank-card dd {
-  margin: 0; font-weight: 500; letter-spacing: .02em;
+  margin: 0; font-weight: var(--fw-medium); letter-spacing: var(--ls-cjk);
   color: var(--text-1);
-  font-size: 15px;
+  font-size: var(--fs-md);
   font-variant-numeric: tabular-nums;
 }
 
@@ -1862,8 +1909,8 @@ body[data-page="give"] .budget h3 { margin-bottom: 18px; }
   transition: color .2s ease, border-color .2s ease;
 }
 .copy-btn:hover {
-  color: var(--amber-700);
-  border-bottom-color: var(--amber-700);
+  color: var(--amber-500);
+  border-bottom-color: var(--amber-500);
 }
 .copy-btn:focus-visible {
   outline: 2px solid var(--amber-500);
@@ -1885,7 +1932,7 @@ body[data-page="give"] .budget h3 { margin-bottom: 18px; }
   border-radius: var(--radius-pill);
   background: var(--ink-900);
   color: var(--text-on-dark);
-  font-size: 14px; letter-spacing: .02em;
+  font-size: var(--fs-sm); letter-spacing: var(--ls-cjk);
   box-shadow: 0 12px 34px rgba(0, 0, 0, .35);
   opacity: 0;
   pointer-events: none;
@@ -1908,18 +1955,18 @@ body[data-page="give"] .budget h3 { margin-bottom: 18px; }
 }
 .remit-note > p {
   margin: 0 0 8px;
-  color: var(--text-1); font-weight: 500; font-size: 15px;
-  line-height: 1.85;
+  color: var(--text-1); font-weight: var(--fw-medium); font-size: var(--fs-md);
+  line-height: var(--lh-body);
 }
 .remit-note ol {
   margin: 10px 0 0; padding-left: 22px;
   display: flex; flex-direction: column; gap: 8px;
 }
 .remit-note li {
-  line-height: 1.85;
-  color: var(--text-2); font-size: 15px;
+  line-height: var(--lh-body);
+  color: var(--text-2); font-size: var(--fs-md);
 }
-.remit-note b { color: var(--ink-900); font-weight: 700; }
+.remit-note b { color: var(--ink-900); font-weight: var(--fw-bold); }
 
 .pay-cta { margin-top: 4px; align-self: flex-start; }
 /* Give 頁的 .btn-text 全數改用深藍主色（.btn-text 預設是琥珀底線） */
@@ -1946,16 +1993,16 @@ body[data-page="give"] .btn.btn-text:hover {
   width: 32px; height: 32px; border-radius: var(--radius-round);
   background: var(--ink-800);
   color: #fff;
-  font-family: var(--font-en); font-style: italic;
-  font-size: 15px; font-weight: 500;
+  font-family: var(--font-en);
+  font-size: var(--fs-md); font-weight: var(--fw-medium);
   display: inline-flex; align-items: center; justify-content: center;
-  flex-shrink: 0; line-height: 1;
+  flex-shrink: 0; line-height: var(--lh-flat);
   position: relative; z-index: 1;
 }
 .give-step-title {
-  font-family: var(--font-brand); font-weight: 500;
-  font-size: 17px; color: var(--text-1);
-  letter-spacing: .02em; line-height: 1.4;
+  font-family: var(--font-brand); font-weight: var(--fw-medium);
+  font-size: var(--fs-xl); color: var(--text-1);
+  letter-spacing: var(--ls-cjk); line-height: var(--lh-heading);
 }
 .give-step-body {
   margin-left: 15px;                          /* 對齊 32px 圓心 (16px) 的左邊緣 */
@@ -1970,25 +2017,25 @@ body[data-page="give"] .btn.btn-text:hover {
 
 .give-option-name {
   display: flex; align-items: center; gap: 10px;
-  font-family: var(--font-brand); font-weight: 500;
-  font-size: 16px; color: var(--ink-800);
-  margin: 20px 0 10px; letter-spacing: .02em;
-  line-height: 1.4;
+  font-family: var(--font-brand); font-weight: var(--fw-medium);
+  font-size: var(--fs-md); color: var(--ink-800);
+  margin: 20px 0 10px; letter-spacing: var(--ls-cjk);
+  line-height: var(--lh-heading);
 }
 .give-option-tag {
   width: 26px; height: 26px; border-radius: var(--radius-round);
   background: transparent;
   border: 1.5px solid var(--ink-800);
   color: var(--ink-800);
-  font-family: var(--font-en); font-style: italic;
-  font-size: 13px; font-weight: 500;
+  font-family: var(--font-en);
+  font-size: var(--fs-sm); font-weight: var(--fw-medium);
   display: inline-flex; align-items: center; justify-content: center;
-  flex-shrink: 0; line-height: 1;
+  flex-shrink: 0; line-height: var(--lh-flat);
 }
 
 /* ---- 合併卡內的 .desc 統一樣式（從 form 內移出後仍需套用） ---- */
 .donate-block .desc {
-  font-size: 14px; color: var(--text-3); margin: 0 0 12px;
+  font-size: var(--fs-sm); color: var(--text-3); margin: 0 0 12px;
 }
 /* ---- 送出按鈕統一靠左並保留上緣呼吸（取代原本的 inline style） ---- */
 .donate-form .btn[type="submit"] {
@@ -2000,30 +2047,30 @@ body[data-page="give"] .btn.btn-text:hover {
   display: flex; flex-direction: column; gap: 18px;
 }
 .donate-form h2 {
-  font-family: var(--font-brand); font-weight: 600;
-  font-size: 22px; margin: 0 0 4px; letter-spacing: .02em;
-  color: var(--text-1); line-height: 1.55;
+  font-family: var(--font-brand); font-weight: var(--fw-semibold);
+  font-size: var(--fs-3xl); margin: 0 0 4px; letter-spacing: var(--ls-cjk);
+  color: var(--text-1); line-height: var(--lh-title);
 }
 .donate-form .desc {
-  font-size: 14px; color: var(--text-3); margin: 0 0 8px;
+  font-size: var(--fs-sm); color: var(--text-3); margin: 0 0 8px;
 }
 .donate-form label .req { color: var(--coral-700); margin-left: 2px; }
 .donate-form label .hint {
-  color: var(--text-4); font-weight: 400;
-  font-size: 12px; margin-left: 6px;
+  color: var(--text-4); font-weight: var(--fw-regular);
+  font-size: var(--fs-2xs); margin-left: 6px;
 }
 
 .form-status {
   margin-top: 4px;
   padding: 12px 16px; border-radius: var(--radius-input);
-  font-size: 14px; line-height: 1.7;
+  font-size: var(--fs-sm); line-height: var(--lh-body);
   display: none;
 }
 .form-status.show { display: block; }
 .form-status.ok {
   color: var(--sage-700);
   background: var(--sage-100);
-  border: 1px solid rgba(107, 144, 64, .28);
+  border: 1px solid rgba(127, 166, 78, .28);
 }
 .form-status.err {
   color: var(--coral-800);
@@ -2218,25 +2265,25 @@ body[data-page="home"] .newsletter {
 }
 .admin-gate-card .hero-symbol { margin: 0 auto 24px; }
 .admin-gate-card h1 {
-  font-family: var(--font-brand); font-weight: 600;
-  font-size: 28px; color: var(--text-1);
-  margin: 0 0 8px; letter-spacing: .02em; line-height: 1.4;
+  font-family: var(--font-brand); font-weight: var(--fw-semibold);
+  font-size: var(--fs-4xl); color: var(--text-1);
+  margin: 0 0 8px; letter-spacing: var(--ls-cjk); line-height: var(--lh-heading);
 }
 .admin-gate-card .lead {
-  font-size: 15px; color: var(--text-3); margin: 0 0 28px;
+  font-size: var(--fs-md); color: var(--text-3); margin: 0 0 28px;
 }
 .admin-gate-card .field {
   display: flex; flex-direction: column; gap: 6px;
   text-align: left; margin-bottom: 20px;
 }
 .admin-gate-card .field span {
-  font-size: 13px; color: var(--text-2); letter-spacing: .04em;
+  font-size: var(--fs-sm); color: var(--text-2); letter-spacing: var(--ls-wide);
 }
 .admin-gate-card .field input {
   height: 48px; padding: 0 16px; border-radius: var(--radius-input);
   border: 1px solid var(--line-mid);
   background: rgba(250, 246, 239, .85);
-  font-family: var(--font-zh); font-size: 15px;
+  font-family: var(--font-zh); font-size: var(--fs-md);
   color: var(--text-1); outline: none;
 }
 .admin-gate-card .field input:focus {
@@ -2244,7 +2291,7 @@ body[data-page="home"] .newsletter {
 }
 .admin-gate-card .btn { width: 100%; }
 .admin-gate-err {
-  color: var(--coral-700); font-size: 13px;
+  color: var(--coral-700); font-size: var(--fs-sm);
   margin: 12px 0 0; min-height: 1.4em;
 }
 
@@ -2254,9 +2301,9 @@ body[data-page="home"] .newsletter {
   gap: 24px; margin-bottom: 32px; flex-wrap: wrap;
 }
 .admin-header h1 {
-  font-family: var(--font-brand); font-weight: 600;
-  font-size: 32px; color: var(--text-1);
-  margin: 8px 0 4px; letter-spacing: .02em; line-height: 1.4;
+  font-family: var(--font-brand); font-weight: var(--fw-semibold);
+  font-size: var(--fs-5xl); color: var(--text-1);
+  margin: 8px 0 4px; letter-spacing: var(--ls-cjk); line-height: var(--lh-heading);
 }
 /* 標題右側 dropdown：切換表單來源 */
 .admin-title-row {
@@ -2269,21 +2316,21 @@ body[data-page="home"] .newsletter {
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a06a2c' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
   background-repeat: no-repeat; background-position: right 12px center;
   -webkit-appearance: none; -moz-appearance: none; appearance: none;
-  font-family: var(--font-brand); font-size: 14px; font-weight: 500;
-  color: var(--text-1); letter-spacing: .02em;
+  font-family: var(--font-brand); font-size: var(--fs-sm); font-weight: var(--fw-medium);
+  color: var(--text-1); letter-spacing: var(--ls-cjk);
   cursor: pointer; outline: none;
 }
 .admin-source-select:focus {
   border-color: var(--amber-500); background-color: var(--paper);
 }
 .admin-header .lead {
-  font-size: 14px; color: var(--text-3); margin: 0;
+  font-size: var(--fs-sm); color: var(--text-3); margin: 0;
 }
 .admin-header-actions {
   display: flex; gap: 8px; flex-wrap: wrap;
 }
 .admin-header-actions .btn {
-  padding: 10px 18px; font-size: 14px;
+  padding: 10px 18px; font-size: var(--fs-sm);
 }
 
 .admin-filters {
@@ -2294,14 +2341,14 @@ body[data-page="home"] .newsletter {
   display: flex; flex-direction: column; gap: 4px;
 }
 .admin-filter span {
-  font-size: 12px; color: var(--text-3); letter-spacing: .04em;
+  font-size: var(--fs-2xs); color: var(--text-3); letter-spacing: var(--ls-wide);
 }
 .admin-filter input,
 .admin-filter select {
   height: 40px; padding: 0 12px; border-radius: var(--radius-input);
   border: 1px solid var(--line-mid);
   background: rgba(250, 246, 239, .85);
-  font-family: var(--font-zh); font-size: 14px;
+  font-family: var(--font-zh); font-size: var(--fs-sm);
   color: var(--text-1); outline: none;
 }
 .admin-filter input:focus,
@@ -2317,28 +2364,28 @@ body[data-page="home"] .newsletter {
 }
 .admin-table {
   width: 100%; border-collapse: collapse;
-  font-size: 13px; color: var(--text-2);
+  font-size: var(--fs-sm); color: var(--text-2);
 }
 .admin-table thead th {
   text-align: left; padding: 14px 16px;
-  background: rgba(232, 163, 61, .06);
-  font-family: var(--font-brand); font-weight: 500;
-  font-size: 13px; color: var(--text-1);
-  letter-spacing: .02em; white-space: nowrap;
+  background: rgba(255, 186, 73, .06);
+  font-family: var(--font-brand); font-weight: var(--fw-medium);
+  font-size: var(--fs-sm); color: var(--text-1);
+  letter-spacing: var(--ls-cjk); white-space: nowrap;
   cursor: pointer; user-select: none;
   border-bottom: 1px solid var(--line-mid);
 }
-.admin-table thead th:hover { background: rgba(232, 163, 61, .12); }
+.admin-table thead th:hover { background: rgba(255, 186, 73, .12); }
 .admin-table .sort-arrow {
   display: inline-block; width: 10px;
-  font-size: 10px; color: var(--amber-700);
+  font-size: var(--fs-3xs); color: var(--amber-500);
 }
 .admin-table tbody td {
   padding: 12px 16px; vertical-align: top;
   border-bottom: 1px solid var(--line-dim);
-  line-height: 1.55;
+  line-height: var(--lh-title);
 }
-.admin-table tbody tr:hover { background: rgba(232, 163, 61, .04); }
+.admin-table tbody tr:hover { background: rgba(255, 186, 73, .04); }
 .admin-table .cell-message {
   max-width: 320px;
   overflow: hidden;
@@ -2349,18 +2396,17 @@ body[data-page="home"] .newsletter {
   padding: 40px 16px !important;
   text-align: center;
   color: var(--text-3);
-  font-style: italic;
 }
 .kind-badge {
   display: inline-block; padding: 3px 10px;
   border-radius: var(--radius-pill);
-  font-size: 12px; font-weight: 500;
-  letter-spacing: .02em; white-space: nowrap;
+  font-size: var(--fs-2xs); font-weight: var(--fw-medium);
+  letter-spacing: var(--ls-cjk); white-space: nowrap;
 }
 .kind-donate {
-  background: rgba(232, 163, 61, .14);
-  color: var(--amber-700);
-  border: 1px solid rgba(232, 163, 61, .3);
+  background: rgba(255, 186, 73, .14);
+  color: var(--amber-500);
+  border: 1px solid rgba(255, 186, 73, .3);
 }
 .kind-volunteer {
   background: var(--sage-100);
@@ -2376,8 +2422,8 @@ body[data-page="home"] .newsletter {
 @media (max-width: 560px) {
   .admin-shell { padding: 88px 20px 56px; }
   .admin-filters { grid-template-columns: 1fr; }
-  .admin-header h1 { font-size: 26px; }
-  .admin-table { font-size: 12px; }
+  .admin-header h1 { font-size: var(--fs-4xl); }
+  .admin-table { font-size: var(--fs-2xs); }
   .admin-table thead th,
   .admin-table tbody td { padding: 10px 12px; }
 }
@@ -2390,6 +2436,19 @@ body[data-page="home"] .newsletter {
    由外層 .section 提供單層 24px。
    ============================================================ */
 @media (max-width: 700px) {
+  /* --- 字級降階 ---
+     舊版每個大標各自寫一組 clamp()，同一個「區塊主標」角色卻有四條不同曲線。
+     現在字級全部靜態，窄螢幕的降階集中在這裡處理，一眼看得完整層級。 */
+  .hero h1                { font-size: var(--fs-5xl); }
+  .page-hero h1           { font-size: var(--fs-4xl); }
+  .section-head h2        { font-size: var(--fs-4xl); }
+  .feature-text h2        { font-size: var(--fs-4xl); }
+  .cta-poem               { font-size: var(--fs-4xl); }
+  .verse-quote            { font-size: var(--fs-3xl); }
+  .section-num            { font-size: var(--fs-5xl); }
+  .verse-card .quote-mark { font-size: var(--fs-5xl); }
+  .newsletter h3          { font-size: var(--fs-3xl); }
+
   /* --- Section / Wrap 統一水平 24px --- */
   .section          { padding: 72px 24px; }
   .wrap             { padding: 0; }

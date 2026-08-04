@@ -1,0 +1,7 @@
+# 子集化用的原始字型（每支 8 MB 以上，不進版本控制）。
+# 需要重跑 tools/subset-fonts.py 時，從 commit 611a858 之前的歷史還原：
+#   mkdir -p assets/fonts/_src
+#   for f in Medium SemiBold Italic; do
+#     git show 611a858:assets/fonts/ShiweiSiJiChun-$f.woff2 > assets/fonts/_src/ShiweiSiJiChun-$f.woff2
+#   done
+assets/fonts/_src/

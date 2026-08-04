@@ -160,25 +160,24 @@
       .ss-content .ss-num {
         display: block;
         font-family: var(--font-en);
-        font-style: italic;
-        font-weight: 300;
-        font-size: clamp(36px, 4vw, 48px);
+        font-weight: var(--fw-light);
+        font-size: var(--fs-5xl);
         line-height: .9;
-        color: var(--amber-700);
+        color: var(--amber-500);
         margin-bottom: 12px;
       }
       .ss-content h3 {
         font-family: var(--font-brand);
-        font-weight: 600;
-        font-size: clamp(18px, 1.9vw, 22px);
+        font-weight: var(--fw-semibold);
+        font-size: var(--fs-3xl);
         color: var(--text-1);
         margin: 0 0 8px;
-        letter-spacing: .02em;
-        line-height: 1.55;
+        letter-spacing: var(--ls-cjk);
+        line-height: var(--lh-title);
       }
       .ss-content p {
-        font-size: clamp(13px, 1.3vw, 15px);
-        line-height: 1.85;
+        font-size: var(--fs-sm);
+        line-height: var(--lh-body);
         color: var(--text-2);
         margin: 0;
       }
@@ -190,7 +189,7 @@
         width: clamp(24px, 2.6vw, 34px);
         height: auto;
         transform: translateY(-50%);
-        color: var(--amber-700);
+        color: var(--amber-500);
         z-index: 6;
       }
       .ss-arrow-1 { left: calc(var(--ss-h)  - 8px); }
