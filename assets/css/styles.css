@@ -194,17 +194,23 @@
   --fw-bold:     700;
 
   /* 深色面上的白色層 — surface / hairline alpha 階梯（原本 40 處手寫 rgba） */
-  --surface-1:  var(--surface-1);
-  --surface-2:  var(--surface-2);
-  --surface-3:  var(--surface-3);
-  --surface-4:  var(--surface-4);
-  --hairline-1: var(--hairline-1);
-  --hairline-2: var(--hairline-2);
-  --hairline-3: var(--hairline-3);
+  --surface-1:  rgba(255, 255, 255, .05);   /* 卡片底 */
+  --surface-2:  rgba(255, 255, 255, .09);   /* hover */
+  --surface-3:  rgba(255, 255, 255, .45);   /* 半透卡 */
+  --surface-4:  rgba(255, 255, 255, .90);   /* 實心感卡片 */
+  --hairline-1: rgba(255, 255, 255, .10);   /* 分隔線 */
+  --hairline-2: rgba(255, 255, 255, .20);   /* 邊框 */
+  --hairline-3: rgba(255, 255, 255, .35);   /* 強調框 */
+
+  /* 深底上的「內容卡」實心白底。--surface-4 只有 90% 不透明度，
+     捲動場的深藍會透上來把 --text-1 的內文壓灰；需要長文閱讀的卡片
+     （give 頁預算圖、奉獻資訊）改用這支不透明的白。 */
+  --surface-solid:        #FFFFFF;
+  --surface-solid-border: var(--line-mid);
 
   /* 深色面上的文字三階（通用命名；--home-text-* 是首頁的既有別名） */
-  --on-dark-2: var(--on-dark-2);
-  --on-dark-3: var(--on-dark-3);
+  --on-dark-2: rgba(245, 241, 232, .85);    /* 深底內文 */
+  --on-dark-3: rgba(245, 241, 232, .65);    /* 深底小字 */
 }
 
 /* ---------------------------------------------------------
@@ -610,9 +616,11 @@ body[data-page="about"] .logo .logo-dark { display: block; }
     letter-spacing: var(--ls-cjk);
     line-height: var(--lh-title);
   }
+  /* 白卡上的金額強調：--amber-500 對白底僅 1.6:1，改用 --clay-700（5.1:1），
+     既保住暖色的強調感，也讓「67.7 萬」真的讀得到。 */
   .budget h3 em {
     font-family: var(--font-brand); font-style: italic; font-weight: var(--fw-regular);
-    font-size: var(--fs-4xl); color: var(--amber-500); letter-spacing: var(--ls-none);
+    font-size: var(--fs-4xl); color: var(--clay-700); letter-spacing: var(--ls-none);
   }
   .budget > p{
     color:var(--text-2);
@@ -1488,13 +1496,16 @@ body[data-page="home"] .hero .btn-ghost:hover {
   accent-color: var(--amber-500);
   cursor: pointer;
 }
+/* 同意條款的連結一律落在淺底（give 白卡 / contact 的 paper），
+   amber-500 在此只有 1.6:1 —— 改用深藍主色，hover 才轉暖色。 */
 .form-consent a {
-  color: var(--amber-500);
-  border-bottom: 1px solid rgba(255, 186, 73, .5);
-  transition: border-color .2s ease;
+  color: var(--ink-800);
+  border-bottom: 1px solid var(--line-strong);
+  transition: color .2s ease, border-color .2s ease;
 }
 .form-consent a:hover {
-  border-bottom-color: var(--amber-500);
+  color: var(--clay-700);
+  border-bottom-color: var(--clay-700);
 }
 
 /* -----------------------------------------------------------
@@ -1828,12 +1839,12 @@ body[data-page="give"] main > .section {
   }
 }
 
-/* ---- 卡片區塊（半透明白，襯托深色底） ---- */
+/* ---- 卡片區塊（實心白，襯托深色底） ----
+   原本是 --surface-4（90% 白）+ backdrop-blur，深藍背景場會透上來把
+   --text-1 的內文壓成低對比的灰藍。這裡的內容需要逐字閱讀，改為不透明白底。 */
 .donate-block {
-  background: var(--surface-4);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--hairline-3);
+  background: var(--surface-solid);
+  border: 1px solid var(--surface-solid-border);
   border-radius: var(--radius-card);
   padding: 36px 34px;
   box-shadow: 0 10px 34px rgba(0, 0, 0, .18);
@@ -1843,11 +1854,12 @@ body[data-page="give"] main > .section {
   font-size: var(--fs-3xl); line-height: var(--lh-title); letter-spacing: var(--ls-cjk);
   margin: 0 0 18px; color: var(--text-1);
 }
-/* Give 頁的合作副標，白卡上要有足夠對比 —— 用 amber-700 深金，AAA-friendly */
+/* Give 頁的合作副標。白卡上 --amber-500 只有 1.6:1（DESIGN_TOKENS.md §5.1），
+   依該節的規範，淺底上的文字改用暖色深階 --clay-700（對白底 5.1:1）。 */
 .donate-block h3 {
   font-family: var(--font-brand); font-weight: var(--fw-medium);
   font-size: var(--fs-2xl); line-height: var(--lh-title); letter-spacing: var(--ls-cjk);
-  margin: 0 0 16px; color: var(--amber-500);
+  margin: 0 0 16px; color: var(--clay-700);
 }
 .donate-block p {
   font-size: var(--fs-md); line-height: var(--lh-loose);
@@ -1855,12 +1867,12 @@ body[data-page="give"] main > .section {
 }
 .donate-block p:last-child { margin-bottom: 0; }
 
-/* ---- Give 頁：左欄的 .budget 也統一為半透明白卡 ---- */
+/* ---- Give 頁：左欄的 .budget 也統一為實心白卡 ----
+   圓環圖的引線、標籤、中央金額全是 --text-1 / --text-3 / --line-mid 的
+   深色值，底一透就整組糊掉，所以與 .donate-block 用同一支實心白。 */
 body[data-page="give"] .budget {
-  background: var(--surface-4);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--hairline-3);
+  background: var(--surface-solid);
+  border: 1px solid var(--surface-solid-border);
   border-radius: var(--radius-card);
   padding: 28px;
   box-shadow: 0 10px 34px rgba(0, 0, 0, .18);

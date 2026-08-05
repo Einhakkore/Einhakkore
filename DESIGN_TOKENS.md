@@ -141,6 +141,20 @@
 
 深底標題直接用 `--text-on-dark`（`#F5F1E8`）。
 
+### 5.2b 深底上的實心內容卡
+
+`--surface-4` 只有 90% 不透明度，捲動場的深藍會透上來，把 `--text-1` 的內文
+壓成低對比的灰藍。**需要逐字閱讀**的卡片（give 頁的預算圓環圖、奉獻資訊）
+改吃這一組不透明白：
+
+```css
+--surface-solid:        #FFFFFF;
+--surface-solid-border: var(--line-mid);   /* rgba(26,46,64,.14)，白底上看得見 */
+```
+
+`--hairline-*` 是白色 alpha，畫在白底上等於沒有 —— 用 `--surface-solid` 時，
+邊框一律配 `--surface-solid-border`。半透明的裝飾性卡片維持 `--surface-4` 不變。
+
 ### 5.3 不可刪的 token
 
 `--ink-700` / `--sky-500` / `--sky-700` 在 CSS 裡看不到 `var()` 引用，
@@ -196,6 +210,31 @@ FreightText 只有五支正體、沒有 italic 檔，站上卻有 **28 處**
 ---
 
 ## 7. 修掉的 bug
+
+### 7.1 alpha 階梯 token 自我循環（give 頁整頁失效）
+
+§5.2 那九個 token 進 `styles.css` 時被寫成了自我參照：
+
+```css
+--surface-4:  var(--surface-4);   /* ← 循環，不是宣告 */
+--hairline-3: var(--hairline-3);
+--on-dark-2:  var(--on-dark-2);
+/* ...共 9 個 */
+```
+
+依 CSS 自訂屬性規範，循環參照的 token 在 computed-value 階段即為
+guaranteed-invalid，所有引用它的宣告一併失效：
+
+- `.donate-block` / `.budget` 的 `background: var(--surface-4)` → 退回
+  `transparent`，兩張白卡直接消失，深藍背景場透出來
+- `border: 1px solid var(--hairline-3)` 是簡寫，整條失效 → `border-style: none`
+- 卡上的文字仍是 `--text-1`（`#1A2E40`）等深色值，落在深藍底上 ≈ 1.1:1，
+  give 頁的預算圓環圖與奉獻資訊因此**完全讀不到**
+
+已改回 §5.2 列的實際 rgba 值。同時受影響的還有 home / about 的 `--card-bg`、
+`--on-dark-2/3` 與 newsletter 邊框。
+
+### 7.2 圓餅圖引線的 `--line`
 
 `styles.css` 的 `.lead{ stroke: var(--line) }` —— 全站從未定義 `--line`
 （只有 `--line-dim` / `--line-mid` / `--line-strong`）。宣告在計算值階段即失效，
