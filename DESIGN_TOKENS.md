@@ -117,7 +117,12 @@
 > 合併之後，淺色頁（contact / terms / serve / admin）上以琥珀色呈現的文字
 > —— `.section-eyebrow`、`.newsletter-label`、`.practice-card .roman`、
 > `.btn-text`、`.feature-text .link`、`.terms-content a`、`h2 em` 等 ——
-> 對比都掉到 1.6:1。深色頁（home / give / about）不受影響，因為琥珀落在深底上。
+> 對比都掉到 1.6:1。深色頁（home / about）不受影響，因為琥珀落在深底上。
+>
+> **give 頁是例外**：`.donate-block` / `.budget` 兩張卡是 `--surface-5` 淺底，
+> 卡上這三處琥珀文字實測 1.6:1 —— `.donate-block h3`（合作副標）、
+> `.budget h3 em`（「67.7 萬」）、`.form-consent a`（同意條款連結）。
+> 待挑色後再改，目前維持 `--amber-500`。
 >
 > 若要救回可讀性又保持「只有一支金」，做法是：**裝飾**（按鈕底、邊框、光暈、
 > icon、深底文字）維持 `--amber-500`，**淺底上的文字**改用 `--ink-800`／`--ink-900`。
@@ -140,6 +145,22 @@
 ```
 
 深底標題直接用 `--text-on-dark`（`#F5F1E8`）。
+
+### 5.2b `--surface-5` — 階梯末端的不透明底
+
+`--surface-4` 只有 90% 不透明度，捲動場的深藍仍會透上來，把 `--text-1` 的內文
+壓成低對比的灰藍。**需要逐字閱讀**的卡片（give 頁的預算圓環圖、奉獻資訊）
+再往上補一階：
+
+```css
+--surface-5: var(--paper);   /* #FAF6EF — 不透明 */
+```
+
+前四階是白色 alpha，第五階不另立新色，直接吃既有的 `--paper`。
+
+配邊框時注意：`--hairline-*` 是白色 alpha，畫在淺底上等於沒有 ——
+`--surface-5` 的卡片一律配 `--line-*`（give 頁兩張卡用 `--line-mid`）。
+半透明的裝飾性卡片維持 `--surface-4` 不變。
 
 ### 5.3 不可刪的 token
 
@@ -196,6 +217,31 @@ FreightText 只有五支正體、沒有 italic 檔，站上卻有 **28 處**
 ---
 
 ## 7. 修掉的 bug
+
+### 7.1 alpha 階梯 token 自我循環（give 頁整頁失效）
+
+§5.2 那九個 token 進 `styles.css` 時被寫成了自我參照：
+
+```css
+--surface-4:  var(--surface-4);   /* ← 循環，不是宣告 */
+--hairline-3: var(--hairline-3);
+--on-dark-2:  var(--on-dark-2);
+/* ...共 9 個 */
+```
+
+依 CSS 自訂屬性規範，循環參照的 token 在 computed-value 階段即為
+guaranteed-invalid，所有引用它的宣告一併失效：
+
+- `.donate-block` / `.budget` 的 `background: var(--surface-4)` → 退回
+  `transparent`，兩張白卡直接消失，深藍背景場透出來
+- `border: 1px solid var(--hairline-3)` 是簡寫，整條失效 → `border-style: none`
+- 卡上的文字仍是 `--text-1`（`#1A2E40`）等深色值，落在深藍底上 ≈ 1.1:1，
+  give 頁的預算圓環圖與奉獻資訊因此**完全讀不到**
+
+已改回 §5.2 列的實際 rgba 值。同時受影響的還有 home / about 的 `--card-bg`、
+`--on-dark-2/3` 與 newsletter 邊框。
+
+### 7.2 圓餅圖引線的 `--line`
 
 `styles.css` 的 `.lead{ stroke: var(--line) }` —— 全站從未定義 `--line`
 （只有 `--line-dim` / `--line-mid` / `--line-strong`）。宣告在計算值階段即失效，

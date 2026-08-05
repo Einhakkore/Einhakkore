@@ -194,17 +194,21 @@
   --fw-bold:     700;
 
   /* 深色面上的白色層 — surface / hairline alpha 階梯（原本 40 處手寫 rgba） */
-  --surface-1:  var(--surface-1);
-  --surface-2:  var(--surface-2);
-  --surface-3:  var(--surface-3);
-  --surface-4:  var(--surface-4);
-  --hairline-1: var(--hairline-1);
-  --hairline-2: var(--hairline-2);
-  --hairline-3: var(--hairline-3);
+  --surface-1:  rgba(255, 255, 255, .05);   /* 卡片底 */
+  --surface-2:  rgba(255, 255, 255, .09);   /* hover */
+  --surface-3:  rgba(255, 255, 255, .45);   /* 半透卡 */
+  --surface-4:  rgba(255, 255, 255, .90);   /* 實心感卡片 */
+  --hairline-1: rgba(255, 255, 255, .10);   /* 分隔線 */
+  --hairline-2: rgba(255, 255, 255, .20);   /* 邊框 */
+  --hairline-3: rgba(255, 255, 255, .35);   /* 強調框 */
+  /* 階梯末端：不透明。--surface-4 只有 90%，捲動場的深藍仍會透上來把
+     --text-1 的內文壓灰，需要逐字閱讀的卡片（give 頁預算圖、奉獻資訊）
+     用這支。前四階是白色 alpha，這一階直接吃既有的奶紙白。 */
+  --surface-5:  var(--paper);               /* #FAF6EF 實心內容卡 */
 
   /* 深色面上的文字三階（通用命名；--home-text-* 是首頁的既有別名） */
-  --on-dark-2: var(--on-dark-2);
-  --on-dark-3: var(--on-dark-3);
+  --on-dark-2: rgba(245, 241, 232, .85);    /* 深底內文 */
+  --on-dark-3: rgba(245, 241, 232, .65);    /* 深底小字 */
 }
 
 /* ---------------------------------------------------------
@@ -1828,12 +1832,12 @@ body[data-page="give"] main > .section {
   }
 }
 
-/* ---- 卡片區塊（半透明白，襯托深色底） ---- */
+/* ---- 卡片區塊（實心奶紙白，襯托深色底） ----
+   原本是 --surface-4（90% 白）+ backdrop-blur，深藍背景場會透上來把
+   --text-1 的內文壓成低對比的灰藍。這裡的內容需要逐字閱讀，改為不透明底。 */
 .donate-block {
-  background: var(--surface-4);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--hairline-3);
+  background: var(--surface-5);
+  border: 1px solid var(--line-mid);
   border-radius: var(--radius-card);
   padding: 36px 34px;
   box-shadow: 0 10px 34px rgba(0, 0, 0, .18);
@@ -1855,12 +1859,12 @@ body[data-page="give"] main > .section {
 }
 .donate-block p:last-child { margin-bottom: 0; }
 
-/* ---- Give 頁：左欄的 .budget 也統一為半透明白卡 ---- */
+/* ---- Give 頁：左欄的 .budget 也統一為實心卡 ----
+   圓環圖的引線、標籤、中央金額全是 --text-1 / --text-3 / --line-mid 的
+   深色值，底一透就整組糊掉，所以與 .donate-block 用同一支 --surface-5。 */
 body[data-page="give"] .budget {
-  background: var(--surface-4);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--hairline-3);
+  background: var(--surface-5);
+  border: 1px solid var(--line-mid);
   border-radius: var(--radius-card);
   padding: 28px;
   box-shadow: 0 10px 34px rgba(0, 0, 0, .18);
