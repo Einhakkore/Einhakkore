@@ -117,7 +117,12 @@
 > 合併之後，淺色頁（contact / terms / serve / admin）上以琥珀色呈現的文字
 > —— `.section-eyebrow`、`.newsletter-label`、`.practice-card .roman`、
 > `.btn-text`、`.feature-text .link`、`.terms-content a`、`h2 em` 等 ——
-> 對比都掉到 1.6:1。深色頁（home / give / about）不受影響，因為琥珀落在深底上。
+> 對比都掉到 1.6:1。深色頁（home / about）不受影響，因為琥珀落在深底上。
+>
+> **give 頁是例外**：`.donate-block` / `.budget` 兩張卡是 `--surface-5` 淺底，
+> 卡上這三處琥珀文字實測 1.6:1 —— `.donate-block h3`（合作副標）、
+> `.budget h3 em`（「67.7 萬」）、`.form-consent a`（同意條款連結）。
+> 待挑色後再改，目前維持 `--amber-500`。
 >
 > 若要救回可讀性又保持「只有一支金」，做法是：**裝飾**（按鈕底、邊框、光暈、
 > icon、深底文字）維持 `--amber-500`，**淺底上的文字**改用 `--ink-800`／`--ink-900`。
@@ -141,19 +146,21 @@
 
 深底標題直接用 `--text-on-dark`（`#F5F1E8`）。
 
-### 5.2b 深底上的實心內容卡
+### 5.2b `--surface-5` — 階梯末端的不透明底
 
-`--surface-4` 只有 90% 不透明度，捲動場的深藍會透上來，把 `--text-1` 的內文
+`--surface-4` 只有 90% 不透明度，捲動場的深藍仍會透上來，把 `--text-1` 的內文
 壓成低對比的灰藍。**需要逐字閱讀**的卡片（give 頁的預算圓環圖、奉獻資訊）
-改吃這一組不透明白：
+再往上補一階：
 
 ```css
---surface-solid:        #FFFFFF;
---surface-solid-border: var(--line-mid);   /* rgba(26,46,64,.14)，白底上看得見 */
+--surface-5: var(--paper);   /* #FAF6EF — 不透明 */
 ```
 
-`--hairline-*` 是白色 alpha，畫在白底上等於沒有 —— 用 `--surface-solid` 時，
-邊框一律配 `--surface-solid-border`。半透明的裝飾性卡片維持 `--surface-4` 不變。
+前四階是白色 alpha，第五階不另立新色，直接吃既有的 `--paper`。
+
+配邊框時注意：`--hairline-*` 是白色 alpha，畫在淺底上等於沒有 ——
+`--surface-5` 的卡片一律配 `--line-*`（give 頁兩張卡用 `--line-mid`）。
+半透明的裝飾性卡片維持 `--surface-4` 不變。
 
 ### 5.3 不可刪的 token
 
