@@ -41,6 +41,10 @@
 
   // ---------- #flow-bg：只在 home / give / about 三頁注入 ----------
   function isFlowPage() {
+    // data-flow="sections" 的頁面改用 assets/js/flow.js 的 .flow-field
+    // 以 section 為單位換色；這支是依整頁捲動進度每一幀寫 --bg1/--bg2，
+    // 兩個一起跑會互相覆寫，所以在這裡讓路。
+    if (document.body.dataset.flow === 'sections') return false;
     const p = document.body.getAttribute('data-page');
     return p === 'home' || p === 'give' || p === 'about';
   }

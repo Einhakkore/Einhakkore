@@ -1,0 +1,243 @@
+/* ============================================================
+   FLOW — 「泉」的形狀素材層
+   ------------------------------------------------------------
+   三個元件，都可以單獨用在任何一頁：
+
+     .flow-field    背景色場。每個 tint 一層，交叉淡入。
+                    section 上加 data-flow-tint="deep" 指定要換到哪一層。
+     .flow-divider  section 之間的線條轉場。
+                    <div class="flow-divider" data-flow-divider="contour"></div>
+                    線條由 assets/js/flow.js 產生並量長度做描繪動畫。
+     .flow-figure   形狀遮罩圖。用 partials/flow.html 定義的 clipPath 切圖，
+                    <figure class="flow-figure flow-figure--spring">…</figure>
+
+   相依：assets/partials/flow.html（clipPath 定義 + 色層）
+        assets/js/flow.js（線條產生 + 描繪 + tint 切換 + 圖內視差）
+   JS 掛掉時：色場停在第一層、線條直接顯示、圖片顯示為未裁切的矩形，
+   內容不會消失，只是少了動態。
+   ============================================================ */
+
+/* -----------------------------------------------------------
+   1 · FIELD — 背景色場
+   ----------------------------------------------------------- */
+
+/* 用 data-flow="sections" 讓 site.js 的 initFlowField() 跳過這一頁
+   （那支是依「整頁捲動進度」線性內插，會每一幀覆寫 --bg1/--bg2，
+     跟這裡以 section 為單位的換色互相打架）。 */
+body[data-flow="sections"] {
+  background: #182C3B;   /* 色層還沒淡入前的保底底色 */
+}
+
+.flow-field {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.flow-field__layer {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.5s cubic-bezier(.16, 1, .3, 1);
+}
+.flow-field__layer.is-on { opacity: 1; }
+
+/* 每一層 = 一道「光源在某個位置」的深藍。
+   section 往下走時光源跟著移動，就是整頁的流向。
+   徑向光暈都壓在 .18 以下，深底上的淺色文字對比維持在 AAA。 */
+.flow-tint--dawn {
+  background:
+    radial-gradient(60vw 55vw at 18% 12%, rgba(255, 186, 73, .16), transparent 62%),
+    linear-gradient(175deg, #22394A, #182C3B);
+}
+.flow-tint--deep {
+  background:
+    radial-gradient(70vw 60vw at 78% 42%, rgba(127, 166, 78, .13), transparent 64%),
+    linear-gradient(175deg, #14232E, #0E1A23);
+}
+.flow-tint--rise {
+  background:
+    radial-gradient(65vw 60vw at 14% 78%, rgba(255, 186, 73, .15), transparent 62%),
+    linear-gradient(175deg, #16323D, #0F1F29);
+}
+.flow-tint--current {
+  background:
+    radial-gradient(72vw 62vw at 88% 60%, rgba(143, 180, 206, .16), transparent 64%),
+    linear-gradient(175deg, #2C4854, #1D3038);
+}
+.flow-tint--shallow {
+  background:
+    radial-gradient(80vw 55vw at 50% 92%, rgba(255, 186, 73, .17), transparent 60%),
+    linear-gradient(175deg, #33505C, #22323C);
+}
+.flow-tint--surface {
+  background:
+    radial-gradient(90vw 60vw at 50% 100%, rgba(255, 186, 73, .18), transparent 58%),
+    linear-gradient(175deg, #3C5A66, #2A3D47);
+}
+
+/* -----------------------------------------------------------
+   2 · DIVIDER — section 之間的線條轉場
+   ----------------------------------------------------------- */
+.flow-divider {
+  position: relative;
+  width: 100%;
+  line-height: 0;
+  pointer-events: none;
+  color: rgba(242, 195, 107, .55);   /* 線色，用 currentColor 傳給 path */
+  --flow-divider-h: clamp(72px, 9vw, 132px);
+}
+.flow-divider svg {
+  display: block;
+  width: 100%;
+  height: var(--flow-divider-h);
+  overflow: visible;
+}
+.flow-divider path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;   /* 橫向拉伸時線寬不變形 */
+}
+
+/* 四條等高線由上到下遞減，像漣漪擴散開之後變淡 */
+.flow-divider--contour { --flow-divider-h: clamp(110px, 13vw, 190px); }
+.flow-divider--contour path:nth-child(1) { opacity: .85; }
+.flow-divider--contour path:nth-child(2) { opacity: .60; }
+.flow-divider--contour path:nth-child(3) { opacity: .40; }
+.flow-divider--contour path:nth-child(4) { opacity: .24; }
+
+/* 裂：一條線在中央斷開、錯開成上下兩支。
+   線頭在左右兩側淡掉，不要在畫面邊緣留一個硬切口。 */
+.flow-divider--rift { --flow-divider-h: clamp(64px, 8vw, 112px); }
+.flow-divider--rift svg,
+.flow-divider--well svg {
+  mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
+}
+.flow-divider--rift path { opacity: .70; }
+.flow-divider--rift .flow-divider__seed {
+  fill: currentColor;
+  stroke: none;
+  opacity: .9;
+}
+
+/* 泉眼：一道垂直落線 + 落點 + 擴散的漣漪 */
+.flow-divider--well { --flow-divider-h: clamp(120px, 15vw, 200px); }
+.flow-divider--well path { opacity: .75; }
+.flow-divider--well ellipse {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.flow-divider--well .flow-divider__seed { fill: currentColor; stroke: none; }
+
+/* 描繪動畫：JS 量完 getTotalLength() 後把 --len 寫在 path 上，
+   加 .is-drawn 就把 dashoffset 收到 0。GSAP 在場時改由 scrub 接手，
+   這組 CSS 就是沒有 GSAP 時的保底。 */
+.flow-divider path.is-measured {
+  stroke-dasharray: var(--len);
+  stroke-dashoffset: var(--len);
+  transition: stroke-dashoffset 1.8s cubic-bezier(.16, 1, .3, 1);
+  transition-delay: var(--draw-delay, 0ms);
+}
+.flow-divider.is-drawn path.is-measured { stroke-dashoffset: 0; }
+
+.flow-divider .flow-divider__seed,
+.flow-divider ellipse {
+  opacity: 0;
+  transition: opacity 1s ease, transform 1.4s cubic-bezier(.16, 1, .3, 1);
+  transition-delay: var(--draw-delay, 0ms);
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(.4);
+}
+.flow-divider.is-drawn .flow-divider__seed,
+.flow-divider.is-drawn ellipse {
+  opacity: 1;
+  transform: scale(1);
+}
+.flow-divider--well.is-drawn ellipse:nth-of-type(1) { opacity: .55; }
+.flow-divider--well.is-drawn ellipse:nth-of-type(2) { opacity: .34; }
+.flow-divider--well.is-drawn ellipse:nth-of-type(3) { opacity: .18; }
+
+/* -----------------------------------------------------------
+   3 · FIGURE — 形狀遮罩圖
+   ----------------------------------------------------------- */
+.flow-figure { margin: 0; position: relative; }
+
+.flow-figure__frame {
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, .04);
+}
+/* 圖比框高一截，捲動時在框內上下走（GSAP 接手），視差就從這裡來。
+   沒有 GSAP 時停在置中，看起來就是一張正常的滿版圖。 */
+.flow-figure__frame img {
+  position: absolute;
+  left: 0;
+  top: -9%;
+  width: 100%;
+  height: 118%;
+  object-fit: cover;
+  display: block;
+}
+
+/* clip-path 若解析失敗（partial 沒載到），圖片只是變回矩形，不會消失 */
+.flow-figure--spring .flow-figure__frame {
+  aspect-ratio: 3 / 4;
+  clip-path: url(#flow-clip-spring);
+}
+.flow-figure--basin .flow-figure__frame {
+  aspect-ratio: 4 / 3;
+  clip-path: url(#flow-clip-basin);
+}
+.flow-figure--stream .flow-figure__frame {
+  aspect-ratio: 16 / 6;
+  clip-path: url(#flow-clip-stream);
+}
+.flow-figure--drop .flow-figure__frame {
+  aspect-ratio: 1 / 1;
+  clip-path: url(#flow-clip-drop);
+}
+
+.flow-figure figcaption {
+  margin-top: 20px;
+  font-family: var(--font-en);
+  font-size: var(--fs-sm);
+  letter-spacing: var(--ls-wide);
+  line-height: var(--lh-body);
+  color: rgba(245, 241, 232, .72);
+}
+
+/* 出血：讓圖切出容器、走到視窗邊緣，是版面「破格」的那一下 */
+.flow-bleed-left  { margin-left: calc(50% - 50vw); }
+.flow-bleed-right { margin-right: calc(50% - 50vw); }
+@media (max-width: 900px) {
+  .flow-bleed-left, .flow-bleed-right { margin-left: 0; margin-right: 0; }
+}
+
+/* -----------------------------------------------------------
+   4 · 降級
+   ----------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .flow-field__layer { transition: opacity .01ms; }
+  .flow-divider path.is-measured {
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+    transition: none;
+  }
+  .flow-divider .flow-divider__seed,
+  .flow-divider ellipse {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .flow-figure__frame img { top: 0; height: 100%; }
+}
+
+/* GSAP / Lenis 沒載到時，about 頁會掛 html.no-anim */
+html.no-anim .flow-figure__frame img { top: 0; height: 100%; }

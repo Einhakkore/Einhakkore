@@ -19,12 +19,17 @@
   <meta name="twitter:title" content="關於我們 · 隱哈歌利">
   <meta name="twitter:description" content="我們是誰、為什麼存在、是哪些人在服事，以及背後的合作網絡。">
 
-  <link rel="preload" href="assets/fonts/ShiweiSiJiChun-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <!-- assets/fonts/ 下沒有 Regular 這個字重，舊的 preload 是 404，且真正在用的
+       Medium / SemiBold 反而沒被預載，首屏中文會晚到再跳一次版。 -->
+  <link rel="preload" href="assets/fonts/ShiweiSiJiChun-Medium.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/ShiweiSiJiChun-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/FreightTextPro-Book.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600&display=swap">
   <link rel="stylesheet" href="assets/css/styles.css">
+  <!-- 「泉」的形狀素材層：背景色場 / 線條轉場 / 遮罩圖 -->
+  <link rel="stylesheet" href="assets/css/flow.css">
 
   <script type="application/ld+json">
   {
@@ -101,13 +106,19 @@
       filter: sepia(.10) saturate(.80) brightness(.55);
       z-index: 0;
       transform: translateZ(0);   /* GPU 合成，避開 blur 混合 repaint */
+      /* 下緣淡出：讓 .flow-field 的色場透上來接手，hero 與下一段之間
+         就沒有那道橫向的硬切口，泉眼的落線像是從照片裡長出來的 */
+      mask-image: linear-gradient(to bottom, #000 0%, #000 56%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 56%, transparent 100%);
     }
+    /* 遮罩跟著照片一起收掉，否則照片淡出後會剩一塊深色的方形浮在色場上 */
     .scr-hero__veil {
       position: absolute; inset: 0;
       background: linear-gradient(180deg,
         rgba(24, 44, 59, .30) 0%,
         rgba(24, 44, 59, .55) 55%,
-        rgba(24, 44, 59, .85) 100%);
+        rgba(24, 44, 59, .80) 78%,
+        rgba(24, 44, 59, 0) 100%);
       z-index: 1;
       pointer-events: none;
     }
@@ -775,6 +786,70 @@
       color: var(--text-2);
     }
 
+    /* ============================================================
+       泉 · 遮罩圖（經文之後的那一格畫面）
+       ============================================================ */
+    /* 整段不套 .wrap：左欄的圖刻意切出視窗左緣，讓版面在這裡破一次格，
+       閱讀節奏從「置中、對稱」被打斷成「偏移、不對稱」。 */
+    .spring-figure {
+      position: relative;
+      overflow: hidden;               /* 負的 margin-left 不要撐出橫向捲軸 */
+      padding: clamp(40px, 8vh, 96px) 0 clamp(32px, 5vh, 64px);
+    }
+
+    /* divider 自己有 110–190px 的高度，等於已經是一段留白；
+       後面的區塊再吃滿 120px 的 padding-top 會空掉一大塊。 */
+    [data-flow-divider] + section {
+      padding-top: clamp(32px, 5vh, 64px);
+    }
+    [data-flow-divider] + .philosophy {
+      padding-top: clamp(48px, 8vh, 96px);
+    }
+    .spring-figure__inner {
+      display: grid;
+      grid-template-columns: minmax(0, 44%) minmax(0, 1fr);
+      column-gap: clamp(40px, 6vw, 96px);
+      align-items: center;
+      margin-left: clamp(-120px, -6vw, -40px);
+      padding-right: clamp(32px, 6vw, 100px);
+    }
+    .spring-figure__eyebrow {
+      font-family: var(--font-en);
+      font-size: var(--fs-sm);
+      letter-spacing: var(--ls-track);
+      color: var(--amber-400);
+      margin-bottom: clamp(20px, 3vw, 36px);
+    }
+    .spring-figure__quote {
+      font-family: var(--font-brand);
+      font-weight: var(--fw-medium);
+      font-size: var(--fs-5xl);
+      line-height: var(--lh-title);
+      letter-spacing: var(--ls-cjk);
+      color: var(--text-on-dark);
+      margin: 0 0 clamp(24px, 3vw, 40px);
+    }
+    .spring-figure__note {
+      font-size: var(--fs-md);
+      line-height: var(--lh-loose);
+      color: rgba(245, 241, 232, .82);
+      max-width: 46ch;
+      margin: 0;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255, 255, 255, .14);
+    }
+    @media (max-width: 900px) {
+      .spring-figure { padding: 64px 0 88px; }
+      .spring-figure__inner {
+        grid-template-columns: 1fr;
+        row-gap: 40px;
+        margin-left: 0;
+        padding: 0 32px;
+      }
+      /* 窄螢幕只留一點點出血，圖還是要看得完整 */
+      .spring-figure .flow-figure { margin-left: -32px; margin-right: 12%; }
+    }
+
     /* ---------- 無動畫保底 ----------
        html.no-anim 由頁尾腳本在「GSAP / ScrollTrigger 載入失敗」或
        「使用者偏好減弱動態」時加上；所有靠 JS 才會現身的元素直接顯示終態，
@@ -785,6 +860,11 @@
     html.no-anim [data-scr-fade],
     html.no-anim [data-split-lines],
     html.no-anim .section-practices .practice-card.slideItem {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+    html.no-anim .spring-figure__eyebrow,
+    html.no-anim .spring-figure__note {
       opacity: 1 !important;
       transform: none !important;
     }
@@ -821,6 +901,7 @@
       /* 字級降階：流體 clamp() 已移除，窄螢幕在此統一收斂 */
       .scr-hero__title   { font-size: var(--fs-5xl); }
       .philosophy__title { font-size: var(--fs-4xl); }
+      .spring-figure__quote { font-size: var(--fs-4xl); }
       .philosophy__label { font-size: var(--fs-5xl); }
       .net-block h3      { font-size: var(--fs-3xl); }
       .about-cta h2      { font-size: var(--fs-4xl); }
@@ -840,9 +921,10 @@
     }
   </style>
 </head>
-<body data-page="about">
+<body data-page="about" data-flow="sections">
 
 <div data-include="icons"></div>
+<div data-include="flow"></div>
 <div data-include="header"></div>
 
 <!-- about 頁專用 icon sprite（合作網絡的領域圖示） -->
@@ -886,7 +968,7 @@
 <main>
 
   <!-- ============================ HERO ============================ -->
-  <section class="scr-hero">
+  <section class="scr-hero" data-flow-tint="dawn">
     <div class="scr-hero__bg"></div>
     <div class="scr-hero__veil"></div>
 
@@ -903,8 +985,11 @@
     <div class="scr-hero__scroll-hint">SCROLL</div>
   </section>
 
+  <!-- 轉場：湧 —— 一道落線打在水面上 -->
+  <div data-flow-divider="well"></div>
+
   <!-- ============================ 起源與異象 ============================ -->
-  <section class="philosophy" data-scene="philosophy">
+  <section class="philosophy" data-scene="philosophy" data-flow-tint="deep">
     <div class="philosophy__inner">
       <div class="philosophy__col philosophy__col--label">
         <div class="philosophy__label" data-split-lines>Einhakkore</div>
@@ -924,8 +1009,29 @@
     </div>
   </section>
 
+  <!-- ============================ 泉 · 遮罩圖 ============================ -->
+  <section class="spring-figure" data-flow-tint="deep">
+    <div class="spring-figure__inner">
+      <figure class="flow-figure flow-figure--spring" data-flow-parallax>
+        <div class="flow-figure__frame">
+          <img src="assets/img/Water.webp"
+               alt="一雙手在流水下捧接落下的水"
+               width="1400" height="2100" loading="lazy" decoding="async">
+        </div>
+      </figure>
+      <div class="spring-figure__aside">
+        <div class="spring-figure__eyebrow" data-scr-fade>THE SPRING · 泉</div>
+        <p class="spring-figure__quote" data-split-lines>水不會停在自己身上。<br>它經過誰，誰就活過來。</p>
+        <p class="spring-figure__note" data-scr-fade>隱哈歌利不是水源，是接水的那雙手。<br>把後方的資源接住，再送到前線真正需要的地方。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 轉場：裂 —— 一條線在中央斷開、錯位成上下兩支（士 15:19「窪處裂開」） -->
+  <div data-flow-divider="rift"></div>
+
   <!-- ============================ OUR VISION ============================ -->
-  <section class="section section-practices" data-scene="practices">
+  <section class="section section-practices" data-scene="practices" data-flow-tint="rise">
     <div class="wrap">
       <hgroup class="section-head section-head--on-dark" data-section-title>
         <div class="section-num" data-scr-fade>OUR VISION</div>
@@ -957,8 +1063,11 @@
     </div>
   </section>
 
+  <!-- 轉場：流 —— 水面等高線 -->
+  <div data-flow-divider="contour"></div>
+
   <!-- ============================ TEAM & NETWORK · 我們的服事 ============================ -->
-  <section class="section section-team" id="team" data-scene="team">
+  <section class="section section-team" id="team" data-scene="team" data-flow-tint="current">
     <div class="wrap">
       <hgroup class="section-head section-head--on-dark">
         <div class="section-num" data-scr-fade>TEAM &amp; NETWORK</div>
@@ -1115,8 +1224,11 @@
     </div>
   </section>
 
+  <!-- 轉場：流 —— 水面等高線 -->
+  <div data-flow-divider="contour"></div>
+
   <!-- ============================ INFORMATION · 關於隱哈歌利 ============================ -->
-  <section class="section section-org" id="org" data-scene="org">
+  <section class="section section-org" id="org" data-scene="org" data-flow-tint="shallow">
     <div class="wrap">
       <hgroup class="section-head section-head--on-dark">
         <div class="section-num" data-scr-fade>INFORMATION</div>
@@ -1160,7 +1272,7 @@
 
   <!-- ============================ 頁尾 CTA ============================ -->
   <!-- 這一段落在 scroll flow field 的最亮處，文字色階改吃 --fg（會隨背景由淺轉深） -->
-  <section class="about-cta" data-scene="cta">
+  <section class="about-cta" data-scene="cta" data-flow-tint="surface">
     <div class="about-cta__wrap">
       <div class="section-num" data-scr-fade>JOIN US</div>
       <h2 data-split-lines>一起成為宣教路上的<em>同行者</em></h2>
@@ -1549,6 +1661,10 @@
   window.addEventListener('load', () => ScrollTrigger.refresh());
 })();
 </script>
+
+<!-- 形狀素材的行為層：線條產生 + 描繪、section 換色、遮罩圖視差。
+     要排在 site.js（塞 partials）與 GSAP 之後才抓得到 DOM 與函式庫。 -->
+<script src="assets/js/flow.js"></script>
 
 </body>
 </html>

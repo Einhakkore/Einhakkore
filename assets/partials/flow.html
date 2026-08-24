@@ -1,0 +1,71 @@
+<!-- ============================================================
+     FLOW — 「泉」的形狀素材層（全站共用）
+     士師記 15:19：神使利希的「窪處裂開」，有水「湧出」，參孫喝了「精神復原」。
+     三個動詞＝三組形狀：裂（divider）／湧（image mask）／流（contour）。
+
+     這個 partial 只放兩件不需要 JS 的東西：
+       1. <defs> 裡的 clipPath — 給 .flow-figure 用 clip-path: url(#…) 取用
+       2. .flow-field 的色層 — 每個 section 切換 .is-on 做交叉淡入
+
+     divider 的線條由 assets/js/flow.js 依 data-flow-divider 動態產生
+     （stroke-dashoffset 動畫需要對個別 <path> 量 getTotalLength()，
+       用 <use> 取 <symbol> 會進 shadow tree 量不到，所以不做成 symbol）。
+     ============================================================ -->
+
+<svg class="flow-defs" width="0" height="0" aria-hidden="true" focusable="false">
+  <defs>
+    <!-- 湧 — 泉眼：上緣整圈拱起像井口，下緣是一道水面的波 -->
+    <clipPath id="flow-clip-spring" clipPathUnits="objectBoundingBox">
+      <path d="M0 .38
+               C0 .13 .21 0 .5 0
+               C.79 0 1 .13 1 .38
+               L1 .87
+               C.85 .96 .70 .83 .52 .90
+               C.35 .965 .17 1 0 .925
+               Z"/>
+    </clipPath>
+
+    <!-- 窪 — 窪處：上緣是水面的波，下緣收成一只承接的碗 -->
+    <clipPath id="flow-clip-basin" clipPathUnits="objectBoundingBox">
+      <path d="M0 .11
+               C.18 .005 .34 .17 .52 .10
+               C.70 .035 .84 .15 1 .055
+               L1 .68
+               C1 .885 .80 1 .5 1
+               C.20 1 0 .885 0 .68
+               Z"/>
+    </clipPath>
+
+    <!-- 流 — 流帶：上下緣都是波，用在橫幅、滿版出血的長條圖 -->
+    <clipPath id="flow-clip-stream" clipPathUnits="objectBoundingBox">
+      <path d="M0 .19
+               C.22 .02 .40 .23 .62 .12
+               C.80 .03 .92 .17 1 .07
+               L1 .83
+               C.84 .985 .64 .79 .44 .90
+               C.26 .995 .12 .85 0 .94
+               Z"/>
+    </clipPath>
+
+    <!-- 滴 — 不對稱水滴：給小尺寸的點綴圖 -->
+    <clipPath id="flow-clip-drop" clipPathUnits="objectBoundingBox">
+      <path d="M.5 0
+               C.75 .21 1 .40 1 .62
+               C1 .845 .78 1 .5 1
+               C.22 1 0 .845 0 .62
+               C0 .40 .25 .21 .5 0
+               Z"/>
+    </clipPath>
+  </defs>
+</svg>
+
+<!-- 背景色場：每個 tint 一層，由 flow.js 依當前 section 切換 .is-on。
+     第一層預設就是 on，JS 掛掉時頁面仍有正確的深藍底。 -->
+<div class="flow-field" aria-hidden="true">
+  <div class="flow-field__layer flow-tint--dawn is-on"    data-tint="dawn"></div>
+  <div class="flow-field__layer flow-tint--deep"          data-tint="deep"></div>
+  <div class="flow-field__layer flow-tint--rise"          data-tint="rise"></div>
+  <div class="flow-field__layer flow-tint--current"       data-tint="current"></div>
+  <div class="flow-field__layer flow-tint--shallow"       data-tint="shallow"></div>
+  <div class="flow-field__layer flow-tint--surface"       data-tint="surface"></div>
+</div>
