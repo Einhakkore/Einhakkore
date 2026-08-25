@@ -663,34 +663,30 @@
     .field-grid {
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 14px;
+      gap: clamp(14px, 2vw, 28px);
     }
-    @media (max-width: 900px) { .field-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    @media (max-width: 1000px) { .field-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
     @media (max-width: 560px) { .field-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
+    /* 不做成「圓角卡片 + icon」：拿掉外框與底色，讓水滴形的照片自己當主體，
+       名稱與人數掛在照片下方。形狀的辨識度取代了框線的分隔功能。 */
     .field-card {
       display: flex; flex-direction: column; align-items: center;
       text-align: center;
-      padding: 22px 14px 26px;
-      border-radius: var(--radius-card);
-      background: var(--surface-1);
-      border: 1px solid rgba(255, 255, 255, .12);
-      transition: background .3s ease, border-color .3s ease;
+      padding: 0 4px;
     }
-    .field-card:hover {
-      background: rgba(255, 255, 255, .08);
-      border-color: rgba(242, 195, 107, .30);
+    .field-card__figure {
+      width: 100%;
+      max-width: 132px;
+      margin: 0 0 18px;
+      transition: transform .45s cubic-bezier(.16, 1, .3, 1);
     }
-    .field-card .icon {
-      width: 42px; height: 42px; flex: 0 0 auto;
-      margin-bottom: 16px;
-      border-radius: var(--radius-icon);
-      display: flex; align-items: center; justify-content: center;
-      color: var(--amber-400);
-      background: rgba(242, 195, 107, .10);
-      border: 1px solid rgba(242, 195, 107, .25);
+    .field-card:hover .field-card__figure { transform: translateY(-4px); }
+    /* 深底上的照片壓一層暖色調，跟全站的攝影調性一致 */
+    .field-card__figure .flow-figure__frame {
+      background: rgba(255, 255, 255, .05);
     }
-    .field-card .icon svg { width: 21px; height: 21px; }
+    .field-card__figure img { filter: sepia(.12) saturate(.86) brightness(.92); }
     .field-card__name {
       font-size: var(--fs-md); letter-spacing: var(--ls-wide);
       color: var(--text-on-dark);
@@ -712,26 +708,22 @@
     /* 接待資源 */
     .host-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: clamp(24px, 3vw, 40px);
     }
+    /* 接待＝承接，所以用「窪處」那個形狀切圖：上緣是水面的波、下緣收成一只碗。
+       照片在上、文字在下，一樣不套卡片外框。 */
     .host-card {
-      display: flex; gap: 20px; align-items: flex-start;
-      padding: 28px 26px;
-      border-radius: var(--radius-card);
-      background: var(--surface-1);
-      border: 1px solid rgba(255, 255, 255, .12);
+      display: flex; flex-direction: column;
+      gap: 20px;
     }
-    .host-card .icon {
-      width: 46px; height: 46px; flex: 0 0 auto;
-      border-radius: var(--radius-icon);
-      display: flex; align-items: center; justify-content: center;
-      color: var(--amber-400);
-      background: rgba(242, 195, 107, .10);
-      border: 1px solid rgba(242, 195, 107, .25);
+    .host-card__figure {
+      margin: 0;
+      transition: transform .45s cubic-bezier(.16, 1, .3, 1);
     }
-    .host-card .icon svg { width: 22px; height: 22px; }
-    .host-card__body { flex: 1; min-width: 0; }
+    .host-card:hover .host-card__figure { transform: translateY(-4px); }
+    .host-card__figure img { filter: sepia(.12) saturate(.86) brightness(.92); }
+    .host-card__body { min-width: 0; }
     .host-card__row {
       display: flex; align-items: baseline; justify-content: space-between;
       gap: 16px;
@@ -1112,7 +1104,7 @@
                   data-vision-tab="0">
             <span class="vision__chapter-bar" aria-hidden="true"></span>
             <span class="vision__chapter-num">01</span>
-            <span class="vision__chapter-title">長期的陪伴</span>
+            <span class="vision__chapter-title">倡議</span>
           </button>
           <button type="button" class="vision__chapter" role="tab"
                   id="vision-tab-1" aria-controls="vision-panel-1"
@@ -1139,8 +1131,8 @@
                    id="vision-panel-0" aria-labelledby="vision-tab-0"
                    data-vision-panel="0">
             <div class="vision__num" aria-hidden="true">01</div>
-            <h3 class="vision__title">長期的陪伴</h3>
-            <p class="vision__body">關顧不是一次性的活動，而是持續的同行。從預備期、在工場、到回國述職，我們希望每個階段都有人記得、有人回應，讓神國工人在前線奔跑時，後方是穩的。</p>
+            <h3 class="vision__title">看見跨文化工人的真實處境，打破「屬靈英雄」的迷思，幫助後方更了解關顧的內涵。</h3>
+            <p class="vision__body">宣教士長期在前線承擔跨文化的挑戰，然而在後方支持的我們鮮少體會誇文化的處境，因此宣教士的需要很難被理解。隱哈歌利致力於倡議一個更健康、具同理心的宣教生態系。我們透過真實經驗的訪談、議題倡導與文字傳播，引導後方教會與支持者理解宣教士在身心靈、雙向文化衝擊與生活過渡期的真實需要，推動以後方支持為後盾的健康關顧文化。</p>
 
             <div class="vision__expand" data-vision-expand>
               <button type="button" class="vision__expand-trigger"
@@ -1272,14 +1264,13 @@
         </div>
       </div>
 
-      <!-- TODO: 以下兩段自述為文案草稿，請 Ewan、Yu 兩位同工親自確認或改寫後再上線 -->
       <div class="team-grid">
         <article class="person-card" data-scr-fade>
           <h3 class="person-card__name">Ewan</h3>
           <div class="person-card__role">CO-FOUNDER · 核心同工</div>
           <blockquote class="person-card__quote">
             <span class="quote-mark quote-mark--open" aria-hidden="true">“</span>
-            <p>我看過宣教士在前線耗盡，回到家鄉卻找不到可以說話的人。隱哈歌利的起點很單純：讓需要被聽見。我希望我們建立的不是一套流程，而是一種文化——差派之後仍然記得、仍然回應，讓每一位工人知道自己不是獨自站著。</p>
+            <p>2013年領受全職呼召，2023 赴以色列國際志工服事中深刻看見宣教士真實需求。因著對宣教士關顧的負擔，赴以色列希伯來大學攻讀非營利組織管理碩士，被呼召建構一個跨宗派、跨差會、資源整合的第三方關顧平台，讓每位跨文化宣教士都能富有熱忱且身心靈健康的走在服事神的道路上。</p>
             <span class="quote-mark quote-mark--close" aria-hidden="true">”</span>
           </blockquote>
         </article>
@@ -1289,7 +1280,7 @@
           <div class="person-card__role">CO-FOUNDER · 核心同工</div>
           <blockquote class="person-card__quote">
             <span class="quote-mark quote-mark--open" aria-hidden="true">“</span>
-            <p>支持宣教不該只停在奉獻與代禱信。當一個家庭需要諮商、醫療或法律協助時，應該有人接得住。我想做的，是把散落各處的專業與善意連成網絡，讓開口求助不必難以啟齒，也讓每一份陪伴都能長久地走下去。</p>
+            <p>從陪伴多名宣教士朋友開始，了解到宣教士也是有血有肉的人，也有生活、生命各方面的需要。完成神國的使命，不只是一線宣教士的單打獨鬥，更是後方網絡一同的支援前線，每個人都能參與！</p>
             <span class="quote-mark quote-mark--close" aria-hidden="true">”</span>
           </blockquote>
         </article>
@@ -1327,29 +1318,51 @@
           </div>
           <p class="net-block__note">來自不同領域的基督徒工作者，願意在需要出現時提供專業協助。我們負責接住需求、進行媒合，並在過程中保護當事人的隱私。</p>
 
+          <!-- TODO：以下五張為佔位圖（沿用 assets/img/ 既有照片），待同工提供各領域的照片後替換，
+               並把 alt 從空字串改成實際描述。 -->
           <div class="field-grid">
             <div class="field-card">
-              <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#ic-mind"></use></svg></span>
+              <figure class="flow-figure flow-figure--drop field-card__figure" data-flow-parallax>
+                <div class="flow-figure__frame">
+                  <img src="assets/img/HandsWater.webp" alt="" loading="lazy" decoding="async">
+                </div>
+              </figure>
               <span class="field-card__name">諮商／心理</span>
               <span class="field-card__count"><b data-fact="counseling">—</b>位</span>
             </div>
             <div class="field-card">
-              <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#ic-web"></use></svg></span>
+              <figure class="flow-figure flow-figure--drop field-card__figure" data-flow-parallax>
+                <div class="flow-figure__frame">
+                  <img src="assets/img/Water.webp" alt="" loading="lazy" decoding="async">
+                </div>
+              </figure>
               <span class="field-card__name">網站</span>
               <span class="field-card__count"><b data-fact="web">—</b>位</span>
             </div>
             <div class="field-card">
-              <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#ic-finance"></use></svg></span>
+              <figure class="flow-figure flow-figure--drop field-card__figure" data-flow-parallax>
+                <div class="flow-figure__frame">
+                  <img src="assets/img/donate_bg.webp" alt="" loading="lazy" decoding="async">
+                </div>
+              </figure>
               <span class="field-card__name">財務</span>
               <span class="field-card__count"><b data-fact="finance">—</b>位</span>
             </div>
             <div class="field-card">
-              <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#ic-legal"></use></svg></span>
+              <figure class="flow-figure flow-figure--drop field-card__figure" data-flow-parallax>
+                <div class="flow-figure__frame">
+                  <img src="assets/img/HandsWater.webp" alt="" loading="lazy" decoding="async">
+                </div>
+              </figure>
               <span class="field-card__name">法律</span>
               <span class="field-card__count"><b data-fact="legal">—</b>位</span>
             </div>
             <div class="field-card">
-              <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#ic-education"></use></svg></span>
+              <figure class="flow-figure flow-figure--drop field-card__figure" data-flow-parallax>
+                <div class="flow-figure__frame">
+                  <img src="assets/img/Water.webp" alt="" loading="lazy" decoding="async">
+                </div>
+              </figure>
               <span class="field-card__name">教育</span>
               <span class="field-card__count"><b data-fact="education">—</b>位</span>
             </div>
@@ -1368,9 +1381,14 @@
           </div>
           <p class="net-block__note">回國述職、轉換期或短期停留時，有一處可以安心落腳的地方，往往比什麼都實際。</p>
 
+          <!-- TODO：以下兩張為佔位圖，待同工提供實際空間照片後替換，並補上 alt。 -->
           <div class="host-grid">
             <div class="host-card">
-              <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#ic-bnb"></use></svg></span>
+              <figure class="flow-figure flow-figure--basin host-card__figure" data-flow-parallax>
+                <div class="flow-figure__frame">
+                  <img src="assets/img/donate_bg.webp" alt="" loading="lazy" decoding="async">
+                </div>
+              </figure>
               <div class="host-card__body">
                 <div class="host-card__row">
                   <h4 class="host-card__name">Mission BnB</h4>
@@ -1380,7 +1398,11 @@
               </div>
             </div>
             <div class="host-card">
-              <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#ic-host"></use></svg></span>
+              <figure class="flow-figure flow-figure--basin host-card__figure" data-flow-parallax>
+                <div class="flow-figure__frame">
+                  <img src="assets/img/HandsWater.webp" alt="" loading="lazy" decoding="async">
+                </div>
+              </figure>
               <div class="host-card__body">
                 <div class="host-card__row">
                   <h4 class="host-card__name">短期接待家庭</h4>
