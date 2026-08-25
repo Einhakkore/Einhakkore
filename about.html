@@ -753,61 +753,76 @@
 
     /* ============================================================
        SECTION 3 · 關於隱哈歌利（組織資訊）
+       日式「会社概要」的做法：不做成卡片，表格直接落在頁面上，
+       只用細橫線分隔。開頭與結尾的線比列間重一點，把表格框起來；
+       標籤欄窄、小字、加字距，數值欄正常字級——層次靠字級與字距，
+       不靠底色與外框。
+
+       原本用不透明奶紙底 + ink 深字，是因為舊的 #flow-bg 依整頁捲動
+       進度連續內插，這一段會落在深轉亮的交界、對比不固定。現在這一段
+       自己宣告了固定的 palette，深底不會再飄，可以直接用淺色文字。
        ============================================================ */
-    /* 這張卡落在背景由深轉亮的交界，用不透明的奶紙底 + ink 深色文字，
-       不論背後是深藍還是霧白，卡內對比都固定（AAA）。 */
     .org-panel {
-      max-width: 900px;
+      max-width: 860px;
       margin: 0 auto;
-      padding: clamp(28px, 4vw, 48px);
-      border-radius: var(--radius-card);
-      background: #F5F1E8;
-      border: 1px solid var(--hairline-3);
-      box-shadow:
-        inset 0 1px 0 var(--surface-4),
-        0 12px 40px rgba(0, 0, 0, .18);
+      padding: 0;
+      background: none;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
     }
     .org-list {
       margin: 0;
       display: grid;
-      grid-template-columns: minmax(140px, 200px) minmax(0, 1fr);
+      grid-template-columns: minmax(140px, 210px) minmax(0, 1fr);
+      border-top: 1px solid rgba(245, 241, 232, .30);
     }
     .org-list dt,
     .org-list dd {
-      padding: 18px 0;
-      border-top: 1px solid var(--line-dim);
+      padding: clamp(18px, 2.2vw, 24px) 0;
+      border-top: 0;
+      border-bottom: 1px solid rgba(245, 241, 232, .13);
     }
     .org-list dt {
-      font-size: var(--fs-sm); letter-spacing: var(--ls-label);
-      color: var(--text-3);
+      font-family: var(--font-zh);
+      font-size: var(--fs-sm);
+      line-height: var(--lh-body);
+      letter-spacing: var(--ls-label);
+      /* 這一段底部有暖色光暈，是全區最亮處；標籤壓太淡會掉到 4.5:1 以下 */
+      color: rgba(245, 241, 232, .86);
     }
     .org-list dd {
       margin: 0;
-      font-size: var(--fs-md); line-height: var(--lh-body);
-      color: var(--text-1);
+      padding-left: clamp(16px, 3vw, 40px);
+      font-size: var(--fs-md);
+      line-height: var(--lh-body);
+      color: var(--text-on-dark);
     }
-    .org-list dt:first-of-type,
-    .org-list dd:first-of-type { border-top: 0; padding-top: 0; }
+    /* 最後一列收尾的線與開頭那道對稱 */
+    .org-list dt:last-of-type,
+    .org-list dd:last-of-type { border-bottom-color: rgba(245, 241, 232, .30); }
+
     .org-list .sub {
       display: block;
-      margin-top: 4px;
+      margin-top: 6px;
       font-size: var(--fs-sm);
-      color: var(--text-3);
+      color: rgba(245, 241, 232, .86);
     }
-    /* 註腳放在卡內：卡片是不透明奶紙底，色階不受背景漸層影響 */
     .org-note {
       margin: 24px 0 0;
-      padding-top: 20px;
-      border-top: 1px solid var(--line-dim);
-      font-size: var(--fs-sm); line-height: var(--lh-body);
-      color: var(--text-2);
+      padding-top: 0;
+      border-top: 0;
+      font-size: var(--fs-sm);
+      line-height: var(--lh-body);
+      color: rgba(245, 241, 232, .86);
     }
     @media (max-width: 640px) {
       .org-list { grid-template-columns: 1fr; }
-      .org-list dt { padding: 18px 0 0; }
-      .org-list dd { padding: 4px 0 18px; border-top: 0; }
-      .org-list dd:first-of-type { padding-top: 4px; }
+      .org-list dt { padding: 18px 0 0; border-bottom: 0; }
+      .org-list dd { padding: 6px 0 18px; padding-left: 0; }
+      .org-list dt:last-of-type { border-bottom: 0; }
     }
+
     /* INFORMATION 的標題還在深底區，維持反白 */
     .section-org .section-head h2 { color: var(--text-on-dark); }
 
@@ -1086,7 +1101,7 @@
   <div data-flow-divider="rift"></div>
 
   <!-- ============================ OUR VISION ============================ -->
-  <!-- TODO：每個章節「具體實踐」的三條為文案草稿，請同工確認或改寫後再上線。 -->
+  <!-- TODO：第一章的「具體實踐」已是同工提供的版本；第二、三章的各三條仍為草稿，待同工確認或改寫。 -->
   <section class="section section-vision" id="vision" data-flow-palette="#16323D | #0F1F29 | rgba(255,186,73,.15) | 14% 78%">
     <div class="wrap">
       <hgroup class="section-head section-head--on-dark">
@@ -1112,7 +1127,7 @@
                   data-vision-tab="1">
             <span class="vision__chapter-bar" aria-hidden="true"></span>
             <span class="vision__chapter-num">02</span>
-            <span class="vision__chapter-title">資源整合</span>
+            <span class="vision__chapter-title">資源整合平台</span>
           </button>
           <button type="button" class="vision__chapter" role="tab"
                   id="vision-tab-2" aria-controls="vision-panel-2"
@@ -1152,9 +1167,8 @@
               <div class="vision__expand-body" id="vision-detail-0">
                 <div class="vision__expand-inner">
                   <ul class="vision__list">
-                    <li>預備期：出發前的心理準備與期待校準</li>
-                    <li>在工場：定期聯繫、線上代禱與陪談</li>
-                    <li>述職期：回國期間的落腳空間與再適應陪伴</li>
+                    <li>社群觀點與議題傳遞：深入解析各類資源的申請條件與服務特性，協助工人評估並媒合最合適的支持方案。</li>
+                    <li>開啟對話與交流空間：藉由社群平台的互動與經驗分享，營造安全且具同理心的討論氛圍，促進前線工人與後方支持者的相互理解。</li>
                   </ul>
                 </div>
               </div>
@@ -1164,8 +1178,8 @@
                    id="vision-panel-1" aria-labelledby="vision-tab-1"
                    data-vision-panel="1" aria-hidden="true" inert>
             <div class="vision__num" aria-hidden="true">02</div>
-            <h3 class="vision__title">資源整合</h3>
-            <p class="vision__body">連結教會、差會與各領域的專業夥伴，把散落各處的善意接成一張可用的網。我們盤點現有資源、主動媒合，讓求助不必難以啟齒，也讓每一份心意精準到位。</p>
+            <h3 class="vision__title">連結跨界專業，讓資源不再零散，成為一站式的關顧資源平台。</h3>
+            <p class="vision__body">當前跨文化工人的關顧生態，資源分配不均、分散且不易取得，往往只有具備深厚歷史與充足量能的大型差派單位，才有能力提供相對完善的支持系統。隱哈歌利扮演「整合/合一」的角色，拉近專業資源與宣教士之間的距離和門檻，將散落在各處的專業資源進行系統化整合。讓每位跨文化工人在不同階段——無論身處前線、返國過渡或生涯轉換都能獲得適切協助與支持。</p>
 
             <div class="vision__expand" data-vision-expand>
               <button type="button" class="vision__expand-trigger"
@@ -1197,8 +1211,8 @@
                    id="vision-panel-2" aria-labelledby="vision-tab-2"
                    data-vision-panel="2" aria-hidden="true" inert>
             <div class="vision__num" aria-hidden="true">03</div>
-            <h3 class="vision__title">關顧網絡</h3>
-            <p class="vision__body">透過定期聯繫、線上交流與實體接待，讓宣教士與家庭都被看見。從心靈到日常生活，我們希望關顧不是單向的服務，而是彼此有名有姓的關係。</p>
+            <h3 class="vision__title">化繁為簡的一站式樞紐，讓每一位尋求支持的工人，都能被理解並找到適切資源。</h3>
+            <p class="vision__body">面對散落各處且申請門檻各異的關顧資源，跨文化工人往往難以逐一辨識適合自己的項目，更常在與多個單位繁複接洽的過程中耗盡心力。隱哈歌利扮演一站式服務平台與資源經紀人的角色，透過單一窗口，協助工人釐清自身需求與對應資格，免去四處奔波與重複申請的負擔，提供清晰、便捷且具溫度的資源連結。</p>
 
             <div class="vision__expand" data-vision-expand>
               <button type="button" class="vision__expand-trigger"
