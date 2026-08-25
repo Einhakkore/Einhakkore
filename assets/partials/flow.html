@@ -5,7 +5,7 @@
 
      這個 partial 只放兩件不需要 JS 的東西：
        1. <defs> 裡的 clipPath — 給 .flow-figure 用 clip-path: url(#…) 取用
-       2. .flow-field 的色層 — 每個 section 切換 .is-on 做交叉淡入
+       2. .flow-field 的兩層底 — 換色時 ping-pong 交替淡入
 
      divider 的線條由 assets/js/flow.js 依 data-flow-divider 動態產生
      （stroke-dashoffset 動畫需要對個別 <path> 量 getTotalLength()，
@@ -59,13 +59,10 @@
   </defs>
 </svg>
 
-<!-- 背景色場：每個 tint 一層，由 flow.js 依當前 section 切換 .is-on。
-     第一層預設就是 on，JS 掛掉時頁面仍有正確的深藍底。 -->
+<!-- 背景色場：兩層輪流當「下一個顏色」，換色時只動 opacity。
+     直接重寫整片漸層會讓整個視窗每一幀重新光柵化，交替淡入則是合成器的事。
+     顏色不寫在這裡 —— 由各 section 的 data-flow-palette 宣告，flow.js 寫進 inline style。 -->
 <div class="flow-field" aria-hidden="true">
-  <div class="flow-field__layer flow-tint--dawn is-on"    data-tint="dawn"></div>
-  <div class="flow-field__layer flow-tint--deep"          data-tint="deep"></div>
-  <div class="flow-field__layer flow-tint--rise"          data-tint="rise"></div>
-  <div class="flow-field__layer flow-tint--current"       data-tint="current"></div>
-  <div class="flow-field__layer flow-tint--shallow"       data-tint="shallow"></div>
-  <div class="flow-field__layer flow-tint--surface"       data-tint="surface"></div>
+  <div class="flow-field__layer is-on" data-layer="a"></div>
+  <div class="flow-field__layer"       data-layer="b"></div>
 </div>

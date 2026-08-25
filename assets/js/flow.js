@@ -4,7 +4,9 @@
    搭配 assets/css/flow.css 與 assets/partials/flow.html 使用。
 
      data-flow-divider="contour|rift|well"  → 產生線條並做描繪動畫
-     data-flow-tint="dawn|deep|…"           → 該 section 進入視窗中線時換背景色層
+     data-flow-palette="bg1 | bg2 | glow | glow 位置"
+                                            → 該 section 自己宣告一組背景色，
+                                              進出時 tween 過去
      data-flow-parallax                     → .flow-figure 的圖在框內做視差
 
    有 GSAP + ScrollTrigger 時走 scrub（線條跟著捲動一點一點畫出來）；
@@ -157,28 +159,84 @@
     });
   }
 
-  /* ---------- 背景色場：以 section 為單位換色 ----------
-     用視窗中線判斷「現在讀到哪一段」，而不是整頁捲動進度——
-     這樣換色的時機永遠對齊 section 邊界，跟視窗高度無關。 */
-  function initTints() {
+  /* ---------- 背景色場：每個 section 自己宣告一組顏色 ----------
+     data-flow-palette="#14232E | #0E1A23 | rgba(127,166,78,.13) | 78% 42%"
+       第 1、2 段  線性漸層的上下兩色
+       第 3 段     徑向光暈的顏色（可省略 → 不畫光暈）
+       第 4 段     光暈落在哪（可省略 → 50% 50%）
+
+     兩層 ping-pong：新顏色寫進閒置的那一層，再淡入。整片漸層每一幀重寫
+     會讓整個視窗重新光柵化，只動 opacity 則交給合成器，捲動時不掉幀。 */
+  function parsePalette(raw) {
+    const parts = String(raw).split('|').map(v => v.trim());
+    if (!parts[0] || !parts[1]) return null;
+    return {
+      bg1: parts[0],
+      bg2: parts[1],
+      glow: parts[2] || 'transparent',
+      at: parts[3] || '50% 50%',
+    };
+  }
+
+  function initPalettes(gsapReady) {
     const field = document.querySelector('.flow-field');
-    const sections = [...document.querySelectorAll('[data-flow-tint]')];
+    const sections = [...document.querySelectorAll('[data-flow-palette]')];
     if (!field || !sections.length) return;
 
-    const layers = new Map();
-    field.querySelectorAll('.flow-field__layer').forEach(layer => {
-      layers.set(layer.dataset.tint, layer);
-    });
+    const layers = [...field.querySelectorAll('.flow-field__layer')];
+    if (layers.length < 2) return;
 
-    let active = null;
-    function activate(name) {
-      const layer = layers.get(name);
-      if (!layer || active === layer) return;
-      if (active) active.classList.remove('is-on');
-      layer.classList.add('is-on');
-      active = layer;
+    let front = layers[0];
+    let back = layers[1];
+    let current = null;
+
+    function paint(layer, pal) {
+      layer.style.setProperty('--flow-bg1', pal.bg1);
+      layer.style.setProperty('--flow-bg2', pal.bg2);
+      layer.style.setProperty('--flow-glow', pal.glow);
+      layer.style.setProperty('--flow-glow-at', pal.at);
     }
 
+    function applyTo(pal) {
+      if (!pal) return;
+      const key = pal.bg1 + pal.bg2 + pal.glow + pal.at;
+      if (current === key) return;
+      current = key;
+
+      paint(back, pal);
+      // 強制讓瀏覽器先套用新顏色，再切 opacity，否則同一幀內兩件事會合併
+      void back.offsetWidth;
+      back.classList.add('is-on');
+      front.classList.remove('is-on');
+      const tmp = front; front = back; back = tmp;
+    }
+
+    // 第一段直接上色，不淡入
+    const first = parsePalette(sections[0].dataset.flowPalette);
+    if (first) {
+      paint(front, first);
+      front.classList.add('is-on');
+      current = first.bg1 + first.bg2 + first.glow + first.at;
+    }
+
+    if (gsapReady) {
+      // ScrollTrigger：往下捲用 onEnter、往回捲用 onEnterBack，
+      // 交界固定在視窗中線，換色時機就永遠對齊 section 邊界。
+      sections.forEach(section => {
+        const pal = parsePalette(section.dataset.flowPalette);
+        if (!pal) return;
+        ScrollTrigger.create({
+          trigger: section,
+          start: 'top 50%',
+          end: 'bottom 50%',
+          onEnter: () => applyTo(pal),
+          onEnterBack: () => applyTo(pal),
+        });
+      });
+      return;
+    }
+
+    // 沒有 GSAP：用 IntersectionObserver 取「離視窗中線最近的那一段」
     const visible = new Set();
     function pick() {
       if (!visible.size) return;
@@ -186,13 +244,12 @@
       let best = null, bestDist = Infinity;
       visible.forEach(node => {
         const r = node.getBoundingClientRect();
-        // 區塊已經跨過中線 → 距離 0；否則取離中線最近的邊
         const dist = (r.top <= mid && r.bottom >= mid)
           ? 0
           : Math.min(Math.abs(r.top - mid), Math.abs(r.bottom - mid));
         if (dist < bestDist) { bestDist = dist; best = node; }
       });
-      if (best) activate(best.dataset.flowTint);
+      if (best) applyTo(parsePalette(best.dataset.flowPalette));
     }
 
     const io = new IntersectionObserver(entries => {
@@ -202,17 +259,14 @@
       });
       pick();
     }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
-
     sections.forEach(s => io.observe(s));
 
-    // IO 只在交界處回報，捲動中途要靠這裡把「最接近中線」重算一次
     let queued = false;
     window.addEventListener('scroll', () => {
       if (queued) return;
       queued = true;
       requestAnimationFrame(() => { queued = false; pick(); });
     }, { passive: true });
-
     pick();
   }
 
@@ -248,7 +302,7 @@
 
     const dividers = buildDividers();
     initDividerDraw(dividers, gsapReady);
-    initTints();
+    initPalettes(gsapReady);
     initFigureParallax(gsapReady);
 
     if (gsapReady) ScrollTrigger.refresh();

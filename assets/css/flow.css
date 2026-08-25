@@ -21,11 +21,11 @@
    1 · FIELD — 背景色場
    ----------------------------------------------------------- */
 
-/* 用 data-flow="sections" 讓 site.js 的 initFlowField() 跳過這一頁
+/* data-flow="sections" 的頁面不吃 site.js 注入的 #flow-bg
    （那支是依「整頁捲動進度」線性內插，會每一幀覆寫 --bg1/--bg2，
      跟這裡以 section 為單位的換色互相打架）。 */
 body[data-flow="sections"] {
-  background: #182C3B;   /* 色層還沒淡入前的保底底色 */
+  background: var(--flow-fallback, #182C3B);   /* 色層還沒寫進來前的保底底色 */
 }
 
 .flow-field {
@@ -35,47 +35,22 @@ body[data-flow="sections"] {
   pointer-events: none;
 }
 
+/* 兩層輪流：新的顏色寫進閒置的那一層，再把它的 opacity 淡進來。
+   顏色由 flow.js 依各 section 的 data-flow-palette 寫成 inline 的
+   --flow-bg1 / --flow-bg2 / --flow-glow / --flow-glow-at。 */
 .flow-field__layer {
   position: absolute;
   inset: 0;
   opacity: 0;
-  transition: opacity 1.5s cubic-bezier(.16, 1, .3, 1);
+  background:
+    radial-gradient(72vw 62vw at var(--flow-glow-at, 50% 50%),
+                    var(--flow-glow, transparent), transparent 62%),
+    linear-gradient(175deg,
+                    var(--flow-bg1, #22394A),
+                    var(--flow-bg2, #182C3B));
+  transition: opacity 1.2s cubic-bezier(.16, 1, .3, 1);
 }
 .flow-field__layer.is-on { opacity: 1; }
-
-/* 每一層 = 一道「光源在某個位置」的深藍。
-   section 往下走時光源跟著移動，就是整頁的流向。
-   徑向光暈都壓在 .18 以下，深底上的淺色文字對比維持在 AAA。 */
-.flow-tint--dawn {
-  background:
-    radial-gradient(60vw 55vw at 18% 12%, rgba(255, 186, 73, .16), transparent 62%),
-    linear-gradient(175deg, #22394A, #182C3B);
-}
-.flow-tint--deep {
-  background:
-    radial-gradient(70vw 60vw at 78% 42%, rgba(127, 166, 78, .13), transparent 64%),
-    linear-gradient(175deg, #14232E, #0E1A23);
-}
-.flow-tint--rise {
-  background:
-    radial-gradient(65vw 60vw at 14% 78%, rgba(255, 186, 73, .15), transparent 62%),
-    linear-gradient(175deg, #16323D, #0F1F29);
-}
-.flow-tint--current {
-  background:
-    radial-gradient(72vw 62vw at 88% 60%, rgba(143, 180, 206, .16), transparent 64%),
-    linear-gradient(175deg, #2C4854, #1D3038);
-}
-.flow-tint--shallow {
-  background:
-    radial-gradient(80vw 55vw at 50% 92%, rgba(255, 186, 73, .17), transparent 60%),
-    linear-gradient(175deg, #33505C, #22323C);
-}
-.flow-tint--surface {
-  background:
-    radial-gradient(90vw 60vw at 50% 100%, rgba(255, 186, 73, .18), transparent 58%),
-    linear-gradient(175deg, #3C5A66, #2A3D47);
-}
 
 /* -----------------------------------------------------------
    2 · DIVIDER — section 之間的線條轉場
@@ -224,6 +199,7 @@ body[data-flow="sections"] {
    4 · 降級
    ----------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
+  /* 換色本身保留（那是資訊，不是動態），只是不再有淡入的過程 */
   .flow-field__layer { transition: opacity .01ms; }
   .flow-divider path.is-measured {
     stroke-dasharray: none;
