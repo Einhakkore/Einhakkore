@@ -19,12 +19,313 @@
   <meta name="twitter:title" content="參與服事 · 隱哈歌利">
   <meta name="twitter:description" content="用您的專業成為宣教士的後盾。">
 
-  <link rel="preload" href="assets/fonts/ShiweiSiJiChun-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <!-- assets/fonts/ 下沒有 Regular 這個字重，舊的 preload 是 404 -->
+  <link rel="preload" href="assets/fonts/ShiweiSiJiChun-Medium.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/ShiweiSiJiChun-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/FreightTextPro-Book.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600&display=swap">
   <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/flow.css">
+
+  <style>
+    /* ============================================================
+       SERVE — 三個新區塊的頁面級樣式
+       ============================================================ */
+
+    /* ------------------------------------------------------------
+       SECTION 1 · 資源連結 —— 池塘拼貼
+       八塊水窪各自是獨立生成的形狀（見 body 開頭的 <defs>），
+       用絕對定位手排在一個固定比例的舞台上，讓彼此咬合。
+       位置與大小走 CSS 變數（--l / --t / --w / --ar），要調版面
+       只要改 HTML 上那一行 style，不用動這裡。
+       ------------------------------------------------------------ */
+    .pond-field {
+      position: relative;
+      width: 100%;
+      max-width: 1120px;
+      margin: clamp(32px, 5vw, 64px) auto 0;
+      aspect-ratio: 100 / 68;
+    }
+
+    .pond {
+      position: absolute;
+      left: var(--l);
+      top: var(--t);
+      width: var(--w);
+      aspect-ratio: var(--ar);
+      z-index: var(--z);
+      padding: 0;
+      border: 0;
+      background: none;
+      color: inherit;
+      text-align: center;
+      transition: transform .5s cubic-bezier(.16, 1, .3, 1);
+      /* 水窪是互相重疊的，按鈕本身仍是矩形 —— 不處理的話鄰居看不見的
+         直角會把點擊搶走。把命中判定交給有 clip-path 的 .pond__shape：
+         被裁掉的區域不接受指標事件，點擊就只會落在真正的形狀上。
+         .pond__inner 沿用 none，點在文字上會穿透到下面同一塊的 shape。 */
+      pointer-events: none;
+    }
+    /* 形狀本體與內容分兩層：形狀吃 clip-path，文字疊在上面不被裁掉 */
+    .pond__shape {
+      position: absolute;
+      inset: 0;
+      pointer-events: auto;
+      cursor: pointer;
+      background:
+        radial-gradient(120% 100% at 30% 20%, rgba(143, 180, 206, .22), transparent 70%),
+        rgba(245, 241, 232, .07);
+      transition: background .45s ease;
+    }
+    .pond__inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      /* 有機形狀的邊緣是曲線，文字要往內縮才不會壓到邊 */
+      padding: 18% 17%;
+    }
+    .pond__name {
+      font-family: var(--font-brand);
+      font-weight: var(--fw-semibold);
+      font-size: var(--fs-md);
+      line-height: var(--lh-title);
+      letter-spacing: var(--ls-cjk);
+      color: var(--text-on-dark);
+    }
+    .pond__items {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      font-size: var(--fs-2xs);
+      line-height: 1.5;
+      color: rgba(245, 241, 232, .86);
+    }
+
+    /* 每一塊用自己的 clipPath；同時各自吃一點色相差，看起來像深淺不同的水 */
+    .pond--body   .pond__shape { clip-path: url(#pond-body); }
+    .pond--mind   .pond__shape { clip-path: url(#pond-mind); }
+    .pond--spirit .pond__shape { clip-path: url(#pond-spirit); }
+    .pond--equip  .pond__shape { clip-path: url(#pond-equip); }
+    .pond--admin  .pond__shape { clip-path: url(#pond-admin); }
+    .pond--team   .pond__shape { clip-path: url(#pond-team); }
+    .pond--family .pond__shape { clip-path: url(#pond-family); }
+    .pond--crisis .pond__shape { clip-path: url(#pond-crisis); }
+
+    .pond--mind   .pond__shape,
+    .pond--family .pond__shape { background:
+        radial-gradient(120% 100% at 30% 20%, rgba(127, 166, 78, .20), transparent 70%),
+        rgba(245, 241, 232, .07); }
+    .pond--admin  .pond__shape,
+    .pond--equip  .pond__shape { background:
+        radial-gradient(120% 100% at 30% 20%, rgba(255, 186, 73, .18), transparent 70%),
+        rgba(245, 241, 232, .07); }
+
+    /* 浮起：hover 先抬一點，點下去鎖住放大並壓過鄰居 */
+    .pond:has(.pond__shape:hover) { transform: translateY(-6px) scale(1.02); z-index: 20; }
+    .pond:has(.pond__shape:hover) .pond__shape { background:
+        radial-gradient(120% 100% at 30% 20%, rgba(242, 195, 107, .26), transparent 70%),
+        rgba(245, 241, 232, .12); }
+    .pond.is-lifted {
+      transform: translateY(-10px) scale(1.10);
+      z-index: 30;
+    }
+    .pond.is-lifted .pond__shape { background:
+        radial-gradient(120% 100% at 30% 20%, rgba(242, 195, 107, .32), transparent 70%),
+        rgba(245, 241, 232, .16); }
+    .pond:focus-visible { outline: none; }
+    .pond:focus-visible .pond__shape {
+      box-shadow: 0 0 0 2px var(--amber-400);
+    }
+
+    .pond-hint {
+      margin: clamp(20px, 3vw, 32px) 0 0;
+      text-align: center;
+      font-size: var(--fs-sm);
+      letter-spacing: var(--ls-wide);
+      color: rgba(245, 241, 232, .62);
+    }
+
+    /* 窄螢幕：拆成兩欄的一般排版，形狀留著、位置不再手排 */
+    @media (max-width: 760px) {
+      .pond-field {
+        aspect-ratio: auto;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 4px;
+      }
+      .pond {
+        /* 不能用 static：.pond__shape 是 absolute inset:0，
+           少了定位祖先就會改去對齊 .pond-field，八塊形狀會全部疊在一起 */
+        position: relative;
+        left: auto;
+        top: auto;
+        width: auto;
+        /* 窄螢幕不鎖比例，讓高度跟著內容長 —— 財務有五項，
+           固定 1:1 會把最後一行擠到形狀外面 */
+        aspect-ratio: auto;
+        min-height: 150px;
+        transform: none;
+      }
+      /* inner 改回文件流，pond 的高度就由文字決定，shape 再撐滿它 */
+      .pond__inner { position: static; }
+      /* 交錯上下錯位，保留一點拼貼感 */
+      .pond:nth-child(even) { margin-top: 26px; }
+      .pond:nth-child(odd)  { margin-bottom: 26px; }
+      .pond:has(.pond__shape:hover) { transform: none; }
+      .pond.is-lifted { transform: scale(1.06); }
+      .pond__inner { padding: 24% 16%; }
+      .pond__name { font-size: var(--fs-sm); }
+    }
+
+    /* ------------------------------------------------------------
+       SECTION 2 · 代禱守望
+       ------------------------------------------------------------ */
+    .watch-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(24px, 3vw, 40px);
+      margin-top: clamp(32px, 4vw, 56px);
+    }
+    @media (max-width: 900px) { .watch-grid { grid-template-columns: 1fr; max-width: 520px; margin-inline: auto; } }
+
+    /* 一樣不做成圓角卡片：靠水滴形的照片與一道細線分段 */
+    .watch-card { display: flex; flex-direction: column; gap: 20px; }
+    .watch-card__figure {
+      width: 100%;
+      max-width: 180px;
+      margin: 0;
+      transition: transform .45s cubic-bezier(.16, 1, .3, 1);
+    }
+    .watch-card:hover .watch-card__figure { transform: translateY(-4px); }
+    .watch-card__figure img { filter: sepia(.12) saturate(.86) brightness(.92); }
+    .watch-card__region {
+      font-family: var(--font-en);
+      font-size: var(--fs-sm);
+      letter-spacing: var(--ls-caps);
+      color: var(--amber-400);
+      margin-bottom: 8px;
+    }
+    .watch-card__name {
+      font-family: var(--font-brand); font-weight: var(--fw-semibold);
+      font-size: var(--fs-3xl); line-height: var(--lh-title);
+      letter-spacing: var(--ls-cjk);
+      color: var(--text-on-dark);
+      margin: 0 0 12px;
+    }
+    .watch-card__intro {
+      margin: 0 0 20px;
+      font-size: var(--fs-md); line-height: var(--lh-loose);
+      color: rgba(245, 241, 232, .86);
+    }
+    .watch-card__pray {
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, .16);
+    }
+    .watch-card__pray-label {
+      display: block;
+      font-size: var(--fs-sm); letter-spacing: var(--ls-label);
+      color: var(--amber-400);
+      margin-bottom: 10px;
+    }
+    .watch-card__pray ul {
+      list-style: none; margin: 0; padding: 0;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .watch-card__pray li {
+      position: relative; padding-left: 20px;
+      font-size: var(--fs-sm); line-height: var(--lh-body);
+      color: rgba(245, 241, 232, .86);
+    }
+    .watch-card__pray li::before {
+      content: ""; position: absolute; left: 0; top: .7em;
+      width: 8px; height: 1px; background: var(--amber-400); opacity: .7;
+    }
+
+    .watch-cta {
+      margin-top: clamp(40px, 5vw, 64px);
+      display: flex; flex-direction: column; align-items: center; gap: 20px;
+      text-align: center;
+    }
+    .watch-cta p {
+      margin: 0;
+      font-size: var(--fs-md); line-height: var(--lh-loose);
+      color: rgba(245, 241, 232, .88);
+    }
+
+    /* ------------------------------------------------------------
+       SECTION 3 · 奉獻支持（整頁轉亮的收尾，文字改吃深色階）
+       ------------------------------------------------------------ */
+    .section-give .section-num     { color: var(--amber-500); opacity: .9; }
+    .section-give .section-eyebrow { color: var(--amber-700, var(--amber-500)); }
+    .section-give .section-head h2 { color: var(--text-1); }
+    .section-give .section-head .lead { color: var(--text-2); }
+
+    .give-panel { max-width: 720px; margin: clamp(32px, 4vw, 48px) auto 0; }
+    .give-list { list-style: none; margin: 0 0 clamp(32px, 4vw, 44px); padding: 0; }
+    .give-list li {
+      position: relative; padding-left: 22px;
+      font-size: var(--fs-md); line-height: var(--lh-loose);
+      color: var(--text-1);
+    }
+    .give-list li::before {
+      content: ""; position: absolute; left: 0; top: .78em;
+      width: 10px; height: 1px; background: var(--amber-500);
+    }
+    .give-list b { font-weight: var(--fw-semibold); }
+
+    /* 數字還沒確定，進度條刻意留空（虛線軌道），不要在畫面上放看起來像真的假數據 */
+    .give-meter {
+      padding: 24px 0;
+      border-top: 1px solid var(--line-mid);
+      border-bottom: 1px solid var(--line-mid);
+    }
+    .give-meter__row {
+      display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+    }
+    .give-meter__label {
+      font-size: var(--fs-sm); letter-spacing: var(--ls-label);
+      color: var(--text-3);
+    }
+    .give-meter__value {
+      font-family: var(--font-en);
+      font-size: var(--fs-xl); color: var(--text-1);
+      font-variant-numeric: tabular-nums;
+    }
+    .give-meter__track {
+      position: relative;
+      height: 6px;
+      margin: 14px 0;
+      border-radius: var(--radius-pill);
+      border: 1px dashed var(--line-mid);
+      background: transparent;
+    }
+    .give-meter__fill {
+      position: absolute; inset: 0 auto 0 0;
+      width: var(--progress, 0);
+      border-radius: var(--radius-pill);
+      background: linear-gradient(90deg, var(--amber-500), var(--amber-400));
+      transition: width 1.2s cubic-bezier(.16, 1, .3, 1);
+    }
+
+    .give-actions { margin-top: clamp(28px, 4vw, 40px); display: flex; justify-content: center; }
+
+    /* ---------- 無 JS / 減弱動態的保底 ---------- */
+    @media (prefers-reduced-motion: reduce) {
+      .pond, .pond__shape,
+      .watch-card__figure,
+      .give-meter__fill { transition-duration: .01ms !important; }
+      .pond:has(.pond__shape:hover) { transform: none; }
+    }
+  </style>
 
   <script type="application/ld+json">
   {
@@ -52,23 +353,188 @@
   }
   </script>
 </head>
-<body data-page="serve">
-
-<div data-include="aurora"></div>
+<body data-page="serve" data-flow="sections">
 
 <div data-include="icons"></div>
+<div data-include="flow"></div>
 <div data-include="header"></div>
+
+<!-- 八塊水窪的形狀定義（由固定種子產生，形狀不會隨載入變動） -->
+<svg class="pond-defs" width="0" height="0" aria-hidden="true" focusable="false">
+  <defs>
+    <clipPath id="pond-body" clipPathUnits="objectBoundingBox">
+      <path d="M0.8267 0.2924 C0.8808 0.3721 0.9481 0.4761 0.9424 0.5718 C0.9367 0.6674 0.8612 0.8034 0.7925 0.8660 C0.7237 0.9287 0.6241 0.9632 0.5299 0.9478 C0.4357 0.9325 0.3013 0.8342 0.2273 0.7741 C0.1532 0.7140 0.1045 0.6780 0.0858 0.5872 C0.0670 0.4964 0.0794 0.3142 0.1148 0.2293 C0.1502 0.1443 0.2142 0.1000 0.2980 0.0773 C0.3817 0.0547 0.5294 0.0577 0.6175 0.0935 C0.7056 0.1293 0.7725 0.2127 0.8267 0.2924 Z"/>
+    </clipPath>
+    <clipPath id="pond-mind" clipPathUnits="objectBoundingBox">
+      <path d="M0.3889 0.1100 C0.4600 0.0906 0.5841 0.0783 0.6592 0.1065 C0.7343 0.1346 0.8033 0.2142 0.8395 0.2790 C0.8758 0.3438 0.8803 0.4239 0.8768 0.4952 C0.8732 0.5666 0.8498 0.6408 0.8182 0.7069 C0.7866 0.7730 0.7503 0.8658 0.6870 0.8919 C0.6237 0.9179 0.5110 0.8822 0.4387 0.8630 C0.3663 0.8438 0.3037 0.8101 0.2530 0.7766 C0.2024 0.7432 0.1537 0.7280 0.1348 0.6622 C0.1159 0.5964 0.1234 0.4551 0.1396 0.3819 C0.1559 0.3086 0.1906 0.2679 0.2322 0.2226 C0.2737 0.1773 0.3177 0.1293 0.3889 0.1100 Z"/>
+    </clipPath>
+    <clipPath id="pond-spirit" clipPathUnits="objectBoundingBox">
+      <path d="M0.6955 0.0924 C0.8042 0.1352 0.9321 0.2737 0.9662 0.3634 C1.0002 0.4531 0.9591 0.5383 0.8999 0.6309 C0.8407 0.7234 0.7045 0.8776 0.6108 0.9186 C0.5171 0.9597 0.4270 0.9240 0.3375 0.8774 C0.2480 0.8309 0.1180 0.7418 0.0736 0.6393 C0.0293 0.5367 0.0316 0.3507 0.0717 0.2620 C0.1118 0.1733 0.2102 0.1352 0.3141 0.1069 C0.4181 0.0787 0.5868 0.0497 0.6955 0.0924 Z"/>
+    </clipPath>
+    <clipPath id="pond-equip" clipPathUnits="objectBoundingBox">
+      <path d="M0.1463 0.4193 C0.1547 0.3414 0.1245 0.2324 0.1827 0.1804 C0.2409 0.1284 0.4064 0.1112 0.4954 0.1072 C0.5844 0.1032 0.6420 0.1146 0.7169 0.1563 C0.7919 0.1980 0.9196 0.2848 0.9450 0.3576 C0.9705 0.4304 0.9028 0.5207 0.8696 0.5933 C0.8363 0.6659 0.7991 0.7378 0.7454 0.7931 C0.6917 0.8484 0.6338 0.9129 0.5474 0.9251 C0.4610 0.9373 0.2961 0.9125 0.2269 0.8662 C0.1577 0.8200 0.1456 0.7223 0.1322 0.6478 C0.1187 0.5734 0.1379 0.4972 0.1463 0.4193 Z"/>
+    </clipPath>
+    <clipPath id="pond-admin" clipPathUnits="objectBoundingBox">
+      <path d="M0.8268 0.2023 C0.8899 0.2509 0.9147 0.3550 0.9244 0.4460 C0.9340 0.5370 0.9345 0.6836 0.8848 0.7481 C0.8351 0.8125 0.7138 0.8093 0.6263 0.8329 C0.5387 0.8566 0.4443 0.9167 0.3596 0.8899 C0.2749 0.8631 0.1613 0.7457 0.1182 0.6722 C0.0751 0.5987 0.0800 0.5323 0.1009 0.4491 C0.1219 0.3660 0.1699 0.2224 0.2440 0.1733 C0.3181 0.1242 0.4484 0.1496 0.5456 0.1544 C0.6427 0.1592 0.7636 0.1537 0.8268 0.2023 Z"/>
+    </clipPath>
+    <clipPath id="pond-team" clipPathUnits="objectBoundingBox">
+      <path d="M0.1384 0.2324 C0.1949 0.1704 0.3308 0.1324 0.4085 0.1115 C0.4862 0.0905 0.5360 0.0879 0.6047 0.1065 C0.6733 0.1251 0.7633 0.1650 0.8204 0.2228 C0.8776 0.2806 0.9453 0.3789 0.9477 0.4534 C0.9502 0.5280 0.8661 0.6043 0.8350 0.6702 C0.8040 0.7361 0.8196 0.8141 0.7613 0.8488 C0.7030 0.8835 0.5597 0.8809 0.4855 0.8783 C0.4112 0.8758 0.3786 0.8643 0.3158 0.8334 C0.2531 0.8024 0.1500 0.7511 0.1090 0.6927 C0.0679 0.6344 0.0645 0.5599 0.0694 0.4831 C0.0743 0.4064 0.0819 0.2943 0.1384 0.2324 Z"/>
+    </clipPath>
+    <clipPath id="pond-family" clipPathUnits="objectBoundingBox">
+      <path d="M0.7855 0.6955 C0.7252 0.7717 0.6851 0.8119 0.6087 0.8458 C0.5323 0.8797 0.4201 0.9351 0.3272 0.8990 C0.2343 0.8629 0.0831 0.7246 0.0515 0.6292 C0.0199 0.5338 0.0783 0.4141 0.1376 0.3267 C0.1969 0.2394 0.3133 0.1470 0.4075 0.1052 C0.5017 0.0633 0.6088 0.0282 0.7027 0.0755 C0.7965 0.1228 0.9570 0.2857 0.9708 0.3891 C0.9846 0.4924 0.8459 0.6194 0.7855 0.6955 Z"/>
+    </clipPath>
+    <clipPath id="pond-crisis" clipPathUnits="objectBoundingBox">
+      <path d="M0.3401 0.0948 C0.4107 0.0775 0.5332 0.1158 0.6141 0.1477 C0.6951 0.1797 0.7814 0.2305 0.8257 0.2866 C0.8699 0.3426 0.8785 0.3998 0.8798 0.4839 C0.8811 0.5680 0.8807 0.7270 0.8337 0.7912 C0.7868 0.8553 0.6704 0.8492 0.5981 0.8689 C0.5257 0.8886 0.4689 0.9245 0.3995 0.9093 C0.3300 0.8941 0.2233 0.8458 0.1813 0.7777 C0.1394 0.7097 0.1464 0.5886 0.1479 0.5009 C0.1495 0.4131 0.1587 0.3190 0.1907 0.2513 C0.2227 0.1836 0.2695 0.1120 0.3401 0.0948 Z"/>
+    </clipPath>
+  </defs>
+</svg>
 
 <main>
 
-<section class="page-hero">
+<section class="page-hero" data-flow-palette="#22394A | #182C3B | rgba(255,186,73,.16) | 18% 12%">
   <div class="symbol-sm"></div>
   <div class="eyebrow">JOIN US · 參與服事</div>
   <h1>用您的專業，<br>成為宣教士的後盾</h1>
   <p>不一定要遠行，才能參與大使命。<br>您的時間、專業與恩賜，都能成為前線的後盾。</p>
 </section>
 
-<section class="section section-practices">
+<!-- 轉場：湧 —— 一道落線打在水面上 -->
+<div data-flow-divider="well"></div>
+
+<!-- ============================ SECTION 1 · 資源連結 ============================ -->
+<section class="section section-fields" id="fields"
+         data-flow-palette="#16323D | #0F1F29 | rgba(143,180,206,.15) | 20% 72%">
+  <div class="wrap">
+    <div class="section-head section-head--on-dark reveal">
+      <div class="section-num">RESOURCES</div>
+      <div class="section-eyebrow">資源連結</div>
+      <h2>專業關顧：用專業恩賜加入網絡</h2>
+      <span class="section-title-line" data-team-line aria-hidden="true"></span>
+      <p class="lead">我們依據宣教士關顧架構，整合 8 個專業領域。透過您的專業恩賜服事跨文化同工。</p>
+    </div>
+
+    <!-- 八個領域各自是一塊獨立生成的水窪：8～11 個隨機擾動的頂點，
+         再用 Catmull-Rom 平滑成閉合曲線（見 <defs>），形狀彼此都不一樣。
+         位置與大小是手排的，讓它們互相咬合成一片池塘。 -->
+    <div class="pond-field" data-pond-field>
+        <button type="button" class="pond pond--body" data-pond
+                style="--l:0%; --t:2%; --w:30%; --ar:1.05; --z:1;"
+                aria-expanded="false">
+          <span class="pond__shape" aria-hidden="true"></span>
+          <span class="pond__inner">
+            <span class="pond__name">生理／醫療照顧</span>
+            <ul class="pond__items">
+              <li>醫師</li>
+              <li>護理師</li>
+              <li>物理治療</li>
+              <li>各類健康諮詢</li>
+            </ul>
+          </span>
+        </button>
+
+        <button type="button" class="pond pond--mind" data-pond
+                style="--l:25%; --t:9%; --w:27%; --ar:1.12; --z:2;"
+                aria-expanded="false">
+          <span class="pond__shape" aria-hidden="true"></span>
+          <span class="pond__inner">
+            <span class="pond__name">諮商／心理照顧</span>
+            <ul class="pond__items">
+              <li>諮商心理師</li>
+              <li>臨床心理師</li>
+              <li>debrefing</li>
+            </ul>
+          </span>
+        </button>
+
+        <button type="button" class="pond pond--spirit" data-pond
+                style="--l:47%; --t:1%; --w:24%; --ar:0.95; --z:3;"
+                aria-expanded="false">
+          <span class="pond__shape" aria-hidden="true"></span>
+          <span class="pond__inner">
+            <span class="pond__name">牧養／靈性照顧</span>
+            <ul class="pond__items">
+              <li>靈程導引</li>
+              <li>牧靈諮商</li>
+            </ul>
+          </span>
+        </button>
+
+        <button type="button" class="pond pond--crisis" data-pond
+                style="--l:66%; --t:7%; --w:25%; --ar:1.08; --z:4;"
+                aria-expanded="false">
+          <span class="pond__shape" aria-hidden="true"></span>
+          <span class="pond__inner">
+            <span class="pond__name">危機／突發應變</span>
+            <ul class="pond__items">
+              <li>危機減壓</li>
+              <li>創傷復原</li>
+            </ul>
+          </span>
+        </button>
+
+        <button type="button" class="pond pond--admin" data-pond
+                style="--l:2%; --t:38%; --w:35%; --ar:1.0; --z:5;"
+                aria-expanded="false">
+          <span class="pond__shape" aria-hidden="true"></span>
+          <span class="pond__inner">
+            <span class="pond__name">財務／行政後勤</span>
+            <ul class="pond__items">
+              <li>財務顧問</li>
+              <li>保險諮詢</li>
+              <li>會計稅務</li>
+              <li>法律諮詢</li>
+              <li>空間與住宿提供（如 MissionBnB）</li>
+            </ul>
+          </span>
+        </button>
+
+        <button type="button" class="pond pond--team" data-pond
+                style="--l:30%; --t:45%; --w:28%; --ar:1.05; --z:6;"
+                aria-expanded="false">
+          <span class="pond__shape" aria-hidden="true"></span>
+          <span class="pond__inner">
+            <span class="pond__name">團隊建立／人際照顧</span>
+            <ul class="pond__items">
+              <li>團隊建造</li>
+              <li>衝突調解</li>
+              <li>溝通培訓</li>
+            </ul>
+          </span>
+        </button>
+
+        <button type="button" class="pond pond--family" data-pond
+                style="--l:53%; --t:40%; --w:26%; --ar:1.0; --z:7;"
+                aria-expanded="false">
+          <span class="pond__shape" aria-hidden="true"></span>
+          <span class="pond__inner">
+            <span class="pond__name">家庭／宣教士子女</span>
+            <ul class="pond__items">
+              <li>TCK升學諮詢</li>
+              <li>TCK心理照顧</li>
+            </ul>
+          </span>
+        </button>
+
+        <button type="button" class="pond pond--equip" data-pond
+                style="--l:74%; --t:47%; --w:20%; --ar:1.0; --z:8;"
+                aria-expanded="false">
+          <span class="pond__shape" aria-hidden="true"></span>
+          <span class="pond__inner">
+            <span class="pond__name">裝備／職涯發展</span>
+            <ul class="pond__items">
+              <li>教練（Coaching）</li>
+            </ul>
+          </span>
+        </button>
+    </div>
+    <p class="pond-hint">點一下水窪可以看得更清楚</p>
+  </div>
+</section>
+
+<!-- 轉場：流 —— 水面等高線 -->
+<div data-flow-divider="contour"></div>
+
+<section class="section section-practices" data-flow-palette="#14232E | #0E1A23 | rgba(127,166,78,.13) | 78% 42%">
   <div class="wrap">
     <div class="section-head reveal">
       <div class="section-num">PROCESS</div>
@@ -348,7 +814,10 @@
   </div>
 </section>
 
-<section class="section">
+<!-- 轉場：流 —— 水面等高線 -->
+<div data-flow-divider="contour"></div>
+
+<section class="section" id="skill-match" data-flow-palette="#2C4854 | #1D3038 | rgba(143,180,206,.16) | 88% 60%">
   <div class="wrap">
     <div class="section-head reveal">
       <div class="section-eyebrow">SKILL MATCH · 技能媒合</div>
@@ -393,13 +862,179 @@
   </div>
 </section>
 
-<div data-include="newsletter"></div>
+<!-- 轉場：裂 —— 一條線在中央斷開、錯位成上下兩支 -->
+<div data-flow-divider="rift"></div>
+
+<!-- ============================ SECTION 2 · 代禱守望 ============================ -->
+<section class="section section-watch" id="watch"
+         data-flow-palette="#33505C | #22323C | rgba(255,186,73,.17) | 50% 92%">
+  <div class="wrap">
+    <div class="section-head section-head--on-dark reveal">
+      <div class="section-num">PRAYER</div>
+      <div class="section-eyebrow">代禱守望</div>
+      <h2>成為守望者‧以禱告托住前線</h2>
+      <span class="section-title-line" data-team-line aria-hidden="true"></span>
+      <p class="lead">事工的推展與宣教士的挑戰，最需要的是持續不斷的禱告遮蓋。</p>
+    </div>
+
+    <!-- TODO：以下三張為版面佔位。待同工提供可公開的宣教士簡介與代禱事項後，
+         把姓名、地區、內容與照片一併替換，並把 alt 從空字串改成實際描述。
+         在取得當事人同意之前，這裡不放任何真實姓名或可辨識資訊。 -->
+    <div class="watch-grid">
+      <article class="watch-card reveal">
+        <figure class="flow-figure flow-figure--drop watch-card__figure" data-flow-parallax>
+          <div class="flow-figure__frame">
+            <img src="assets/img/Water.webp" alt="" loading="lazy" decoding="async">
+          </div>
+        </figure>
+        <div class="watch-card__body">
+          <div class="watch-card__region">服事地區 · 待補</div>
+          <h3 class="watch-card__name">宣教士簡介 01</h3>
+          <p class="watch-card__intro">待補：一段簡短的服事介紹。</p>
+          <div class="watch-card__pray">
+            <span class="watch-card__pray-label">代禱事項</span>
+            <ul>
+              <li>待補</li>
+              <li>待補</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="watch-card reveal">
+        <figure class="flow-figure flow-figure--drop watch-card__figure" data-flow-parallax>
+          <div class="flow-figure__frame">
+            <img src="assets/img/HandsWater.webp" alt="" loading="lazy" decoding="async">
+          </div>
+        </figure>
+        <div class="watch-card__body">
+          <div class="watch-card__region">服事地區 · 待補</div>
+          <h3 class="watch-card__name">宣教士簡介 02</h3>
+          <p class="watch-card__intro">待補：一段簡短的服事介紹。</p>
+          <div class="watch-card__pray">
+            <span class="watch-card__pray-label">代禱事項</span>
+            <ul>
+              <li>待補</li>
+              <li>待補</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="watch-card reveal">
+        <figure class="flow-figure flow-figure--drop watch-card__figure" data-flow-parallax>
+          <div class="flow-figure__frame">
+            <img src="assets/img/donate_bg.webp" alt="" loading="lazy" decoding="async">
+          </div>
+        </figure>
+        <div class="watch-card__body">
+          <div class="watch-card__region">服事地區 · 待補</div>
+          <h3 class="watch-card__name">宣教士簡介 03</h3>
+          <p class="watch-card__intro">待補：一段簡短的服事介紹。</p>
+          <div class="watch-card__pray">
+            <span class="watch-card__pray-label">代禱事項</span>
+            <ul>
+              <li>待補</li>
+              <li>待補</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="watch-cta reveal">
+      <p>訂閱我們的代禱信，定期接收隱哈歌利的服事動態。</p>
+      <a class="btn btn-primary" href="https://enhakkore.substack.com/" target="_blank" rel="noopener">
+        訂閱代禱信
+        <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- 轉場：流 —— 水面等高線 -->
+<div data-flow-divider="contour"></div>
+
+<!-- ============================ SECTION 3 · 奉獻支持 ============================ -->
+<!-- 整頁在這裡轉亮收尾，與 about 頁的 JOIN US 同一個節奏 -->
+<section class="section section-give" id="give-support"
+         data-flow-palette="#F5F1E8 | #E7DECB | rgba(255,186,73,.30) | 50% 88%">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-num">SUPPORT</div>
+      <div class="section-eyebrow">奉獻支持</div>
+      <h2>灌溉長遠的關顧事工</h2>
+      <p class="lead">隱哈歌利的運作仰賴主內肢體的愛心支持。您的每一筆奉獻，將直接用於推動具體關顧專案與維持平台的日常行政營運：</p>
+    </div>
+
+    <div class="give-panel reveal">
+      <ul class="give-list">
+        <li><b>專案推動：</b>MissionBnB 空間營運、關顧資源媒合。</li>
+      </ul>
+
+      <!-- TODO：實際數字確認後，把下面的 XXX,XXX / XX 換掉，
+           並在 .give-meter 上加 style="--progress: 42%" 之類的實際進度。
+           在有真實數字之前刻意不填，避免畫面上出現看起來像真的假數據。 -->
+      <div class="give-meter" role="group" aria-label="年度經常費與專案需求">
+        <div class="give-meter__row">
+          <span class="give-meter__label">年度經常費與專案需求</span>
+          <span class="give-meter__value">NT$ XXX,XXX</span>
+        </div>
+        <div class="give-meter__track"><span class="give-meter__fill"></span></div>
+        <div class="give-meter__row">
+          <span class="give-meter__label">目前進度</span>
+          <span class="give-meter__value">XX%</span>
+        </div>
+      </div>
+
+      <div class="give-actions">
+        <a class="btn btn-primary" href="give.html">
+          前往線上奉獻
+          <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
 
 </main>
 
 <div data-include="footer"></div>
 
 <script src="assets/js/site.js"></script>
+<script src="assets/js/flow.js"></script>
+
+<script>
+/* 水窪：點一下浮起放大，再點一下收回；一次只浮一塊。
+   純 DOM，不相依 GSAP。 */
+(function () {
+  const field = document.querySelector('[data-pond-field]');
+  if (!field) return;
+  const ponds = [...field.querySelectorAll('[data-pond]')];
+  let lifted = null;
+
+  function lift(pond) {
+    if (lifted && lifted !== pond) {
+      lifted.classList.remove('is-lifted');
+      lifted.setAttribute('aria-expanded', 'false');
+    }
+    const on = pond !== lifted;
+    pond.classList.toggle('is-lifted', on);
+    pond.setAttribute('aria-expanded', on ? 'true' : 'false');
+    lifted = on ? pond : null;
+  }
+
+  ponds.forEach(pond => pond.addEventListener('click', () => lift(pond)));
+
+  // 點空白處收回
+  document.addEventListener('click', e => {
+    if (!lifted || field.contains(e.target)) return;
+    lifted.classList.remove('is-lifted');
+    lifted.setAttribute('aria-expanded', 'false');
+    lifted = null;
+  });
+})();
+</script>
 
 <!-- =========================================================
      技能媒合表單 — Firebase 串接（比照 donate.html）
