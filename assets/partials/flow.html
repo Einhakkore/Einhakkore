@@ -3,6 +3,13 @@
      士師記 15:19：神使利希的「窪處裂開」，有水「湧出」，參孫喝了「精神復原」。
      三個動詞＝三組形狀：裂（divider）／湧（image mask）／流（contour）。
 
+     V3 §16 把「水滴」列入禁止形狀，原本的 flow-clip-drop 已移除。
+     保留的輪廓都落在 V3 允許的 Circle / Arc / Flow Line / Abstract Organic
+     四類裡，使用時遵守三條判準：
+       1. 有機輪廓只用在 ≥200px；小尺寸一律 Circle / Ring
+       2. 不做線稿版本 —— 線稿一定會讀成 icon
+       3. 一個畫面最多一種有機輪廓，不要並排變成「形狀展示」
+
      這個 partial 只放兩件不需要 JS 的東西：
        1. <defs> 裡的 clipPath — 給 .flow-figure 用 clip-path: url(#…) 取用
        2. .flow-field 的兩層底 — 換色時 ping-pong 交替淡入
@@ -47,15 +54,6 @@
                Z"/>
     </clipPath>
 
-    <!-- 滴 — 不對稱水滴：給小尺寸的點綴圖 -->
-    <clipPath id="flow-clip-drop" clipPathUnits="objectBoundingBox">
-      <path d="M.5 0
-               C.75 .21 1 .40 1 .62
-               C1 .845 .78 1 .5 1
-               C.22 1 0 .845 0 .62
-               C0 .40 .25 .21 .5 0
-               Z"/>
-    </clipPath>
 
     <!-- ---- 標準幾何遮罩（參考「3 Standardized Image Masks」那張圖） ----
          circle / node        正圓與超橢圓：人像、小節點

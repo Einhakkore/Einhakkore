@@ -52,45 +52,86 @@
    深色骨架（ink） / 暖中性鋪面（paper、sand）/ 亮色點睛（amber／clay／sage）
    ----------------------------------------------------------- */
 :root {
-  /* Ink — 深色骨架（標題、結構） */
-  --ink-900: #1A2E40;
-  --ink-800: #274156;
-  --ink-700: #345670;
+  /* ============================================================
+     V3 調色盤 —— Contemporary Art Museum × Spiritual Editorial
+     「一座深色的展覽空間，讓光、色彩與人的連結慢慢浮現。」
 
-  /* Paper & Sand — 暖中性大面積 */
-  --paper:      #FAF6EF;     /* 頁面底 — 奶紙白 */
-  --paper-2:    #F5EEDF;     /* 比 paper 再深一點，過渡用 */
-  --sand:       #EDE3D3;     /* 區塊／卡片底 — 沙米 */
+     每個顏色有敘事角色，不是「主色 / 次色」：
+       Navy    空間 / 深度      Cobalt  思想 / 宣言
+       Mineral 環境 / 旅程      Aqua    人與人的連結
+       Amber   光 / 呼召        White   留白 / 安靜
 
-  /* Amber — 主要強調（按鈕、重點）
-     amber-700(var(--amber-500)) 與未命名的 var(--amber-500) 都已併入 amber-500，全站只剩一支金。
-     ⚠️ amber-500 對 paper 只有 1.6:1，僅適合深底文字與裝飾；淺底上的文字請用 ink 階。 */
-  /* 淺底專用的深金：amber-500 對 paper 只有 1.6:1，但金色是品牌識別的一部分，
-     不能整批換成 ink 階。這支對 paper 5.5:1、sand 4.7:1、白卡 5.9:1，
-     三種淺底都過 AA。淺色主題的 --accent 就指向這裡。 */
-  --amber-ink: #8A5A1A;
-  --amber-600: #D4AF37;
-  --amber-500: #FFBA49;      /* 唯一主色 — 按鈕、光暈、邊框、tint */
-  --amber-400: #F2C36B;      /* hover、柔性高光 */
-  --amber-300: #FDF3CF;
+     ⚠️ 哪些顏色能承載文字（實測值，見 tools/contrast-audit.js）：
+        可以當「有字的面」：Cobalt 700/500、Mineral 700、Aqua 700、所有 Navy
+        只能當「無字的物件」：Aqua 500/300、Mineral 500/300、Cobalt 300、
+                              以及全部 Amber —— Amber 最深的 600 壓在白底
+                              也只有 2.31:1，連大字的 3:1 都過不了。
+        → 黃色當文字是深底的特權；淺底上黃色只做填色、底線、圓點。
+     ============================================================ */
 
-  /* Clay — 陶土橘：給「人味」的標籤色（咖啡、宣教士故事）
-     clay-500 已併入 amber-500，僅保留 clay-700 作為深色標籤字 */
-  --clay-700:  #9E5E3D;
+  /* Navy — 空間 / 深度 */
+  --navy-950: #0B1116;
+  --navy-900: #101D29;
+  --navy-800: #1A2E40;       /* Brand core */
+  --navy-700: #294354;
+  --navy-600: #3A5667;
 
-/* Coral  — 橘紅 Coral · 警示與急需:錯誤提示、急需關注、緊急代禱（比 amber 更紅，好區分） */
-  --coral-800:  #A33B1E;
-  --coral-700:  #D2502B;
-  --coral-100:  #FBE3DA;
+  /* Cobalt — 思想 / 異象 / 宣言。白字壓在 500 上 6.08:1、700 上 7.53:1 */
+  --cobalt-700: #2746C7;
+  --cobalt-500: #3157D5;
+  --cobalt-300: #718BE5;     /* 只當物件，白字壓上去只有 3.22:1 */
 
-  /* Sage — 草綠 Green · 成功與成長:送出成功、進度達標、正向標籤 */
-  --sage-700:  #4B6A2B;
-  --sage-500:  #7FA64E;
-  --sage-100:  #ECF2DC;
+  /* Mineral — 環境 / 旅程 / 流動。700 是淺底上唯一安全的冷色文字（5.50:1） */
+  --mineral-700: #28718A;
+  --mineral-500: #3C91AD;
+  --mineral-300: #5BA8C4;
+  --mineral-100: #DCECEF;
 
-  /* Sky — 資訊與連結：提示框、次要連結、平靜標籤（呼應 navy-600 藍綠） */
-  --sky-700:  #2A6076;
-  --sky-500:  #5BA8C4;
+  /* Aqua — 人與人之間的連結。500/300 在深底上很好（7.27 / 9.55），
+     但在淺底上是物件不是文字（1.91 / 1.46） */
+  --aqua-700: #287F7D;
+  --aqua-500: #5CCDC2;
+  --aqua-300: #9BE3DC;
+  --aqua-100: #E2F5F2;
+
+  /* Amber — 光 / 焦點 / 希望。只在深底當文字 */
+  --amber-600: #E99A18;
+  --amber-500: #FFBA49;      /* Primary：按鈕底、光暈、圓點 */
+  --amber-400: #FFC75C;      /* hover */
+  --amber-300: #FFE08A;
+  --amber-light: #FFF3C9;    /* 極少量的 highlight 面 */
+
+  /* Light system — 冷調，不含任何米／土色 */
+  --white:     #FFFFFF;
+  --off-white: #FAFAF7;
+
+  /* Sign — 警示 / 錯誤 / 急需。
+     ⚠️ #D14B3A 本身當文字到處都不過 AA（白底 4.39、Navy 800 只有 3.17），
+     所以拆成三階：sign 只做標記、邊框、填色；文字用 ink 或 light 階。 */
+  --sign:       #D14B3A;     /* 標記、邊框、圖示 */
+  --sign-ink:   #B23B29;     /* 淺底上的錯誤文字：白底 5.91、off-white 5.66 */
+  --sign-light: #F09585;     /* 深底上的錯誤文字：Navy 800 6.19、Navy 900 7.60 */
+  --sign-100:   #FBE3DA;     /* 淺色提示底 */
+
+  /* ---- 舊名對照 ----
+     禁止色票（sand / clay / sage / coral / 暖紙白）在 V3 全部移除。
+     這裡保留舊 token 名指到新值，避免一次改動兩千多行選擇器；
+     新寫的樣式請直接用上面的 V3 名稱。 */
+  --ink-900: var(--navy-800);
+  --ink-800: var(--navy-700);
+  --ink-700: var(--navy-600);
+  --paper:   var(--off-white);      /* 原 #FAF6EF 奶紙白 → 冷調 off-white */
+  --paper-2: var(--mineral-100);    /* 原 #F5EEDF → 淡冷色空間 */
+  --sand:    var(--mineral-100);    /* 原 #EDE3D3 沙米 —— 禁止色票 */
+  --clay-700: var(--mineral-700);   /* 原 #9E5E3D 陶土 —— 禁止色票 */
+  --sage-700: var(--aqua-700);      /* V3 沒有綠色，改由 Aqua 承接 */
+  --sage-500: var(--aqua-500);
+  --sage-100: var(--aqua-100);
+  --coral-800: var(--sign-ink);
+  --coral-700: var(--sign);
+  --coral-100: var(--sign-100);
+  --sky-700: var(--mineral-700);    /* Sky 併入 Mineral，同一支 #28718A */
+  --sky-500: var(--mineral-300);
 
   /* ---------------------------------------------------------
      Scroll flow field — 泉湧場：整站背景由 site.js 依捲動內插
@@ -99,23 +140,23 @@
   /* STOP 0 — 頁首：暖琥珀霧的深藍 */
   --stop-0-bg1:  #22394A;
   --stop-0-bg2:  #182C3B;
-  --stop-0-fg:   #F5F1E8;
+  --stop-0-fg:   #FFFFFF;
   /* STOP 1 — 深潛：最深的墨藍夜 */
   --stop-1-bg1:  #0E1A23;
   --stop-1-bg2:  #0A141C;
-  --stop-1-fg:   #F5F1E8;
+  --stop-1-fg:   #FFFFFF;
   /* STOP 2 — 迴升：藍轉青，帶起 sky 微光 */
   --stop-2-bg1:  #16323d;
   --stop-2-bg2:  #0E1A23;
-  --stop-2-fg:   #F5F1E8;
-  /* STOP 3 — 水面：泉湧霧綠 + sage 光暈 */
-  --stop-3-bg1:  #7fa0a6;
-  --stop-3-bg2:  #b9cdc9;
-  --stop-3-fg:   #33454f;
-  /* STOP 4 — 出水：明亮乾淨、琥珀暖光收尾 */
-  --stop-4-bg1:  #F4F6F1;
-  --stop-4-bg2:  #E3ECE7;
-  --stop-4-fg:   #1A2E40;
+  --stop-2-fg:   #FFFFFF;
+  /* STOP 3 — 水面：mineral 冷光（原本的霧綠是禁止色票） */
+  --stop-3-bg1:  #A9C9D4;
+  --stop-3-bg2:  #DCECEF;
+  --stop-3-fg:   #101D29;
+  /* STOP 4 — 出水：白 + mineral 收尾 */
+  --stop-4-bg1:  #FFFFFF;
+  --stop-4-bg2:  #DCECEF;
+  --stop-4-fg:   #101D29;
 
   /* 全站 dynamic tokens：預設是「非 flow-field 頁面」用的淺色主題。
      home / give 兩頁在下方 body[data-page] 覆寫成深色 STOP 0，
@@ -124,26 +165,32 @@
   --bg1:  var(--paper);
   --bg2:  var(--paper-2);
   --fg:   var(--text-2);
-  --accent: var(--amber-ink);
+  --accent: var(--mineral-700);
 
-  /* Text — 對 paper(#FAF6EF) 校正 */
-  --text-1: #1A2E40;        /* 主要標題    對比 12.8:1 — AAA */
-  --text-2: #3A4E60;        /* 內文         對比 8.4:1  — AAA */
-  --text-3: #5C6F80;        /* 次要內文     對比 5.4:1  — AA  */
-  --text-4: #7E8A96;        /* 標籤／小字   對比 3.8:1  — AA-large */
-  --text-on-dark: #F5F1E8;  /* 反白用（深色面上的文字） */
+  /* Text — 對 off-white(#FAFAF7) 校正
+     ⚠️ --text-4 對淺底只有 3.6:1，只能用在 ≥24px 的大字或非文字元素，
+        不要拿來排一般內文。 */
+  --text-1: var(--navy-900);  /* 主要標題    16.3:1 — AAA */
+  --text-2: #3C5363;          /* 內文         7.7:1  — AAA */
+  --text-3: #566B7A;          /* 次要內文     5.1:1  — AA  */
+  --text-4: #718593;          /* 標籤／小字   3.6:1  — 僅限大字 */
+  --text-on-dark: var(--white);
 
   /* Home — 深流 (deep-flow) 首頁專用漸層場 tokens */
   --home-navy-top:   #243D4F;                 /* 頁頂淺 navy（介於 ink-800 與 ink-700 之間） */
   --home-navy-mid:   var(--ink-900);          /* #1A2E40，40% 位置 */
   --home-navy-deep:  #0E1A23;                 /* 頁尾深底，比 ink-900 再沉一階 */
   --home-glow-amber: rgba(255, 186, 73, .16); /* 左上暖光 — amber-500 */
-  --home-glow-sky:   rgba(110, 147, 168, .14);/* 右下冷光（比 sky-500 更灰藍） */
+  --home-glow-sky:   rgba(91, 168, 196, .14); /* 右下冷光 — mineral-300 */
   --home-text-1:     var(--text-on-dark);           /* 主標題，AAA 對比 */
-  --home-text-2:     rgba(245, 241, 232, .82);     /* 內文，AA+ */
-  --home-text-3:     rgba(245, 241, 232, .60);     /* 小字／hint */
+  --home-text-2:     rgba(255, 255, 255, .82);     /* 內文，AA+ */
+  --home-text-3:     rgba(255, 255, 255, .60);     /* 小字／hint */
 
   /* Lines — ink-based，讓分隔線在暖底上有溫度 */
+  /* 深底上的輸入框邊界：.18 只有 1.78:1，看不出框在哪；
+     WCAG 1.4.11 對非文字元素要 3:1，實測 .40 才到 3.54。
+     裝飾性分隔線可以繼續用淡的，可互動元件請用這支。 */
+  --border-input-dark: rgba(255, 255, 255, .40);
   --line-dim:    rgba(26, 46, 64, .08);
   --line-mid:    rgba(26, 46, 64, .14);
   --line-strong: rgba(26, 46, 64, .22);
@@ -211,8 +258,8 @@
   --surface-5:  var(--paper);               /* #FAF6EF 實心內容卡 */
 
   /* 深色面上的文字三階（通用命名；--home-text-* 是首頁的既有別名） */
-  --on-dark-2: rgba(245, 241, 232, .85);    /* 深底內文 */
-  --on-dark-3: rgba(245, 241, 232, .65);    /* 深底小字 */
+  --on-dark-2: rgba(255, 255, 255, .85);    /* 深底內文 */
+  --on-dark-3: rgba(255, 255, 255, .65);    /* 深底小字 */
 }
 
 /* ---------------------------------------------------------
@@ -230,8 +277,11 @@
   --card-border:   var(--line-dim);
   --card-shadow:   none;
   --card-shadow-hover: none;
-  --newsletter-bg:    rgba(237, 227, 211, .55);
-  --newsletter-border: var(--line-dim);
+  /* 訂閱區固定是一條 Navy 900 的帶子：底色確定，文字色才能確定。
+     原本淺／深主題各給一個值（其中一個還是 transparent），
+     結果是「白字落在淺底上」。 */
+  --newsletter-bg:    var(--navy-900);
+  --newsletter-border: transparent;
 
   /* ---- 圓角 tokens（全站統一）----
      card  : 所有卡片 / 面板容器
@@ -263,15 +313,15 @@ body[data-page="serve"] {
 
   --header-bg:     color-mix(in oklab, var(--stop-0-bg1) 78%, transparent);
   --header-fg:     var(--stop-0-fg);
-  --header-border: rgba(245, 241, 232, .08);
+  --header-border: rgba(255, 255, 255, .08);
 
   --card-bg:       var(--surface-4);
   --card-bg-hover: rgba(255, 255, 255, 1);
   --card-border:   var(--hairline-3);
   --card-shadow:   0 10px 34px rgba(0, 0, 0, .10);
   --card-shadow-hover: 0 16px 44px rgba(0, 0, 0, .14);
-  --newsletter-bg:         transparent;
-  --newsletter-border:     var(--hairline-1);
+  --newsletter-bg:         var(--navy-900);
+  --newsletter-border:     transparent;
 }
 
 /* -----------------------------------------------------------
@@ -589,7 +639,9 @@ body[data-page="about"] .logo .logo-dark { display: block; }
   transform: translateX(-50%);
   display: flex; flex-direction: column; align-items: center; gap: 10px;
   font-family: var(--font-en);
-  font-size: var(--fs-2xs); color: var(--text-4); letter-spacing: var(--ls-track);
+  /* --text-4 是僅限大字的階；這裡是 12px 又壓在照片上，改用反白 */
+  font-size: var(--fs-2xs); color: rgba(255, 255, 255, .88); letter-spacing: var(--ls-track);
+  text-shadow: 0 1px 6px rgba(11, 17, 22, .55);
   animation: hint-fade 3s ease-in-out infinite;
   z-index: 2;
 }
@@ -597,8 +649,9 @@ body[data-page="about"] .logo .logo-dark { display: block; }
   content: ""; width: 1px; height: 32px;
   background: linear-gradient(180deg, var(--amber-400), transparent);
 }
+/* 呼吸動畫的谷底也要讀得到：原本 .5 會把 SCROLL 壓到 4.3:1 */
 @keyframes hint-fade {
-  0%, 100% { opacity: .5; }
+  0%, 100% { opacity: .72; }
   50%      { opacity: 1; }
 }
 
@@ -621,7 +674,8 @@ body[data-page="about"] .logo .logo-dark { display: block; }
   }
   .budget h3 em {
     font-family: var(--font-brand); font-style: italic; font-weight: var(--fw-regular);
-    font-size: var(--fs-4xl); color: var(--amber-500); letter-spacing: var(--ls-none);
+    /* 這個 em 落在 off-white 卡上，amber 只有 1.62:1 → 走 Mineral */
+    font-size: var(--fs-4xl); color: var(--mineral-700); letter-spacing: var(--ls-none);
   }
   .budget > p{
     color:var(--text-2);
@@ -769,7 +823,9 @@ body[data-page="about"] .logo .logo-dark { display: block; }
   color: var(--amber-500); letter-spacing: var(--ls-none);
 }
 .section-head .lead {
-  font-size: var(--fs-md); line-height: var(--lh-loose); color: var(--fg); opacity: .82;
+  /* 原本 color: var(--fg) 之外再乘 opacity: .82，兩層疊起來實測 4.2–4.4:1。
+     色階本身已經校過對比，不要再乘第二層透明度。 */
+  font-size: var(--fs-md); line-height: var(--lh-loose); color: var(--fg); opacity: 1;
   font-weight: var(--fw-regular); max-width: 600px; margin: 0 auto;
 }
 
@@ -1169,12 +1225,14 @@ body[data-page="about"] .logo .logo-dark { display: block; }
     linear-gradient(180deg, transparent 55%, rgba(26, 46, 64, .55) 100%),
     linear-gradient(135deg, rgba(255, 186, 73, .10), transparent 50%);
 }
+/* 圖說直接壓在照片上，最亮的那張在手機上只有 2.4:1 → 補一層自身的 scrim */
 .feature-img .caption {
-  position: absolute; bottom: 24px; left: 24px; right: 24px;
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 56px 24px 24px;
+  background: linear-gradient(180deg, transparent, rgba(11, 17, 22, .78) 42%);
   font-family: var(--font-en);
   font-size: var(--fs-sm); color: rgba(255, 255, 255, .92);
-  letter-spacing: var(--ls-wide); padding-top: 16px;
-  border-top: 1px solid rgba(255, 255, 255, .30);
+  letter-spacing: var(--ls-wide);
   z-index: 1;
 }
 .feature-text .label {
@@ -1314,18 +1372,18 @@ body[data-page="home"] .hero .btn-ghost:hover {
 }
 .newsletter-wrap { max-width: 560px; margin: 0 auto; }
 .newsletter-label {
-  color: var(--amber-500);
+  color: var(--amber-500);   /* Navy 900 上 8.20:1 */
   letter-spacing: var(--ls-track); margin-bottom: 28px;
 }
 .newsletter h3 {
   font-family: var(--font-brand); font-weight: var(--fw-semibold);
-  font-size: var(--fs-4xl); color: var(--text-1);
+  font-size: var(--fs-4xl); color: var(--white);
   letter-spacing: var(--ls-cjk); margin: 0 0 20px;
   line-height: var(--lh-title);
 }
 .newsletter p {
   font-size: var(--fs-md); line-height: var(--lh-body);
-  color: var(--fg); opacity: .85; font-weight: var(--fw-regular); margin: 0 0 36px;
+  color: rgba(255, 255, 255, .88); opacity: 1; font-weight: var(--fw-regular); margin: 0 0 36px;
 }
 /* 訂閱改為外連 Substack（平台限制，站內無法直接收單） */
 .newsletter-cta { min-width: 180px; }
@@ -1337,7 +1395,7 @@ body[data-page="home"] .hero .btn-ghost:hover {
   /* Footer 刻意不參與 scroll flow field，維持原本的深藍固定色 */
   background: var(--ink-900);
   padding: 80px 32px 32px;
-  color: rgba(245, 241, 232, .70);
+  color: rgba(255, 255, 255, .70);
   position: relative;
   z-index: 2;
 }
@@ -1359,7 +1417,7 @@ body[data-page="home"] .hero .btn-ghost:hover {
 .footer-brand img { height: 56px; }
 .footer-brand p {
   font-size: var(--fs-sm); line-height: var(--lh-loose);
-  color: rgba(245, 241, 232, .70); max-width: 320px;
+  color: rgba(255, 255, 255, .70); max-width: 320px;
 }
 .footer-social { display: flex; gap: 10px; margin-top: 4px; }
 .footer-social a {
@@ -1390,7 +1448,7 @@ body[data-page="home"] .hero .btn-ghost:hover {
   max-width: 1180px; margin: 32px auto 0;
   display: flex; justify-content: space-between; align-items: center;
   font-family: var(--font-en);
-  font-size: var(--fs-sm); color: rgba(245, 241, 232, .55);
+  font-size: var(--fs-sm); color: rgba(255, 255, 255, .55);
   letter-spacing: var(--ls-label); flex-wrap: wrap; gap: 12px;
 }
 
@@ -1532,7 +1590,7 @@ body[data-page="home"] .hero .btn-ghost:hover {
 }
 .help-guides .lead {
   font-size: var(--fs-md); line-height: var(--lh-body);
-  color: var(--fg); opacity: .78;
+  color: var(--fg); opacity: 1;
   margin: 0 0 24px;
 }
 .guide-list { display: flex; flex-direction: column; gap: 10px; }
@@ -1810,7 +1868,7 @@ body[data-page="give"] main > .section {
 .page-hero.donate-hero .eyebrow { color: var(--on-dark-2); }
 .page-hero.donate-hero h1 { color: var(--text-on-dark); text-shadow: 0 2px 20px rgba(26, 46, 64, .35); }
 .page-hero.donate-hero h1 em { color: var(--amber-400); }
-.page-hero.donate-hero p { color: rgba(245, 241, 232, .92); text-shadow: 0 1px 12px rgba(26, 46, 64, .35); }
+.page-hero.donate-hero p { color: rgba(255, 255, 255, .92); text-shadow: 0 1px 12px rgba(26, 46, 64, .35); }
 
 /* ---- 左固定 / 右滾動 版型（放寬斷點，避免筆電視窗被擠成單欄） ---- */
 .donate-layout {
@@ -1835,7 +1893,7 @@ body[data-page="give"] main > .section {
   }
   .donate-left::-webkit-scrollbar { width: 6px; }
   .donate-left::-webkit-scrollbar-thumb {
-    background: rgba(245, 241, 232, .18);
+    background: rgba(255, 255, 255, .18);
     border-radius: 6px;
   }
 }
@@ -1859,7 +1917,7 @@ body[data-page="give"] main > .section {
 .donate-block h3 {
   font-family: var(--font-brand); font-weight: var(--fw-medium);
   font-size: var(--fs-2xl); line-height: var(--lh-title); letter-spacing: var(--ls-cjk);
-  margin: 0 0 16px; color: var(--accent);
+  margin: 0 0 16px; color: var(--mineral-700);
 }
 .donate-block p {
   font-size: var(--fs-md); line-height: var(--lh-loose);
@@ -2066,7 +2124,7 @@ body[data-page="give"] .btn.btn-text:hover {
 .donate-form .desc {
   font-size: var(--fs-sm); color: var(--text-3); margin: 0 0 8px;
 }
-.donate-form label .req { color: var(--coral-700); margin-left: 2px; }
+.donate-form label .req { color: var(--sign-ink); margin-left: 2px; }
 .donate-form label .hint {
   color: var(--text-2); font-weight: var(--fw-regular);
   font-size: var(--fs-2xs); margin-left: 6px;
@@ -2080,14 +2138,15 @@ body[data-page="give"] .btn.btn-text:hover {
 }
 .form-status.show { display: block; }
 .form-status.ok {
-  color: var(--sage-700);
-  background: var(--sage-100);
-  border: 1px solid rgba(127, 166, 78, .28);
+  color: var(--aqua-700);
+  background: var(--aqua-100);
+  border: 1px solid rgba(40, 127, 125, .28);
 }
 .form-status.err {
-  color: var(--coral-800);
-  background: var(--coral-100);
-  border: 1px solid rgba(210, 80, 43, .28);
+  /* sign(#D14B3A) 本身當文字只有 3.58:1，文字用 sign-ink、邊框才用 sign */
+  color: var(--sign-ink);
+  background: var(--sign-100);
+  border: 1px solid rgba(209, 75, 58, .38);
 }
 
 /* ---- 手機版：銀行卡片改成單欄 ---- */
@@ -2149,7 +2208,6 @@ body[data-page="home"] .hero h2,
 body[data-page="home"] .hero h3 { color: var(--home-text-1); }
 body[data-page="home"] .hero h1 em { color: var(--amber-400); }
 body[data-page="home"] .hero-sub { color: var(--home-text-2); }
-body[data-page="home"] .scroll-hint { color: var(--home-text-3); }
 
 /* ---- 中段：讓半透明奶紙卡片在深流上仍可讀 ---- */
 /* 三大實踐區的標題與 lead 反白 */
@@ -2162,7 +2220,7 @@ body[data-page="home"] .section-practices .section-head .lead { color: var(--hom
 /* practice-card 提高不透明度，讓卡片本身仍是奶紙色 */
 body[data-page="home"] .practice-card {
   background: rgba(237, 227, 211, .94);
-  border-color: rgba(245, 241, 232, .18);
+  border-color: rgba(255, 255, 255, .18);
 }
 body[data-page="home"] .practice-card:hover {
   background: rgba(237, 227, 211, .98);
@@ -2185,10 +2243,12 @@ body[data-page="home"] .feature-text .link:hover {
   color: var(--amber-300); border-color: var(--amber-300);
 }
 
-/* Newsletter — 首頁讓區塊融入捲動漸層背景（不再蓋沙米卡片色）；
-   text 顏色沿用基底：newsletter 落在捲動 ~90% 處，此時 --fg 為深色，讀得清楚 */
+/* Newsletter — 首頁原本讓它透出捲動漸層，但那個位置的背景是會變的：
+   量到的底色從 rgb(235,244,245) 到 rgb(138,153,159) 都有，任何固定的文字色
+   都會在某個捲動位置掉到 1.1:1。改成 92% 不透明的 navy —— 底色確定了，
+   反白文字才有保證，漣漪也還透得出來。 */
 body[data-page="home"] .newsletter {
-  background: transparent;
+  background: rgba(16, 29, 41, .92);
   border-top: 0;
   border-bottom: 0;
 }
@@ -2303,7 +2363,7 @@ body[data-page="home"] .newsletter {
 }
 .admin-gate-card .btn { width: 100%; }
 .admin-gate-err {
-  color: var(--coral-700); font-size: var(--fs-sm);
+  color: var(--sign-ink); font-size: var(--fs-sm);
   margin: 12px 0 0; min-height: 1.4em;
 }
 

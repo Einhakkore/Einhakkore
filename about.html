@@ -75,11 +75,11 @@
 
     /* initFlowField() 從 :root 讀 --stop-*，用 :has() 讓覆寫只在 about 生效 */
     :root:has(body[data-page="about"]) {
-      --stop-0-bg1: #22394A;  --stop-0-bg2: #182C3B;  --stop-0-fg: #F5F1E8;
-      --stop-1-bg1: #14232E;  --stop-1-bg2: #0E1A23;  --stop-1-fg: #F5F1E8;
-      --stop-2-bg1: #16323D;  --stop-2-bg2: #0F1F29;  --stop-2-fg: #F5F1E8;
-      --stop-3-bg1: #2C4854;  --stop-3-bg2: #1D3038;  --stop-3-fg: #F5F1E8;
-      --stop-4-bg1: #33505C;  --stop-4-bg2: #22323C;  --stop-4-fg: #F5F1E8;
+      --stop-0-bg1: #22394A;  --stop-0-bg2: #182C3B;  --stop-0-fg: #FFFFFF;
+      --stop-1-bg1: #14232E;  --stop-1-bg2: #0E1A23;  --stop-1-fg: #FFFFFF;
+      --stop-2-bg1: #16323D;  --stop-2-bg2: #0F1F29;  --stop-2-fg: #FFFFFF;
+      --stop-3-bg1: #2C4854;  --stop-3-bg2: #1D3038;  --stop-3-fg: #FFFFFF;
+      --stop-4-bg1: #33505C;  --stop-4-bg2: #22323C;  --stop-4-fg: #FFFFFF;
     }
 
     html.lenis, html.lenis body { scroll-behavior: auto !important; }
@@ -128,7 +128,7 @@
       max-width: 960px;
       width: 100%;
       text-align: center;
-      color: var(--text-on-dark, #F5F1E8);
+      color: var(--text-on-dark, #FFFFFF);
     }
     .scr-hero__eyebrow {
       font-family: var(--font-en, serif);
@@ -145,14 +145,14 @@
       line-height: var(--lh-title);
       letter-spacing: var(--ls-wide);
       margin: 0;
-      color: var(--text-on-dark, #F5F1E8);
+      color: var(--text-on-dark, #FFFFFF);
     }
     .scr-hero__sub {
       margin: 40px auto 0;
       max-width: 640px;
       font-size: var(--fs-xl);
       line-height: var(--lh-loose);
-      color: rgba(245, 241, 232, .86);
+      color: rgba(255, 255, 255, .86);
       opacity: 0;
     }
     .scr-hero__scroll-hint {
@@ -164,7 +164,7 @@
       font-family: var(--font-en, serif);
       font-size: var(--fs-2xs);
       letter-spacing: var(--ls-track);
-      color: rgba(245, 241, 232, .72);
+      color: rgba(255, 255, 255, .72);
       display: flex; flex-direction: column; align-items: center; gap: 10px;
       pointer-events: none;
     }
@@ -364,7 +364,7 @@
       font-family: var(--font-zh);
       font-size: var(--fs-md);
       line-height: var(--lh-loose);
-      color: rgba(245, 241, 232, .88);
+      color: rgba(255, 255, 255, .88);
       margin: 0;
       max-width: 54ch;
     }
@@ -432,7 +432,7 @@
       padding-left: 20px;
       font-size: var(--fs-sm);
       line-height: var(--lh-body);
-      color: rgba(245, 241, 232, .82);
+      color: rgba(255, 255, 255, .82);
     }
     .vision__list li::before {
       content: "";
@@ -527,7 +527,7 @@
       margin: 0;
       font-size: var(--fs-md);
       line-height: var(--lh-loose);
-      color: rgba(245, 241, 232, .88);
+      color: rgba(255, 255, 255, .88);
     }
     /* 引號：開頭靠左、結尾靠右，用 FreightText 的斜體引號當裝飾 */
     .quote-mark {
@@ -562,13 +562,13 @@
     .stat-cell__num .unit {
       font-family: var(--font-zh); font-style: normal;
       font-size: var(--fs-md); letter-spacing: var(--ls-wide);
-      color: rgba(245, 241, 232, .82);
+      color: rgba(255, 255, 255, .82);
       margin-left: 8px;
     }
     .stat-cell__label {
       margin-top: 14px;
       font-size: var(--fs-sm); letter-spacing: var(--ls-label);
-      color: rgba(245, 241, 232, .82);
+      color: rgba(255, 255, 255, .82);
     }
 
     /* ============================================================
@@ -602,7 +602,7 @@
     }
     .net-block__note {
       font-size: var(--fs-md); line-height: var(--lh-loose);
-      color: rgba(245, 241, 232, .82);
+      color: rgba(255, 255, 255, .82);
       max-width: 60ch;
       margin: 0 0 28px;
     }
@@ -654,7 +654,7 @@
     /* logo 尚未取得授權前的佔位樣式 */
     .logo-wall__ph {
       display: flex; flex-direction: column; align-items: center; gap: 8px;
-      color: rgba(245, 241, 232, .72);
+      color: rgba(255, 255, 255, .72);
     }
     .logo-wall__ph svg { width: 26px; height: 26px; }
     .logo-wall__ph span { font-size: var(--fs-3xs); letter-spacing: var(--ls-caps); }
@@ -694,7 +694,7 @@
     }
     .field-card__count {
       font-size: var(--fs-sm);
-      color: rgba(245, 241, 232, .82);
+      color: rgba(255, 255, 255, .82);
       white-space: nowrap;
     }
     .field-card__count b {
@@ -742,13 +742,13 @@
     }
     .host-card__num .unit {
       font-family: var(--font-zh); font-style: normal;
-      font-size: var(--fs-sm); color: rgba(245, 241, 232, .82);
+      font-size: var(--fs-sm); color: rgba(255, 255, 255, .82);
       margin-left: 6px;
     }
     .host-card__desc {
       margin: 10px 0 0;
       font-size: var(--fs-sm); line-height: var(--lh-body);
-      color: rgba(245, 241, 232, .84);
+      color: rgba(255, 255, 255, .84);
     }
 
     /* ============================================================
@@ -775,13 +775,13 @@
       margin: 0;
       display: grid;
       grid-template-columns: minmax(140px, 210px) minmax(0, 1fr);
-      border-top: 1px solid rgba(245, 241, 232, .30);
+      border-top: 1px solid rgba(255, 255, 255, .30);
     }
     .org-list dt,
     .org-list dd {
       padding: clamp(18px, 2.2vw, 24px) 0;
       border-top: 0;
-      border-bottom: 1px solid rgba(245, 241, 232, .13);
+      border-bottom: 1px solid rgba(255, 255, 255, .13);
     }
     .org-list dt {
       font-family: var(--font-zh);
@@ -789,7 +789,7 @@
       line-height: var(--lh-body);
       letter-spacing: var(--ls-label);
       /* 這一段底部有暖色光暈，是全區最亮處；標籤壓太淡會掉到 4.5:1 以下 */
-      color: rgba(245, 241, 232, .86);
+      color: rgba(255, 255, 255, .86);
     }
     .org-list dd {
       margin: 0;
@@ -800,13 +800,13 @@
     }
     /* 最後一列收尾的線與開頭那道對稱 */
     .org-list dt:last-of-type,
-    .org-list dd:last-of-type { border-bottom-color: rgba(245, 241, 232, .30); }
+    .org-list dd:last-of-type { border-bottom-color: rgba(255, 255, 255, .30); }
 
     .org-list .sub {
       display: block;
       margin-top: 6px;
       font-size: var(--fs-sm);
-      color: rgba(245, 241, 232, .86);
+      color: rgba(255, 255, 255, .86);
     }
     .org-note {
       margin: 24px 0 0;
@@ -814,7 +814,7 @@
       border-top: 0;
       font-size: var(--fs-sm);
       line-height: var(--lh-body);
-      color: rgba(245, 241, 232, .86);
+      color: rgba(255, 255, 255, .86);
     }
     @media (max-width: 640px) {
       .org-list { grid-template-columns: 1fr; }
@@ -845,7 +845,9 @@
     .about-cta__wrap { max-width: 720px; margin: 0 auto; position: relative; }
     /* 點綴色用全站在淺底上慣用的 --amber-700（section-eyebrow、newsletter-label
        等淺色頁面元件都是這支） */
-    .about-cta .section-num { color: var(--amber-ink); opacity: 1; }
+    /* 轉亮的收尾段：金色在淺底上當不了文字，標籤走 Mineral，
+       Amber 留給下面那顆 CTA 按鈕當唯一光源 */
+    .about-cta .section-num { color: var(--mineral-700); opacity: 1; }
     .about-cta .cta-actions {
       display: flex; justify-content: center; flex-wrap: wrap; gap: 16px;
     }
@@ -858,7 +860,7 @@
     }
     .about-cta h2 em {
       font-family: var(--font-brand); font-style: italic; font-weight: var(--fw-regular);
-      color: var(--amber-ink); letter-spacing: var(--ls-none);
+      color: var(--mineral-700); letter-spacing: var(--ls-none);
     }
     .about-cta p {
       font-size: var(--fs-md); line-height: var(--lh-loose);
@@ -928,7 +930,7 @@
     .spring-figure__note {
       font-size: var(--fs-md);
       line-height: var(--lh-loose);
-      color: rgba(245, 241, 232, .82);
+      color: rgba(255, 255, 255, .82);
       max-width: 46ch;
       margin: 0;
       padding-top: 24px;
@@ -1059,7 +1061,7 @@
 <main>
 
   <!-- ============================ HERO ============================ -->
-  <section class="scr-hero" data-flow-palette="#22394A | #182C3B | rgba(255,186,73,.16) | 18% 12%">
+  <section class="scr-hero" data-flow-palette="#1A2E40 | #101D29 | rgba(255,186,73,.16) | 18% 12%">
     <div class="scr-hero__bg"></div>
     <div class="scr-hero__veil"></div>
 
@@ -1080,7 +1082,7 @@
   <div data-flow-divider="well"></div>
 
   <!-- ============================ 泉 · 起源與異象 ============================ -->
-  <section class="spring-figure" data-flow-palette="#14232E | #0E1A23 | rgba(127,166,78,.13) | 78% 42%">
+  <section class="spring-figure" data-flow-palette="#101D29 | #0B1116 | rgba(60,145,173,.15) | 78% 42%">
     <div class="spring-figure__inner">
       <figure class="flow-figure flow-figure--spring" data-flow-parallax>
         <div class="flow-figure__frame">
@@ -1101,7 +1103,7 @@
   <div data-flow-divider="rift"></div>
 
   <!-- ============================ OUR VISION ============================ -->
-  <section class="section section-vision" id="vision" data-flow-palette="#16323D | #0F1F29 | rgba(255,186,73,.15) | 14% 78%">
+  <section class="section section-vision" id="vision" data-flow-palette="#101D29 | #16273A | rgba(49,87,213,.22) | 14% 78%">
     <div class="wrap">
       <hgroup class="section-head section-head--on-dark">
         <div class="section-num" data-scr-fade>OUR VISION</div>
@@ -1245,7 +1247,7 @@
   <div data-flow-divider="contour"></div>
 
   <!-- ============================ TEAM & NETWORK · 我們的服事 ============================ -->
-  <section class="section section-team" id="team" data-scene="team" data-flow-palette="#2C4854 | #1D3038 | rgba(143,180,206,.16) | 88% 60%">
+  <section class="section section-team" id="team" data-scene="team" data-flow-palette="#294354 | #1A2E40 | rgba(92,205,194,.16) | 88% 60%">
     <div class="wrap">
       <hgroup class="section-head section-head--on-dark">
         <div class="section-num" data-scr-fade>TEAM &amp; NETWORK</div>
@@ -1436,7 +1438,7 @@
   <div data-flow-divider="contour"></div>
 
   <!-- ============================ INFORMATION · 關於隱哈歌利 ============================ -->
-  <section class="section section-org" id="org" data-scene="org" data-flow-palette="#33505C | #22323C | rgba(255,186,73,.17) | 50% 92%">
+  <section class="section section-org" id="org" data-scene="org" data-flow-palette="#3A5667 | #294354 | rgba(91,168,196,.16) | 50% 92%">
     <div class="wrap">
       <hgroup class="section-head section-head--on-dark">
         <div class="section-num" data-scr-fade>INFORMATION</div>
@@ -1480,7 +1482,7 @@
 
   <!-- ============================ 頁尾 CTA ============================ -->
   <!-- 這一段落在 scroll flow field 的最亮處，文字色階改吃 --fg（會隨背景由淺轉深） -->
-  <section class="about-cta" data-scene="cta" data-flow-palette="#F5F1E8 | #E7DECB | rgba(255,186,73,.30) | 50% 88%">
+  <section class="about-cta" data-scene="cta" data-flow-palette="#FFFFFF | #DCECEF | rgba(255,186,73,.30) | 50% 88%">
     <div class="about-cta__wrap">
       <div class="section-num" data-scr-fade>JOIN US</div>
       <h2 data-split-lines>一起成為宣教路上的<em>同行者</em></h2>
