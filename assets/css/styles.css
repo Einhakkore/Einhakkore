@@ -65,6 +65,10 @@
   /* Amber — 主要強調（按鈕、重點）
      amber-700(var(--amber-500)) 與未命名的 var(--amber-500) 都已併入 amber-500，全站只剩一支金。
      ⚠️ amber-500 對 paper 只有 1.6:1，僅適合深底文字與裝飾；淺底上的文字請用 ink 階。 */
+  /* 淺底專用的深金：amber-500 對 paper 只有 1.6:1，但金色是品牌識別的一部分，
+     不能整批換成 ink 階。這支對 paper 5.5:1、sand 4.7:1、白卡 5.9:1，
+     三種淺底都過 AA。淺色主題的 --accent 就指向這裡。 */
+  --amber-ink: #8A5A1A;
   --amber-600: #D4AF37;
   --amber-500: #FFBA49;      /* 唯一主色 — 按鈕、光暈、邊框、tint */
   --amber-400: #F2C36B;      /* hover、柔性高光 */
@@ -120,7 +124,7 @@
   --bg1:  var(--paper);
   --bg2:  var(--paper-2);
   --fg:   var(--text-2);
-  --accent: var(--amber-500);
+  --accent: var(--amber-ink);
 
   /* Text — 對 paper(#FAF6EF) 校正 */
   --text-1: #1A2E40;        /* 主要標題    對比 12.8:1 — AAA */
@@ -243,14 +247,15 @@
 }
 
 /* ---------------------------------------------------------
-   Flow-field 頁面（home / give / about）：切成深色 STOP 0 起手，
+   Flow-field 頁面（home / give / about / serve）：切成深色 STOP 0 起手，
    捲動時 site.js 再逐幀更新 --bg1 / --bg2 / --fg。
    about 頁另外在該頁 <style> 內把五個 STOP 全鎖在深色域，
    讓文字色階固定為淺色、對比可預期。
    --------------------------------------------------------- */
 body[data-page="home"],
 body[data-page="give"],
-body[data-page="about"] {
+body[data-page="about"],
+body[data-page="serve"] {
   --bg1:  var(--stop-0-bg1);
   --bg2:  var(--stop-0-bg2);
   --fg:   var(--stop-0-fg);
@@ -686,7 +691,7 @@ body[data-page="about"] .logo .logo-dark { display: block; }
 }
 .page-hero h1 em {
   font-family: var(--font-brand); font-style: italic; font-weight: var(--fw-regular);
-  color: var(--amber-500);
+  color: var(--accent);
 }
 .page-hero p {
   font-size: var(--fs-xl); line-height: var(--lh-loose); color: var(--fg); opacity: .88;
@@ -1403,8 +1408,9 @@ body[data-page="home"] .hero .btn-ghost:hover {
   margin: 0 0 4px; letter-spacing: var(--ls-cjk);
   line-height: var(--lh-title);
 }
+/* --text-3 在表單白卡上量到 4.38:1，差一點過不了 AA，降一階到 --text-2 */
 .contact-form .desc {
-  font-size: var(--fs-sm); color: var(--text-3); margin: 0 0 8px;
+  font-size: var(--fs-sm); color: var(--text-2); margin: 0 0 8px;
 }
 .field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .field label {
@@ -1492,9 +1498,11 @@ body[data-page="home"] .hero .btn-ghost:hover {
   accent-color: var(--amber-500);
   cursor: pointer;
 }
+/* 淺底上的連結：文字用 ink 階（amber-500 對奶紙只有 1.6:1），
+   金色移到底線上，連結的辨識度與品牌色都留著。 */
 .form-consent a {
-  color: var(--amber-500);
-  border-bottom: 1px solid rgba(255, 186, 73, .5);
+  color: var(--text-1);
+  border-bottom: 1px solid var(--amber-500);
   transition: border-color .2s ease;
 }
 .form-consent a:hover {
@@ -1851,7 +1859,7 @@ body[data-page="give"] main > .section {
 .donate-block h3 {
   font-family: var(--font-brand); font-weight: var(--fw-medium);
   font-size: var(--fs-2xl); line-height: var(--lh-title); letter-spacing: var(--ls-cjk);
-  margin: 0 0 16px; color: var(--amber-500);
+  margin: 0 0 16px; color: var(--accent);
 }
 .donate-block p {
   font-size: var(--fs-md); line-height: var(--lh-loose);
@@ -2060,7 +2068,7 @@ body[data-page="give"] .btn.btn-text:hover {
 }
 .donate-form label .req { color: var(--coral-700); margin-left: 2px; }
 .donate-form label .hint {
-  color: var(--text-4); font-weight: var(--fw-regular);
+  color: var(--text-2); font-weight: var(--fw-regular);
   font-size: var(--fs-2xs); margin-left: 6px;
 }
 

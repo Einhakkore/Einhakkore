@@ -56,6 +56,32 @@
                C0 .40 .25 .21 .5 0
                Z"/>
     </clipPath>
+
+    <!-- ---- 標準幾何遮罩（參考「3 Standardized Image Masks」那張圖） ----
+         circle / node        正圓與超橢圓：人像、小節點
+         amorphous / organic  兩顆不同的軟塊：無定形、有機
+         oval                 直立橢圓：直邊 + 上下收圓
+         wave                 波浪切角：上緣與側邊直角，下緣一道波切掉兩個下角
+         軟塊是用固定種子沿圓周擾動半徑再平滑成閉合曲線產生的（角度保持等距，
+         一旦連角度也擾動，Catmull-Rom 會在頂點密集處拗出尖角）。 -->
+    <clipPath id="flow-clip-circle" clipPathUnits="objectBoundingBox">
+      <path d="M.5 0 C.7761 0 1 .2239 1 .5 C1 .7761 .7761 1 .5 1 C.2239 1 0 .7761 0 .5 C0 .2239 .2239 0 .5 0 Z"/>
+    </clipPath>
+    <clipPath id="flow-clip-node" clipPathUnits="objectBoundingBox">
+      <path d="M.5 0 C.82 0 1 .18 1 .5 C1 .82 .82 1 .5 1 C.18 1 0 .82 0 .5 C0 .18 .18 0 .5 0 Z"/>
+    </clipPath>
+    <clipPath id="flow-clip-amorphous" clipPathUnits="objectBoundingBox">
+      <path d="M0.8356 0.6943 C0.7677 0.8103 0.6112 0.9617 0.4995 0.9615 C0.3877 0.9612 0.2362 0.8107 0.1653 0.6927 C0.0944 0.5747 0.0183 0.3664 0.0742 0.2535 C0.1301 0.1406 0.3617 0.0134 0.5006 0.0154 C0.6394 0.0174 0.8514 0.1524 0.9072 0.2655 C0.9631 0.3787 0.9036 0.5783 0.8356 0.6943 Z"/>
+    </clipPath>
+    <clipPath id="flow-clip-organic" clipPathUnits="objectBoundingBox">
+      <path d="M0.9382 0.2763 C0.9895 0.3601 1.0093 0.5213 0.9744 0.6091 C0.9395 0.6969 0.8119 0.7471 0.7290 0.8033 C0.6461 0.8596 0.5634 0.9453 0.4770 0.9466 C0.3906 0.9478 0.2792 0.8765 0.2105 0.8110 C0.1417 0.7456 0.0701 0.6407 0.0643 0.5539 C0.0586 0.4670 0.1226 0.3617 0.1759 0.2899 C0.2293 0.2181 0.3026 0.1536 0.3844 0.1230 C0.4662 0.0924 0.5745 0.0806 0.6668 0.1062 C0.7591 0.1317 0.8869 0.1924 0.9382 0.2763 Z"/>
+    </clipPath>
+    <clipPath id="flow-clip-oval" clipPathUnits="objectBoundingBox">
+      <path d="M.5 0 C.80 0 1 .13 1 .30 L1 .70 C1 .87 .80 1 .5 1 C.20 1 0 .87 0 .70 L0 .30 C0 .13 .20 0 .5 0 Z"/>
+    </clipPath>
+    <clipPath id="flow-clip-wave" clipPathUnits="objectBoundingBox">
+      <path d="M0 0 L1 0 L1 .78 C.90 .93 .78 1 .62 .965 C.46 .93 .34 .84 .20 .875 C.11 .898 .05 .95 0 .93 Z"/>
+    </clipPath>
   </defs>
 </svg>
 

@@ -30,6 +30,14 @@
   <link rel="stylesheet" href="assets/css/flow.css">
 
   <style>
+    /* ---------- page-hero：整頁改深色場後改吃反白色階 ---------- */
+    body[data-page="serve"] .page-hero h1 { color: var(--text-on-dark); }
+    body[data-page="serve"] .page-hero h1 em { color: var(--amber-400); }
+    body[data-page="serve"] .page-hero p { color: rgba(245, 241, 232, .88); }
+    body[data-page="serve"] .page-hero .eyebrow { color: var(--amber-400); }
+  </style>
+
+  <style>
     /* ============================================================
        SERVE — 三個新區塊的頁面級樣式
        ============================================================ */
@@ -264,8 +272,8 @@
     /* ------------------------------------------------------------
        SECTION 3 · 奉獻支持（整頁轉亮的收尾，文字改吃深色階）
        ------------------------------------------------------------ */
-    .section-give .section-num     { color: var(--amber-500); opacity: .9; }
-    .section-give .section-eyebrow { color: var(--amber-700, var(--amber-500)); }
+    .section-give .section-num     { color: var(--amber-ink); opacity: 1; }
+    .section-give .section-eyebrow { color: var(--amber-ink); }
     .section-give .section-head h2 { color: var(--text-1); }
     .section-give .section-head .lead { color: var(--text-2); }
 
@@ -394,7 +402,7 @@
 <section class="page-hero" data-flow-palette="#22394A | #182C3B | rgba(255,186,73,.16) | 18% 12%">
   <div class="symbol-sm"></div>
   <div class="eyebrow">JOIN US · 參與我們</div>
-  <h1>在前線與家鄉之間，，<br>築起一張接住宣教士的網絡</h1>
+  <h1>在前線與家鄉之間，<br>築起一張接住宣教士的網絡</h1>
   <p>無論是您的專業恩賜、忠心守望，或是財務支持，<br>都能成為滋潤宣教工人的泉源。</p>
 </section>
 
@@ -536,7 +544,7 @@
 
 <section class="section section-practices" data-flow-palette="#14232E | #0E1A23 | rgba(127,166,78,.13) | 78% 42%">
   <div class="wrap">
-    <div class="section-head reveal">
+    <div class="section-head section-head--on-dark reveal">
       <div class="section-num">PROCESS</div>
       <div class="section-eyebrow"> 招募流程</div>
       <h2>三步驟</h2>
@@ -590,12 +598,17 @@
         border-radius: var(--radius-pill);
         transition: none;
       }
+      /* 這三個圈裡放的是 ink 深字。整頁改成深色場之後，原本 .55/.32/.16
+         的奶紙底透出來會變成中灰，深字直接掉到 1.4:1。透明度往上拉，
+         保留「由內而外漸淡」的層次，但每一圈都撐得住深色文字。 */
       .ss-shape-1 { width: var(--ss-h);  height: var(--ss-h);  z-index: 3;
-                    background: rgba(237, 227, 211, .55); }
+                    background: rgba(240, 232, 219, .95); }
       .ss-shape-2 { width: var(--ss-w2); height: var(--ss-h2); z-index: 2;
-                    background: rgba(237, 227, 211, .32); }
+                    background: rgba(237, 227, 211, .94); }
+      /* 最外圈原本 .86，深色場透上來把底壓到 rgb(202,195,181)，
+         clay 的「03」量到 2.91:1，差一點過不了大字的 3:1 */
       .ss-shape-3 { width: var(--ss-w3); height: var(--ss-h3); z-index: 1;
-                    background: rgba(237, 227, 211, .16); }
+                    background: rgba(232, 221, 204, .94); }
 
       /* 文字內容：絕對定位在各形狀的可見「尾巴」區 */
       .ss-shape .ss-content {
@@ -629,7 +642,9 @@
         font-weight: var(--fw-light);
         font-size: var(--fs-5xl);
         line-height: .9;
-        color: var(--amber-500);
+        /* 這三個圈是奶紙底：amber-500 壓在上面只有 1.0–1.3:1。
+           改用 clay-700 —— 同樣是暖色調的重點色，但撐得住淺底。 */
+        color: var(--clay-700);
         margin-bottom: 12px;
       }
       .ss-content h3 {
@@ -819,7 +834,7 @@
 
 <section class="section" id="skill-match" data-flow-palette="#2C4854 | #1D3038 | rgba(143,180,206,.16) | 88% 60%">
   <div class="wrap">
-    <div class="section-head reveal">
+    <div class="section-head section-head--on-dark reveal">
       <div class="section-eyebrow">SKILL MATCH · 技能媒合</div>
       <h2>填寫意願表</h2>
       <p class="lead">告訴我們您的恩賜與時間，我們會在三個工作天內回覆。</p>
@@ -882,7 +897,7 @@
          在取得當事人同意之前，這裡不放任何真實姓名或可辨識資訊。 -->
     <div class="watch-grid">
       <article class="watch-card reveal">
-        <figure class="flow-figure flow-figure--drop watch-card__figure" data-flow-parallax>
+        <figure class="flow-figure flow-figure--oval watch-card__figure" data-flow-parallax>
           <div class="flow-figure__frame">
             <img src="assets/img/Water.webp" alt="" loading="lazy" decoding="async">
           </div>
@@ -902,7 +917,7 @@
       </article>
 
       <article class="watch-card reveal">
-        <figure class="flow-figure flow-figure--drop watch-card__figure" data-flow-parallax>
+        <figure class="flow-figure flow-figure--oval watch-card__figure" data-flow-parallax>
           <div class="flow-figure__frame">
             <img src="assets/img/HandsWater.webp" alt="" loading="lazy" decoding="async">
           </div>
@@ -922,7 +937,7 @@
       </article>
 
       <article class="watch-card reveal">
-        <figure class="flow-figure flow-figure--drop watch-card__figure" data-flow-parallax>
+        <figure class="flow-figure flow-figure--oval watch-card__figure" data-flow-parallax>
           <div class="flow-figure__frame">
             <img src="assets/img/donate_bg.webp" alt="" loading="lazy" decoding="async">
           </div>

@@ -179,6 +179,33 @@ body[data-flow="sections"] {
   clip-path: url(#flow-clip-drop);
 }
 
+/* ---- 標準幾何遮罩：形狀與比例成套，換 class 就換形狀 ---- */
+.flow-figure--circle .flow-figure__frame {
+  aspect-ratio: 1 / 1;
+  clip-path: url(#flow-clip-circle);
+}
+.flow-figure--node .flow-figure__frame {
+  aspect-ratio: 1 / 1;
+  clip-path: url(#flow-clip-node);
+}
+.flow-figure--amorphous .flow-figure__frame {
+  aspect-ratio: 1 / 1;
+  clip-path: url(#flow-clip-amorphous);
+}
+.flow-figure--organic .flow-figure__frame {
+  aspect-ratio: 1 / 1;
+  clip-path: url(#flow-clip-organic);
+}
+/* 直立橢圓：預設走 3:4，要更修長就在使用端覆寫 aspect-ratio */
+.flow-figure--oval .flow-figure__frame {
+  aspect-ratio: 3 / 4;
+  clip-path: url(#flow-clip-oval);
+}
+.flow-figure--wave .flow-figure__frame {
+  aspect-ratio: 4 / 3;
+  clip-path: url(#flow-clip-wave);
+}
+
 .flow-figure figcaption {
   margin-top: 20px;
   font-family: var(--font-en);
