@@ -215,10 +215,20 @@
     // 明暗會翻的版面不能只靠固定色場 —— 色場是在「視窗中線」換色的，
     // 於是 section 的標題會有一段時間壓在前一段的背景上，暗底看到暗字、
     // 亮底看到亮字。讓這些區塊自己不透明地鋪一層，就沒有那個空窗期。
-    sections.forEach(section => {
+    // 同時把「上一段結束的顏色」與「下一段開始的顏色」寫進來，
+    // 讓每一段的底色從前一段接續、再交棒給後一段 —— 相鄰區塊之間
+    // 就沒有那條分隔直線，整頁是一條連續的色帶。
+    const declared = sections.filter(x => parsePalette(x.dataset.flowPalette));
+    declared.forEach((section, idx) => {
       if (!section.dataset.surface) return;
       const pal = parsePalette(section.dataset.flowPalette);
-      if (pal) paint(section, pal);
+      if (!pal) return;
+      paint(section, pal);
+      // 只需要「從上一段結束的顏色開始」。底端不必再交棒 ——
+      // 每一段本來就結束在自己的 bg2，下一段從那個顏色接上，接縫同色。
+      // 兩端都做漸層的話會變成「淡到下一段的顏色、再跳回自己的深色」。
+      const prev = parsePalette((declared[idx - 1] || {}).dataset?.flowPalette || '');
+      section.style.setProperty('--flow-from', prev ? prev.bg2 : pal.bg1);
     });
 
     // 第一段直接上色，不淡入

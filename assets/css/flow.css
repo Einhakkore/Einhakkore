@@ -84,7 +84,15 @@ body[data-flow="sections"] {
   isolation: isolate;
 }
 /* 自己鋪一層底（顏色由 flow.js 依 data-flow-palette 寫進來），
-   蓋在固定色場之上，明暗翻轉時不會有「標題壓在前一段背景上」的空窗期。 */
+   蓋在固定色場之上，明暗翻轉時不會有「標題壓在前一段背景上」的空窗期。
+
+   頂端留一段 --flow-blend 的過渡，從 --flow-from（上一段結束的顏色）
+   接進來；底端就停在自己的 bg2，下一段再從那個顏色接上 —— 接縫兩側
+   同色，看不到分隔直線，整頁是一條連續的色帶。 */
+[data-surface] { --flow-blend: clamp(120px, 18vh, 220px); }
+/* 由深轉亮的那一段，上緣的漸層比較長，內文要落在漸層之後才不會
+   壓在中間調上（實測會掉到 2:1 以下）。 */
+[data-surface="light"] { padding-top: clamp(200px, 28vh, 320px); }
 [data-surface]::before {
   content: "";
   position: absolute;
@@ -94,10 +102,13 @@ body[data-flow="sections"] {
   background:
     radial-gradient(72vw 62vw at var(--flow-glow-at, 50% 50%),
                     var(--flow-glow, transparent), transparent 62%),
-    linear-gradient(175deg, var(--flow-bg1, transparent), var(--flow-bg2, transparent));
+    linear-gradient(180deg,
+      var(--flow-from, var(--flow-bg1)) 0,
+      var(--flow-bg1) var(--flow-blend),
+      var(--flow-bg2) 100%);
 }
-/* 區塊之間的轉場線落在兩段之間，跟著前一段的底色走 */
-[data-surface] + [data-flow-divider] { background: var(--divider-bg, transparent); }
+/* 轉場線落在兩個區塊之間，底下是固定色場 —— 現在相鄰區塊的接縫同色，
+   線條兩側不會再出現一半深一半亮的情況。 */
 
 /* -----------------------------------------------------------
    2 · DIVIDER — section 之間的線條轉場

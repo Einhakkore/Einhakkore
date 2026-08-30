@@ -830,11 +830,8 @@
       position: relative;
       padding: clamp(200px, 24vh, 280px) 32px clamp(120px, 16vh, 180px);
       text-align: center;
-      background: linear-gradient(180deg,
-        transparent 0,
-        color-mix(in srgb, var(--paper) 60%, transparent) 150px,
-        var(--paper) 250px,
-        var(--paper) 100%);
+      /* 轉亮的漸層現在由 [data-surface]::before 統一處理，
+         這裡再畫一層會變成兩次轉場、出現色帶。 */
     }
     .about-cta__wrap { max-width: 720px; margin: 0 auto; position: relative; }
     /* 點綴色用全站在淺底上慣用的 --amber-700（section-eyebrow、newsletter-label
@@ -995,15 +992,10 @@
       .stat-cell__num    { font-size: var(--fs-4xl); }
       .about-cta {
         padding-top: clamp(160px, 22vh, 220px);
-        /* 手機的 padding-top 較小，漸層也要更早收斂到亮底 */
-        background: linear-gradient(180deg,
-          transparent 0,
-          color-mix(in srgb, var(--paper) 60%, transparent) 60px,
-          var(--paper) 110px,
-          var(--paper) 100%);
       }
       .parallax-deco { opacity: .28; filter: blur(24px); }
-      .about-cta { padding: 96px 24px; }
+      /* 上緣要留給轉亮的漸層，只收窄左右與下緣 */
+      .about-cta { padding-inline: 24px; padding-bottom: 96px; }
     }
   </style>
 </head>

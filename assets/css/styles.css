@@ -755,10 +755,11 @@ body[data-page="serve"] .logo .logo-dark { display: block; }
    置中留給首頁 .hero 與經文那類 statement 段落。 */
 .page-hero {
   position: relative;
-  padding: clamp(96px, 16vh, 168px) clamp(20px, 5vw, 64px) clamp(64px, 10vh, 96px);
+  /* 左右用 max() 把內容收在 1280 的量測裡，但 section 本身滿版 ——
+     在 section 上設 max-width 會讓它的背景變成一塊浮在頁面上的矩形。 */
+  padding-block: clamp(96px, 16vh, 168px) clamp(64px, 10vh, 96px);
+  padding-inline: max(clamp(20px, 5vw, 64px), calc((100% - 1280px) / 2));
   text-align: left;
-  max-width: 1280px;
-  margin: 0 auto;
 }
 .page-hero .symbol-sm {
   width: 40px; height: 40px;
@@ -1416,7 +1417,9 @@ body[data-page="home"] .hero .btn-ghost:hover {
    NEWSLETTER — 與「代禱信」相關，鼠尾草點綴
    ----------------------------------------------------------- */
 .newsletter {
-  padding: 120px 32px; text-align: center;
+  /* 這是每頁由深轉亮的那一段，上緣有一段漸層在接前一段的顏色，
+     內文要落在漸層之後才不會壓在中間調上。 */
+  padding: clamp(180px, 26vh, 280px) 32px 120px; text-align: center;
   background: var(--newsletter-bg);
   border-top: 1px solid var(--newsletter-border);
   border-bottom: 1px solid var(--newsletter-border);
