@@ -215,24 +215,29 @@
     // 明暗會翻的版面不能只靠固定色場 —— 色場是在「視窗中線」換色的，
     // 於是 section 的標題會有一段時間壓在前一段的背景上，暗底看到暗字、
     // 亮底看到亮字。讓這些區塊自己不透明地鋪一層，就沒有那個空窗期。
-    // 同時把「上一段結束的顏色」與「下一段開始的顏色」寫進來，
-    // 讓每一段的底色從前一段接續、再交棒給後一段 —— 相鄰區塊之間
-    // 就沒有那條分隔直線，整頁是一條連續的色帶。
-    const declared = sections.filter(x => parsePalette(x.dataset.flowPalette));
-    declared.forEach((section, idx) => {
-      if (!section.dataset.surface) return;
-      const pal = parsePalette(section.dataset.flowPalette);
-      if (!pal) return;
-      paint(section, pal);
-      // 只需要「從上一段結束的顏色開始」。底端不必再交棒 ——
-      // 每一段本來就結束在自己的 bg2，下一段從那個顏色接上，接縫同色。
-      // 兩端都做漸層的話會變成「淡到下一段的顏色、再跳回自己的深色」。
-      const prev = parsePalette((declared[idx - 1] || {}).dataset?.flowPalette || '');
-      section.style.setProperty('--flow-from', prev ? prev.bg2 : pal.bg1);
-    });
+    // 轉亮那一段的顏色寫到專用的亮色層上；它的 opacity 由 CSS 的
+    // scroll-driven animation 綁在該區塊的進場進度上（見 flow.css）。
+    const lightLayer = field.querySelector('.flow-field__light');
+    const lightSection = sections.find(x => x.dataset.surface === 'light');
+    if (lightLayer && lightSection) {
+      const pal = parsePalette(lightSection.dataset.flowPalette);
+      if (pal) paint(lightLayer, pal);
+      // 零高度的哨兵：view-timeline 掛在它身上，轉場的捲動區間才會固定
+      // 是「一個視窗高」，不會被 section 自己的高度拉長（見 flow.css）。
+      if (!lightSection.querySelector('.flow-turn')) {
+        const turn = document.createElement('span');
+        turn.className = 'flow-turn';
+        turn.setAttribute('aria-hidden', 'true');
+        lightSection.prepend(turn);
+      }
+    }
+
+    // 深色段落之間仍然用兩層 ping-pong 換色 —— 相鄰的深色色差很小，
+    // 交叉淡入看不出接縫；真正會被看見的極性翻轉交給上面那一層。
+    const darkSections = sections.filter(x => x.dataset.surface !== 'light');
 
     // 第一段直接上色，不淡入
-    const first = parsePalette(sections[0].dataset.flowPalette);
+    const first = parsePalette((darkSections[0] || sections[0]).dataset.flowPalette);
     if (first) {
       paint(front, first);
       front.classList.add('is-on');
@@ -242,7 +247,7 @@
     if (gsapReady) {
       // ScrollTrigger：往下捲用 onEnter、往回捲用 onEnterBack，
       // 交界固定在視窗中線，換色時機就永遠對齊 section 邊界。
-      sections.forEach(section => {
+      darkSections.forEach(section => {
         const pal = parsePalette(section.dataset.flowPalette);
         if (!pal) return;
         ScrollTrigger.create({
@@ -279,7 +284,7 @@
       });
       pick();
     }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
-    sections.forEach(s => io.observe(s));
+    darkSections.forEach(s => io.observe(s));
 
     let queued = false;
     window.addEventListener('scroll', () => {
@@ -288,6 +293,16 @@
       requestAnimationFrame(() => { queued = false; pick(); });
     }, { passive: true });
     pick();
+
+    // 沒有 scroll-driven animation 的瀏覽器：亮色層改用 IntersectionObserver
+    // 交叉淡入，一樣會轉亮，只是不跟捲動同步。
+    if (lightLayer && lightSection &&
+        !CSS.supports('animation-timeline', 'view()')) {
+      lightLayer.style.transition = 'opacity 1.2s cubic-bezier(.16, 1, .3, 1)';
+      new IntersectionObserver(entries => {
+        entries.forEach(e => { lightLayer.style.opacity = e.isIntersecting ? '1' : '0'; });
+      }, { rootMargin: '0px 0px -45% 0px', threshold: 0 }).observe(lightSection);
+    }
   }
 
   /* ---------- 遮罩圖的圖內視差 ----------

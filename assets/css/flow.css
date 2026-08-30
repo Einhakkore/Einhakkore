@@ -78,37 +78,64 @@ body[data-flow="sections"] {
   --surface-line:        rgba(16, 29, 41, .14);
   --surface-line-strong: rgba(16, 29, 41, .30);
 }
-[data-surface] {
-  color: var(--surface-fg);
-  position: relative;
-  isolation: isolate;
-}
-/* 自己鋪一層底（顏色由 flow.js 依 data-flow-palette 寫進來），
-   蓋在固定色場之上，明暗翻轉時不會有「標題壓在前一段背景上」的空窗期。
+[data-surface] { color: var(--surface-fg); }
 
-   頂端留一段 --flow-blend 的過渡，從 --flow-from（上一段結束的顏色）
-   接進來；底端就停在自己的 bg2，下一段再從那個顏色接上 —— 接縫兩側
-   同色，看不到分隔直線，整頁是一條連續的色帶。 */
-[data-surface] { --flow-blend: clamp(120px, 18vh, 220px); }
-/* 由深轉亮的那一段，上緣的漸層比較長，內文要落在漸層之後才不會
-   壓在中間調上（實測會掉到 2:1 以下）。 */
-[data-surface="light"] { padding-top: clamp(200px, 28vh, 320px); }
-[data-surface]::before {
-  content: "";
-  position: absolute;
-  inset: -1px 0;              /* 上下各多 1px，避免相鄰區塊之間出現髮絲縫 */
-  z-index: -1;
-  pointer-events: none;
-  background:
-    radial-gradient(72vw 62vw at var(--flow-glow-at, 50% 50%),
-                    var(--flow-glow, transparent), transparent 62%),
-    linear-gradient(180deg,
-      var(--flow-from, var(--flow-bg1)) 0,
-      var(--flow-bg1) var(--flow-blend),
-      var(--flow-bg2) 100%);
+/* 轉場發生在整個視窗上，所以交界前後要留一段沒有文字的空間，
+   否則變色的過程中會有字壓在中間調上。 */
+.flow-turn { display: block; height: 0; }
+[data-surface="light"] { padding-block-start: clamp(240px, 34vh, 360px) !important; }
+[data-surface]:has(+ [data-surface="light"]),
+[data-surface]:has(+ * + [data-surface="light"]) {
+  padding-block-end: clamp(220px, 34vh, 400px);
 }
-/* 轉場線落在兩個區塊之間，底下是固定色場 —— 現在相鄰區塊的接縫同色，
-   線條兩側不會再出現一半深一半亮的情況。 */
+
+/* -----------------------------------------------------------
+   1c · 由深轉亮 —— scroll-driven，不是烤進版面的漸層
+   ------------------------------------------------------------
+   之前讓每個區塊自己畫一段底色、上緣接前一段的顏色。那等於把漸層
+   烤進版面的幾何裡：它是一條固定在頁面上的色帶，捲動時只是跟著捲，
+   看起來就是「一段一段被切開，中間補了個漸層」。
+
+   改成整頁共用一層 fixed 的背景：hero 到轉亮之前都是同一張底，
+   捲動時它不動，所以根本不存在接縫。轉亮則交給 scroll-driven
+   animation —— 亮色層的 opacity 直接綁在「最後那一段進場的進度」上，
+   捲多少就亮多少，是連續的，不是補間動畫。
+
+   view-timeline 宣告在轉亮的那一段上，用 timeline-scope 提到 body，
+   fixed 的背景層才拿得到（它不是那一段的子孫）。
+   不支援的瀏覽器走 @supports 之外的路：flow.js 的 IntersectionObserver
+   交叉淡入，一樣會亮，只是少了跟捲動同步。
+   ----------------------------------------------------------- */
+.flow-field__light {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background:
+    radial-gradient(72vw 62vw at var(--flow-glow-at, 50% 88%),
+                    var(--flow-glow, transparent), transparent 62%),
+    linear-gradient(175deg, var(--flow-bg1, #FFFFFF), var(--flow-bg2, #DCECEF));
+}
+
+@supports (animation-timeline: view()) {
+  body { timeline-scope: --flow-to-light; }
+  /* timeline 掛在一個零高度的哨兵上（由 flow.js 插在轉亮那一段的最前面），
+     而不是掛在 section 本身：section 有多高，entry/cover 的區間就有多長，
+     高的 section 會讓轉場拖過整段內容。零高度的哨兵，cover 0%→100% 剛好
+     就是「它從視窗底走到視窗頂」= 一個視窗的捲動距離，跟內容無關。 */
+  .flow-turn {
+    view-timeline-name: --flow-to-light;
+    view-timeline-axis: block;
+  }
+  .flow-field__light {
+    animation: flow-to-light linear both;
+    animation-timeline: --flow-to-light;
+    /* 整個視窗會一起變色，所以變色的那一刻畫面上不能有文字 —— 白字會
+       落在中間調上。轉場收在哨兵行經視窗的中段（約 0.3 個視窗高、
+       捲動時約 270px），此時上一段只剩下緣留白、下一段還在上緣留白。 */
+    animation-range: cover 40% cover 62%;
+  }
+  @keyframes flow-to-light { from { opacity: 0; } to { opacity: 1; } }
+}
 
 /* -----------------------------------------------------------
    2 · DIVIDER — section 之間的線條轉場
@@ -280,7 +307,10 @@ body[data-flow="sections"] {
    4 · 降級
    ----------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
-  /* 換色本身保留（那是資訊，不是動態），只是不再有淡入的過程 */
+  /* 換色本身保留（那是資訊，不是動態），只是不再有淡入的過程。
+     .flow-field__light 的 scroll-driven animation 也刻意不關掉 ——
+     它是跟著捲動走的，不是自己在播；關掉的話整頁會停在深底，
+     而那一段的文字是深色的，會直接看不到。 */
   .flow-field__layer { transition: opacity .01ms; }
   .flow-divider path.is-measured {
     stroke-dasharray: none;

@@ -87,6 +87,9 @@
      直接重寫整片漸層會讓整個視窗每一幀重新光柵化，交替淡入則是合成器的事。
      顏色不寫在這裡 —— 由各 section 的 data-flow-palette 宣告，flow.js 寫進 inline style。 -->
 <div class="flow-field" aria-hidden="true">
+  <!-- 深色段落共用這兩層（互相 ping-pong 換色，色差很小、看不出接縫） -->
   <div class="flow-field__layer is-on" data-layer="a"></div>
   <div class="flow-field__layer"       data-layer="b"></div>
+  <!-- 轉亮專用的一層：opacity 綁在最後那一段的進場進度上 -->
+  <div class="flow-field__light" data-layer="light"></div>
 </div>
