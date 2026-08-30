@@ -141,7 +141,7 @@
     .scr-hero__title {
       font-family: var(--font-brand, serif);
       font-weight: var(--fw-semibold);
-      font-size: var(--fs-6xl);
+      font-size: var(--fs-display);
       line-height: var(--lh-title);
       letter-spacing: var(--ls-wide);
       margin: 0;
@@ -152,7 +152,7 @@
       max-width: 640px;
       font-size: var(--fs-xl);
       line-height: var(--lh-loose);
-      color: rgba(255, 255, 255, .86);
+      color: var(--surface-fg-2);
       opacity: 0;
     }
     .scr-hero__scroll-hint {
@@ -164,7 +164,7 @@
       font-family: var(--font-en, serif);
       font-size: var(--fs-2xs);
       letter-spacing: var(--ls-track);
-      color: rgba(255, 255, 255, .72);
+      color: var(--surface-fg-3);
       display: flex; flex-direction: column; align-items: center; gap: 10px;
       pointer-events: none;
     }
@@ -200,7 +200,7 @@
     }
 
     /* ---------- 深底上的 section head 補色 ---------- */
-    .section-head--on-dark .section-eyebrow { color: var(--amber-400); }
+    .section-head--on-dark .section-eyebrow { color: var(--surface-accent); }
     .section-head--on-dark .section-num     { opacity: .85; }
 
     /* ---------- Card fade in ---------- */
@@ -215,7 +215,7 @@
       display: block;
       width: 120px;
       height: 1px;
-      margin: 20px auto 28px;
+      margin: 20px 0 28px;
       background: linear-gradient(
         90deg, transparent,
         var(--amber-500) 20%,
@@ -254,7 +254,7 @@
       text-align: left;
       background: none;
       border: 0;
-      border-top: 1px solid rgba(255, 255, 255, .12);
+      border-top: 1px solid var(--surface-line);
       padding: clamp(20px, 2.4vw, 28px) 0 clamp(20px, 2.4vw, 28px) 22px;
       color: inherit;
       cursor: pointer;
@@ -263,7 +263,7 @@
       /* 非作用中的章節仍然是可點的控制項，對比要守住 4.5:1，不能再更淡 */
       opacity: .68;
     }
-    .vision__chapter:last-child { border-bottom: 1px solid rgba(255, 255, 255, .12); }
+    .vision__chapter:last-child { border-bottom: 1px solid var(--surface-line); }
     .vision__chapter:hover { opacity: .9; }
     .vision__chapter.is-active {
       opacity: 1;
@@ -297,7 +297,7 @@
       font-size: var(--fs-xl);
       line-height: var(--lh-flat);
       letter-spacing: var(--ls-none);
-      color: var(--amber-400);
+      color: var(--surface-accent);
       margin-bottom: 8px;
     }
     .vision__chapter-title {
@@ -307,7 +307,7 @@
       font-size: var(--fs-2xl);
       line-height: var(--lh-title);
       letter-spacing: var(--ls-cjk);
-      color: var(--text-on-dark);
+      color: var(--surface-fg);
     }
 
     /* ---------- 右：內容舞台 ---------- */
@@ -318,7 +318,7 @@
       grid-area: 1 / 1;
       /* 刻意不是「卡片」：低透明度的底 + 一道細邊 + 4px 圓角 */
       background: rgba(255, 255, 255, .045);
-      border: 1px solid rgba(255, 255, 255, .12);
+      border: 1px solid var(--surface-line);
       border-radius: 4px;
       padding: clamp(32px, 4vw, 56px);
       opacity: 0;
@@ -347,7 +347,7 @@
       font-weight: var(--fw-regular);
       font-size: var(--fs-5xl);
       line-height: var(--lh-flat);
-      color: var(--amber-400);
+      color: var(--surface-accent);
       opacity: .9;
       margin-bottom: 18px;
     }
@@ -357,14 +357,14 @@
       font-size: var(--fs-4xl);
       line-height: var(--lh-title);
       letter-spacing: var(--ls-cjk);
-      color: var(--text-on-dark);
+      color: var(--surface-fg);
       margin: 0 0 20px;
     }
     .vision__body {
       font-family: var(--font-zh);
       font-size: var(--fs-md);
       line-height: var(--lh-loose);
-      color: rgba(255, 255, 255, .88);
+      color: var(--surface-fg-2);
       margin: 0;
       max-width: 54ch;
     }
@@ -373,7 +373,7 @@
     .vision__expand {
       margin-top: clamp(24px, 3vw, 36px);
       padding-top: 20px;
-      border-top: 1px solid rgba(255, 255, 255, .12);
+      border-top: 1px solid var(--surface-line);
     }
     .vision__expand-trigger {
       display: inline-flex;
@@ -386,7 +386,7 @@
       font-family: var(--font-zh);
       font-size: var(--fs-sm);
       letter-spacing: var(--ls-label);
-      color: var(--amber-400);
+      color: var(--surface-accent);
       transition: color .25s ease;
     }
     .vision__expand-trigger:hover { color: var(--amber-300, #F7D89A); }
@@ -432,7 +432,7 @@
       padding-left: 20px;
       font-size: var(--fs-sm);
       line-height: var(--lh-body);
-      color: rgba(255, 255, 255, .82);
+      color: var(--surface-fg-2);
     }
     .vision__list li::before {
       content: "";
@@ -453,7 +453,7 @@
         flex-direction: row;
         overflow-x: auto;
         scrollbar-width: none;
-        border-bottom: 1px solid rgba(255, 255, 255, .12);
+        border-bottom: 1px solid var(--surface-line);
         scroll-snap-type: x proximity;
       }
       .vision__nav::-webkit-scrollbar { display: none; }
@@ -493,33 +493,25 @@
     @media (max-width: 820px) { .team-grid { grid-template-columns: 1fr; } }
 
     /* 人物卡：不放照片，用字母印記 + 一段「為什麼投入」的自述 */
+    /* V3 §20：降低卡片用量。這裡不做「毛玻璃卡 + 圓角 + 陰影」，
+       改成一道上緣線 + 大留白的編輯式排版，資訊層級靠字級與間距。 */
     .person-card {
-      padding: 40px 36px;
-      border-radius: var(--radius-card);
-      background: rgba(255, 255, 255, .06);
-      border: 1px solid rgba(255, 255, 255, .14);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      transition: background .4s cubic-bezier(.16,1,.3,1),
-                  border-color .4s cubic-bezier(.16,1,.3,1),
-                  transform .4s cubic-bezier(.16,1,.3,1);
-    }
-    .person-card:hover {
-      background: var(--surface-2);
-      border-color: rgba(242, 195, 107, .38);
-      transform: translateY(-3px);
+      padding: 32px 0 0;
+      border-top: 1px solid var(--surface-line-strong);
+      background: none;
+      border-radius: 0;
     }
     .person-card__name {
       font-family: var(--font-brand); font-weight: var(--fw-semibold);
       font-size: var(--fs-4xl); line-height: var(--lh-heading);
-      color: var(--text-on-dark);
+      color: var(--surface-fg);
       letter-spacing: var(--ls-wide);
       margin: 0 0 6px;
     }
     .person-card__role {
       font-family: var(--font-en);
       font-size: var(--fs-sm); letter-spacing: var(--ls-caps);
-      color: var(--amber-400);
+      color: var(--surface-accent);
       margin-bottom: 22px;
     }
     .person-card__quote { margin: 0; }
@@ -527,18 +519,20 @@
       margin: 0;
       font-size: var(--fs-md);
       line-height: var(--lh-loose);
-      color: rgba(255, 255, 255, .88);
+      color: var(--surface-fg-2);
     }
     /* 引號：開頭靠左、結尾靠右，用 FreightText 的斜體引號當裝飾 */
     .quote-mark {
       display: block;
       font-family: var(--font-en);
       font-size: var(--fs-5xl); line-height: .8;
-      color: rgba(242, 195, 107, .72);
+      /* 引號是裝飾，但它仍然是被畫出來的字元；.55 在淺底上只有 2.2:1 */
+      color: var(--surface-accent);
+      opacity: .85;
     }
     .quote-mark--open  { margin-bottom: 14px; }
     .quote-mark--close { margin-top: 18px; text-align: right; }
-    @media (max-width: 640px) { .person-card { padding: 32px 24px; } }
+    @media (max-width: 640px) { .person-card { padding: 28px 0 0; } }
 
     /* 團隊規模 —— 數據列 */
     /* 團隊規模：四個數字一排，無框無底，直接落在漸層背景上 */
@@ -553,7 +547,7 @@
     .stat-cell__num {
       font-family: var(--font-en); font-weight: var(--fw-regular);
       font-size: var(--fs-5xl); line-height: var(--lh-flat);
-      color: var(--amber-400);
+      color: var(--surface-accent);
       font-variant-numeric: tabular-nums;
     }
     @media (max-width: 560px) {
@@ -562,13 +556,13 @@
     .stat-cell__num .unit {
       font-family: var(--font-zh); font-style: normal;
       font-size: var(--fs-md); letter-spacing: var(--ls-wide);
-      color: rgba(255, 255, 255, .82);
+      color: var(--surface-fg-2);
       margin-left: 8px;
     }
     .stat-cell__label {
       margin-top: 14px;
       font-size: var(--fs-sm); letter-spacing: var(--ls-label);
-      color: rgba(255, 255, 255, .82);
+      color: var(--surface-fg-2);
     }
 
     /* ============================================================
@@ -586,23 +580,23 @@
       flex-wrap: wrap;
       margin-bottom: 20px;
       padding-bottom: 18px;
-      border-bottom: 1px solid rgba(255, 255, 255, .12);
+      border-bottom: 1px solid var(--surface-line);
     }
     .net-block__en {
       font-family: var(--font-en);
       font-size: var(--fs-sm); letter-spacing: var(--ls-eyebrow);
-      color: var(--amber-400);
+      color: var(--surface-accent);
     }
     .net-block h3 {
       font-family: var(--font-brand); font-weight: var(--fw-semibold);
       font-size: var(--fs-4xl);
       line-height: var(--lh-title); letter-spacing: var(--ls-wide);
-      color: var(--text-on-dark);
+      color: var(--surface-fg);
       margin: 0;
     }
     .net-block__note {
       font-size: var(--fs-md); line-height: var(--lh-loose);
-      color: rgba(255, 255, 255, .82);
+      color: var(--surface-fg-2);
       max-width: 60ch;
       margin: 0 0 28px;
     }
@@ -615,7 +609,7 @@
       display: inline-flex; align-items: center; gap: 10px;
       padding: 8px 0;
       font-size: var(--fs-md); letter-spacing: var(--ls-wide);
-      color: var(--amber-400);
+      color: var(--surface-accent);
       border-bottom: 1px solid rgba(242, 195, 107, .55);
       transition: color .25s ease, border-color .25s ease;
     }
@@ -654,7 +648,7 @@
     /* logo 尚未取得授權前的佔位樣式 */
     .logo-wall__ph {
       display: flex; flex-direction: column; align-items: center; gap: 8px;
-      color: rgba(255, 255, 255, .72);
+      color: var(--surface-fg-3);
     }
     .logo-wall__ph svg { width: 26px; height: 26px; }
     .logo-wall__ph span { font-size: var(--fs-3xs); letter-spacing: var(--ls-caps); }
@@ -689,18 +683,18 @@
     .field-card__figure img { filter: sepia(.12) saturate(.86) brightness(.92); }
     .field-card__name {
       font-size: var(--fs-md); letter-spacing: var(--ls-wide);
-      color: var(--text-on-dark);
+      color: var(--surface-fg);
       margin-bottom: 14px;
     }
     .field-card__count {
       font-size: var(--fs-sm);
-      color: rgba(255, 255, 255, .82);
+      color: var(--surface-fg-2);
       white-space: nowrap;
     }
     .field-card__count b {
       font-family: var(--font-en); font-weight: var(--fw-regular);
       font-size: var(--fs-5xl); line-height: var(--lh-flat);
-      color: var(--amber-400);
+      color: var(--surface-accent);
       margin-right: 5px;
       font-variant-numeric: tabular-nums;
     }
@@ -731,24 +725,24 @@
     .host-card__name {
       font-family: var(--font-brand); font-weight: var(--fw-medium);
       font-size: var(--fs-xl); line-height: var(--lh-title); letter-spacing: var(--ls-cjk);
-      color: var(--text-on-dark);
+      color: var(--surface-fg);
       margin: 0;
     }
     .host-card__num {
       font-family: var(--font-en);
       font-size: var(--fs-4xl); line-height: var(--lh-tight); white-space: nowrap;
-      color: var(--amber-400);
+      color: var(--surface-accent);
       font-variant-numeric: tabular-nums;
     }
     .host-card__num .unit {
       font-family: var(--font-zh); font-style: normal;
-      font-size: var(--fs-sm); color: rgba(255, 255, 255, .82);
+      font-size: var(--fs-sm); color: var(--surface-fg-2);
       margin-left: 6px;
     }
     .host-card__desc {
       margin: 10px 0 0;
       font-size: var(--fs-sm); line-height: var(--lh-body);
-      color: rgba(255, 255, 255, .84);
+      color: var(--surface-fg-2);
     }
 
     /* ============================================================
@@ -781,7 +775,7 @@
     .org-list dd {
       padding: clamp(18px, 2.2vw, 24px) 0;
       border-top: 0;
-      border-bottom: 1px solid rgba(255, 255, 255, .13);
+      border-bottom: 1px solid var(--surface-line);
     }
     .org-list dt {
       font-family: var(--font-zh);
@@ -789,14 +783,14 @@
       line-height: var(--lh-body);
       letter-spacing: var(--ls-label);
       /* 這一段底部有暖色光暈，是全區最亮處；標籤壓太淡會掉到 4.5:1 以下 */
-      color: rgba(255, 255, 255, .86);
+      color: var(--surface-fg-2);
     }
     .org-list dd {
       margin: 0;
       padding-left: clamp(16px, 3vw, 40px);
       font-size: var(--fs-md);
       line-height: var(--lh-body);
-      color: var(--text-on-dark);
+      color: var(--surface-fg);
     }
     /* 最後一列收尾的線與開頭那道對稱 */
     .org-list dt:last-of-type,
@@ -806,7 +800,7 @@
       display: block;
       margin-top: 6px;
       font-size: var(--fs-sm);
-      color: rgba(255, 255, 255, .86);
+      color: var(--surface-fg-2);
     }
     .org-note {
       margin: 24px 0 0;
@@ -814,7 +808,7 @@
       border-top: 0;
       font-size: var(--fs-sm);
       line-height: var(--lh-body);
-      color: rgba(255, 255, 255, .86);
+      color: var(--surface-fg-2);
     }
     @media (max-width: 640px) {
       .org-list { grid-template-columns: 1fr; }
@@ -824,7 +818,7 @@
     }
 
     /* INFORMATION 的標題還在深底區，維持反白 */
-    .section-org .section-head h2 { color: var(--text-on-dark); }
+    .section-org .section-head h2 { color: var(--surface-fg); }
 
     /* ============================================================
        頁尾 CTA
@@ -910,7 +904,7 @@
       font-family: var(--font-en);
       font-size: var(--fs-sm);
       letter-spacing: var(--ls-track);
-      color: var(--amber-400);
+      color: var(--surface-accent);
       margin-bottom: clamp(20px, 3vw, 36px);
     }
     .spring-figure__quote {
@@ -919,7 +913,7 @@
       font-size: var(--fs-5xl);
       line-height: var(--lh-title);
       letter-spacing: var(--ls-cjk);
-      color: var(--text-on-dark);
+      color: var(--surface-fg);
       margin: 0 0 clamp(24px, 3vw, 40px);
     }
     /* 逐行分割會把 <br><br> 之間的空行切成一個空的 .scr-line，
@@ -930,11 +924,11 @@
     .spring-figure__note {
       font-size: var(--fs-md);
       line-height: var(--lh-loose);
-      color: rgba(255, 255, 255, .82);
+      color: var(--surface-fg-2);
       max-width: 46ch;
       margin: 0;
       padding-top: 24px;
-      border-top: 1px solid rgba(255, 255, 255, .14);
+      border-top: 1px solid var(--surface-line);
     }
     @media (max-width: 900px) {
       .spring-figure { padding: 64px 0 88px; }
@@ -994,7 +988,6 @@
         font-size: var(--fs-5xl); line-height: var(--lh-tight); margin-bottom: 14px;
       }
       /* 字級降階：流體 clamp() 已移除，窄螢幕在此統一收斂 */
-      .scr-hero__title   { font-size: var(--fs-5xl); }
       .spring-figure__quote { font-size: var(--fs-4xl); }
       .net-block h3      { font-size: var(--fs-3xl); }
       .about-cta h2      { font-size: var(--fs-4xl); }
@@ -1061,7 +1054,7 @@
 <main>
 
   <!-- ============================ HERO ============================ -->
-  <section class="scr-hero" data-flow-palette="#1A2E40 | #101D29 | rgba(255,186,73,.16) | 18% 12%">
+  <section class="scr-hero" data-surface="dark" data-flow-palette="#1A2E40 | #101D29 | rgba(255,186,73,.16) | 18% 12%">
     <div class="scr-hero__bg"></div>
     <div class="scr-hero__veil"></div>
 
@@ -1082,7 +1075,7 @@
   <div data-flow-divider="well"></div>
 
   <!-- ============================ 泉 · 起源與異象 ============================ -->
-  <section class="spring-figure" data-flow-palette="#101D29 | #0B1116 | rgba(60,145,173,.15) | 78% 42%">
+  <section class="spring-figure" data-surface="light" data-flow-palette="#FFFFFF | #DCECEF | rgba(60,145,173,.18) | 78% 42%">
     <div class="spring-figure__inner">
       <figure class="flow-figure flow-figure--spring" data-flow-parallax>
         <div class="flow-figure__frame">
@@ -1103,7 +1096,7 @@
   <div data-flow-divider="rift"></div>
 
   <!-- ============================ OUR VISION ============================ -->
-  <section class="section section-vision" id="vision" data-flow-palette="#101D29 | #16273A | rgba(49,87,213,.22) | 14% 78%">
+  <section class="section section-vision" id="vision" data-surface="dark" data-flow-palette="#101D29 | #16273A | rgba(49,87,213,.22) | 14% 78%">
     <div class="wrap">
       <hgroup class="section-head section-head--on-dark">
         <div class="section-num" data-scr-fade>OUR VISION</div>
@@ -1247,7 +1240,7 @@
   <div data-flow-divider="contour"></div>
 
   <!-- ============================ TEAM & NETWORK · 我們的服事 ============================ -->
-  <section class="section section-team" id="team" data-scene="team" data-flow-palette="#294354 | #1A2E40 | rgba(92,205,194,.16) | 88% 60%">
+  <section class="section section-team" id="team" data-scene="team" data-surface="light" data-flow-palette="#FAFAF7 | #E2F5F2 | rgba(92,205,194,.22) | 88% 60%">
     <div class="wrap">
       <hgroup class="section-head section-head--on-dark">
         <div class="section-num" data-scr-fade>TEAM &amp; NETWORK</div>
@@ -1438,7 +1431,7 @@
   <div data-flow-divider="contour"></div>
 
   <!-- ============================ INFORMATION · 關於隱哈歌利 ============================ -->
-  <section class="section section-org" id="org" data-scene="org" data-flow-palette="#3A5667 | #294354 | rgba(91,168,196,.16) | 50% 92%">
+  <section class="section section-org" id="org" data-scene="org" data-surface="light" data-flow-palette="#FFFFFF | #DCECEF | rgba(91,168,196,.20) | 50% 92%">
     <div class="wrap">
       <hgroup class="section-head section-head--on-dark">
         <div class="section-num" data-scr-fade>INFORMATION</div>
@@ -1482,7 +1475,7 @@
 
   <!-- ============================ 頁尾 CTA ============================ -->
   <!-- 這一段落在 scroll flow field 的最亮處，文字色階改吃 --fg（會隨背景由淺轉深） -->
-  <section class="about-cta" data-scene="cta" data-flow-palette="#FFFFFF | #DCECEF | rgba(255,186,73,.30) | 50% 88%">
+  <section class="about-cta" data-scene="cta" data-surface="light" data-flow-palette="#FFFFFF | #DCECEF | rgba(255,186,73,.30) | 50% 88%">
     <div class="about-cta__wrap">
       <div class="section-num" data-scr-fade>JOIN US</div>
       <h2 data-split-lines>一起成為宣教路上的<em>同行者</em></h2>

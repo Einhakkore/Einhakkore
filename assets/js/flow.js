@@ -211,6 +211,16 @@
       const tmp = front; front = back; back = tmp;
     }
 
+    // 有宣告 data-surface 的區塊自己畫底：
+    // 明暗會翻的版面不能只靠固定色場 —— 色場是在「視窗中線」換色的，
+    // 於是 section 的標題會有一段時間壓在前一段的背景上，暗底看到暗字、
+    // 亮底看到亮字。讓這些區塊自己不透明地鋪一層，就沒有那個空窗期。
+    sections.forEach(section => {
+      if (!section.dataset.surface) return;
+      const pal = parsePalette(section.dataset.flowPalette);
+      if (pal) paint(section, pal);
+    });
+
     // 第一段直接上色，不淡入
     const first = parsePalette(sections[0].dataset.flowPalette);
     if (first) {

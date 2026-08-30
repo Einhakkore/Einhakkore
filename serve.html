@@ -31,10 +31,10 @@
 
   <style>
     /* ---------- page-hero：整頁改深色場後改吃反白色階 ---------- */
-    body[data-page="serve"] .page-hero h1 { color: var(--text-on-dark); }
-    body[data-page="serve"] .page-hero h1 em { color: var(--amber-400); }
-    body[data-page="serve"] .page-hero p { color: rgba(255, 255, 255, .88); }
-    body[data-page="serve"] .page-hero .eyebrow { color: var(--amber-400); }
+    body[data-page="serve"] .page-hero h1 { color: var(--surface-fg); }
+    body[data-page="serve"] .page-hero h1 em { color: var(--surface-accent); }
+    body[data-page="serve"] .page-hero p { color: var(--surface-fg-2); }
+    body[data-page="serve"] .page-hero .eyebrow { color: var(--surface-accent); }
   </style>
 
   <style>
@@ -82,11 +82,19 @@
       inset: 0;
       pointer-events: auto;
       cursor: pointer;
+      /* 底色跟著 surface 走 —— 深底是白色半透明，翻成淺底時要換成
+         mineral 的實色，否則整片水窪會消失。色相分三組，對應 V3 的
+         敘事角色：Mineral 環境 / Aqua 連結 / Amber 光。 */
       background:
-        radial-gradient(120% 100% at 30% 20%, rgba(143, 180, 206, .22), transparent 70%),
-        rgba(255, 255, 255, .07);
+        radial-gradient(120% 100% at 30% 20%, var(--pond-tint), transparent 70%),
+        var(--pond-base);
       transition: background .45s ease;
     }
+    [data-surface="dark"]  .pond-field { --pond-base: rgba(255, 255, 255, .07);
+                                         --pond-base-hi: rgba(255, 255, 255, .16); }
+    [data-surface="light"] .pond-field { --pond-base: rgba(40, 113, 138, .10);
+                                         --pond-base-hi: rgba(40, 113, 138, .20); }
+    .pond-field { --pond-tint: rgba(60, 145, 173, .22); }
     .pond__inner {
       position: absolute;
       inset: 0;
@@ -104,7 +112,7 @@
       font-size: var(--fs-md);
       line-height: var(--lh-title);
       letter-spacing: var(--ls-cjk);
-      color: var(--text-on-dark);
+      color: var(--surface-fg);
     }
     .pond__items {
       list-style: none;
@@ -115,7 +123,7 @@
       gap: 2px;
       font-size: var(--fs-2xs);
       line-height: 1.5;
-      color: rgba(255, 255, 255, .86);
+      color: var(--surface-fg-2);
     }
 
     /* 每一塊用自己的 clipPath；同時各自吃一點色相差，看起來像深淺不同的水 */
@@ -128,27 +136,19 @@
     .pond--family .pond__shape { clip-path: url(#pond-family); }
     .pond--crisis .pond__shape { clip-path: url(#pond-crisis); }
 
-    .pond--mind   .pond__shape,
-    .pond--family .pond__shape { background:
-        radial-gradient(120% 100% at 30% 20%, rgba(127, 166, 78, .20), transparent 70%),
-        rgba(255, 255, 255, .07); }
-    .pond--admin  .pond__shape,
-    .pond--equip  .pond__shape { background:
-        radial-gradient(120% 100% at 30% 20%, rgba(255, 186, 73, .18), transparent 70%),
-        rgba(255, 255, 255, .07); }
+    .pond--mind, .pond--family { --pond-tint: rgba(92, 205, 194, .24); }   /* Aqua */
+    .pond--admin, .pond--equip { --pond-tint: rgba(255, 186, 73, .20); }   /* Amber */
 
     /* 浮起：hover 先抬一點，點下去鎖住放大並壓過鄰居 */
     .pond:has(.pond__shape:hover) { transform: translateY(-6px) scale(1.02); z-index: 20; }
-    .pond:has(.pond__shape:hover) .pond__shape { background:
-        radial-gradient(120% 100% at 30% 20%, rgba(242, 195, 107, .26), transparent 70%),
-        rgba(255, 255, 255, .12); }
+    .pond:has(.pond__shape:hover) { --pond-tint: rgba(255, 186, 73, .28); }
+    .pond:has(.pond__shape:hover) .pond__shape { --pond-base: var(--pond-base-hi); }
     .pond.is-lifted {
       transform: translateY(-10px) scale(1.10);
       z-index: 30;
     }
-    .pond.is-lifted .pond__shape { background:
-        radial-gradient(120% 100% at 30% 20%, rgba(242, 195, 107, .32), transparent 70%),
-        rgba(255, 255, 255, .16); }
+    .pond.is-lifted { --pond-tint: rgba(255, 186, 73, .34); }
+    .pond.is-lifted .pond__shape { --pond-base: var(--pond-base-hi); }
     .pond:focus-visible { outline: none; }
     .pond:focus-visible .pond__shape {
       box-shadow: 0 0 0 2px var(--amber-400);
@@ -159,7 +159,7 @@
       text-align: center;
       font-size: var(--fs-sm);
       letter-spacing: var(--ls-wide);
-      color: rgba(255, 255, 255, .62);
+      color: var(--surface-fg-3);
     }
 
     /* 窄螢幕：拆成兩欄的一般排版，形狀留著、位置不再手排 */
@@ -219,29 +219,29 @@
       font-family: var(--font-en);
       font-size: var(--fs-sm);
       letter-spacing: var(--ls-caps);
-      color: var(--amber-400);
+      color: var(--surface-accent);
       margin-bottom: 8px;
     }
     .watch-card__name {
       font-family: var(--font-brand); font-weight: var(--fw-semibold);
       font-size: var(--fs-3xl); line-height: var(--lh-title);
       letter-spacing: var(--ls-cjk);
-      color: var(--text-on-dark);
+      color: var(--surface-fg);
       margin: 0 0 12px;
     }
     .watch-card__intro {
       margin: 0 0 20px;
       font-size: var(--fs-md); line-height: var(--lh-loose);
-      color: rgba(255, 255, 255, .86);
+      color: var(--surface-fg-2);
     }
     .watch-card__pray {
       padding-top: 16px;
-      border-top: 1px solid rgba(255, 255, 255, .16);
+      border-top: 1px solid var(--surface-line);
     }
     .watch-card__pray-label {
       display: block;
       font-size: var(--fs-sm); letter-spacing: var(--ls-label);
-      color: var(--amber-400);
+      color: var(--surface-accent);
       margin-bottom: 10px;
     }
     .watch-card__pray ul {
@@ -251,7 +251,7 @@
     .watch-card__pray li {
       position: relative; padding-left: 20px;
       font-size: var(--fs-sm); line-height: var(--lh-body);
-      color: rgba(255, 255, 255, .86);
+      color: var(--surface-fg-2);
     }
     .watch-card__pray li::before {
       content: ""; position: absolute; left: 0; top: .7em;
@@ -266,7 +266,7 @@
     .watch-cta p {
       margin: 0;
       font-size: var(--fs-md); line-height: var(--lh-loose);
-      color: rgba(255, 255, 255, .88);
+      color: var(--surface-fg-2);
     }
 
     /* ------------------------------------------------------------
@@ -399,7 +399,7 @@
 
 <main>
 
-<section class="page-hero" data-flow-palette="#1A2E40 | #101D29 | rgba(255,186,73,.16) | 18% 12%">
+<section class="page-hero" data-surface="dark" data-flow-palette="#1A2E40 | #101D29 | rgba(255,186,73,.16) | 18% 12%">
   <div class="symbol-sm"></div>
   <div class="eyebrow">JOIN US · 參與我們</div>
   <h1>在前線與家鄉之間，<br>築起一張接住宣教士的網絡</h1>
@@ -410,8 +410,8 @@
 <div data-flow-divider="well"></div>
 
 <!-- ============================ SECTION 1 · 資源連結 ============================ -->
-<section class="section section-fields" id="fields"
-         data-flow-palette="#101D29 | #0B1116 | rgba(92,205,194,.16) | 20% 72%">
+<section class="section section-fields" id="fields" data-surface="light"
+         data-flow-palette="#FAFAF7 | #E2F5F2 | rgba(92,205,194,.24) | 20% 72%">
   <div class="wrap">
     <div class="section-head section-head--on-dark reveal">
       <div class="section-num">RESOURCES</div>
@@ -542,7 +542,7 @@
 <!-- 轉場：流 —— 水面等高線 -->
 <div data-flow-divider="contour"></div>
 
-<section class="section section-practices" data-flow-palette="#101D29 | #0B1116 | rgba(60,145,173,.15) | 78% 42%">
+<section class="section section-practices" data-surface="dark" data-flow-palette="#101D29 | #0B1116 | rgba(60,145,173,.15) | 78% 42%">
   <div class="wrap">
     <div class="section-head section-head--on-dark reveal">
       <div class="section-num">PROCESS</div>
@@ -832,7 +832,7 @@
 <!-- 轉場：流 —— 水面等高線 -->
 <div data-flow-divider="contour"></div>
 
-<section class="section" id="skill-match" data-flow-palette="#294354 | #1A2E40 | rgba(91,168,196,.16) | 88% 60%">
+<section class="section" id="skill-match" data-surface="light" data-flow-palette="#FFFFFF | #DCECEF | rgba(91,168,196,.20) | 88% 60%">
   <div class="wrap">
     <div class="section-head section-head--on-dark reveal">
       <div class="section-eyebrow">SKILL MATCH · 技能媒合</div>
@@ -881,7 +881,7 @@
 <div data-flow-divider="rift"></div>
 
 <!-- ============================ SECTION 2 · 代禱守望 ============================ -->
-<section class="section section-watch" id="watch"
+<section class="section section-watch" id="watch" data-surface="dark"
          data-flow-palette="#294354 | #1A2E40 | rgba(49,87,213,.20) | 50% 92%">
   <div class="wrap">
     <div class="section-head section-head--on-dark reveal">
@@ -972,7 +972,7 @@
 
 <!-- ============================ SECTION 3 · 奉獻支持 ============================ -->
 <!-- 整頁在這裡轉亮收尾，與 about 頁的 JOIN US 同一個節奏 -->
-<section class="section section-give" id="give-support"
+<section class="section section-give" id="give-support" data-surface="light"
          data-flow-palette="#FFFFFF | #DCECEF | rgba(255,186,73,.30) | 50% 88%">
   <div class="wrap">
     <div class="section-head reveal">

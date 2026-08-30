@@ -53,6 +53,53 @@ body[data-flow="sections"] {
 .flow-field__layer.is-on { opacity: 1; }
 
 /* -----------------------------------------------------------
+   1b · SURFACE — 這一段是深底還是淺底
+   ------------------------------------------------------------
+   V3 的用色比例是 White 40% / Navy 28%，也就是明暗會一段一段翻。
+   如果文字色寫死成 rgba(255,255,255,…)，每翻一段就要逐條改回來。
+   改成：section 上宣告 data-surface="dark|light"，文字、點綴、線條
+   都吃 --surface-* ，翻轉就只是改一個屬性。
+   ----------------------------------------------------------- */
+[data-surface="dark"] {
+  --surface-fg:          var(--white);
+  --surface-fg-2:        rgba(255, 255, 255, .88);
+  --surface-fg-3:        rgba(255, 255, 255, .74);
+  --surface-accent:      var(--amber-500);   /* Navy 上 8.20:1 */
+  --surface-line:        rgba(255, 255, 255, .18);
+  --surface-line-strong: rgba(255, 255, 255, .40);
+}
+[data-surface="light"] {
+  --surface-fg:          var(--navy-900);
+  --surface-fg-2:        var(--text-2);
+  --surface-fg-3:        var(--text-3);
+  /* 淺底上金色當不了文字（Amber 最深的 600 壓在白底也只有 2.31:1），
+     點綴色換成 Mineral 700；Amber 在淺底只做填色、底線、圓點。 */
+  --surface-accent:      var(--mineral-700);
+  --surface-line:        rgba(16, 29, 41, .14);
+  --surface-line-strong: rgba(16, 29, 41, .30);
+}
+[data-surface] {
+  color: var(--surface-fg);
+  position: relative;
+  isolation: isolate;
+}
+/* 自己鋪一層底（顏色由 flow.js 依 data-flow-palette 寫進來），
+   蓋在固定色場之上，明暗翻轉時不會有「標題壓在前一段背景上」的空窗期。 */
+[data-surface]::before {
+  content: "";
+  position: absolute;
+  inset: -1px 0;              /* 上下各多 1px，避免相鄰區塊之間出現髮絲縫 */
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(72vw 62vw at var(--flow-glow-at, 50% 50%),
+                    var(--flow-glow, transparent), transparent 62%),
+    linear-gradient(175deg, var(--flow-bg1, transparent), var(--flow-bg2, transparent));
+}
+/* 區塊之間的轉場線落在兩段之間，跟著前一段的底色走 */
+[data-surface] + [data-flow-divider] { background: var(--divider-bg, transparent); }
+
+/* -----------------------------------------------------------
    2 · DIVIDER — section 之間的線條轉場
    ----------------------------------------------------------- */
 .flow-divider {

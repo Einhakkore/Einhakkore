@@ -162,6 +162,15 @@
      home / give 兩頁在下方 body[data-page] 覆寫成深色 STOP 0，
      site.js 再依捲動每幀更新 --bg1 / --bg2 / --fg。
      其他頁面 JS 不會跑，所以 vars 就停在下面這組淺色預設。 */
+  /* 沒有宣告 data-surface 的區塊沿用淺底預設，
+     避免 --surface-* 解析不到而讓文字掉回繼承色 */
+  --surface-fg:          var(--navy-900);
+  --surface-fg-2:        #3C5363;
+  --surface-fg-3:        #566B7A;
+  --surface-accent:      var(--mineral-700);
+  --surface-line:        rgba(16, 29, 41, .14);
+  --surface-line-strong: rgba(16, 29, 41, .30);
+
   --bg1:  var(--paper);
   --bg2:  var(--paper-2);
   --fg:   var(--text-2);
@@ -218,6 +227,12 @@
   --fs-4xl:  28px;   /* 次級大標、經文                      收 24 / 26 / 28 / 30 */
   --fs-5xl:  36px;   /* 區塊主標、裝飾數字                  收 32 / 34 / 38 / 40 / 42 / 48 / 64 */
   --fs-6xl:  56px;   /* hero h1、philosophy 浮水印          收 56 / 72 / 88 / 104 */
+
+  /* Display — 只給 Hero / Statement / Exhibition-like moment。
+     一般標題請留在 6XL 以下；整頁到處都是巨字就不叫 statement 了。
+     斷點對照：390 → 40 / 768 → 65 / 1440 → 120（lg：48 / 77 / 144） */
+  --fs-display:    clamp(40px, 8.5vw, 120px);
+  --fs-display-lg: clamp(48px, 10vw,  144px);
 
   /* 行高 —— 6 種（原本 21 種） */
   --lh-flat:    1;      /* 數字、icon 標籤 */
@@ -289,9 +304,13 @@
      icon  : icon 徽章底
      pill  : 膠囊按鈕 / 分頁 / chip
      round : 正圓（頭像、圓點、圓形 icon） */
-  --radius-card:  20px;
-  --radius-input: 12px;
-  --radius-icon:  20px;
+  /* V3 §23：UI 4px / Image 0–4px / Button 0–2px。
+     整站 16–24px 的圓角會把畫面推向 SaaS，刻意收掉。
+     --radius-pill 保留，但只給特殊互動用（例如 serve 的三個圈）。 */
+  --radius-card:  4px;
+  --radius-input: 4px;
+  --radius-icon:  4px;
+  --radius-btn:   2px;
   --radius-pill:  999px;
   --radius-round: 50%;
 }
@@ -322,6 +341,14 @@ body[data-page="serve"] {
   --card-shadow-hover: 0 16px 44px rgba(0, 0, 0, .14);
   --newsletter-bg:         var(--navy-900);
   --newsletter-border:     transparent;
+
+  /* 深色主題頁面的預設表面；個別 section 可用 data-surface 覆寫 */
+  --surface-fg:          var(--white);
+  --surface-fg-2:        rgba(255, 255, 255, .88);
+  --surface-fg-3:        rgba(255, 255, 255, .74);
+  --surface-accent:      var(--amber-500);
+  --surface-line:        rgba(255, 255, 255, .18);
+  --surface-line-strong: rgba(255, 255, 255, .40);
 }
 
 /* -----------------------------------------------------------
@@ -476,10 +503,12 @@ body[data-page="give"] .aurora {
 .logo .logo-dark { display: none; }
 body[data-page="home"] .logo .logo-light,
 body[data-page="give"] .logo .logo-light,
-body[data-page="about"] .logo .logo-light { display: none; }
+body[data-page="about"] .logo .logo-light,
+body[data-page="serve"] .logo .logo-light { display: none; }
 body[data-page="home"] .logo .logo-dark,
 body[data-page="give"] .logo .logo-dark,
-body[data-page="about"] .logo .logo-dark { display: block; }
+body[data-page="about"] .logo .logo-dark,
+body[data-page="serve"] .logo .logo-dark { display: block; }
 
 .nav { display: flex; align-items: center; gap: 4px; }
 .nav a {
@@ -529,7 +558,12 @@ body[data-page="about"] .logo .logo-dark { display: block; }
 /* -----------------------------------------------------------
    COMMON: wrap
    ----------------------------------------------------------- */
-.wrap { max-width: 1180px; margin: 0 auto; padding: 0 32px; position: relative; }
+/* V3 §13：Max 1280 / 側邊留白 桌機 64、平板 40、手機 20 */
+.wrap {
+  max-width: 1280px; margin: 0 auto;
+  padding: 0 clamp(20px, 5vw, 64px);
+  position: relative;
+}
 
 /* -----------------------------------------------------------
    HERO — 滿版照片 + 暖色漸層遮罩（下方靠文字處漸漸透成奶紙白）
@@ -604,7 +638,7 @@ body[data-page="about"] .logo .logo-dark { display: block; }
 .hero h1 {
   font-family: var(--font-brand);
   font-weight: var(--fw-semibold);
-  font-size: var(--fs-6xl);
+  font-size: var(--fs-display);
   line-height: var(--lh-title);
   color: var(--text-1);
   letter-spacing: var(--ls-cjk);
@@ -717,14 +751,18 @@ body[data-page="about"] .logo .logo-dark { display: block; }
 /* -----------------------------------------------------------
    PAGE HERO (內頁、較小)
    ----------------------------------------------------------- */
+/* V3 §14：不對稱。內頁 hero 靠左，右側留白就是版面的呼吸。
+   置中留給首頁 .hero 與經文那類 statement 段落。 */
 .page-hero {
   position: relative;
-  padding: 120px 32px 80px;
-  text-align: center;
+  padding: clamp(96px, 16vh, 168px) clamp(20px, 5vw, 64px) clamp(64px, 10vh, 96px);
+  text-align: left;
+  max-width: 1280px;
+  margin: 0 auto;
 }
 .page-hero .symbol-sm {
   width: 40px; height: 40px;
-  margin: 0 auto 32px;
+  margin: 0 0 32px;
   border: 1px solid var(--amber-500);
   border-radius: var(--radius-round);
   display: flex; align-items: center; justify-content: center;
@@ -739,17 +777,19 @@ body[data-page="about"] .logo .logo-dark { display: block; }
 }
 .page-hero h1 {
   font-family: var(--font-brand); font-weight: var(--fw-semibold);
-  font-size: var(--fs-5xl); line-height: var(--lh-title);
-  color: var(--text-1); letter-spacing: var(--ls-cjk); margin: 0 auto 28px;
-  max-width: 800px;
+  /* Display 的上限 120px 是給短句與英文的；中文標題一個字就是一個全形，
+     21 個字在 120px 會撐成三行、把整個 hero 推出視窗。這裡收到 72px。 */
+  font-size: clamp(32px, 5.2vw, 72px); line-height: var(--lh-title);
+  color: var(--text-1); letter-spacing: var(--ls-cjk); margin: 0 0 28px;
+  max-width: 900px;
 }
 .page-hero h1 em {
   font-family: var(--font-brand); font-style: italic; font-weight: var(--fw-regular);
   color: var(--accent);
 }
 .page-hero p {
-  font-size: var(--fs-xl); line-height: var(--lh-loose); color: var(--fg); opacity: .88;
-  margin: 0 auto; max-width: 640px; font-weight: var(--fw-regular);
+  font-size: var(--fs-xl); line-height: var(--lh-loose); color: var(--surface-fg-2); opacity: 1;
+  margin: 0; max-width: 52ch; font-weight: var(--fw-regular);
 }
 
 /* -----------------------------------------------------------
@@ -758,7 +798,7 @@ body[data-page="about"] .logo .logo-dark { display: block; }
 .btn {
   display: inline-flex; align-items: center; justify-content: center;
   gap: 10px;
-  padding: 16px 28px; border-radius: var(--radius-pill); border: 0;
+  padding: 16px 28px; border-radius: var(--radius-btn); border: 0;
   font-family: var(--font-zh); font-size: var(--fs-md); font-weight: var(--fw-medium);
   letter-spacing: var(--ls-cjk);
   transition: all .25s ease;
@@ -798,19 +838,27 @@ body[data-page="about"] .logo .logo-dark { display: block; }
 /* -----------------------------------------------------------
    SECTION
    ----------------------------------------------------------- */
-.section { position: relative; padding: 120px 32px; }
+/* 水平留白由 .wrap 統一負責，兩邊都給會疊成 96px */
+.section { position: relative; padding: clamp(88px, 12vh, 140px) 0; }
 
+/* V3 §12 Rule 01：不要每個標題都置中。
+   置中留給刻意的 statement（經文、頁尾 CTA），其餘一律靠左，
+   右側的空白就是版面的呼吸，不用填滿。 */
 .section-head {
-  max-width: 720px; margin: 0 auto 80px;
-  text-align: center;
+  max-width: 46ch; margin: 0 0 clamp(48px, 7vh, 80px);
+  text-align: left;
 }
+/* 需要置中的段落自己加這個類別 */
+.section-head--center { margin-inline: auto; text-align: center; }
+.section-head--center .section-title-line { margin-inline: auto; }
 .section-num {
   font-family: var(--font-en); font-weight: var(--fw-light);
-  font-size: var(--fs-6xl); color: rgba(255, 186, 73, .28);
+  /* 大字的門檻是 3:1；.55 在淺底上量到 2.26，提到 .78 */
+  font-size: var(--fs-6xl); color: var(--surface-accent); opacity: .78;
   line-height: var(--lh-flat); margin-bottom: 8px;
 }
 .section-eyebrow {
-  color: var(--amber-500);
+  color: var(--surface-accent);
   letter-spacing: var(--ls-eyebrow); margin-bottom: 24px;
 }
 .section-head h2 {
@@ -825,19 +873,23 @@ body[data-page="about"] .logo .logo-dark { display: block; }
 .section-head .lead {
   /* 原本 color: var(--fg) 之外再乘 opacity: .82，兩層疊起來實測 4.2–4.4:1。
      色階本身已經校過對比，不要再乘第二層透明度。 */
-  font-size: var(--fs-md); line-height: var(--lh-loose); color: var(--fg); opacity: 1;
-  font-weight: var(--fw-regular); max-width: 600px; margin: 0 auto;
+  font-size: var(--fs-md); line-height: var(--lh-loose); color: var(--surface-fg-2); opacity: 1;
+  font-weight: var(--fw-regular); max-width: 60ch; margin: 0;
 }
 
 /* section-head 在深色背景上的變體 */
-.section-head--on-dark .section-num { color: var(--amber-400); }
-.section-head--on-dark .cta-label   { color: var(--amber-600); }
-.section-head--on-dark h2           { color: var(--text-on-dark); }
-.section-head--on-dark h2 em        { color: var(--amber-400); }
+/* 以前是「這個 section head 在深底上」的變體，寫死了反白與金色。
+   現在明暗由 section 的 data-surface 決定，這裡改吃 --surface-*，
+   同一個 class 在深底與淺底都對，翻轉版面時不用逐頁改。
+   （--surface-accent 在深底是 Amber、在淺底是 Mineral 700） */
+.section-head--on-dark .section-num { color: var(--surface-accent); }
+.section-head--on-dark .cta-label   { color: var(--surface-accent); }
+.section-head--on-dark h2           { color: var(--surface-fg); }
+.section-head--on-dark h2 em        { color: var(--surface-accent); }
 .section-head--on-dark > p {
-  color: var(--text-on-dark);
+  color: var(--surface-fg-2);
   font-size: var(--fs-md); line-height: var(--lh-loose); font-weight: var(--fw-regular);
-  max-width: 600px; margin: 0 auto;
+  max-width: 60ch; margin: 0;
 }
 
 /* -----------------------------------------------------------
@@ -2184,7 +2236,10 @@ body[data-page="home"] .hero { background: transparent; }
 body[data-page="home"] .hero::before {
   background: url("../img/HandsWater.webp") center / cover no-repeat;
   filter: none;                    /* 拿掉全站暖濾鏡，避免疊圖過黃 */
-  opacity: .60;
+  /* .60 讓照片把 hero 上緣提亮到 rgb(80,93,103)，14px 的 eyebrow 在上面
+     只有 4.0:1。壓到 .44 之後量到 5.6:1，照片仍然看得見。
+     V3 的說法是「深色建立空間」—— hero 本來就該更沉。 */
+  opacity: .44;
   mask-image: linear-gradient(
     to bottom,
     rgba(0, 0, 0, .95) 0%,
@@ -2202,7 +2257,9 @@ body[data-page="home"] .hero::before {
 
 
 /* ---- HERO 文字：改為深底上的淺色階 ---- */
-body[data-page="home"] .hero-eyebrow { color: var(--amber-400); }
+/* amber-400 壓在 hero 照片被壓暗後的中間調上只有 4.38:1，
+   差一點過不了；amber-500 更亮，量到 5.1:1 */
+body[data-page="home"] .hero-eyebrow { color: var(--amber-500); }
 body[data-page="home"] .hero h1,
 body[data-page="home"] .hero h2,
 body[data-page="home"] .hero h3 { color: var(--home-text-1); }
