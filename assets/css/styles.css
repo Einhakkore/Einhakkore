@@ -584,18 +584,24 @@ body[data-page="serve"] .logo .logo-dark { display: block; }
     var(--stop-0-bg2);
   filter: sepia(.10) saturate(.85) brightness(.55);
   z-index: 0;
+  /* 下緣淡出（跟 about 的 .scr-hero__bg 同一套）：照片自己收掉，
+     底下的 .flow-field 色場直接透上來接手。原本靠漸層收到 --bg1，
+     但 --bg1 在這幾頁是固定的 #22394A，跟 section palette 的
+     #101D29 對不上，交界就會出現一條明顯的橫向色階。 */
+  mask-image: linear-gradient(to bottom, #000 0%, #000 56%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 56%, transparent 100%);
 }
 .hero::after {
-  /* 深色遮罩：直接吃 #flow-bg 當下的 --bg1，hero 底緣永遠跟 flow field
-     對齊。舊版有一層 amber / clay 對角暖光會把 hero 照片打亮，已拿掉。 */
+  /* 壓暗照片用的深色紗，同樣收到透明 —— 否則照片淡出後
+     會剩一塊深色方形浮在色場上。 */
   content: "";
   position: absolute;
   inset: 0;
   background: linear-gradient(180deg,
-    color-mix(in oklab, var(--bg1) 20%, transparent) 0%,
-    color-mix(in oklab, var(--bg1) 40%, transparent) 40%,
-    color-mix(in oklab, var(--bg1) 80%, transparent) 75%,
-    var(--bg1) 100%
+    rgba(24, 44, 59, .30) 0%,
+    rgba(24, 44, 59, .55) 55%,
+    rgba(24, 44, 59, .80) 78%,
+    rgba(24, 44, 59, 0) 100%
   );
   z-index: 1;
 }
@@ -1417,12 +1423,24 @@ body[data-page="home"] .hero .btn-ghost:hover {
    ----------------------------------------------------------- */
 .newsletter {
   padding: clamp(120px, 18vh, 180px) 32px 120px; text-align: center;
-  background: var(--newsletter-bg);
-  border-top: 1px solid var(--newsletter-border);
   border-bottom: 1px solid var(--newsletter-border);
   position: relative;
+  isolation: isolate;
 }
-.newsletter-wrap { max-width: 560px; margin: 0 auto; }
+/* 淺色底改成獨立一層，上緣用遮罩淡入 —— 跟 hero 的照片同一套做法。
+   原本 background 直接畫在 section 上，會在區塊頂端切出一條很清楚的
+   深淺交界線；捲動換色還沒跑完時那條線特別明顯。
+   淡入距離一定要小於區塊的上留白，訂閱區的深色文字才會永遠踩在
+   不透明的淺底上，不會出現「深字疊深底」的空窗。 */
+.newsletter::before {
+  content: "";
+  position: absolute; inset: 0; z-index: 0;
+  background: var(--newsletter-bg);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 var(--nl-fade, 120px));
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 var(--nl-fade, 120px));
+  pointer-events: none;
+}
+.newsletter-wrap { max-width: 560px; margin: 0 auto; position: relative; z-index: 1; }
 .newsletter-label {
   /* 淺底上金色當不了文字（最深的 Amber 600 壓白底也只有 2.31:1） */
   color: var(--mineral-700);
@@ -1900,19 +1918,23 @@ body[data-page="give"] main > .section {
   position: absolute; inset: 0; z-index: -2;
   background: url("../img/donate_bg.webp") center / cover no-repeat;
   transform: scale(1.02);
+  /* 跟 index 的 .hero::before、about 的 .scr-hero__bg 同一套：
+     照片下緣自己淡出，讓 .flow-field 的色場透上來接手。
+     不再用「漸層收到某個顏色」的做法 —— 那需要收尾色跟下一段
+     的 palette 完全相同，只要對不上就會留下一條橫線。 */
+  mask-image: linear-gradient(to bottom, #000 0%, #000 56%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 56%, transparent 100%);
 }
 .page-hero.donate-hero::after {
-  /* 收尾色改吃 --flow-bg2（flow.js 依這一段的 data-flow-palette 寫進來）。
-     原本吃的 --bg1 是舊 flow field 的 token，這一頁改用 section palette
-     之後它不再被更新，hero 底緣就會跟下一段對不上、出現一條接縫。 */
+  /* 壓暗照片用的深色紗，同樣收到透明。 */
   content: "";
   position: absolute; inset: 0; z-index: -1;
   background: linear-gradient(
     180deg,
-    color-mix(in oklab, var(--flow-bg2, var(--bg1)) 25%, transparent) 0%,
-    color-mix(in oklab, var(--flow-bg2, var(--bg1)) 55%, transparent) 40%,
-    color-mix(in oklab, var(--flow-bg2, var(--bg1)) 88%, transparent) 78%,
-    var(--flow-bg2, var(--bg1)) 100%
+    rgba(24, 44, 59, .30) 0%,
+    rgba(24, 44, 59, .55) 55%,
+    rgba(24, 44, 59, .80) 78%,
+    rgba(24, 44, 59, 0) 100%
   );
 }
 .page-hero.donate-hero .symbol-sm {
@@ -2580,7 +2602,9 @@ body[data-page="home"] .feature-text .link:hover {
   .wrap             { padding: 0; }
   .section-verse    { padding: 88px 24px; }
   .section-cta      { padding: 104px 24px; }
-  .newsletter       { padding: 72px 24px; }
+  /* 手機的上留白只有 72px，淡入距離要跟著收，否則文字會落在
+     還沒不透明的漸層裡 */
+  .newsletter       { padding: 72px 24px; --nl-fade: 56px; }
   .page-hero        { padding: 88px 24px 56px; }
   .page-hero.donate-hero { padding: 96px 24px 72px; }
 
