@@ -292,10 +292,9 @@
   --card-border:   var(--line-dim);
   --card-shadow:   none;
   --card-shadow-hover: none;
-  /* 訂閱區固定是一條 Navy 900 的帶子：底色確定，文字色才能確定。
-     原本淺／深主題各給一個值（其中一個還是 transparent），
-     結果是「白字落在淺底上」。 */
-  --newsletter-bg:    var(--navy-900);
+  /* 訂閱區是每一頁最後那一段「轉亮」。底色寫死成不透明的淺色 ——
+     之前做成 transparent 想融入捲動漸層，結果白字落在淺底上。 */
+  --newsletter-bg:    linear-gradient(175deg, var(--off-white), var(--amber-light));
   --newsletter-border: transparent;
 
   /* ---- 圓角 tokens（全站統一）----
@@ -339,7 +338,7 @@ body[data-page="serve"] {
   --card-border:   var(--hairline-3);
   --card-shadow:   0 10px 34px rgba(0, 0, 0, .10);
   --card-shadow-hover: 0 16px 44px rgba(0, 0, 0, .14);
-  --newsletter-bg:         var(--navy-900);
+  --newsletter-bg:         linear-gradient(175deg, var(--off-white), var(--amber-light));
   --newsletter-border:     transparent;
 
   /* 深色主題頁面的預設表面；個別 section 可用 data-surface 覆寫 */
@@ -638,7 +637,8 @@ body[data-page="serve"] .logo .logo-dark { display: block; }
 .hero h1 {
   font-family: var(--font-brand);
   font-weight: var(--fw-semibold);
-  font-size: var(--fs-display);
+  /* 120px 會把內容全部擠到摺線以下；中文標題一律收在 72px */
+  font-size: clamp(32px, 5.2vw, 72px);
   line-height: var(--lh-title);
   color: var(--text-1);
   letter-spacing: var(--ls-cjk);
@@ -1424,18 +1424,19 @@ body[data-page="home"] .hero .btn-ghost:hover {
 }
 .newsletter-wrap { max-width: 560px; margin: 0 auto; }
 .newsletter-label {
-  color: var(--amber-500);   /* Navy 900 上 8.20:1 */
+  /* 淺底上金色當不了文字（最深的 Amber 600 壓白底也只有 2.31:1） */
+  color: var(--mineral-700);
   letter-spacing: var(--ls-track); margin-bottom: 28px;
 }
 .newsletter h3 {
   font-family: var(--font-brand); font-weight: var(--fw-semibold);
-  font-size: var(--fs-4xl); color: var(--white);
+  font-size: var(--fs-4xl); color: var(--navy-900);
   letter-spacing: var(--ls-cjk); margin: 0 0 20px;
   line-height: var(--lh-title);
 }
 .newsletter p {
   font-size: var(--fs-md); line-height: var(--lh-body);
-  color: rgba(255, 255, 255, .88); opacity: 1; font-weight: var(--fw-regular); margin: 0 0 36px;
+  color: var(--text-2); opacity: 1; font-weight: var(--fw-regular); margin: 0 0 36px;
 }
 /* 訂閱改為外連 Substack（平台限制，站內無法直接收單） */
 .newsletter-cta { min-width: 180px; }
@@ -2300,15 +2301,8 @@ body[data-page="home"] .feature-text .link:hover {
   color: var(--amber-300); border-color: var(--amber-300);
 }
 
-/* Newsletter — 首頁原本讓它透出捲動漸層，但那個位置的背景是會變的：
-   量到的底色從 rgb(235,244,245) 到 rgb(138,153,159) 都有，任何固定的文字色
-   都會在某個捲動位置掉到 1.1:1。改成 92% 不透明的 navy —— 底色確定了，
-   反白文字才有保證，漣漪也還透得出來。 */
-body[data-page="home"] .newsletter {
-  background: rgba(16, 29, 41, .92);
-  border-top: 0;
-  border-bottom: 0;
-}
+/* 首頁不再另外覆寫：訂閱區在每一頁都是同一段「轉亮」的收尾。
+   漣漪畫在它底下的 .newsletter-scene 上，透得出來。 */
 
 /* Ripple field — 只在首頁 .newsletter-scene 內生效，
    從畫面右下一角湧出的細環，18s 一輪、4 圈錯開，
@@ -2343,7 +2337,7 @@ body[data-page="home"] .newsletter {
 }
 .ripple {
   width: 40px; height: 40px;
-  border: 1.5px solid rgba(26, 46, 64, .35);
+  border: 1.5px solid rgba(40, 113, 138, .30);   /* mineral-700 */
   opacity: 0;
   animation: ripple-out 18s cubic-bezier(.15, .4, .35, 1) infinite;
 }

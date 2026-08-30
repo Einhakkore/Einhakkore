@@ -193,9 +193,9 @@
       padding: 0;
       display: flex;
       flex-direction: column;
-      gap: 2px;
-      font-size: var(--fs-2xs);
-      line-height: 1.5;
+      gap: 4px;
+      font-size: var(--fs-sm);
+      line-height: 1.55;
       color: var(--surface-fg-2);
     }
 
@@ -227,13 +227,6 @@
       box-shadow: 0 0 0 2px var(--amber-400);
     }
 
-    .pond-hint {
-      margin: clamp(20px, 3vw, 32px) 0 0;
-      text-align: center;
-      font-size: var(--fs-sm);
-      letter-spacing: var(--ls-wide);
-      color: var(--surface-fg-3);
-    }
 
     /* 窄螢幕：拆成兩欄的一般排版，形狀留著、位置不再手排 */
     @media (max-width: 760px) {
@@ -265,6 +258,7 @@
       .pond.is-lifted { transform: scale(1.06); }
       .pond__inner { padding: 24% 16%; }
       .pond__name { font-size: var(--fs-sm); }
+      .pond__items { font-size: var(--fs-2xs); }
     }
 
     /* ------------------------------------------------------------
@@ -489,7 +483,6 @@
     </svg>
 
   </div>
-  <div class="symbol-sm"></div>
   <div class="eyebrow">JOIN US · 參與我們</div>
   <h1>在前線與家鄉之間，<br>築起一張接住宣教士的網絡</h1>
   <p>無論是您的專業恩賜、忠心守望，或是財務支持，<br>都能成為滋潤宣教工人的泉源。</p>
@@ -499,8 +492,8 @@
 <div data-flow-divider="well"></div>
 
 <!-- ============================ SECTION 1 · 資源連結 ============================ -->
-<section class="section section-fields" id="fields" data-surface="light"
-         data-flow-palette="#FAFAF7 | #E2F5F2 | rgba(92,205,194,.24) | 20% 72%">
+<section class="section section-fields" id="fields" data-surface="dark"
+         data-flow-palette="#101D29 | #0B1116 | rgba(92,205,194,.18) | 20% 72%">
   <div class="wrap">
     <div class="section-head section-head--on-dark reveal">
       <div class="section-num">RESOURCES</div>
@@ -624,7 +617,6 @@
           </span>
         </button>
     </div>
-    <p class="pond-hint">點一下水窪可以看得更清楚</p>
   </div>
 </section>
 
@@ -921,7 +913,7 @@
 <!-- 轉場：流 —— 水面等高線 -->
 <div data-flow-divider="contour"></div>
 
-<section class="section" id="skill-match" data-surface="light" data-flow-palette="#FFFFFF | #DCECEF | rgba(91,168,196,.20) | 88% 60%">
+<section class="section" id="skill-match" data-surface="dark" data-flow-palette="#294354 | #1A2E40 | rgba(91,168,196,.18) | 88% 60%">
   <div class="wrap">
     <div class="section-head section-head--on-dark reveal">
       <div class="section-eyebrow">SKILL MATCH · 技能媒合</div>
@@ -1056,8 +1048,8 @@
   </div>
 </section>
 
-<!-- 轉場：流 —— 水面等高線 -->
-<div data-flow-divider="contour"></div>
+<!-- 這裡是全頁唯一的深 → 光交界，不放轉場線：
+     點綴線橫跨兩個明暗會有一半落在深底、一半落在亮底，很怪。 -->
 
 <!-- ============================ SECTION 3 · 奉獻支持 ============================ -->
 <!-- 整頁在這裡轉亮收尾，與 about 頁的 JOIN US 同一個節奏 -->

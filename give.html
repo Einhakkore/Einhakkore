@@ -19,13 +19,16 @@
   <meta name="twitter:title" content="奉獻支持 · 隱哈歌利">
   <meta name="twitter:description" content="支持宣教士的關顧事工。">
 
-  <link rel="preload" href="assets/fonts/ShiweiSiJiChun-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <!-- assets/fonts/ 下沒有 Regular 這個字重，舊的 preload 是 404 -->
+  <link rel="preload" href="assets/fonts/ShiweiSiJiChun-Medium.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/ShiweiSiJiChun-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/FreightTextPro-Book.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/img/donate_bg.webp" as="image" type="image/webp">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600&display=swap">
   <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/flow.css">
 
   <script type="application/ld+json">
   {
@@ -66,24 +69,25 @@
   }
   </script>
 </head>
-<body data-page="give">
-
-<div data-include="aurora"></div>
+<body data-page="give" data-flow="sections">
 
 <div data-include="icons"></div>
+<div data-include="flow"></div>
 <div data-include="header"></div>
 
 <main>
 
-<section class="page-hero donate-hero">
-  <div class="symbol-sm"></div>
+<section class="page-hero donate-hero" data-surface="dark"
+         data-flow-palette="#1A2E40 | #101D29 | rgba(255,186,73,.16) | 18% 12%">
   <div class="eyebrow">奉獻支持</div>
   <h1>你們要給人，就必有給你們的</h1>
   <div class="cta-label">路加福音 6:38</div>
   <p> 無論金額大小，您的支持都是與宣教士誠實同行的堅定力量。<br>不論是單次奉獻、或是設定每月定期定額轉帳，這份長流的泉源，都將成為宣教士最務實的後援。</p>
 </section>
 
-<section class="section">
+<!-- 奉獻是「宣言」的段落 —— V3 §28 Cobalt = Vision / Belief / Statement -->
+<section class="section" data-surface="dark"
+         data-flow-palette="#101D29 | #16273A | rgba(49,87,213,.22) | 14% 78%">
     <div class="section-head section-head--on-dark reveal">
       <div class="section-num">WHY</div>
       <div class="cta-label">您的奉獻，將轉化為第一線宣教士生命中具體可行的資源與陪伴。</div>
@@ -346,6 +350,7 @@
 <div data-include="footer"></div>
 
 <script src="assets/js/site.js"></script>
+<script src="assets/js/flow.js"></script>
 
 <!-- =========================================================
      Section C 表單 — Firebase 串接
