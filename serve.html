@@ -39,6 +39,11 @@
        左上用遮罩淡出，就是為了把標題那一區留空。
        ------------------------------------------------------------ */
     .hero-flow {
+      /* 流線強度。線是 1px 的髮絲，數字要比一般色塊高才看得見；
+         .14 幾乎看不到、.22 偏淡、.38 是目前這一版、.50 以上會開始跟標題搶。
+         要調就改這一個值。 */
+      --hf-base: .38;
+      --hf-opacity: var(--hf-base);
       position: absolute;
       inset: 0;
       overflow: hidden;
@@ -51,13 +56,11 @@
       position: absolute;
       inset: 0;
       width: 100%; height: 100%;
-      display: none;
       /* 往左上淡出，把標題那一區留給文字 */
       mask-image: linear-gradient(115deg, transparent 18%, #000 62%);
       -webkit-mask-image: linear-gradient(115deg, transparent 18%, #000 62%);
     }
     [data-hero-flow="contour"] .hero-flow__svg--contour,
-    [data-hero-flow="contour"]     .hero-flow__svg--arc { display: block; }
 
     .hf-lines path {
       fill: none;
@@ -72,66 +75,32 @@
     @keyframes hf-draw { to { stroke-dashoffset: 0; } }
 
     /* A · 等高線：七條依序畫出來，由上往下遞減透明度 */
-    .hero-flow__svg--contour .hf-lines {
+    .hero-flow__svg .hf-lines {
       animation: hf-drift 34s ease-in-out infinite alternate;
     }
-    .hero-flow__svg--contour path { opacity: 0; animation-name: hf-draw, hf-in; }
-    .hero-flow__svg--contour path:nth-child(1) { animation-delay: .15s; }
-    .hero-flow__svg--contour path:nth-child(2) { animation-delay: .27s; }
-    .hero-flow__svg--contour path:nth-child(3) { animation-delay: .39s; }
-    .hero-flow__svg--contour path:nth-child(4) { animation-delay: .51s; }
-    .hero-flow__svg--contour path:nth-child(5) { animation-delay: .63s; }
-    @keyframes hf-in { to { opacity: .14; } }
+    .hero-flow__svg path { opacity: 0; animation-name: hf-draw, hf-in; }
+    .hero-flow__svg path:nth-child(1) { animation-delay: .15s; }
+    .hero-flow__svg path:nth-child(2) { animation-delay: .27s; }
+    .hero-flow__svg path:nth-child(3) { animation-delay: .39s; }
+    .hero-flow__svg path:nth-child(4) { animation-delay: .51s; }
+    .hero-flow__svg path:nth-child(5) { animation-delay: .63s; }
+    @keyframes hf-in { to { opacity: var(--hf-opacity); } }
+    /* 每條線的強弱錯開一點，才有遠近，不會像五條一樣重的線 */
+    .hero-flow__svg path:nth-child(2),
+    .hero-flow__svg path:nth-child(4) { --hf-opacity: calc(var(--hf-base) * .68); }
     /* 極慢的橫向漂移 —— V3 §24 的 Ambient 是 8–40s */
     @keyframes hf-drift {
       from { transform: translate3d(0, 0, 0); }
       to   { transform: translate3d(-1.6%, 10px, 0); }
     }
 
-    /* B · 長弧：一條主線 + 一條做景深的伴線，弧上三個節點 */
-    .hero-flow__svg--arc .hf-arc { opacity: 0; animation-name: hf-draw, hf-in-arc; animation-duration: 2s, 2s; }
-    .hero-flow__svg--arc .hf-arc--echo { animation-delay: .35s; }
-    @keyframes hf-in-arc { to { opacity: .20; } }
-    .hero-flow__svg--arc .hf-arc--echo { animation-name: hf-draw, hf-in-echo; }
-    @keyframes hf-in-echo { to { opacity: .09; } }
-
-    .hf-node {
-      fill: var(--mineral-300);
-      stroke: none;
-      opacity: 0;
-      transform-box: fill-box;
-      transform-origin: center;
-      animation: hf-node-in 1s cubic-bezier(.16, 1, .3, 1) forwards;
-    }
-    /* 中間那顆是「光」—— V3 §30：Amber 出現時使用者應該覺得這裡重要 */
-    .hf-node--light { fill: var(--amber-500); }
-    @keyframes hf-node-in {
-      from { opacity: 0; transform: scale(.4); }
-      to   { opacity: .55; transform: scale(1); }
-    }
-    .hero-flow__svg--arc .hf-node:nth-of-type(1) { animation-delay: 1.2s; }
-    .hero-flow__svg--arc .hf-node:nth-of-type(2) { animation-delay: 1.45s; }
-    .hero-flow__svg--arc .hf-node:nth-of-type(3) { animation-delay: 1.7s; }
-    .hero-flow__svg--arc .hf-node--light { animation-name: hf-node-in, hf-breathe; }
-    @keyframes hf-breathe {
-      0%, 100% { opacity: .55; }
-      50%      { opacity: .85; }
-    }
-    .hero-flow__svg--arc .hf-node--light {
-      animation-duration: 1s, 9s;
-      animation-iteration-count: 1, infinite;
-    }
-
     @media (prefers-reduced-motion: reduce) {
-      .hf-lines path, .hf-node {
+      .hf-lines path {
         animation: none !important;
         stroke-dashoffset: 0 !important;
+        opacity: var(--hf-opacity);
       }
-      .hero-flow__svg--contour path { opacity: .14; }
-      .hero-flow__svg--arc .hf-arc { opacity: .20; }
-      .hero-flow__svg--arc .hf-arc--echo { opacity: .09; }
-      .hf-node { opacity: .55; }
-      .hero-flow__svg--contour .hf-lines { animation: none; }
+      .hero-flow__svg .hf-lines { animation: none; }
     }
 
     /* ---------- page-hero：整頁改深色場後改吃反白色階 ---------- */
@@ -503,12 +472,12 @@
 
 <main>
 
-<section class="page-hero" data-surface="dark" data-hero-flow="contour" data-flow-palette="#1A2E40 | #101D29 | rgba(255,186,73,.16) | 18% 12%">
-  <!-- Hero 的流線層。兩個方案並存，由 section 上的 data-hero-flow 切換：
-       contour = 等高線流場（A）／arc = 長弧＋節點（B）。挑定之後移除另一個。
-       元素只走右側與下緣的留白，透明度壓在 14% 以下，不進到標題後方。 -->
+<section class="page-hero" data-surface="dark" data-flow-palette="#1A2E40 | #101D29 | rgba(255,186,73,.16) | 18% 12%">
+  <!-- Hero 的流線層：五條等高線流場。
+       只走右側與下緣的留白，左上用遮罩淡出，把標題那一區留給文字。
+       強度由 .hero-flow 上的 --hf-opacity 控制。 -->
   <div class="hero-flow" aria-hidden="true">
-    <svg class="hero-flow__svg hero-flow__svg--contour"
+    <svg class="hero-flow__svg"
          viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" focusable="false">
       <g class="hf-lines">
         <path d="M0.0 132.8 C20.0 136.6 80.0 148.0 120.0 155.5 C160.0 163.0 200.0 171.3 240.0 177.6 C280.0 184.0 320.0 189.9 360.0 193.6 C400.0 197.3 440.0 199.4 480.0 199.9 C520.0 200.3 560.0 198.5 600.0 196.1 C640.0 193.7 680.0 189.3 720.0 185.2 C760.0 181.2 800.0 176.1 840.0 171.8 C880.0 167.5 920.0 163.3 960.0 159.7 C1000.0 156.0 1040.0 153.2 1080.0 150.0 C1120.0 146.7 1160.0 144.3 1200.0 140.2 C1240.0 136.1 1280.0 132.0 1320.0 125.1 C1360.0 118.3 1420.0 103.5 1440.0 99.2"/>
@@ -519,16 +488,6 @@
       </g>
     </svg>
 
-    <svg class="hero-flow__svg hero-flow__svg--arc"
-         viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" focusable="false">
-      <g class="hf-lines">
-<path class="hf-arc" d="M-60.0 880.0 C-26.2 875.9 75.0 867.7 142.5 855.1 C210.0 842.5 277.5 824.3 345.0 804.5 C412.5 784.6 480.0 761.5 547.5 736.0 C615.0 710.5 682.5 682.1 750.0 651.4 C817.5 620.7 885.0 587.2 952.5 551.8 C1020.0 516.4 1087.5 478.3 1155.0 438.8 C1222.5 399.3 1290.0 357.4 1357.5 314.6 C1425.0 271.8 1526.2 204.0 1560.0 181.9"/>
-        <path class="hf-arc hf-arc--echo" d="M-42.0 934.0 C-8.2 929.9 93.0 921.7 160.5 909.1 C228.0 896.5 295.5 878.3 363.0 858.5 C430.5 838.6 498.0 815.5 565.5 790.0 C633.0 764.5 700.5 736.1 768.0 705.4 C835.5 674.7 903.0 641.2 970.5 605.8 C1038.0 570.4 1105.5 532.3 1173.0 492.8 C1240.5 453.3 1308.0 411.4 1375.5 368.6 C1443.0 325.8 1544.2 258.0 1578.0 235.9"/>
-        <circle class="hf-node" cx="393.6" cy="789.6" r="5"/>
-        <circle class="hf-node hf-node--light" cx="831.0" cy="613.3" r="7"/>
-        <circle class="hf-node" cx="1268.4" cy="370.5" r="4"/>
-      </g>
-    </svg>
   </div>
   <div class="symbol-sm"></div>
   <div class="eyebrow">JOIN US · 參與我們</div>
