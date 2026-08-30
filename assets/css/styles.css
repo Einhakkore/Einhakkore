@@ -782,7 +782,7 @@ body[data-page="serve"] .logo .logo-dark { display: block; }
      21 個字在 120px 會撐成三行、把整個 hero 推出視窗。這裡收到 72px。 */
   font-size: clamp(32px, 5.2vw, 72px); line-height: var(--lh-title);
   color: var(--text-1); letter-spacing: var(--ls-cjk); margin: 0 0 28px;
-  max-width: 900px;
+  max-width: 1040px;
 }
 .page-hero h1 em {
   font-family: var(--font-brand); font-style: italic; font-weight: var(--fw-regular);
@@ -850,7 +850,10 @@ body[data-page="serve"] .logo .logo-dark { display: block; }
   text-align: left;
 }
 /* 需要置中的段落自己加這個類別 */
-.section-head--center { margin-inline: auto; text-align: center; }
+/* 置中的段落量測放寬 —— 46ch 是為靠左的段落設的，置中時會把長標題
+   折在很奇怪的位置 */
+.section-head--center { max-width: 62ch; margin-inline: auto; text-align: center; }
+.section-head--center .lead { margin-inline: auto; }
 .section-head--center .section-title-line { margin-inline: auto; }
 .section-num {
   font-family: var(--font-en); font-weight: var(--fw-light);
@@ -897,12 +900,8 @@ body[data-page="serve"] .logo .logo-dark { display: block; }
    PRACTICES
    ----------------------------------------------------------- */
 .section-practices { position: relative; }
-.section-practices::before {
-  content: ""; position: absolute;
-  top: 0; left: 50%; transform: translateX(-50%);
-  width: 1px; height: 64px;
-  background: linear-gradient(180deg, transparent, var(--amber-500));
-}
+/* 原本這裡有一道 64px 的垂直細線當轉場，已改由區塊之間的
+   <div data-flow-divider="contour"> 承接，語彙跟其他頁一致。 */
 .practices {
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
 }
@@ -1888,11 +1887,13 @@ body[data-page="give"] main > .section {
 }
 
 /* ---- Donate hero：滿版背景圖 + ink-800 漸層 30% → 100% 融入背景 ---- */
+/* 左右留白沿用 .page-hero 那組（內容收在 1280 的量測裡），
+   只覆寫上下 —— 原本寫死 32px，文字會貼在畫面最左邊。 */
 .page-hero.donate-hero {
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  padding: 140px 32px 110px;
+  padding-block: 140px 110px;
 }
 .page-hero.donate-hero::before {
   content: "";
@@ -1901,16 +1902,17 @@ body[data-page="give"] main > .section {
   transform: scale(1.02);
 }
 .page-hero.donate-hero::after {
-  /* 直接吃 --bg1（scroll flow field 當下值）作為漸層收尾色，
-     hero 底緣永遠跟緊接的背景場對齊，無縫接軌。 */
+  /* 收尾色改吃 --flow-bg2（flow.js 依這一段的 data-flow-palette 寫進來）。
+     原本吃的 --bg1 是舊 flow field 的 token，這一頁改用 section palette
+     之後它不再被更新，hero 底緣就會跟下一段對不上、出現一條接縫。 */
   content: "";
   position: absolute; inset: 0; z-index: -1;
   background: linear-gradient(
     180deg,
-    color-mix(in oklab, var(--bg1) 25%, transparent) 0%,
-    color-mix(in oklab, var(--bg1) 55%, transparent) 40%,
-    color-mix(in oklab, var(--bg1) 85%, transparent) 75%,
-    var(--bg1) 100%
+    color-mix(in oklab, var(--flow-bg2, var(--bg1)) 25%, transparent) 0%,
+    color-mix(in oklab, var(--flow-bg2, var(--bg1)) 55%, transparent) 40%,
+    color-mix(in oklab, var(--flow-bg2, var(--bg1)) 88%, transparent) 78%,
+    var(--flow-bg2, var(--bg1)) 100%
   );
 }
 .page-hero.donate-hero .symbol-sm {

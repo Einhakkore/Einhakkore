@@ -86,9 +86,12 @@
 </section>
 
 <!-- 奉獻是「宣言」的段落 —— V3 §28 Cobalt = Vision / Belief / Statement -->
+<!-- 轉場：湧 -->
+<div data-flow-divider="well"></div>
+
 <section class="section" data-surface="dark"
          data-flow-palette="#101D29 | #16273A | rgba(49,87,213,.22) | 14% 78%">
-    <div class="section-head section-head--on-dark reveal">
+    <div class="section-head section-head--on-dark section-head--center reveal">
       <div class="section-num">WHY</div>
       <div class="cta-label">您的奉獻，將轉化為第一線宣教士生命中具體可行的資源與陪伴。</div>
       <h2>為什麼我們需要您的支持？</h2>
@@ -343,7 +346,23 @@
   </div>
 </section>
 
-<div data-include="newsletter"></div>
+<!-- 訂閱區直接寫在頁面裡（不用 partial）：它是這一頁由深轉亮的那一段，
+     需要自己宣告 data-surface 與 palette，捲動到這裡時整片背景轉成「光」。 -->
+<section class="newsletter" data-surface="light"
+         data-flow-palette="#FAFAF7 | #FFF3C9 | rgba(255,186,73,.28) | 50% 88%">
+  <div class="newsletter-wrap">
+    <div class="newsletter-label">STAY CONNECTED · 保持連結</div>
+    <h3>訂閱我們的代禱信</h3>
+    <p>定期收到宣教士代禱信、事工更新與感恩見證，與我們一起關心神國度的擴展。</p>
+    <!-- 平台限制無法站內收單，訂閱直接外連 Substack -->
+    <a class="btn btn-primary newsletter-cta"
+       href="https://enhakkore.substack.com/"
+       target="_blank" rel="noopener">
+      訂閱
+      <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg>
+    </a>
+  </div>
+</section>
 
 </main>
 

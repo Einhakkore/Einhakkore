@@ -32,6 +32,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600&display=swap">
   <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/flow.css">
 
   <!-- 結構化資料：NGO / Organization。之後 sameAs 填入社群連結 -->
   <script type="application/ld+json">
@@ -55,17 +56,17 @@
   }
   </script>
 </head>
-<body data-page="home">
-
-<div data-include="aurora"></div>
+<body data-page="home" data-flow="sections">
 
 <div data-include="icons"></div>
+<div data-include="flow"></div>
 <div data-include="header"></div>
 
 <main>
 
 <!-- HERO -->
-<section class="hero">
+<section class="hero" data-surface="dark"
+         data-flow-palette="#1A2E40 | #101D29 | rgba(255,186,73,.16) | 18% 12%">
   <div class="hero-content">
     <div class="hero-symbol"></div>
     <div class="hero-eyebrow">EN HAKKORE · 求告者之泉</div>
@@ -77,11 +78,14 @@
       <a class="btn btn-ghost" href="about.html">瞭解異象</a>
     </div>
   </div>
-  <div class="scroll-hint">SCROLL</div>
 </section>
-  
+
+<!-- 轉場：湧 —— 取代原本 hero 底部的 SCROLL 提示 -->
+<div data-flow-divider="well"></div>
+
 <!-- VERSE -->
-<section class="section-verse section--navy">
+<section class="section-verse section--navy" data-surface="dark"
+         data-flow-palette="#101D29 | #0B1116 | rgba(60,145,173,.16) | 78% 42%">
   <div class="verse-wrap reveal">
     <div class="verse-ref">JUDGES 15:19 · 士師記</div>
     <div class="verse-quote">
@@ -93,10 +97,14 @@
   </div>
 </section>
 
+<!-- 轉場：流 —— 取代原本 .section-practices::before 的 64px 細線 -->
+<div data-flow-divider="contour"></div>
+
 <!-- THREE PRACTICES -->
-<section class="section section-practices">
+<section class="section section-practices" data-surface="dark"
+         data-flow-palette="#101D29 | #0B1116 | rgba(92,205,194,.18) | 20% 72%">
   <div class="wrap">
-    <div class="section-head reveal">
+    <div class="section-head section-head--center reveal">
       <div class="section-num">About Us</div>
       <div class="section-eyebrow">關於我們</div>
       <h2>透過穩定的陪伴與資源整合，<br>與你一起在宣教路上走得更遠、更穩健。</h2>
@@ -179,7 +187,8 @@
 </section>
 
 <!-- FEATURE: COFFEE CONNECTION -->
-<section class="section" id="mission-bnb">
+<section class="section" id="mission-bnb" data-surface="dark"
+         data-flow-palette="#0F1B25 | #16283A | rgba(91,168,196,.18) | 88% 60%">
   <div class="wrap">
     <div class="feature-grid reveal">
       <div class="feature-img">
@@ -198,7 +207,8 @@
 </section>
 
 <!-- FEATURE: FROM THE FIELD -->
-<section class="section">
+<section class="section" data-surface="dark"
+         data-flow-palette="#16283A | #101D29 | rgba(92,205,194,.16) | 14% 78%">
   <div class="wrap">
     <div class="feature-grid reverse reveal">
       <div class="feature-img">
@@ -217,7 +227,9 @@
 </section>
 
 <!-- CTA -->
-<section class="section-cta section--navy">
+<!-- 共同守望是「宣言」的段落 —— V3 §28 Cobalt = Vision / Belief / Statement -->
+<section class="section-cta section--navy" data-surface="dark"
+         data-flow-palette="#101D29 | #16273A | rgba(49,87,213,.22) | 14% 78%">
   <div class="cta-wrap reveal">
    <div class="section-num">JOIN US </div>
      <div class="cta-label">共同守望</div>
@@ -232,24 +244,30 @@
   </div>
 </section>
 
-<div class="newsletter-scene">
-  <!-- 訂閱區改成不透明的淺色底之後，漣漪永遠被蓋住。
-       先整段隱藏（不刪），之後要換個方式露出來再打開。 -->
-  <div class="ripple-field" aria-hidden="true" hidden>
-    <span class="ripple-origin"></span>
-    <span class="ripple r1"></span>
-    <span class="ripple r2"></span>
-    <span class="ripple r3"></span>
-    <span class="ripple r4"></span>
+<!-- 訂閱區直接寫在頁面裡（不用 partial）：它是這一頁由深轉亮的那一段，
+     需要自己宣告 data-surface 與 palette，捲動到這裡時整片背景轉成「光」。 -->
+<section class="newsletter" data-surface="light"
+         data-flow-palette="#FAFAF7 | #FFF3C9 | rgba(255,186,73,.28) | 50% 88%">
+  <div class="newsletter-wrap">
+    <div class="newsletter-label">STAY CONNECTED · 保持連結</div>
+    <h3>訂閱我們的代禱信</h3>
+    <p>定期收到宣教士代禱信、事工更新與感恩見證，與我們一起關心神國度的擴展。</p>
+    <!-- 平台限制無法站內收單，訂閱直接外連 Substack -->
+    <a class="btn btn-primary newsletter-cta"
+       href="https://enhakkore.substack.com/"
+       target="_blank" rel="noopener">
+      訂閱
+      <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg>
+    </a>
   </div>
-  <div data-include="newsletter"></div>
-</div>
+</section>
 
 </main>
 
 <div data-include="footer"></div>
 
 <script src="assets/js/site.js"></script>
+<script src="assets/js/flow.js"></script>
 </body>
 </html>
 
