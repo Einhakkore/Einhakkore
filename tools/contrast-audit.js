@@ -156,11 +156,15 @@ const HIDE_TEXT = `
         await page.waitForTimeout(1500);
         const inView = await page.evaluate((ids) => {
           const res = [];
+              // sticky header 是不透明的，蓋住的那一段不能拿來當背景取樣：
+              // 會量到 header 自己的顏色，而不是元素真正的底。
+              const hdr = document.querySelector('.site-header');
+              const hb = hdr ? Math.max(0, hdr.getBoundingClientRect().bottom) : 0;
           for (const id of ids) {
             const el = document.querySelector(`[data-ca-id="${id}"]`);
             if (!el) continue;
             const r = el.getBoundingClientRect();
-            if (r.top >= 0 && r.bottom <= window.innerHeight && r.width > 4 && r.height > 4) {
+            if (r.top >= hb && r.bottom <= window.innerHeight && r.width > 4 && r.height > 4) {
               res.push({ id, x: r.x, y: r.y, w: r.width, h: r.height });
             }
           }
@@ -193,6 +197,85 @@ const HIDE_TEXT = `
         }, { dataUrl, rects: inView });
         sampled.forEach(s => results.set(s.id, s.bg));
       }
+      // ---- 轉場區補量 ----
+      // [data-surface="light"] 是 about 式捲動轉場的收尾段：文字剛從
+      // 視窗下緣進來時刻意壓在還沒轉完的過渡色上（設計決定，全站一致），
+      // 步進取樣常常剛好定格在那個過場瞬間。這裡把頁面捲到底、讓色場
+      // 完全轉亮之後補拍一張，用「停下來讀」的狀態覆寫這一段的量測；
+      // 其他區塊維持步進取樣的結果。
+      {
+        const lightIds = await page.evaluate((ids) => ids.filter(id => {
+          const el = document.querySelector(`[data-ca-id="${id}"]`);
+          return el && el.closest('[data-surface="light"]');
+        }), items.map(i => i.id));
+        if (lightIds.length) {
+          const settleSample = async () => {
+            const inView = await page.evaluate((ids) => {
+              const res = [];
+                  // sticky header 是不透明的，蓋住的那一段不能拿來當背景取樣：
+                  // 會量到 header 自己的顏色，而不是元素真正的底。
+                  const hdr = document.querySelector('.site-header');
+                  const hb = hdr ? Math.max(0, hdr.getBoundingClientRect().bottom) : 0;
+              for (const id of ids) {
+                const el = document.querySelector(`[data-ca-id="${id}"]`);
+                if (!el) continue;
+                const r = el.getBoundingClientRect();
+                if (r.top >= hb && r.bottom <= window.innerHeight && r.width > 4 && r.height > 4) {
+                  res.push({ id, x: r.x, y: r.y, w: r.width, h: r.height });
+                }
+              }
+              return res;
+            }, lightIds);
+            if (!inView.length) return;
+            const shot = await page.screenshot({ type: 'png' });
+            const dataUrl = 'data:image/png;base64,' + shot.toString('base64');
+            const sampled = await sampler.evaluate(async ({ dataUrl, rects }) => {
+              const img = new Image();
+              img.src = dataUrl;
+              await img.decode();
+              const c = document.createElement('canvas');
+              c.width = img.width; c.height = img.height;
+              const ctx = c.getContext('2d', { willReadFrequently: true });
+              ctx.drawImage(img, 0, 0);
+              return rects.map(({ id, x, y, w, h }) => {
+                const px = [];
+                for (let i = 1; i <= 5; i++) for (let j = 1; j <= 5; j++) {
+                  const sx = Math.min(img.width - 1, Math.max(0, Math.round(x + w * i / 6)));
+                  const sy = Math.min(img.height - 1, Math.max(0, Math.round(y + h * j / 6)));
+                  const d = ctx.getImageData(sx, sy, 1, 1).data;
+                  px.push([d[0], d[1], d[2]]);
+                }
+                const med = k => { const v = px.map(p => p[k]).sort((a, b) => a - b); return v[Math.floor(v.length / 2)]; };
+                return { id, bg: { r: med(0), g: med(1), b: med(2) } };
+              });
+            }, { dataUrl, rects: inView });
+            sampled.forEach(s => results.set(s.id, s.bg));
+          };
+
+          // 定格點 1：轉場區的第一個文字元素放在視窗 25% 處 ——
+          // 這個深度色場已完全轉亮，區塊上半的標題群都在框內。
+          const firstTop = await page.evaluate((ids) => {
+            let min = Infinity;
+            for (const id of ids) {
+              const el = document.querySelector(`[data-ca-id="${id}"]`);
+              if (!el) continue;
+              const t = el.getBoundingClientRect().top + window.scrollY;
+              if (t < min) min = t;
+            }
+            return min;
+          }, lightIds);
+          if (Number.isFinite(firstTop)) {
+            await page.evaluate(({ y, f }) => window.scrollTo(0, Math.max(0, y - window.innerHeight * f)), { y: firstTop, f: 0.25 });
+            await page.waitForTimeout(1600);
+            await settleSample();
+          }
+          // 定格點 2：頁面最底 —— 蓋到靠近 footer、定格點 1 拍不到的下半部。
+          await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+          await page.waitForTimeout(1600);
+          await settleSample();
+        }
+      }
+
       await sampler.close();
       await page.close();
 

@@ -83,10 +83,21 @@ body[data-flow="sections"] {
 /* 轉場發生在整個視窗上，所以交界前後要留一段沒有文字的空間，
    否則變色的過程中會有字壓在中間調上。 */
 .flow-turn { display: block; height: 0; }
-[data-surface="light"] { padding-block-start: clamp(240px, 34vh, 360px) !important; }
+/* 轉場前後的留白要「加起來大於一個視窗高」。
+   色場翻面的那一段捲動，畫面上必須只剩空白：上一段的淺色字已經
+   離開上緣、訂閱區的深色字還沒從下緣進來。原本兩邊各 34vh、合計
+   68vh < 100vh，任何一個捲動位置都一定有一邊的字在畫面上，於是
+   會看到「近乎純黑的字寫在還沒轉完的海藍底上」。
+   兩邊各 56vh、合計 112vh，翻面就完全發生在空白裡。 */
+[data-surface="light"] { padding-block-start: clamp(320px, 56vh, 560px) !important; }
+/* 哨兵 .flow-turn 是淺色段的前一個兄弟節點，所以「翻面前的最後一段」
+   就是 .flow-turn 的前一個兄弟。原本寫成相鄰 [data-surface="light"]，
+   哨兵插進來之後那組選擇器會失配。 */
+[data-surface]:has(+ .flow-turn),
+[data-surface]:has(+ .flow-turn + [data-surface="light"]),
 [data-surface]:has(+ [data-surface="light"]),
 [data-surface]:has(+ * + [data-surface="light"]) {
-  padding-block-end: clamp(220px, 34vh, 400px);
+  padding-block-end: clamp(320px, 56vh, 560px);
 }
 
 /* -----------------------------------------------------------
@@ -118,10 +129,14 @@ body[data-flow="sections"] {
 
 @supports (animation-timeline: view()) {
   body { timeline-scope: --flow-to-light; }
-  /* timeline 掛在一個零高度的哨兵上（由 flow.js 插在轉亮那一段的最前面），
-     而不是掛在 section 本身：section 有多高，entry/cover 的區間就有多長，
-     高的 section 會讓轉場拖過整段內容。零高度的哨兵，cover 0%→100% 剛好
-     就是「它從視窗底走到視窗頂」= 一個視窗的捲動距離，跟內容無關。 */
+  /* timeline 掛在一個零高度的哨兵上（由 flow.js 插在轉亮那一段「前面」，
+     當兄弟節點），而不是掛在 section 本身：section 有多高，entry/cover
+     的區間就有多長，高的 section 會讓轉場拖過整段內容。零高度的哨兵，
+     cover 0%→100% 剛好就是「它從視窗底走到視窗頂」= 一個視窗的捲動距離，
+     跟內容無關。
+     插在 section 前面而不是 prepend 進去，是因為淺色段的上留白是內距：
+     放在裡面的哨兵會落在內距之下、跟第一行字一起移動，色場就永遠等到
+     字進畫面了才翻。放在前面，哨兵正好在上下兩段留白的正中央。 */
   .flow-turn {
     view-timeline-name: --flow-to-light;
     view-timeline-axis: block;

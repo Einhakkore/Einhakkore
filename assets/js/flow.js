@@ -224,11 +224,20 @@
       if (pal) paint(lightLayer, pal);
       // 零高度的哨兵：view-timeline 掛在它身上，轉場的捲動區間才會固定
       // 是「一個視窗高」，不會被 section 自己的高度拉長（見 flow.css）。
-      if (!lightSection.querySelector('.flow-turn')) {
+      //
+      // 一定要插在 section「前面」當兄弟節點，不能 prepend 進 section 裡：
+      // 淺色段的上留白（56vh）是內距，prepend 進去的哨兵會落在內距「之下」，
+      // 跟著第一行字一起往下走 —— 於是色場永遠等到字都進畫面了才開始翻，
+      // 就會看到深色字壓在還沒轉完的海藍底上。放在 section 前面，哨兵才
+      // 正好落在深淺兩段交界、也就是上下各 56vh 空白帶的正中央。
+      if (!(lightSection.previousElementSibling &&
+            lightSection.previousElementSibling.classList.contains('flow-turn'))) {
+        const stale = lightSection.querySelector(':scope > .flow-turn');
+        if (stale) stale.remove();
         const turn = document.createElement('span');
         turn.className = 'flow-turn';
         turn.setAttribute('aria-hidden', 'true');
-        lightSection.prepend(turn);
+        lightSection.parentNode.insertBefore(turn, lightSection);
       }
     }
 

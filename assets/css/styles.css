@@ -292,11 +292,6 @@
   --card-border:   var(--line-dim);
   --card-shadow:   none;
   --card-shadow-hover: none;
-  /* 訂閱區是每一頁最後那一段「轉亮」。底色寫死成不透明的淺色 ——
-     之前做成 transparent 想融入捲動漸層，結果白字落在淺底上。 */
-  --newsletter-bg:    linear-gradient(175deg, var(--off-white), var(--amber-light));
-  --newsletter-border: transparent;
-
   /* ---- 圓角 tokens（全站統一）----
      card  : 所有卡片 / 面板容器
      input : 輸入框、select、狀態訊息列
@@ -329,7 +324,10 @@ body[data-page="serve"] {
   --fg:   var(--stop-0-fg);
   --accent: var(--amber-400);
 
-  --header-bg:     color-mix(in oklab, var(--stop-0-bg1) 78%, transparent);
+  /* 深色頁的 header 浮在會變色的色場上。78% 的時候，捲到「深轉亮」
+     的中間調，底下的淺色會透上來把整條 bar 提亮到 rgb(83,99,110)，
+     金色的 active 連結掉到 4.0:1。92% 讓 bar 在整段轉場都維持深色。 */
+  --header-bg:     color-mix(in oklab, var(--stop-0-bg1) 92%, transparent);
   --header-fg:     var(--stop-0-fg);
   --header-border: rgba(255, 255, 255, .08);
 
@@ -338,8 +336,6 @@ body[data-page="serve"] {
   --card-border:   var(--hairline-3);
   --card-shadow:   0 10px 34px rgba(0, 0, 0, .10);
   --card-shadow-hover: 0 16px 44px rgba(0, 0, 0, .14);
-  --newsletter-bg:         linear-gradient(175deg, var(--off-white), var(--amber-light));
-  --newsletter-border:     transparent;
 
   /* 深色主題頁面的預設表面；個別 section 可用 data-surface 覆寫 */
   --surface-fg:          var(--white);
@@ -1423,24 +1419,13 @@ body[data-page="home"] .hero .btn-ghost:hover {
    ----------------------------------------------------------- */
 .newsletter {
   padding: clamp(120px, 18vh, 180px) 32px 120px; text-align: center;
-  border-bottom: 1px solid var(--newsletter-border);
   position: relative;
-  isolation: isolate;
+  /* 跟 about 的 Join Us（.about-cta）同一套：完全不畫自己的底，
+     讓 .flow-field 的轉亮漸層直接當背景。捲動接近時，深色文字會有
+     一段先落在還沒轉完的海藍過渡色上，再隨捲動一起轉亮 ——
+     這是刻意的（跟 about 一致），不是漏畫背景。 */
 }
-/* 淺色底改成獨立一層，上緣用遮罩淡入 —— 跟 hero 的照片同一套做法。
-   原本 background 直接畫在 section 上，會在區塊頂端切出一條很清楚的
-   深淺交界線；捲動換色還沒跑完時那條線特別明顯。
-   淡入距離一定要小於區塊的上留白，訂閱區的深色文字才會永遠踩在
-   不透明的淺底上，不會出現「深字疊深底」的空窗。 */
-.newsletter::before {
-  content: "";
-  position: absolute; inset: 0; z-index: 0;
-  background: var(--newsletter-bg);
-  mask-image: linear-gradient(to bottom, transparent 0, #000 var(--nl-fade, 120px));
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 var(--nl-fade, 120px));
-  pointer-events: none;
-}
-.newsletter-wrap { max-width: 560px; margin: 0 auto; position: relative; z-index: 1; }
+.newsletter-wrap { max-width: 560px; margin: 0 auto; }
 .newsletter-label {
   /* 淺底上金色當不了文字（最深的 Amber 600 壓白底也只有 2.31:1） */
   color: var(--mineral-700);
@@ -2602,9 +2587,7 @@ body[data-page="home"] .feature-text .link:hover {
   .wrap             { padding: 0; }
   .section-verse    { padding: 88px 24px; }
   .section-cta      { padding: 104px 24px; }
-  /* 手機的上留白只有 72px，淡入距離要跟著收，否則文字會落在
-     還沒不透明的漸層裡 */
-  .newsletter       { padding: 72px 24px; --nl-fade: 56px; }
+  .newsletter       { padding: 72px 24px; }
   .page-hero        { padding: 88px 24px 56px; }
   .page-hero.donate-hero { padding: 96px 24px 72px; }
 
