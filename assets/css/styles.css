@@ -126,42 +126,20 @@
   --clay-700: var(--mineral-700);   /* 原 #9E5E3D 陶土 —— 禁止色票 */
   --sage-700: var(--aqua-700);      /* V3 沒有綠色，改由 Aqua 承接 */
   --sage-500: var(--aqua-500);
-  --sage-100: var(--aqua-100);
-  --coral-800: var(--sign-ink);
-  --coral-700: var(--sign);
-  --coral-100: var(--sign-100);
   --sky-700: var(--mineral-700);    /* Sky 併入 Mineral，同一支 #28718A */
   --sky-500: var(--mineral-300);
 
   /* ---------------------------------------------------------
-     Scroll flow field — 泉湧場：整站背景由 site.js 依捲動內插
-     每個 STOP 是一組 (bg1, bg2, fg)；p=0 頁面頂，p=1 頁面底
+     深色頁的起手色：body[data-page] 用它初始化 --bg1 / --fg，
+     捲動中的換色由 flow.js 的 .flow-field 以 section 為單位接手
      --------------------------------------------------------- */
-  /* STOP 0 — 頁首：暖琥珀霧的深藍 */
   --stop-0-bg1:  #22394A;
   --stop-0-bg2:  #182C3B;
   --stop-0-fg:   #FFFFFF;
-  /* STOP 1 — 深潛：最深的墨藍夜 */
-  --stop-1-bg1:  #0E1A23;
-  --stop-1-bg2:  #0A141C;
-  --stop-1-fg:   #FFFFFF;
-  /* STOP 2 — 迴升：藍轉青，帶起 sky 微光 */
-  --stop-2-bg1:  #16323d;
-  --stop-2-bg2:  #0E1A23;
-  --stop-2-fg:   #FFFFFF;
-  /* STOP 3 — 水面：mineral 冷光（原本的霧綠是禁止色票） */
-  --stop-3-bg1:  #A9C9D4;
-  --stop-3-bg2:  #DCECEF;
-  --stop-3-fg:   #101D29;
-  /* STOP 4 — 出水：白 + mineral 收尾 */
-  --stop-4-bg1:  #FFFFFF;
-  --stop-4-bg2:  #DCECEF;
-  --stop-4-fg:   #101D29;
 
   /* 全站 dynamic tokens：預設是「非 flow-field 頁面」用的淺色主題。
      home / give 兩頁在下方 body[data-page] 覆寫成深色 STOP 0，
-     site.js 再依捲動每幀更新 --bg1 / --bg2 / --fg。
-     其他頁面 JS 不會跑，所以 vars 就停在下面這組淺色預設。 */
+     其他頁面就停在下面這組淺色預設。 */
   /* 沒有宣告 data-surface 的區塊沿用淺底預設，
      避免 --surface-* 解析不到而讓文字掉回繼承色 */
   --surface-fg:          var(--navy-900);
@@ -172,7 +150,6 @@
   --surface-line-strong: rgba(16, 29, 41, .30);
 
   --bg1:  var(--paper);
-  --bg2:  var(--paper-2);
   --fg:   var(--text-2);
   --accent: var(--mineral-700);
 
@@ -193,13 +170,8 @@
   --home-glow-sky:   rgba(91, 168, 196, .14); /* 右下冷光 — mineral-300 */
   --home-text-1:     var(--text-on-dark);           /* 主標題，AAA 對比 */
   --home-text-2:     rgba(255, 255, 255, .82);     /* 內文，AA+ */
-  --home-text-3:     rgba(255, 255, 255, .60);     /* 小字／hint */
 
   /* Lines — ink-based，讓分隔線在暖底上有溫度 */
-  /* 深底上的輸入框邊界：.18 只有 1.78:1，看不出框在哪；
-     WCAG 1.4.11 對非文字元素要 3:1，實測 .40 才到 3.54。
-     裝飾性分隔線可以繼續用淡的，可互動元件請用這支。 */
-  --border-input-dark: rgba(255, 255, 255, .40);
   --line-dim:    rgba(26, 46, 64, .08);
   --line-mid:    rgba(26, 46, 64, .14);
   --line-strong: rgba(26, 46, 64, .22);
@@ -227,12 +199,6 @@
   --fs-4xl:  28px;   /* 次級大標、經文                      收 24 / 26 / 28 / 30 */
   --fs-5xl:  36px;   /* 區塊主標、裝飾數字                  收 32 / 34 / 38 / 40 / 42 / 48 / 64 */
   --fs-6xl:  56px;   /* hero h1、philosophy 浮水印          收 56 / 72 / 88 / 104 */
-
-  /* Display — 只給 Hero / Statement / Exhibition-like moment。
-     一般標題請留在 6XL 以下；整頁到處都是巨字就不叫 statement 了。
-     斷點對照：390 → 40 / 768 → 65 / 1440 → 120（lg：48 / 77 / 144） */
-  --fs-display:    clamp(40px, 8.5vw, 120px);
-  --fs-display-lg: clamp(48px, 10vw,  144px);
 
   /* 行高 —— 6 種（原本 21 種） */
   --lh-flat:    1;      /* 數字、icon 標籤 */
@@ -288,10 +254,8 @@
   --header-border: var(--line-dim);
 
   --card-bg:       rgba(237, 227, 211, .70);
-  --card-bg-hover: rgba(237, 227, 211, .92);
   --card-border:   var(--line-dim);
   --card-shadow:   none;
-  --card-shadow-hover: none;
   /* ---- 圓角 tokens（全站統一）----
      card  : 所有卡片 / 面板容器
      input : 輸入框、select、狀態訊息列
@@ -311,16 +275,13 @@
 
 /* ---------------------------------------------------------
    Flow-field 頁面（home / give / about / serve）：切成深色 STOP 0 起手，
-   捲動時 site.js 再逐幀更新 --bg1 / --bg2 / --fg。
-   about 頁另外在該頁 <style> 內把五個 STOP 全鎖在深色域，
-   讓文字色階固定為淺色、對比可預期。
+   之後的換色由 flow.js 依各 section 的 data-flow-palette 接手。
    --------------------------------------------------------- */
 body[data-page="home"],
 body[data-page="give"],
 body[data-page="about"],
 body[data-page="serve"] {
   --bg1:  var(--stop-0-bg1);
-  --bg2:  var(--stop-0-bg2);
   --fg:   var(--stop-0-fg);
   --accent: var(--amber-400);
 
@@ -332,10 +293,8 @@ body[data-page="serve"] {
   --header-border: rgba(255, 255, 255, .08);
 
   --card-bg:       var(--surface-4);
-  --card-bg-hover: rgba(255, 255, 255, 1);
   --card-border:   var(--hairline-3);
   --card-shadow:   0 10px 34px rgba(0, 0, 0, .10);
-  --card-shadow-hover: 0 16px 44px rgba(0, 0, 0, .14);
 
   /* 深色主題頁面的預設表面；個別 section 可用 data-surface 覆寫 */
   --surface-fg:          var(--white);
@@ -350,10 +309,13 @@ body[data-page="serve"] {
    RESET
    ----------------------------------------------------------- */
 *, *::before, *::after { box-sizing: border-box; }
+/* hidden 屬性要贏過任何 display 宣告 —— admin.html 的兩個視圖是用
+   element.hidden 切換的，沒有這條，.admin-auth 的 display:flex 會把
+   已登入使用者的登入卡片一起顯示出來。 */
+[hidden] { display: none !important; }
 html { scroll-behavior: smooth; }
 body {
   margin: 0; padding: 0;
-  /* 背景由固定的 #flow-bg 提供；body 只留 fallback 色以防 #flow-bg 尚未注入 */
   background: var(--bg1);
   color: var(--fg);
   font-family: var(--font-zh);
@@ -370,7 +332,7 @@ body {
   position: relative;
   /* Sticky footer：body 為 flex 直欄、撐滿至少一個視窗高，
      main 伸展佔滿剩餘空間，短頁面時 footer 也會貼在視窗最底部。
-     .aurora / #flow-bg 為 fixed、icons 為 display:none，皆不參與此排版。 */
+     .aurora 為 fixed、icons 為 display:none，皆不參與此排版。 */
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -378,20 +340,6 @@ body {
 }
 /* main 吃掉 header 與 footer 以外的剩餘高度，把 footer 推到最底 */
 main { flex: 1 0 auto; }
-
-/* ---------------------------------------------------------
-   #flow-bg — 固定的整站背景場（由 site.js 只在 home / give / about 注入）
-   顏色隨捲動由 --bg1 / --bg2 動態變化。
-   舊版有個 --glow 徑向光暈落在左上，會讓 hero 照片顯得更亮，已拿掉。
-   --------------------------------------------------------- */
-#flow-bg {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background: linear-gradient(175deg, var(--bg1), var(--bg2));
-  will-change: background;
-}
 h1, h2, h3 { font-weight: var(--fw-semibold); }
 p { margin: 0 0 1.4em; }
 p:last-child { margin-bottom: 0; }
@@ -400,7 +348,7 @@ img { max-width: 100%; display: block; }
 
 /* 全站照片：很淡的暖色濾鏡（略加暖、略降飽和），不影響 logo */
 img { filter: sepia(.06) saturate(.92) brightness(.99); }
-.logo img, .footer-brand img, .footer-social svg, .practice-card .icon svg,
+.logo img, .footer-brand img, .footer-social svg,
 .field select, .menu-toggle svg { filter: none; }
 
 a { color: inherit; text-decoration: none; cursor: pointer; }
@@ -470,8 +418,6 @@ body[data-page="give"] .aurora {
   0%, 100% { transform: translate(0, 0) scale(1); }
   50%      { transform: translate(-100px, -120px) scale(1.05); }
 }
-
-.aurora-stars { display: none; }
 
 /* 確保內容在 aurora 之上 */
 .site-header, main, footer { position: relative; z-index: 1; }
@@ -576,7 +522,7 @@ body[data-page="serve"] .logo .logo-dark { display: block; }
   position: absolute;
   inset: 0;
   background:
-    url("../img/HandsWater.jpg") center/cover no-repeat,
+    url("../img/HandsWater.webp") center/cover no-repeat,
     var(--stop-0-bg2);
   filter: sepia(.10) saturate(.85) brightness(.55);
   z-index: 0;
@@ -652,12 +598,6 @@ body[data-page="serve"] .logo .logo-dark { display: block; }
   color: var(--amber-500);
   letter-spacing: var(--ls-none);
 }
-.hero .hero-tagline {
-  font-family: var(--font-brand); font-weight: var(--fw-medium);
-  font-size: var(--fs-3xl); line-height: var(--lh-title);
-  color: var(--text-1); letter-spacing: var(--ls-cjk);
-  margin: 0 0 24px;
-}
 .hero-sub {
   font-size: var(--fs-xl);
   line-height: var(--lh-loose);
@@ -669,26 +609,6 @@ body[data-page="serve"] .logo .logo-dark { display: block; }
 .hero-actions {
   display: flex; gap: 16px;
   justify-content: center; flex-wrap: wrap;
-}
-.scroll-hint {
-  position: absolute; bottom: 24px; left: 50%;
-  transform: translateX(-50%);
-  display: flex; flex-direction: column; align-items: center; gap: 10px;
-  font-family: var(--font-en);
-  /* --text-4 是僅限大字的階；這裡是 12px 又壓在照片上，改用反白 */
-  font-size: var(--fs-2xs); color: rgba(255, 255, 255, .88); letter-spacing: var(--ls-track);
-  text-shadow: 0 1px 6px rgba(11, 17, 22, .55);
-  animation: hint-fade 3s ease-in-out infinite;
-  z-index: 2;
-}
-.scroll-hint::after {
-  content: ""; width: 1px; height: 32px;
-  background: linear-gradient(180deg, var(--amber-400), transparent);
-}
-/* 呼吸動畫的谷底也要讀得到：原本 .5 會把 SCROLL 壓到 4.3:1 */
-@keyframes hint-fade {
-  0%, 100% { opacity: .72; }
-  50%      { opacity: 1; }
 }
 
 /* -----------------------------------------------------------
@@ -762,17 +682,6 @@ body[data-page="serve"] .logo .logo-dark { display: block; }
   padding-block: clamp(96px, 16vh, 168px) clamp(64px, 10vh, 96px);
   padding-inline: max(clamp(20px, 5vw, 64px), calc((100% - 1280px) / 2));
   text-align: left;
-}
-.page-hero .symbol-sm {
-  width: 40px; height: 40px;
-  margin: 0 0 32px;
-  border: 1px solid var(--amber-500);
-  border-radius: var(--radius-round);
-  display: flex; align-items: center; justify-content: center;
-}
-.page-hero .symbol-sm::after {
-  content: ""; width: 10px; height: 10px;
-  background: var(--amber-500); border-radius: var(--radius-round);
 }
 .page-hero .eyebrow {
   color: var(--accent);
@@ -902,14 +811,12 @@ body[data-page="serve"] .logo .logo-dark { display: block; }
    PRACTICES
    ----------------------------------------------------------- */
 .section-practices { position: relative; }
+
 /* 原本這裡有一道 64px 的垂直細線當轉場，已改由區塊之間的
    <div data-flow-divider="contour"> 承接，語彙跟其他頁一致。 */
-.practices {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
-}
-@media (max-width: 900px) { .practices { grid-template-columns: 1fr; } }
-/* Glass-card 底：paper 卡片共用的毛玻璃底 recipe */
-.practice-card, .contact-form, .verse-card {
+
+/* Glass-card 底：paper 表單／卡片共用的毛玻璃底 recipe */
+.contact-form {
   background: var(--card-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -917,76 +824,10 @@ body[data-page="serve"] .logo .logo-dark { display: block; }
   border-radius: var(--radius-card);
   box-shadow: var(--card-shadow);
 }
-.practice-card {
-  padding: 48px 36px;
-  transition: all .4s cubic-bezier(.16, 1, .3, 1);
-  position: relative; overflow: hidden;
-}
-.practice-card::before {
-  content: ""; position: absolute;
-  top: -50%; left: -50%; width: 200%; height: 200%;
-  background: radial-gradient(circle at center, rgba(255, 186, 73, .10), transparent 50%);
-  opacity: 0; transition: opacity .5s ease;
-}
-.practice-card:hover {
-  background: var(--card-bg-hover);
-  border-color: rgba(255, 186, 73, .35);
-  transform: translateY(-4px);
-  box-shadow: var(--card-shadow-hover);
-}
-.practice-card:hover::before { opacity: 1; }
-.practice-card > * { position: relative; z-index: 1; }
-.practice-card .icon {
-  width: 56px; height: 56px;
-  color: var(--amber-500);
-  margin-bottom: 28px;
-}
-.practice-card .icon svg { width: 100%; height: 100%; }
-.practice-card .roman {
-  font-family: var(--font-en); font-weight: var(--fw-light);
-  font-size: var(--fs-md); color: var(--amber-500);
-  letter-spacing: var(--ls-caps); margin-bottom: 16px;
-  display: flex; align-items: center; gap: 12px;
-}
-.practice-card .roman::after {
-  content: ""; flex: 1; height: 1px;
-  background: linear-gradient(90deg, rgba(255, 186, 73, .35), transparent);
-}
-.practice-card h3 {
-  font-family: var(--font-brand); font-weight: var(--fw-semibold);
-  font-size: var(--fs-4xl); color: var(--text-1);
-  margin: 0 0 18px; letter-spacing: var(--ls-cjk); line-height: var(--lh-title);
-}
-.practice-card p {
-  font-size: var(--fs-md); line-height: var(--lh-loose);
-  color: var(--text-2); font-weight: var(--fw-regular); margin: 0;
-}
-
 /* 區段下方置中按鈕（例如三大實踐後的「認識我們」CTA） */
 .section-actions {
   display: flex; justify-content: center; flex-wrap: wrap;
   gap: 16px; margin-top: 64px;
-}
-
-/* Card variants — 陶土／鼠尾草 */
-.practice-card.clay .icon,
-.practice-card.clay .roman { color: var(--clay-700); }
-.practice-card.clay .roman::after {
-  background: linear-gradient(90deg, rgba(255, 186, 73, .35), transparent);
-}
-.practice-card.clay:hover { border-color: rgba(255, 186, 73, .35); }
-.practice-card.clay:hover::before {
-  background: radial-gradient(circle at center, rgba(255, 186, 73, .10), transparent 50%);
-}
-
-.practice-card.sage .icon,
-.practice-card.sage .roman { color: var(--sage-700); }
-.practice-card.sage .roman::after {
-  background: linear-gradient(90deg, rgba(127, 166, 78, .35), transparent);
-}
-.practice-card.sage:hover { border-color: rgba(127, 166, 78, .35); }
-.practice-card.sage:hover::before {
-  background: radial-gradient(circle at center, rgba(127, 166, 78, .12), transparent 50%);
 }
 
 /* -----------------------------------------------------------
@@ -1298,8 +1139,6 @@ body[data-page="serve"] .logo .logo-dark { display: block; }
   content: ""; width: 32px; height: 1px; background: currentColor; opacity: .6;
 }
 /* Label 變體 */
-.feature-text .label.clay { color: var(--clay-700); }
-.feature-text .label.sage { color: var(--sage-700); }
 
 .feature-text h2 {
   font-family: var(--font-brand); font-weight: var(--fw-semibold);
@@ -1310,8 +1149,6 @@ body[data-page="serve"] .logo .logo-dark { display: block; }
   font-family: var(--font-brand); font-style: italic; font-weight: var(--fw-regular);
   color: var(--amber-500); letter-spacing: var(--ls-none);
 }
-.feature-text h2.clay em { color: var(--clay-700); }
-.feature-text h2.sage em { color: var(--sage-700); }
 .feature-text p {
   font-size: var(--fs-md); line-height: var(--lh-loose);
   color: var(--fg); opacity: .85; font-weight: var(--fw-regular); margin: 0 0 1.4em;
@@ -1325,8 +1162,6 @@ body[data-page="serve"] .logo .logo-dark { display: block; }
   transition: all .25s ease;
 }
 .feature-text .link:hover { color: var(--fg); border-color: var(--fg); }
-.feature-text .link.clay { color: var(--clay-700); border-color: var(--clay-700); }
-.feature-text .link.sage { color: var(--sage-700); border-color: var(--sage-700); }
 
 /* -----------------------------------------------------------
    CTA — 品牌定錨段落（深藍 + 極光由 .section--navy 提供）
@@ -1372,23 +1207,8 @@ body[data-page="serve"] .logo .logo-dark { display: block; }
   background: transparent;
   color: var(--fg);
 }
-/* 舊的本地光團（松青 / 靛藍 + 琥珀）在 #flow-bg 上會浮成另一層 bg，
-   關掉。若要恢復，把兩個 content 改回 "" 即可。 */
-.section--navy::before,
-.section--navy::after {
-  content: none;
-}
 /* 內容墊在光層之上 */
 .section--navy > * { position: relative; z-index: 1; }
-
-@keyframes navyAuroraA {
-  from { transform: translate(0, 0)   scale(1);    }
-  to   { transform: translate(8%, 6%) scale(1.15); }
-}
-@keyframes navyAuroraB {
-  from { transform: translate(0, 0)    scale(1);   }
-  to   { transform: translate(-6%, -8%) scale(1.1);}
-}
 
 /* 在 .section--navy 內的元件變體（首頁 hero 的 ghost button 也是同一套反白配色，見文末） */
 .section--navy .btn-ghost,
@@ -1410,8 +1230,6 @@ body[data-page="home"] .hero .btn-ghost:hover {
 
 /* 系統「減少動態」時，極光靜止 */
 @media (prefers-reduced-motion: reduce) {
-  .section--navy::before,
-  .section--navy::after { animation: none; }
 }
 
 /* -----------------------------------------------------------
@@ -1573,16 +1391,6 @@ body[data-page="home"] .hero .btn-ghost:hover {
   background-repeat: no-repeat;
   background-position: right 16px center;
   padding-right: 40px;
-}
-.form-success {
-  padding: 24px; border-radius: var(--radius-card);
-  background: rgba(255, 186, 73, .10);
-  color: var(--text-1); font-size: var(--fs-md); line-height: var(--lh-body);
-  border: 1px solid rgba(255, 186, 73, .3);
-  display: flex; gap: 12px; align-items: flex-start;
-}
-.form-success svg {
-  flex-shrink: 0; margin-top: 2px; color: var(--amber-500);
 }
 
 /* -----------------------------------------------------------
@@ -1801,40 +1609,6 @@ body[data-page="home"] .hero .btn-ghost:hover {
 .terms-content a { color: var(--accent); border-bottom: 1px solid rgba(255, 186, 73, .35); }
 
 /* -----------------------------------------------------------
-   ABOUT VERSE CARD
-   ----------------------------------------------------------- */
-.verse-card {
-  max-width: 760px; margin: 0 auto;
-  text-align: center; padding: 56px 48px;
-  position: relative;
-}
-.verse-card::before {
-  content: ""; position: absolute;
-  top: -1px; left: 50%; transform: translateX(-50%);
-  width: 60px; height: 3px;
-  background: var(--sage-500); border-radius: 0 0 4px 4px;
-}
-.verse-card .quote-mark {
-  font-family: var(--font-en);
-  font-size: var(--fs-6xl); line-height: .6;
-  color: var(--sage-500); margin-bottom: 16px;
-}
-.verse-card blockquote {
-  font-family: var(--font-brand); font-weight: var(--fw-medium);
-  font-size: var(--fs-3xl); line-height: var(--lh-loose);
-  color: var(--text-1); margin: 0 0 24px;
-  letter-spacing: var(--ls-cjk);
-}
-.verse-card blockquote strong {
-  font-weight: var(--fw-medium); color: var(--amber-500);
-}
-.verse-card cite {
-  display: block; font-family: var(--font-en);
-  font-size: var(--fs-sm); color: var(--sage-700);
-  letter-spacing: var(--ls-caps);
-}
-
-/* -----------------------------------------------------------
    SCROLL REVEAL — 進場動畫（IntersectionObserver 觸發 .in）
    stagger 用 CSS var --reveal-delay 由 JS 在觀察時寫入
    ----------------------------------------------------------- */
@@ -1859,8 +1633,7 @@ body[data-page="home"] .hero .btn-ghost:hover {
    REDUCE MOTION — 關掉位移／模糊、只留 opacity 淡入；場停在靜態底
    ----------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
-  .aurora-blob, .aurora-stars,
-  .hero-symbol, .scroll-hint {
+  .aurora-blob, .hero-symbol {
     animation: none !important;
   }
   .reveal {
@@ -1868,11 +1641,6 @@ body[data-page="home"] .hero .btn-ghost:hover {
     filter: none !important;
     transition: opacity .6s ease !important;
     transition-delay: 0ms !important;
-  }
-  #flow-bg {
-    /* 靜態單色底：抓 STOP 0 當固定深底 */
-    background: linear-gradient(175deg, var(--stop-0-bg1), var(--stop-0-bg2)) !important;
-    will-change: auto !important;
   }
 }
 
@@ -1883,7 +1651,6 @@ body[data-page="home"] .hero .btn-ghost:hover {
 /* ---- 頁面級變數：header 高度供左欄 sticky 定位使用 ---- */
 :root { --header-h: 64px; }
 
-/* ---- Give 頁的深底由全站 #flow-bg 接手，此處不再單獨覆寫 ---- */
 body[data-page="give"] main > .section {
   position: relative;
   isolation: isolate;
@@ -1921,12 +1688,6 @@ body[data-page="give"] main > .section {
     rgba(24, 44, 59, .80) 78%,
     rgba(24, 44, 59, 0) 100%
   );
-}
-.page-hero.donate-hero .symbol-sm {
-  border-color: var(--amber-400);
-}
-.page-hero.donate-hero .symbol-sm::after {
-  background: var(--amber-400);
 }
 .page-hero.donate-hero .eyebrow { color: var(--on-dark-2); }
 .page-hero.donate-hero h1 { color: var(--text-on-dark); text-shadow: 0 2px 20px rgba(26, 46, 64, .35); }
@@ -2237,9 +1998,6 @@ body[data-page="home"] {
   color: var(--home-text-2);
 }
 
-/* 深流本身已提供暖／冷光氛圍，頁面級 aurora 疊上去會混濁 → 關掉 */
-body[data-page="home"] .aurora { display: none; }
-
 /* ---- HERO：圖片以下緣遮罩淡出、上疊深色 scrim ---- */
 body[data-page="home"] .hero { background: transparent; }
 
@@ -2285,15 +2043,6 @@ body[data-page="home"] .section-practices .section-head h2 { color: var(--home-t
 body[data-page="home"] .section-practices .section-head h2 em { color: var(--amber-400); }
 body[data-page="home"] .section-practices .section-head .lead { color: var(--home-text-2); }
 
-/* practice-card 提高不透明度，讓卡片本身仍是奶紙色 */
-body[data-page="home"] .practice-card {
-  background: rgba(237, 227, 211, .94);
-  border-color: rgba(255, 255, 255, .18);
-}
-body[data-page="home"] .practice-card:hover {
-  background: rgba(237, 227, 211, .98);
-}
-
 /* Feature 圖文段 — 深底上文字反白，強調色改用亮階 amber */
 body[data-page="home"] .feature-text .label,
 body[data-page="home"] .feature-text .label.amber { color: var(--amber-400); }
@@ -2311,66 +2060,6 @@ body[data-page="home"] .feature-text .link:hover {
   color: var(--amber-300); border-color: var(--amber-300);
 }
 
-/* 首頁不再另外覆寫：訂閱區在每一頁都是同一段「轉亮」的收尾。
-   漣漪畫在它底下的 .newsletter-scene 上，透得出來。 */
-
-/* Ripple field — 只在首頁 .newsletter-scene 內生效，
-   從畫面右下一角湧出的細環，18s 一輪、4 圈錯開，
-   呼應「隱哈歌利 = 泉」的敘事 */
-.newsletter-scene {
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
-}
-.newsletter-scene .newsletter {
-  position: relative;
-  z-index: 1;
-}
-.ripple-field {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-}
-.ripple,
-.ripple-origin {
-  position: absolute;
-  left: 82%; top: 72%;
-  transform: translate(-50%, -50%);
-  border-radius: var(--radius-round);
-}
-.ripple-origin {
-  width: 12px; height: 12px;
-  background: radial-gradient(circle,
-    rgba(255, 186, 73, .70),
-    rgba(255, 186, 73, 0) 70%);
-}
-.ripple {
-  width: 40px; height: 40px;
-  border: 1.5px solid rgba(40, 113, 138, .30);   /* mineral-700 */
-  opacity: 0;
-  animation: ripple-out 18s cubic-bezier(.15, .4, .35, 1) infinite;
-}
-.ripple.r1 { animation-delay: 0s;    }
-.ripple.r2 { animation-delay: 4.5s;  }
-.ripple.r3 { animation-delay: 9s;    }
-.ripple.r4 { animation-delay: 13.5s; }
-
-@keyframes ripple-out {
-  0%   { width: 40px;   height: 40px;   opacity: 0;   border-width: 1.5px; }
-  8%   { opacity: .40; }
-  70%  { opacity: .12; }
-  100% { width: 1600px; height: 1600px; opacity: 0;   border-width: .5px;  }
-}
-
-@media (max-width: 900px) {
-  /* 手機不跑漣漪，畫面清爽為先 */
-  .ripple-field { display: none; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .ripple { animation: none; opacity: 0; }
-}
-
 /* Ghost button on 深流：已與 .section--navy .btn-ghost 合併在該規則區塊 */
 
 /* .section--navy 內建 ink-900 底 + 極光，在深流上照常運作，無需覆寫 */
@@ -2381,12 +2070,12 @@ body[data-page="home"] .feature-text .link:hover {
 .admin-shell {
   max-width: 1240px; margin: 0 auto; padding: 120px 32px 96px;
 }
-/* login gate */
-.admin-gate {
+/* login gate — markup 見 admin.html 的 #loginView */
+.admin-auth {
   display: flex; align-items: center; justify-content: center;
   min-height: 60vh;
 }
-.admin-gate-card {
+.admin-auth-card {
   width: 100%; max-width: 420px;
   padding: 40px 36px;
   background: var(--card-bg);
@@ -2396,34 +2085,17 @@ body[data-page="home"] .feature-text .link:hover {
   -webkit-backdrop-filter: blur(20px);
   text-align: center;
 }
-.admin-gate-card .hero-symbol { margin: 0 auto 24px; }
-.admin-gate-card h1 {
+.admin-auth-card .hero-symbol { margin: 0 auto 24px; }
+.admin-auth-card h1 {
   font-family: var(--font-brand); font-weight: var(--fw-semibold);
   font-size: var(--fs-4xl); color: var(--text-1);
   margin: 0 0 8px; letter-spacing: var(--ls-cjk); line-height: var(--lh-heading);
 }
-.admin-gate-card .lead {
+.admin-auth-card .lead {
   font-size: var(--fs-md); color: var(--text-3); margin: 0 0 28px;
 }
-.admin-gate-card .field {
-  display: flex; flex-direction: column; gap: 6px;
-  text-align: left; margin-bottom: 20px;
-}
-.admin-gate-card .field span {
-  font-size: var(--fs-sm); color: var(--text-2); letter-spacing: var(--ls-wide);
-}
-.admin-gate-card .field input {
-  height: 48px; padding: 0 16px; border-radius: var(--radius-input);
-  border: 1px solid var(--line-mid);
-  background: rgba(250, 246, 239, .85);
-  font-family: var(--font-zh); font-size: var(--fs-md);
-  color: var(--text-1); outline: none;
-}
-.admin-gate-card .field input:focus {
-  border-color: var(--amber-500); background: var(--paper);
-}
-.admin-gate-card .btn { width: 100%; }
-.admin-gate-err {
+.admin-auth-card .btn { width: 100%; }
+.admin-auth-err {
   color: var(--sign-ink); font-size: var(--fs-sm);
   margin: 12px 0 0; min-height: 1.4em;
 }
@@ -2466,29 +2138,6 @@ body[data-page="home"] .feature-text .link:hover {
   padding: 10px 18px; font-size: var(--fs-sm);
 }
 
-.admin-filters {
-  display: grid; grid-template-columns: 1fr 2fr 1fr 1fr;
-  gap: 12px; margin-bottom: 24px;
-}
-.admin-filter {
-  display: flex; flex-direction: column; gap: 4px;
-}
-.admin-filter span {
-  font-size: var(--fs-2xs); color: var(--text-3); letter-spacing: var(--ls-wide);
-}
-.admin-filter input,
-.admin-filter select {
-  height: 40px; padding: 0 12px; border-radius: var(--radius-input);
-  border: 1px solid var(--line-mid);
-  background: rgba(250, 246, 239, .85);
-  font-family: var(--font-zh); font-size: var(--fs-sm);
-  color: var(--text-1); outline: none;
-}
-.admin-filter input:focus,
-.admin-filter select:focus {
-  border-color: var(--amber-500); background: var(--paper);
-}
-
 .admin-table-wrap {
   overflow-x: auto;
   background: var(--card-bg);
@@ -2509,10 +2158,6 @@ body[data-page="home"] .feature-text .link:hover {
   border-bottom: 1px solid var(--line-mid);
 }
 .admin-table thead th:hover { background: rgba(255, 186, 73, .12); }
-.admin-table .sort-arrow {
-  display: inline-block; width: 10px;
-  font-size: var(--fs-3xs); color: var(--amber-500);
-}
 .admin-table tbody td {
   padding: 12px 16px; vertical-align: top;
   border-bottom: 1px solid var(--line-dim);
@@ -2530,31 +2175,12 @@ body[data-page="home"] .feature-text .link:hover {
   text-align: center;
   color: var(--text-3);
 }
-.kind-badge {
-  display: inline-block; padding: 3px 10px;
-  border-radius: var(--radius-pill);
-  font-size: var(--fs-2xs); font-weight: var(--fw-medium);
-  letter-spacing: var(--ls-cjk); white-space: nowrap;
-}
-.kind-donate {
-  background: rgba(255, 186, 73, .14);
-  color: var(--amber-500);
-  border: 1px solid rgba(255, 186, 73, .3);
-}
-.kind-volunteer {
-  background: var(--sage-100);
-  color: var(--sage-700);
-  border: 1px solid rgba(127, 166, 78, .3);
-}
-
 /* admin RWD */
 @media (max-width: 900px) {
   .admin-shell { padding: 96px 24px 64px; }
-  .admin-filters { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 560px) {
   .admin-shell { padding: 88px 20px 56px; }
-  .admin-filters { grid-template-columns: 1fr; }
   .admin-header h1 { font-size: var(--fs-4xl); }
   .admin-table { font-size: var(--fs-2xs); }
   .admin-table thead th,
@@ -2579,7 +2205,6 @@ body[data-page="home"] .feature-text .link:hover {
   .cta-poem               { font-size: var(--fs-4xl); }
   .verse-quote            { font-size: var(--fs-3xl); }
   .section-num            { font-size: var(--fs-5xl); }
-  .verse-card .quote-mark { font-size: var(--fs-5xl); }
   .newsletter h3          { font-size: var(--fs-3xl); }
 
   /* --- Section / Wrap 統一水平 24px --- */

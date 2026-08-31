@@ -61,26 +61,11 @@
   <style>
     /* ============================================================
        ABOUT — 頁面級樣式
-       背景沿用首頁那套 scroll flow field（#flow-bg，由 site.js 注入），
-       設計稿的走向是「深藍起手 → 最深墨藍 → 逐漸回升 → 頁尾轉亮」。
-
-       這裡把「轉亮」拆成兩段做：
-       1. flow field 只負責深藍 → 板岩藍的回升（五個 STOP 都還在深色域），
-       2. 最後的明亮收尾由 .about-cta 自己畫一道漸層。
-       原因是 flow field 是依「捲動進度」內插的，同一個區塊在不同視窗高度
-       會落在不同亮度上——實測手機版的頁尾 CTA 會剛好卡在深淺交界，
-       前景與背景同時是中間調，對比掉到 3.4。把亮區綁在區塊上就與視窗
-       高度無關，文字對比在任何裝置上都是固定的。
+       背景由 flow.js 的 .flow-field 依各 section 的 data-flow-palette 換色，
+       走向是「深藍起手 → 最深墨藍 → 逐漸回升 → 頁尾轉亮」。
+       最後的明亮收尾由 .about-cta 自己畫一道漸層——綁在區塊上，
+       文字對比就與視窗高度無關，在任何裝置上都是固定的。
        ============================================================ */
-
-    /* initFlowField() 從 :root 讀 --stop-*，用 :has() 讓覆寫只在 about 生效 */
-    :root:has(body[data-page="about"]) {
-      --stop-0-bg1: #22394A;  --stop-0-bg2: #182C3B;  --stop-0-fg: #FFFFFF;
-      --stop-1-bg1: #14232E;  --stop-1-bg2: #0E1A23;  --stop-1-fg: #FFFFFF;
-      --stop-2-bg1: #16323D;  --stop-2-bg2: #0F1F29;  --stop-2-fg: #FFFFFF;
-      --stop-3-bg1: #2C4854;  --stop-3-bg2: #1D3038;  --stop-3-fg: #FFFFFF;
-      --stop-4-bg1: #33505C;  --stop-4-bg2: #22323C;  --stop-4-fg: #FFFFFF;
-    }
 
     html.lenis, html.lenis body { scroll-behavior: auto !important; }
 

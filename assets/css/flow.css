@@ -21,9 +21,7 @@
    1 · FIELD — 背景色場
    ----------------------------------------------------------- */
 
-/* data-flow="sections" 的頁面不吃 site.js 注入的 #flow-bg
-   （那支是依「整頁捲動進度」線性內插，會每一幀覆寫 --bg1/--bg2，
-     跟這裡以 section 為單位的換色互相打架）。 */
+/* data-flow="sections"：背景改由下面的 .flow-field 以 section 為單位換色 */
 body[data-flow="sections"] {
   background: var(--flow-fallback, #182C3B);   /* 色層還沒寫進來前的保底底色 */
 }
@@ -266,32 +264,8 @@ body[data-flow="sections"] {
   aspect-ratio: 3 / 4;
   clip-path: url(#flow-clip-spring);
 }
-.flow-figure--basin .flow-figure__frame {
-  aspect-ratio: 4 / 3;
-  clip-path: url(#flow-clip-basin);
-}
-.flow-figure--stream .flow-figure__frame {
-  aspect-ratio: 16 / 6;
-  clip-path: url(#flow-clip-stream);
-}
 
 /* ---- 標準幾何遮罩：形狀與比例成套，換 class 就換形狀 ---- */
-.flow-figure--circle .flow-figure__frame {
-  aspect-ratio: 1 / 1;
-  clip-path: url(#flow-clip-circle);
-}
-.flow-figure--node .flow-figure__frame {
-  aspect-ratio: 1 / 1;
-  clip-path: url(#flow-clip-node);
-}
-.flow-figure--amorphous .flow-figure__frame {
-  aspect-ratio: 1 / 1;
-  clip-path: url(#flow-clip-amorphous);
-}
-.flow-figure--organic .flow-figure__frame {
-  aspect-ratio: 1 / 1;
-  clip-path: url(#flow-clip-organic);
-}
 /* 直立橢圓：預設走 3:4，要更修長就在使用端覆寫 aspect-ratio */
 .flow-figure--oval .flow-figure__frame {
   aspect-ratio: 3 / 4;
@@ -309,13 +283,6 @@ body[data-flow="sections"] {
   letter-spacing: var(--ls-wide);
   line-height: var(--lh-body);
   color: rgba(245, 241, 232, .72);
-}
-
-/* 出血：讓圖切出容器、走到視窗邊緣，是版面「破格」的那一下 */
-.flow-bleed-left  { margin-left: calc(50% - 50vw); }
-.flow-bleed-right { margin-right: calc(50% - 50vw); }
-@media (max-width: 900px) {
-  .flow-bleed-left, .flow-bleed-right { margin-left: 0; margin-right: 0; }
 }
 
 /* -----------------------------------------------------------
