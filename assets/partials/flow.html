@@ -1,0 +1,95 @@
+<!-- ============================================================
+     FLOW — 「泉」的形狀素材層（全站共用）
+     士師記 15:19：神使利希的「窪處裂開」，有水「湧出」，參孫喝了「精神復原」。
+     三個動詞＝三組形狀：裂（divider）／湧（image mask）／流（contour）。
+
+     V3 §16 把「水滴」列入禁止形狀，原本的 flow-clip-drop 已移除。
+     保留的輪廓都落在 V3 允許的 Circle / Arc / Flow Line / Abstract Organic
+     四類裡，使用時遵守三條判準：
+       1. 有機輪廓只用在 ≥200px；小尺寸一律 Circle / Ring
+       2. 不做線稿版本 —— 線稿一定會讀成 icon
+       3. 一個畫面最多一種有機輪廓，不要並排變成「形狀展示」
+
+     這個 partial 只放兩件不需要 JS 的東西：
+       1. <defs> 裡的 clipPath — 給 .flow-figure 用 clip-path: url(#…) 取用
+       2. .flow-field 的兩層底 — 換色時 ping-pong 交替淡入
+
+     divider 的線條由 assets/js/flow.js 依 data-flow-divider 動態產生
+     （stroke-dashoffset 動畫需要對個別 <path> 量 getTotalLength()，
+       用 <use> 取 <symbol> 會進 shadow tree 量不到，所以不做成 symbol）。
+     ============================================================ -->
+
+<svg class="flow-defs" width="0" height="0" aria-hidden="true" focusable="false">
+  <defs>
+    <!-- 湧 — 泉眼：上緣整圈拱起像井口，下緣是一道水面的波 -->
+    <clipPath id="flow-clip-spring" clipPathUnits="objectBoundingBox">
+      <path d="M0 .38
+               C0 .13 .21 0 .5 0
+               C.79 0 1 .13 1 .38
+               L1 .87
+               C.85 .96 .70 .83 .52 .90
+               C.35 .965 .17 1 0 .925
+               Z"/>
+    </clipPath>
+
+    <!-- 窪 — 窪處：上緣是水面的波，下緣收成一只承接的碗 -->
+    <clipPath id="flow-clip-basin" clipPathUnits="objectBoundingBox">
+      <path d="M0 .11
+               C.18 .005 .34 .17 .52 .10
+               C.70 .035 .84 .15 1 .055
+               L1 .68
+               C1 .885 .80 1 .5 1
+               C.20 1 0 .885 0 .68
+               Z"/>
+    </clipPath>
+
+    <!-- 流 — 流帶：上下緣都是波，用在橫幅、滿版出血的長條圖 -->
+    <clipPath id="flow-clip-stream" clipPathUnits="objectBoundingBox">
+      <path d="M0 .19
+               C.22 .02 .40 .23 .62 .12
+               C.80 .03 .92 .17 1 .07
+               L1 .83
+               C.84 .985 .64 .79 .44 .90
+               C.26 .995 .12 .85 0 .94
+               Z"/>
+    </clipPath>
+
+
+    <!-- ---- 標準幾何遮罩（參考「3 Standardized Image Masks」那張圖） ----
+         circle / node        正圓與超橢圓：人像、小節點
+         amorphous / organic  兩顆不同的軟塊：無定形、有機
+         oval                 直立橢圓：直邊 + 上下收圓
+         wave                 波浪切角：上緣與側邊直角，下緣一道波切掉兩個下角
+         軟塊是用固定種子沿圓周擾動半徑再平滑成閉合曲線產生的（角度保持等距，
+         一旦連角度也擾動，Catmull-Rom 會在頂點密集處拗出尖角）。 -->
+    <clipPath id="flow-clip-circle" clipPathUnits="objectBoundingBox">
+      <path d="M.5 0 C.7761 0 1 .2239 1 .5 C1 .7761 .7761 1 .5 1 C.2239 1 0 .7761 0 .5 C0 .2239 .2239 0 .5 0 Z"/>
+    </clipPath>
+    <clipPath id="flow-clip-node" clipPathUnits="objectBoundingBox">
+      <path d="M.5 0 C.82 0 1 .18 1 .5 C1 .82 .82 1 .5 1 C.18 1 0 .82 0 .5 C0 .18 .18 0 .5 0 Z"/>
+    </clipPath>
+    <clipPath id="flow-clip-amorphous" clipPathUnits="objectBoundingBox">
+      <path d="M0.8356 0.6943 C0.7677 0.8103 0.6112 0.9617 0.4995 0.9615 C0.3877 0.9612 0.2362 0.8107 0.1653 0.6927 C0.0944 0.5747 0.0183 0.3664 0.0742 0.2535 C0.1301 0.1406 0.3617 0.0134 0.5006 0.0154 C0.6394 0.0174 0.8514 0.1524 0.9072 0.2655 C0.9631 0.3787 0.9036 0.5783 0.8356 0.6943 Z"/>
+    </clipPath>
+    <clipPath id="flow-clip-organic" clipPathUnits="objectBoundingBox">
+      <path d="M0.9382 0.2763 C0.9895 0.3601 1.0093 0.5213 0.9744 0.6091 C0.9395 0.6969 0.8119 0.7471 0.7290 0.8033 C0.6461 0.8596 0.5634 0.9453 0.4770 0.9466 C0.3906 0.9478 0.2792 0.8765 0.2105 0.8110 C0.1417 0.7456 0.0701 0.6407 0.0643 0.5539 C0.0586 0.4670 0.1226 0.3617 0.1759 0.2899 C0.2293 0.2181 0.3026 0.1536 0.3844 0.1230 C0.4662 0.0924 0.5745 0.0806 0.6668 0.1062 C0.7591 0.1317 0.8869 0.1924 0.9382 0.2763 Z"/>
+    </clipPath>
+    <clipPath id="flow-clip-oval" clipPathUnits="objectBoundingBox">
+      <path d="M.5 0 C.80 0 1 .13 1 .30 L1 .70 C1 .87 .80 1 .5 1 C.20 1 0 .87 0 .70 L0 .30 C0 .13 .20 0 .5 0 Z"/>
+    </clipPath>
+    <clipPath id="flow-clip-wave" clipPathUnits="objectBoundingBox">
+      <path d="M0 0 L1 0 L1 .78 C.90 .93 .78 1 .62 .965 C.46 .93 .34 .84 .20 .875 C.11 .898 .05 .95 0 .93 Z"/>
+    </clipPath>
+  </defs>
+</svg>
+
+<!-- 背景色場：兩層輪流當「下一個顏色」，換色時只動 opacity。
+     直接重寫整片漸層會讓整個視窗每一幀重新光柵化，交替淡入則是合成器的事。
+     顏色不寫在這裡 —— 由各 section 的 data-flow-palette 宣告，flow.js 寫進 inline style。 -->
+<div class="flow-field" aria-hidden="true">
+  <!-- 深色段落共用這兩層（互相 ping-pong 換色，色差很小、看不出接縫） -->
+  <div class="flow-field__layer is-on" data-layer="a"></div>
+  <div class="flow-field__layer"       data-layer="b"></div>
+  <!-- 轉亮專用的一層：opacity 綁在最後那一段的進場進度上 -->
+  <div class="flow-field__light" data-layer="light"></div>
+</div>
