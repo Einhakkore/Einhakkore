@@ -1,20 +1,13 @@
 /* ============================================================
    EINHAKKORE — Site JavaScript
-   partials loader + scroll flow field + stagger reveal + 表單
+   partials loader + stagger reveal + 點擊複製 + 表單
    ============================================================ */
 
 (function () {
 
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const root = document.documentElement;
-
   // ---------- Shared partials loader ----------
-  // 每頁把 <div data-include="header|footer|newsletter|aurora|page-hero"></div>
+  // 每頁把 <div data-include="header|footer|newsletter|aurora|icons|flow"></div>
   // 換成 assets/partials/*.html 的內容，nav / footer / 訂閱只要改一次。
-  // 支援兩種輕量樣板語法，讓 page-hero 這類「殼相同、內容不同」的區塊也能共用一份 partial：
-  //   {{attr}}      → 換成 include 節點的 data-attr 值
-  //   <slot></slot> → 換成 include 節點原本的子節點（頁面自己寫的 h1 / p 等）
-  //   data-extra-class → 加到 partial 根節點的 class（例如 donate 頁的 .donate-hero）
   async function loadPartials() {
     const nodes = document.querySelectorAll("[data-include]");
     await Promise.all([...nodes].map(async node => {
@@ -22,138 +15,13 @@
       try {
         const res = await fetch(`assets/partials/${name}.html`, { cache: "no-cache" });
         if (!res.ok) throw new Error(res.status);
-        const html = await res.text();
-        const filled = html.replace(/\{\{(\w+)\}\}/g, (_, key) => node.dataset[key] || "");
         const tpl = document.createElement("template");
-        tpl.innerHTML = filled.trim();
-        const slot = tpl.content.querySelector("slot");
-        if (slot) slot.replaceWith(...node.childNodes);
-        if (node.dataset.extraClass) {
-          const root = tpl.content.firstElementChild;
-          if (root) root.classList.add(node.dataset.extraClass);
-        }
+        tpl.innerHTML = (await res.text()).trim();
         node.replaceWith(tpl.content);
       } catch (err) {
         console.warn(`[partials] failed to load "${name}"`, err);
       }
     }));
-  }
-
-  // ---------- #flow-bg：只在 home / give / about 三頁注入 ----------
-  function isFlowPage() {
-    // data-flow="sections" 的頁面改用 assets/js/flow.js 的 .flow-field
-    // 以 section 為單位換色；這支是依整頁捲動進度每一幀寫 --bg1/--bg2，
-    // 兩個一起跑會互相覆寫，所以在這裡讓路。
-    if (document.body.dataset.flow === 'sections') return false;
-    const p = document.body.getAttribute('data-page');
-    return p === 'home' || p === 'give' || p === 'about';
-  }
-  function injectFlowBg() {
-    if (!isFlowPage()) return;
-    if (document.getElementById('flow-bg')) return;
-    const el = document.createElement('div');
-    el.id = 'flow-bg';
-    el.setAttribute('aria-hidden', 'true');
-    document.body.prepend(el);
-  }
-
-  // ---------- Color parsing / lerp ----------
-  function parseColor(str) {
-    str = String(str || '').trim();
-    if (str[0] === '#') {
-      let s = str.slice(1);
-      if (s.length === 3) s = s.split('').map(c => c + c).join('');
-      const n = parseInt(s, 16);
-      return { r: (n >> 16) & 0xff, g: (n >> 8) & 0xff, b: n & 0xff, a: 1 };
-    }
-    const m = str.match(/rgba?\(([^)]+)\)/i);
-    if (m) {
-      const p = m[1].split(',').map(v => parseFloat(v.trim()));
-      return {
-        r: p[0] || 0, g: p[1] || 0, b: p[2] || 0,
-        a: (p[3] === undefined) ? 1 : p[3]
-      };
-    }
-    return { r: 0, g: 0, b: 0, a: 1 };
-  }
-  const lerp = (a, b, t) => a + (b - a) * t;
-  function lerpColor(a, b, t) {
-    return {
-      r: lerp(a.r, b.r, t),
-      g: lerp(a.g, b.g, t),
-      b: lerp(a.b, b.b, t),
-      a: lerp(a.a, b.a, t),
-    };
-  }
-  const fmtColor = c => `rgba(${c.r | 0},${c.g | 0},${c.b | 0},${(+c.a).toFixed(3)})`;
-
-  // ---------- Scroll flow field：只在 home / give / about 跑 ----------
-  function initFlowField() {
-    if (!isFlowPage()) return;
-    const cs = getComputedStyle(root);
-    // 寫入 <body> 而非 <html>：body 有 CSS 變數宣告（page-scoped 深色主題），
-    // 直接寫在 <html> 的 inline style 反而會被 body 的宣告覆蓋掉。
-    const target = document.body;
-    const T = (name, fb) => (cs.getPropertyValue(name).trim() || fb);
-
-    const P_STOPS = [
-      { p: 0.00, bg1: '--stop-0-bg1', bg2: '--stop-0-bg2', fg: '--stop-0-fg' },
-      { p: 0.42, bg1: '--stop-1-bg1', bg2: '--stop-1-bg2', fg: '--stop-1-fg' },
-      { p: 0.72, bg1: '--stop-2-bg1', bg2: '--stop-2-bg2', fg: '--stop-2-fg' },
-      { p: 0.90, bg1: '--stop-3-bg1', bg2: '--stop-3-bg2', fg: '--stop-3-fg' },
-      { p: 1.00, bg1: '--stop-4-bg1', bg2: '--stop-4-bg2', fg: '--stop-4-fg' },
-    ].map(s => ({
-      p: s.p,
-      bg1:  parseColor(T(s.bg1,  '#22394A')),
-      bg2:  parseColor(T(s.bg2,  '#182C3B')),
-      fg:   parseColor(T(s.fg,   '#F5F1E8')),
-    }));
-
-    function writeStops(p) {
-      let i = 0;
-      while (i < P_STOPS.length - 1 && P_STOPS[i + 1].p < p) i++;
-      const a = P_STOPS[i];
-      const b = P_STOPS[Math.min(i + 1, P_STOPS.length - 1)];
-      const span = b.p - a.p;
-      const t = span > 0 ? Math.min(1, Math.max(0, (p - a.p) / span)) : 0;
-      target.style.setProperty('--bg1',  fmtColor(lerpColor(a.bg1,  b.bg1,  t)));
-      target.style.setProperty('--bg2',  fmtColor(lerpColor(a.bg2,  b.bg2,  t)));
-      target.style.setProperty('--fg',   fmtColor(lerpColor(a.fg,   b.fg,   t)));
-    }
-
-    if (reducedMotion) {
-      writeStops(0);
-      return;
-    }
-
-    let targetY = window.scrollY;
-    let curY = targetY;
-    let docHeight = document.documentElement.scrollHeight;
-    let winHeight = window.innerHeight;
-    function recomputeHeights() {
-      docHeight = document.documentElement.scrollHeight;
-      winHeight = window.innerHeight;
-    }
-
-    window.addEventListener('scroll', () => { targetY = window.scrollY; }, { passive: true });
-    window.addEventListener('resize', recomputeHeights, { passive: true });
-    window.addEventListener('load', recomputeHeights);
-
-    let sinceRecomp = 0;
-    function tick() {
-      const diff = targetY - curY;
-      if (Math.abs(diff) < 0.5) curY = targetY;
-      else curY += diff * 0.14;
-
-      const maxScroll = Math.max(1, docHeight - winHeight);
-      const p = Math.min(1, Math.max(0, curY / maxScroll));
-      writeStops(p);
-
-      if (++sinceRecomp > 60) { recomputeHeights(); sinceRecomp = 0; }
-      requestAnimationFrame(tick);
-    }
-    writeStops(0);
-    requestAnimationFrame(tick);
   }
 
   // ---------- Stagger reveal ----------
@@ -219,32 +87,6 @@
     select.addEventListener('change', () => syncTo(select.value));
   }
 
-  function initEmailCopy() {
-    document.querySelectorAll('.email-card').forEach(card => {
-      card.addEventListener('click', async () => {
-        const email = card.dataset.email;
-        if (!email) return;
-        try {
-          if (navigator.clipboard && navigator.clipboard.writeText) {
-            await navigator.clipboard.writeText(email);
-          } else {
-            const ta = document.createElement('textarea');
-            ta.value = email;
-            ta.setAttribute('readonly', '');
-            ta.style.position = 'fixed'; ta.style.opacity = '0';
-            document.body.appendChild(ta);
-            ta.select();
-            document.execCommand('copy');
-            document.body.removeChild(ta);
-          }
-          showSnackbar('已複製 Email');
-        } catch (e) {
-          showSnackbar('複製失敗，請手動選取');
-        }
-      });
-    });
-  }
-
   function initInteractivity() {
 
     // ---------- Mobile menu ----------
@@ -264,12 +106,8 @@
       });
     }
 
-    // ---------- Newsletter ----------
-    // 訂閱改為直接外連 https://enhakkore.substack.com/（平台限制，站內不再收單）
-
     // ---------- Contact guide cards ↔ Category select ----------
     initContactGuides();
-    initEmailCopy();
 
     // ---------- Contact / Volunteer forms ----------
     // 送出後不整段隱藏表單，改在表單下方顯示提示訊息（與 donate 頁一致）。
@@ -318,13 +156,7 @@
         form.reset();
       });
     });
-    // ---------- Contact / volunteer forms ----------
-    // 表單送出改由各頁面底部的 Firebase module（serve.html / contact.html）
-    // 直接處理：寫入 Firestore、App Check 驗證、honeypot 檢查與狀態訊息。
-    // 這裡不再攔截 submit，以免覆蓋掉真正的送出邏輯。
 
-    injectFlowBg();
-    initFlowField();
     initReveal();
     initCopyToClipboard();
   }
