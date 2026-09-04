@@ -2,6 +2,12 @@
 
 純靜態 HTML / CSS / JavaScript 網站，無需 build。
 
+## 設計規範
+
+寫新樣式前請先看 **[`DESIGN_GUIDELINES.md`](DESIGN_GUIDELINES.md)** ——
+顏色、字級、圓角、版面、背景色場行為、照片遮罩形狀、動效時間的完整規則。
+`DESIGN_TOKENS.md` 是 token 合併那一輪的歷史紀錄，其中的顏色章節已被 V3 取代。
+
 ## 設計重點
 
 - 🌊 **Flow 色場**：背景以 section 為單位換色（`data-flow-palette`），
@@ -64,7 +70,8 @@ python3 -m http.server 8000
 
 `assets/css/styles.css` 最上面的 `:root` 是 V3 色票（Navy / Cobalt / Mineral /
 Aqua / Amber / Sign），每一階都註明了實測對比與「能不能承載文字」。
-完整的 token 系統與合併理由見 `DESIGN_TOKENS.md`。
+用色規則（哪些色能承載文字、禁止色票）見 `DESIGN_GUIDELINES.md` §1；
+合併理由的歷史紀錄見 `DESIGN_TOKENS.md`。
 
 改色前請先跑一次對比稽核：
 
