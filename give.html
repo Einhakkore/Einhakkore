@@ -98,250 +98,45 @@
       <p>宣教士在跨文化的環境中前行，常需面對複雜與不易。隱哈歌利相信，真誠的關懷會先接住情緒，再帶出方向與實際步驟。我們尊重每個生命的節奏，不給標準答案，但在關鍵時刻，我們希望具體、務實地陪著他們一起走過。</p>
     </div>
   <div class="wrap">
-    <div class="donate-layout">
+    <div class="donate-stack">
 
-      <!-- ============================================================
-           左欄（>1068px 時固定 sticky）        
-           ============================================================ -->
-      <aside class="donate-left reveal">
-
-  <div class="budget">
-    <h3>2026 年度預算 共<em>67.7 萬</em></h3>
-    <p>我們尊重神的主權，也誠實面對機構運作的有限與需要。<br>
-       隱哈歌利堅持財務公開透明，以下是我們 2026 年度的整體預算規劃與分佈：</p>
-
-    <div class="donut-wrap">
-      <svg id="donut" viewBox="0 0 560 400" role="img" aria-label="2026 年度預算分佈圓環圖"></svg>
-    </div>
-
-    <a class="btn btn-text" href="about.html">
-      了解事工
-      <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg>
-    </a>
-  </div>
-
-<script>
-  const data = [
-    { name:'倡議與調研',value:20, note:'約 20%',            color:'var(--ink-900)' },
-    { name:'資源整合平台', value:54, note:'約 54%',            color:'var(--ink-700)' },
-    { name:'關顧支持網絡', value:8,  note:'約 8%',             color:'var(--sky-700)' },
-    { name:'行政管理費用',value:18, note:'117,280（約 18%）', color:'var(--sky-500)' },
-  ];
-
-  const cx = 280, cy = 190;   // 圓心
-  const r  = 100;             // 圓環中線半徑
-  const sw = 42;              // 圓環厚度
-  const pad = 1.3;            // 每段之間的空隙（角度）
-  const total = data.reduce((s,d)=>s+d.value,0);
-
-  const NS = 'http://www.w3.org/2000/svg';
-  const svg = document.getElementById('donut');
-
-  const rad = a => (a - 90) * Math.PI / 180;           // 0° 從正上方開始
-  const pt  = (radius, ang) => ({
-    x: cx + radius * Math.cos(rad(ang)),
-    y: cy + radius * Math.sin(rad(ang))
-  });
-  const el = (tag, attrs) => {
-    const n = document.createElementNS(NS, tag);
-    for (const k in attrs) n.setAttribute(k, attrs[k]);
-    return n;
-  };
-
-  let cum = 0;
-
-  data.forEach(d => {
-    const a0 = cum / total * 360;
-    cum += d.value;
-    const a1 = cum / total * 360;
-    const mid = (a0 + a1) / 2;
-
-    const g = el('g', { class:'seg' });
-
-    // ── 圓弧 ──
-    const s = pt(r, a0 + pad);
-    const e = pt(r, a1 - pad);
-    const large = (a1 - a0) > 180 ? 1 : 0;
-    const arc = el('path', {
-      class:'seg-arc',
-      d:`M ${s.x} ${s.y} A ${r} ${r} 0 ${large} 1 ${e.x} ${e.y}`,
-      fill:'none',
-      stroke:d.color,
-      'stroke-width':sw,
-      'stroke-linecap':'butt'
-    });
-    g.appendChild(arc);
-
-    // ── 引導線 ──
-    const edge  = pt(r + sw/2, mid);          // 圓環外緣
-    const elbow = pt(r + sw/2 + 20, mid);     // 轉折點
-    const right = pt(r, mid).x >= cx;         // 判斷在左半還右半
-    const labelX = right ? 430 : 130;
-    const lineEndX = right ? labelX - 8 : labelX + 8;
-
-    g.appendChild(el('path', {
-      class:'lead',
-      d:`M ${edge.x} ${edge.y} L ${elbow.x} ${elbow.y} L ${lineEndX} ${elbow.y}`
-    }));
-
-    // 顏色小圓點
-    const dot = el('circle', { class:'dot', cx:lineEndX, cy:elbow.y, r:3 });
-    dot.style.color = d.color;
-    g.appendChild(dot);
-
-    // ── 文字（兩行）──
-    const anchor = right ? 'start' : 'end';
-    const name = el('text', { x:labelX, y:elbow.y - 4, 'text-anchor':anchor, class:'lbl-name' });
-    name.textContent = d.name;
-    const note = el('text', { x:labelX, y:elbow.y + 14, 'text-anchor':anchor, class:'lbl-note' });
-    note.textContent = d.note;
-    g.appendChild(name);
-    g.appendChild(note);
-
-    svg.appendChild(g);
-  });
-
-  // ── 中間總金額 ──
-  const c1 = el('text', { x:cx, y:cy - 16, 'text-anchor':'middle', class:'center-sub' });
-  c1.textContent = '2026 年度總預算';
-  const c2 = el('text', { x:cx, y:cy + 20, 'text-anchor':'middle' });
-  const big  = el('tspan', { class:'center-big' }); big.textContent = '67.7';
-  const unit = el('tspan', { class:'center-unit', dx:'4' }); unit.textContent = '萬';
-  c2.appendChild(big); c2.appendChild(unit);
-  svg.appendChild(c1);
-  svg.appendChild(c2);
-</script>
-
-      </aside>
-
-      <!-- ============================================================
-           右欄（可滾動）＝ Section A / B / C
-           ============================================================ -->
-      <div class="donate-right">
-
-        <!-- ---------- Section A ---------- -->
-        <div class="donate-block reveal">
-          <h2>📣 重要公告——關於我們的合作夥伴</h2>
-          <h3>隱哈歌利 × 台灣好地方社區發展協會</h3>
-          <p>為了讓財務流程更完善、提供支持者更放心的奉獻管道，隱哈歌利目前與「社團法人台灣好地方社區發展協會」展開正式的專案合作。</p>
-          <p>目前隱哈歌利的所有奉獻將由「好地方協會」協助統籌收款、管理帳務並協助開立正式的奉獻收據。請大家放心，您的每一分奉獻，都將專款專用於隱哈歌利的事工推動中，陪伴我們走穩每一步。</p>
-        </div>
-
-        <!-- ---------- Section B：匯款與奉獻確認（Step 1 選匯款方式 / Step 2 填表） ---------- -->
-        <div class="donate-block reveal">
-          <h2>匯款與奉獻資訊</h2>
-          <p>您可以單次奉獻，或在您的網路銀行設定每月固定轉帳（定期定額），成為我們長期的關顧夥伴。</p>
-
-          <div class="give-track">
-            <div class="give-step">
-              <span class="give-step-num">1</span>
-              <span class="give-step-title">選擇匯款方式</span>
-            </div>
-            <div class="give-step-body">
-              <p class="desc">以下兩種方式擇一即可，銀行匯款或線上刷卡都能完成奉獻。</p>
-
-              <h4 class="give-option-name">
-                <span class="give-option-tag">A</span>銀行匯款
-              </h4>
-              <div class="remit-note">
-                <p>為了確保您的款項順利進入隱哈歌利的專案，請務必在匯款時協助以下備註：</p>
-                <ol>
-                  <li><b>網路銀行轉帳：</b>請於「備註欄」或「轉帳附言」務必填寫：<b>為隱哈歌利奉獻</b></li>
-                  <li><b>臨櫃匯款：</b>請在解款行備註註明：<b>為隱哈歌利奉獻</b></li>
-                </ol>
-              </div>
-
-              <div class="bank-card">
-                <dl>
-                  <dt>戶名</dt><dd>台灣好地方協會</dd>
-                  <dt>銀行</dt><dd>808（玉山銀行／忠孝分行）</dd>
-                  <dt>帳號</dt>
-                  <dd>
-                    <button type="button" class="copy-btn" data-copy="0875940142895" data-label="帳號" title="點擊複製帳號">
-                      0875940142895
-                      <svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <rect x="9" y="9" width="13" height="13" rx="2"/>
-                        <path d="M5 15V5a2 2 0 0 1 2-2h10"/>
-                      </svg>
-                    </button>
-                  </dd>
-                  <dt>統編</dt><dd>60291512</dd>
-                </dl>
-              </div>
-
-              <h4 class="give-option-name">
-                <span class="give-option-tag">B</span>線上刷卡
-              </h4>
-              <p>透過信用卡連結，也能快速完成單次或定期奉獻。</p>
-              <!-- 👉 刷卡連結：把 href="#REPLACE_WITH_YOUR_PAYMENT_LINK" 換成金流頁面網址 -->
-              <a class="btn btn-text pay-cta" href="#REPLACE_WITH_YOUR_PAYMENT_LINK" target="_blank" rel="noopener">
-                前往刷卡頁面
-                <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg>
-              </a>
-            </div>
-
-            <div class="give-step">
-              <span class="give-step-num">2</span>
-              <span class="give-step-title">填寫奉獻確認表單</span>
-            </div>
-            <div class="give-step-body give-step-body--last">
-              <p class="desc">完成轉帳或刷卡後，請填寫以下資訊，方便我們對帳與開立收據。</p>
-
-              <form class="donate-form" id="donationForm" novalidate>
-            <!-- honeypot 陷阱欄位：對真人隱藏，機器人才會亂填。
-                 送出時若此欄非空即靜默丟棄，避免透露陷阱存在。 -->
-            <input type="text" name="website" class="hp-field"
-                   tabindex="-1" autocomplete="off" aria-hidden="true">
-
-            <div class="field">
-              <label>1. 奉獻者姓名（或建檔戶名）<span class="req">*</span></label>
-              <input type="text" name="name" required placeholder="王小明">
-            </div>
-
-            <div class="field-row">
-              <div class="field">
-                <label>2. 轉帳日期 <span class="req">*</span></label>
-                <input type="date" name="date" required>
-              </div>
-              <div class="field">
-                <label>3. 奉獻金額 <span class="req">*</span></label>
-                <input type="number" name="amount" min="1" required placeholder="1000">
-              </div>
-            </div>
-
-            <div class="field-row">
-              <div class="field">
-                <label>4. 轉帳帳號末五碼 <span class="req">*</span></label>
-                <input type="text" name="last5" required inputmode="numeric" pattern="\d{5}" maxlength="5" placeholder="12345">
-              </div>
-              <div class="field">
-                <label>5. 聯絡電話</label>
-                <input type="tel" name="phone" placeholder="09xx-xxx-xxx">
-              </div>
-            </div>
-
-            <div class="field">
-              <label>6. 收據寄送地址<span class="hint">（第一次奉獻或需開立收據請務必提供）</span></label>
-              <textarea name="address" placeholder="郵遞區號 + 完整地址"></textarea>
-            </div>
-
-            <label class="form-consent">
-              <input type="checkbox" name="consent" required>
-              <span>我已閱讀並同意隱哈歌利的<a href="terms.html">隱私權政策及服務條款</a></span>
-            </label>
-
-            <button class="btn btn-primary" type="submit" id="donateSubmit">
-              送出確認
-              <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg>
-            </button>
-
-            <div class="form-status" id="donationStatus" role="status" aria-live="polite"></div>
-          </form>
-            </div>
-          </div>
-        </div>
-
+      <!-- ---------- Section A：合作夥伴公告 ---------- -->
+      <div class="donate-block reveal">
+        <h2>📣 重要公告——關於我們的合作夥伴</h2>
+        <h3>隱哈歌利 × 台灣好地方社區發展協會</h3>
+        <p>為了讓財務流程更完善、提供支持者更放心的奉獻管道，隱哈歌利目前與「社團法人台灣好地方社區發展協會」展開正式的專案合作。</p>
       </div>
+
+      <!-- ---------- Section B：匯款與奉獻資訊 ---------- -->
+      <div class="donate-block reveal">
+        <h2>匯款與奉獻資訊</h2>
+        <p>您可以單次奉獻，或在您的網路銀行設定每月固定轉帳（定期定額），成為我們長期的關顧夥伴。</p>
+
+        <div class="give-option">
+          <h4 class="give-option-name">
+            <span class="give-option-tag">A</span>銀行匯款
+          </h4>
+          <p>為了確保您的款項順利進入隱哈歌利的專案，請於「備註欄」或「轉帳附言」務必填寫：<b>為隱哈歌利奉獻</b>。</p>
+          <!-- 👉 匯款連結：把 href="#REPLACE_WITH_YOUR_TRANSFER_LINK" 換成匯款資訊頁面網址 -->
+          <a class="btn btn-text pay-cta" href="#REPLACE_WITH_YOUR_TRANSFER_LINK" target="_blank" rel="noopener">
+            前往匯款
+            <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg>
+          </a>
+        </div>
+
+        <div class="give-option">
+          <h4 class="give-option-name">
+            <span class="give-option-tag">B</span>信用卡付款
+          </h4>
+          <p>透過信用卡連結，也能快速完成單次或定期奉獻。</p>
+          <!-- 👉 刷卡連結：把 href="#REPLACE_WITH_YOUR_PAYMENT_LINK" 換成金流頁面網址 -->
+          <a class="btn btn-text pay-cta" href="#REPLACE_WITH_YOUR_PAYMENT_LINK" target="_blank" rel="noopener">
+            前往刷卡頁面
+            <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg>
+          </a>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -371,92 +166,6 @@
 <script src="assets/js/site.js"></script>
 <script src="assets/js/flow.js"></script>
 
-<!-- =========================================================
-     Section C 表單 — Firebase 串接
-     送出後寫入 Firestore「donations」集合，
-     由 Cloud Function 觸發自動寄信到 einhakkore@gmail.com
-     ========================================================= -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, serverTimestamp }
-    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-  // 共用 Firebase 設定（placeholder 值，實際安全性由 Firestore Rules + App Check 負責）
-  import { firebaseConfig } from "./assets/js/firebase-config.js";
-
-  const app = initializeApp(firebaseConfig);
-  const db  = getFirestore(app);
-
-  /* ╔══════════════════════════════════════════════════════════╗
-     ║  App Check（防機器人／垃圾寫入）                            ║
-     ║  取得 reCAPTCHA v3 site key 後，解除下方註解即可啟用；      ║
-     ║  啟用後 Firestore 會拒收沒有 App Check token 的請求。       ║
-     ║  取得 site key 的步驟見專案根目錄的 FIREBASE_SETUP.md。     ║
-     ╚══════════════════════════════════════════════════════════╝ */
-import { initializeAppCheck, ReCaptchaV3Provider }
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app-check.js";
-initializeAppCheck(app, {
-  provider: new ReCaptchaV3Provider("6LcXU18tAAAAAG50yNTaHpCQlwnF8hZXJl1VydWr"),
-  isTokenAutoRefreshEnabled: true
-});
-
-  const form      = document.getElementById("donationForm");
-  const statusEl  = document.getElementById("donationStatus");
-  const submitBtn = document.getElementById("donateSubmit");
-
-  function setStatus(msg, type){
-    statusEl.textContent = msg;
-    statusEl.className = "form-status show " + type;
-  }
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const fd = new FormData(form);
-
-    // honeypot：真人不會填 website 這欄，若被填 → 判定為機器人並靜默丟棄
-    if ((fd.get("website") || "").trim() !== "") {
-      return;
-    }
-
-    // 注意：consent（同意條款）僅於前端驗證，不寫入 Firestore；
-    // 寫入的欄位需與 firestore.rules 的允許清單完全一致。
-    const data = {
-      name:    (fd.get("name")    || "").trim(),
-      date:     fd.get("date")    || "",
-      amount:  Number(fd.get("amount") || 0),
-      last5:   (fd.get("last5")   || "").trim(),
-      phone:   (fd.get("phone")   || "").trim(),
-      address: (fd.get("address") || "").trim(),
-    };
-
-    if (!fd.get("consent")) {
-      setStatus("請勾選同意隱私權及服務條款。", "err");
-      return;
-    }
-    if (!data.name || !data.date || !data.amount || !/^\d{5}$/.test(data.last5)) {
-      setStatus("請確認必填欄位是否完整，帳號末五碼需為 5 位數字。", "err");
-      return;
-    }
-
-    submitBtn.disabled = true;
-    setStatus("送出中…", "ok");
-
-    try {
-      await addDoc(collection(db, "donations"), {
-        ...data,
-        createdAt: serverTimestamp(),
-        source: "give.html"
-      });
-      form.reset();
-      setStatus("已收到您的奉獻確認，感謝您的擺上！我們會盡快對帳並與您聯繫。", "ok");
-    } catch (err) {
-      console.error(err);
-      setStatus("送出失敗，請稍後再試，或直接來信 einhakkore@gmail.com。", "err");
-    } finally {
-      submitBtn.disabled = false;
-    }
-  });
-</script>
 </body>
 </html>
 
