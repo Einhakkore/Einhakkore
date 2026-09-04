@@ -1694,6 +1694,18 @@ body[data-page="give"] main > .section {
 .page-hero.donate-hero h1 em { color: var(--amber-400); }
 .page-hero.donate-hero p { color: rgba(255, 255, 255, .92); text-shadow: 0 1px 12px rgba(26, 46, 64, .35); }
 
+/* ---- 單欄版型：公告卡 → 匯款卡由上而下閱讀，行長限制在舒適的閱讀寬度 ---- */
+.donate-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  max-width: 760px;
+  margin: 0 auto;
+}
+/* 匯款方式（A / B）之間的間距，第一個緊接前面的引言段落 */
+.give-option { margin-top: 28px; }
+.give-option .pay-cta { margin-top: 4px; }
+
 /* ---- 左固定 / 右滾動 版型（放寬斷點，避免筆電視窗被擠成單欄） ---- */
 .donate-layout {
   display: grid;
