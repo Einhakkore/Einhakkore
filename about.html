@@ -935,64 +935,29 @@
     }
 
     /* ============================================================
-       文案斷行規則（本頁共用）
+       文案斷行規則（本頁的例外）
        ------------------------------------------------------------
-       中文沒有空格，瀏覽器可以在任何兩個字之間換行，所以「行尾落在
-       哪裡」預設是由 max-width 決定的，而不是由語意決定的。這一段把
-       規則集中寫在一起，讓全頁的斷行有一致的判準：
-
-       1. 語意優先：標題／短句用 text-wrap: balance，讓行長自己平均，
-          最後一行不會只剩一兩個字；長段落用 text-wrap: pretty，
-          只修掉孤行，段落內仍保持自然的閱讀節奏。
-       2. 專有名詞、關鍵詞（隱哈歌利、「屬靈英雄」）包 .kw，
-          不讓品牌名被切在兩行。
-       3. 只有 hero、section 標題、引言、CTA 這種「刻意的句子」才用
-          <br> 主動控制節奏，而且桌機與手機分開：.br-desktop 只在
-          寬螢幕定義節奏，.br-mobile 只在窄螢幕接手；一般內文不用 <br>。
-       4. 寬度不夠才是真正的問題時，先改 max-width / padding，
-          不動文案。
+       規則本體在 assets/css/styles.css 的「COMMON: 文案斷行規則」，
+       全站共用：標題 balance、段落 pretty、.kw 不斷行、
+       .br-desktop / .br-mobile 分別定義兩邊的語意斷行。
+       這裡只寫 about 這一頁跟預設不一樣的地方。
        ============================================================ */
 
-    /* 短標題／短句：讓行長自己平均，避免「同行者」這種孤字尾行。
-       balance 只看寬度、不看語意，所以句子一長就可能切在詞中間
-       （「我／們」「不夠／努力」）。因此只給「一兩行就結束、且沒有
-       明確句讀節奏」的短文字用；長句一律改用下面的 <br> 控制。 */
-    .scr-hero__title,
-    .section-head h2,
-    .about-cta h2,
+    /* 這幾句是短句，交給 balance 比自然斷行好看（預設 p 是 pretty） */
     .host-card__desc,
     .cta-lede,
     .cta-close {
       text-wrap: balance;
     }
 
-    /* 長段落：不平均行長（中文段落不該每行一樣長），只避免孤行尾巴 */
-    .section-head .lead,
-    .vision__title,
-    .vision__body,
-    .vision__list li,
-    .person-card__quote p,
-    .net-block__note,
-    .org-note {
-      text-wrap: pretty;
-    }
+    /* vision 標題有明確的句讀節奏，桌機用 <br class="br-desktop"> 分行，
+       窄螢幕則要自然 reflow —— balance 會為了行長平均把詞切開，
+       所以這裡退回 pretty（覆寫全站 h3 的 balance）。 */
+    .vision__title { text-wrap: pretty; }
 
-    /* 專有名詞／關鍵詞不被切斷 */
-    .kw { white-space: nowrap; }
-
-    /* 語意斷行。兩個方向各自獨立：
-       .br-desktop 只在寬螢幕定義節奏（窄螢幕讓文字自然 reflow），
-       .br-mobile  只在窄螢幕接手（寬螢幕維持一行）。 */
-    br.br-mobile  { display: none; }
-    br.br-desktop { display: inline; }
-    @media (max-width: 560px) {
-      br.br-mobile  { display: inline; }
-      br.br-desktop { display: none; }
-    }
-
-    /* TEAM 的導言是兩個完整句子（中間已有 <br>），
-       46ch 的量測會讓第一句剛好多出兩個字掉到下一行（「…一起服／事。」）。
-       這裡把這一段的量測放寬到放得下一整句，句子就不會被切開。 */
+    /* TEAM 的導言是兩個完整句子（中間有 br-desktop）。
+       46ch 的量測會讓第一句剛好多出兩個字掉到下一行（「…一起服／事。」），
+       把這一段的量測放寬到放得下一整句，句子就不會被切開。 */
     .section-team .section-head { max-width: 54ch; }
 
     /* 窄螢幕的 vision panel：56px 的左右內距會把可讀寬度吃到只剩

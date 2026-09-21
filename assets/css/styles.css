@@ -655,6 +655,73 @@ body[data-header-theme="dark"]  .logo .logo-light { opacity: 0; }
 }
 
 /* -----------------------------------------------------------
+   COMMON: 文案斷行規則（全站）
+   -----------------------------------------------------------
+   中文沒有空格，瀏覽器可以在任何兩個字之間換行，所以「行尾落在哪裡」
+   預設是由 max-width 決定的，而不是由語意決定的。結果就是標題行尾只
+   剩一兩個字、一個詞被切成兩半、品牌名跨行。這一段把全站的判準集中：
+
+   1. 語意優先，不是行長一致。
+      標題／短句 → text-wrap: balance（行長自己平均，尾行不會剩碎字）
+      長段落     → text-wrap: pretty（只修孤行，段落內保留自然節奏）
+      balance 只看寬度、不看語意，長句可能切在詞中間（「我／們」），
+      所以「有明確句讀節奏的長標題」不要用 balance，改用第 3 點。
+   2. 專有名詞、關鍵詞、品牌名包 .kw，不讓它被切成兩行。
+   3. hero、section 標題、引言、CTA 這類刻意的句子可以用 <br> 定義
+      節奏，而且桌機與手機分開，不互相沿用：
+        .br-desktop → 只在寬螢幕生效（窄螢幕讓文字自然 reflow）
+        .br-mobile  → 只在窄螢幕生效（寬螢幕維持一行）
+      一般內文不要用 <br> 控制斷行。
+   4. 真正的問題是「寬度不對」時，先調 max-width / padding / 字級，
+      不要改文案。量測的目標是一行 20–40 個中文字。
+   ----------------------------------------------------------- */
+
+/* 全站預設：不追求每行一樣長（中文段落不該如此），只避免孤行尾巴。
+   text-wrap 會繼承，所以寫在 body 上，新加的區塊自動吃到同一套規則。 */
+body { text-wrap: pretty; }
+
+/* 標題與短句：讓行長自己平均，尾行不會只剩一兩個字。
+   但「作者已經用 <br> 定義過節奏」的標題不要讓 balance 插手：
+   balance 只看寬度，會為了行長平均把已經斷好的句子重新切開
+   （實測會把兩行的標題拆成四行）。作者的節奏優先。
+
+   因為 .br-desktop / .br-mobile 各只在一邊生效，判斷要分兩邊寫：
+   在窄螢幕，只帶 .br-desktop 的標題等於沒有斷行，balance 可以接手；
+   寬螢幕反之。`:not(:has(br:not(.br-x)))` 同時涵蓋「完全沒有 <br>」。 */
+.stat-cell__label,
+.field-card__name,
+.caption {
+  text-wrap: balance;
+}
+@media (max-width: 560px) {
+  h1:not(:has(br:not(.br-desktop))),
+  h2:not(:has(br:not(.br-desktop))),
+  h3:not(:has(br:not(.br-desktop))),
+  h4:not(:has(br:not(.br-desktop))) { text-wrap: balance; }
+}
+@media (min-width: 561px) {
+  h1:not(:has(br:not(.br-mobile))),
+  h2:not(:has(br:not(.br-mobile))),
+  h3:not(:has(br:not(.br-mobile))),
+  h4:not(:has(br:not(.br-mobile))) { text-wrap: balance; }
+}
+
+/* 專有名詞／關鍵詞不被切斷 */
+.kw { white-space: nowrap; }
+
+/* 語意斷行：桌機與手機各自定義，互不沿用 */
+br.br-mobile  { display: none; }
+br.br-desktop { display: inline; }
+@media (max-width: 560px) {
+  br.br-mobile  { display: inline; }
+  br.br-desktop { display: none; }
+}
+
+/* home 的置中 section head：62ch 的量測讓主標第二個子句差幾個字
+   放不下，行尾只剩「更穩健。」。放寬到 70ch，句子就能整句成行。 */
+body[data-page="home"] .section-head--center { max-width: 70ch; }
+
+/* -----------------------------------------------------------
    COMMON: wrap
    ----------------------------------------------------------- */
 /* V3 §13：Max 1280 / 側邊留白 桌機 64、平板 40、手機 20 */
@@ -2412,7 +2479,10 @@ body[data-page="home"] .feature-text .link:hover {
      舊版每個大標各自寫一組 clamp()，同一個「區塊主標」角色卻有四條不同曲線。
      現在字級全部靜態，窄螢幕的降階集中在這裡處理，一眼看得完整層級。 */
   .hero h1                { font-size: var(--fs-5xl); }
-  .page-hero h1           { font-size: var(--fs-4xl); }
+  /* 內頁 hero 的主標是整頁最大的一句話，字級一固定在 28px，
+     400px 以下最後一行就會只剩一兩個字（serve 的「…的網絡」）。
+     讓它在窄螢幕跟著視窗縮，句子才留得住。 */
+  .page-hero h1           { font-size: clamp(22px, 6.9vw, 28px); }
   .section-head h2        { font-size: var(--fs-4xl); }
   .feature-text h2        { font-size: var(--fs-4xl); }
   .cta-poem               { font-size: var(--fs-4xl); }
