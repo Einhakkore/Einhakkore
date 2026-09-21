@@ -1855,7 +1855,20 @@ body[data-page="home"] .hero .btn-ghost:hover {
 body[data-page="give"] main > .section {
   position: relative;
   isolation: isolate;
+  /* 這一頁的每段都要能在一個視窗內讀完，並且讓下一段從下緣露出一截
+     —— 露出的那一條是往下捲的動機。所以垂直留白比全站的
+     clamp(88px, 12vh, 140px) 收一階。 */
+  padding-block: clamp(56px, 7vh, 96px);
 }
+/* 段頭整組收一階：全站那組留白是給「一段一畫面」的版面用的，
+   這一頁要的是一段讀完還看得到下一段。 */
+body[data-page="give"] .section-head           { margin-bottom: clamp(24px, 3vh, 36px); }
+/* 裝飾數字在這一頁只是段落的標記，不需要 56px 的存在感 */
+body[data-page="give"] .section-num            { font-size: var(--fs-5xl); margin-bottom: 4px; }
+body[data-page="give"] .section-eyebrow        { margin-bottom: 14px; }
+body[data-page="give"] .section-head h2        { margin-bottom: 14px; }
+/* cta-label 預設 40px 的下緣留白，置中的 WHY 段落裡太鬆 */
+body[data-page="give"] .section-head--center .cta-label { margin-bottom: 18px; }
 
 /* ---- Donate hero：滿版背景圖 + ink-800 漸層 30% → 100% 融入背景 ---- */
 /* 左右留白沿用 .page-hero 那組（內容收在 1280 的量測裡），
@@ -1895,17 +1908,113 @@ body[data-page="give"] main > .section {
 .page-hero.donate-hero h1 em { color: var(--amber-400); }
 .page-hero.donate-hero p { color: rgba(255, 255, 255, .92); text-shadow: 0 1px 12px rgba(26, 46, 64, .35); }
 
-/* ---- 單欄版型：公告卡 → 匯款卡由上而下閱讀，行長限制在舒適的閱讀寬度 ---- */
-.donate-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-  max-width: 760px;
-  margin: 0 auto;
+/* ---- Give 頁：編輯式敘事段落（取代原本的白卡） ----
+   V3 §5「少用卡片」：深色面上直接排字，段落之間用一道 --surface-line
+   的上緣線 + 大留白分節，跟 serve 的 .watch-card__pray、.give-list
+   是同一套語彙。行長收在 62ch 的舒適閱讀寬度。 */
+.give-body {
+  max-width: 62ch;
+  padding-top: clamp(26px, 3.5vw, 36px);
+  border-top: 1px solid var(--surface-line);
 }
-/* 匯款方式（A / B）之間的間距，第一個緊接前面的引言段落 */
-.give-option { margin-top: 28px; }
-.give-option .pay-cta { margin-top: 4px; }
+.give-body > p {
+  margin: 0 0 18px;
+  font-size: var(--fs-md); line-height: var(--lh-loose);
+  color: var(--surface-fg-2);
+}
+.give-body > p:last-child { margin-bottom: 0; }
+
+/* 奉獻用途條列：amber 短線，與 serve #give-support 的 .give-list 同形 */
+.give-use__list {
+  list-style: none; margin: 22px 0 0; padding: 0;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.give-use__list li {
+  position: relative; padding-left: 22px;
+  font-size: var(--fs-md); line-height: var(--lh-loose);
+  color: var(--surface-fg-2);
+}
+.give-use__list li::before {
+  content: ""; position: absolute; left: 0; top: .78em;
+  width: 10px; height: 1px; background: var(--surface-accent);
+}
+.give-use__list b { color: var(--surface-fg); font-weight: var(--fw-semibold); }
+
+/* ---- 公告：左圖右文 ----
+   圖是這一頁唯一的有機輪廓（V3 §7.2 第 3 條），用 --spring（泉眼），
+   跟 hero「這份長流的泉源」是同一個意象。
+   窄螢幕不把圖擠成細長條，直接收起來 —— 它是氣氛，不是資訊。 */
+.give-notice {
+  display: grid;
+  grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
+  gap: clamp(32px, 5vw, 72px);
+  align-items: center;
+}
+.give-notice__figure { width: 100%; }
+/* 比 3:4 再修長一點，讓圖的高度跟右欄的文字塊對得上 */
+.give-notice--tall .give-notice__figure .flow-figure__frame { aspect-ratio: 3 / 4; }
+.give-notice__body .section-head { max-width: 46ch; margin-bottom: clamp(16px, 2.2vh, 26px); }
+/* 右欄的量測仍然要收 —— 讓它撐滿欄寬會變成 50 字一行 */
+.give-notice__body .give-body { max-width: 46ch; }
+
+@media (max-width: 860px) {
+  .give-notice { grid-template-columns: 1fr; gap: clamp(16px, 2.4vw, 26px); }
+  /* ≤860 圖移到文字上方並縮小：直立 3:4 在窄欄會吃掉大半個畫面。
+     200px 是 §7.2「有機輪廓只用在 ≥200px」的下限，不再更小。 */
+  .give-notice__figure { max-width: 200px; }
+}
+
+/* ---- 奉獻入口：兩道「編輯式的列」，不是並排的卡 ---- */
+.give-ways { max-width: 760px; }
+.give-way {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(18px, 3vw, 36px);
+  padding: clamp(18px, 2.2vw, 24px) 0;
+  border-top: 1px solid var(--surface-line);
+}
+.give-way:last-child { border-bottom: 1px solid var(--surface-line); }
+.give-way__num {
+  font-family: var(--font-en); font-weight: var(--fw-light);
+  font-size: var(--fs-4xl); line-height: var(--lh-flat);
+  letter-spacing: var(--ls-none);
+  color: var(--surface-accent); opacity: .78;
+  font-variant-numeric: tabular-nums;
+}
+.give-way__name {
+  font-family: var(--font-brand); font-weight: var(--fw-medium);
+  font-size: var(--fs-2xl); line-height: var(--lh-title);
+  letter-spacing: var(--ls-cjk);
+  color: var(--surface-fg);
+  margin: 0 0 10px;
+}
+.give-way__desc {
+  margin: 0 0 12px;
+  font-size: var(--fs-md); line-height: var(--lh-loose);
+  color: var(--surface-fg-2);
+}
+.give-way .pay-cta { margin-top: 4px; }
+
+/* ---- 備註提醒 ----
+   這是全頁風險最高的一步（沒寫備註＝款項無法辨識），所以是唯一
+   帶視覺重量的區塊。但仍然不做成卡片：一道 amber 直線 + 往右化開的
+   極淡底，無圓角、無陰影、無邊框。 */
+.give-note {
+  margin: 0 0 14px;
+  padding: 10px 0 10px 18px;
+  border-left: 2px solid var(--amber-500);
+  background: linear-gradient(90deg, rgba(255, 186, 73, .10), rgba(255, 186, 73, 0) 72%);
+}
+.give-note p {
+  margin: 0;
+  font-size: var(--fs-md); line-height: var(--lh-loose);
+  color: var(--surface-fg-2);
+}
+/* 要照抄的那串字不能被折行 */
+.give-note b {
+  color: var(--surface-fg); font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-cjk); white-space: nowrap;
+}
 
 /* ---- 左固定 / 右滾動 版型（放寬斷點，避免筆電視窗被擠成單欄） ---- */
 .donate-layout {
@@ -1935,36 +2044,9 @@ body[data-page="give"] main > .section {
   }
 }
 
-/* ---- 卡片區塊（實心奶紙白，襯托深色底） ----
-   原本是 --surface-4（90% 白）+ backdrop-blur，深藍背景場會透上來把
-   --text-1 的內文壓成低對比的灰藍。這裡的內容需要逐字閱讀，改為不透明底。 */
-.donate-block {
-  background: var(--surface-5);
-  border: 1px solid var(--line-mid);
-  border-radius: var(--radius-card);
-  padding: 36px 34px;
-  box-shadow: 0 10px 34px rgba(0, 0, 0, .18);
-}
-.donate-block h2 {
-  font-family: var(--font-brand); font-weight: var(--fw-semibold);
-  font-size: var(--fs-3xl); line-height: var(--lh-title); letter-spacing: var(--ls-cjk);
-  margin: 0 0 18px; color: var(--text-1);
-}
-/* Give 頁的合作副標，白卡上要有足夠對比 —— 用 amber-700 深金，AAA-friendly */
-.donate-block h3 {
-  font-family: var(--font-brand); font-weight: var(--fw-medium);
-  font-size: var(--fs-2xl); line-height: var(--lh-title); letter-spacing: var(--ls-cjk);
-  margin: 0 0 16px; color: var(--mineral-700);
-}
-.donate-block p {
-  font-size: var(--fs-md); line-height: var(--lh-loose);
-  color: var(--text-2); margin: 0 0 14px;
-}
-.donate-block p:last-child { margin-bottom: 0; }
-
 /* ---- Give 頁：左欄的 .budget 也統一為實心卡 ----
    圓環圖的引線、標籤、中央金額全是 --text-1 / --text-3 / --line-mid 的
-   深色值，底一透就整組糊掉，所以與 .donate-block 用同一支 --surface-5。 */
+   深色值，底一透就整組糊掉，所以固定用不透明的 --surface-5。 */
 body[data-page="give"] .budget {
   background: var(--surface-5);
   border: 1px solid var(--line-mid);
@@ -2076,14 +2158,17 @@ body[data-page="give"] .budget h3 { margin-bottom: 18px; }
 .remit-note b { color: var(--ink-900); font-weight: var(--fw-bold); }
 
 .pay-cta { margin-top: 4px; align-self: flex-start; }
-/* Give 頁的 .btn-text 全數改用深藍主色（.btn-text 預設是琥珀底線） */
+/* Give 頁的 .btn-text 跟著 data-surface 走。
+   原本寫死 ink-800 是為了白卡上的對比；卡片拿掉之後，深藍字會
+   直接消失在深藍底上，所以改吃 --surface-accent（深底 Amber /
+   淺底 Mineral 700），翻面時不用再逐條改。 */
 body[data-page="give"] .btn.btn-text {
-  color: var(--ink-800);
-  border-bottom-color: var(--ink-800);
+  color: var(--surface-accent);
+  border-bottom-color: var(--surface-accent);
 }
 body[data-page="give"] .btn.btn-text:hover {
-  color: var(--ink-900);
-  border-bottom-color: var(--ink-900);
+  color: var(--surface-fg);
+  border-bottom-color: var(--surface-fg);
 }
 
 /* ---- 匯款＋表單合併卡：步驟 / 選項 標記 ---- */
@@ -2122,28 +2207,6 @@ body[data-page="give"] .btn.btn-text:hover {
   padding-bottom: 8px;
 }
 
-.give-option-name {
-  display: flex; align-items: center; gap: 10px;
-  font-family: var(--font-brand); font-weight: var(--fw-medium);
-  font-size: var(--fs-md); color: var(--ink-800);
-  margin: 20px 0 10px; letter-spacing: var(--ls-cjk);
-  line-height: var(--lh-heading);
-}
-.give-option-tag {
-  width: 26px; height: 26px; border-radius: var(--radius-round);
-  background: transparent;
-  border: 1.5px solid var(--ink-800);
-  color: var(--ink-800);
-  font-family: var(--font-en);
-  font-size: var(--fs-sm); font-weight: var(--fw-medium);
-  display: inline-flex; align-items: center; justify-content: center;
-  flex-shrink: 0; line-height: var(--lh-flat);
-}
-
-/* ---- 合併卡內的 .desc 統一樣式（從 form 內移出後仍需套用） ---- */
-.donate-block .desc {
-  font-size: var(--fs-sm); color: var(--text-3); margin: 0 0 12px;
-}
 /* ---- 送出按鈕統一靠左並保留上緣呼吸（取代原本的 inline style） ---- */
 .donate-form .btn[type="submit"] {
   align-self: flex-start; margin-top: 6px;
@@ -2437,8 +2500,16 @@ body[data-page="home"] .feature-text .link:hover {
 
   /* --- Contact / Donate 卡片內部 padding：與外層 24 對齊，避免內容偏右 --- */
   .contact-form                    { padding: 24px 20px; }
-  .donate-block                    { padding: 24px 20px; }
   body[data-page="give"] .budget { padding: 22px 20px; }
+
+  /* --- Give 奉獻入口：窄螢幕改單欄，序號移到名稱上方 ---
+     手機一屏放不下兩個完整入口，所以把每一列收到最緊：
+     目標是「標題 + 01 完整 + 02 露出一截」，露出的那一截就是往下捲的動機。 */
+  .give-way        { grid-template-columns: 1fr; gap: 6px; padding: 16px 0; }
+  .give-way__num   { font-size: var(--fs-xl); }
+  .give-way__name  { margin-bottom: 8px; }
+  .give-way__desc  { margin-bottom: 10px; }
+  .give-note       { padding: 10px 0 10px 14px; margin-bottom: 12px; }
 
   /* --- Give-track 步驟軌道：縮小左內縮，讓 step body 內容不再明顯偏右 --- */
   .give-step-body        { margin-left: 6px; padding: 12px 0 20px 20px; }
