@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>奉獻支持 · 隱哈歌利 En-hakkore</title>
-  <meta name="description" content="支持隱哈歌利的關顧事工。透過銀行匯款或線上刷卡，成為宣教士誠實同行的堅定力量。2026 年度總預算 67.7 萬，財務公開透明。">
+  <meta name="description" content="支持隱哈歌利的關顧事工。您的奉獻將用於推動具體關顧專案與維持平台的日常營運，可透過銀行匯款或線上刷卡，單次或定期定額與宣教士同行。">
   <meta name="theme-color" content="#1a2e40">
   <meta name="robots" content="index,follow">
   <link rel="icon" href="assets/img/favicon.png">
@@ -85,56 +85,116 @@
   <p> 無論金額大小，您的支持都是與宣教士誠實同行的堅定力量。<br>不論是單次奉獻、或是設定每月定期定額轉帳，這份長流的泉源，都將成為宣教士最務實的後援。</p>
 </section>
 
-<!-- 奉獻是「宣言」的段落 —— V3 §28 Cobalt = Vision / Belief / Statement -->
+<!-- ============================================================
+     正文分成三段各自獨立的 section，各自帶 data-flow-palette，
+     中間用 divider 斷句 —— 與 serve 同一個捲動節奏。
+     原本三件事（為什麼／公告／怎麼給）壓在同一個 section 的兩張
+     白卡裡，整頁只換兩次背景，讀起來像一頁長文件。
+     卡片一律不用：V3 §5「少用卡片」，深底上直接排字，
+     分段靠 --surface-line 的一道上緣線與留白。
+     ============================================================ -->
+
 <!-- 轉場：湧 -->
 <div data-flow-divider="well"></div>
 
+<!-- ============================ §1 · 為什麼需要您的支持 ============================ -->
+<!-- V3 §28 Cobalt = Vision / Belief / Statement -->
 <section class="section" data-surface="dark"
          data-flow-palette="#101D29 | #16273A | rgba(49,87,213,.22) | 14% 78%">
-    <div class="section-head section-head--on-dark section-head--center reveal">
-      <div class="section-num">WHY</div>
-      <div class="cta-label">您的奉獻，將轉化為第一線宣教士生命中具體可行的資源與陪伴。</div>
-      <h2>為什麼我們需要您的支持？</h2>
-      <p>宣教士在跨文化的環境中前行，常需面對複雜與不易。隱哈歌利相信，真誠的關懷會先接住情緒，再帶出方向與實際步驟。我們尊重每個生命的節奏，不給標準答案，但在關鍵時刻，我們希望具體、務實地陪著他們一起走過。</p>
-    </div>
   <div class="wrap">
-    <div class="donate-stack">
+    <div class="section-head section-head--on-dark reveal">
+      <div class="section-num">WHY</div>
+      <div class="section-eyebrow">支持的理由</div>
+      <h2>為什麼我們需要您的支持？</h2>
+      <p class="lead">宣教士在跨文化的環境中前行，常需面對複雜與不易。隱哈歌利相信，真誠的關懷會先接住情緒，再帶出方向與實際步驟。我們尊重每個生命的節奏，不給標準答案，但在關鍵時刻，我們希望具體、務實地陪著他們一起走過。</p>
+    </div>
 
-      <!-- ---------- Section A：合作夥伴公告 ---------- -->
-      <div class="donate-block reveal">
-        <h2>📣 重要公告——關於我們的合作夥伴</h2>
-        <h3>隱哈歌利 × 台灣好地方社區發展協會</h3>
-        <p>為了讓財務流程更完善、提供支持者更放心的奉獻管道，隱哈歌利目前與「社團法人台灣好地方社區發展協會」展開正式的專案合作。</p>
-      </div>
+    <!-- 奉獻用途。文案沿用 serve.html #give-support 的同一段，兩頁必須一致。
+         TODO：目前站上有據可查的只有「專案推動」一條。待同工確認後再補
+         其餘項目（行政營運、關顧專案…），在那之前不自行增列。 -->
+    <div class="give-body reveal">
+      <p>您的奉獻，將轉化為第一線宣教士生命中具體可行的資源與陪伴。隱哈歌利的運作仰賴主內肢體的愛心支持，您的每一筆奉獻，將直接用於推動具體關顧專案與維持平台的日常行政營運：</p>
+      <ul class="give-use__list">
+        <li><b>專案推動：</b>MissionBnB 空間營運、關顧資源媒合。</li>
+      </ul>
+    </div>
+  </div>
+</section>
 
-      <!-- ---------- Section B：匯款與奉獻資訊 ---------- -->
-      <div class="donate-block reveal">
-        <h2>匯款與奉獻資訊</h2>
-        <p>您可以單次奉獻，或在您的網路銀行設定每月固定轉帳（定期定額），成為我們長期的關顧夥伴。</p>
+<!-- 轉場：流 -->
+<div data-flow-divider="contour"></div>
 
-        <div class="give-option">
-          <h4 class="give-option-name">
-            <span class="give-option-tag">A</span>銀行匯款
-          </h4>
-          <p>為了確保您的款項順利進入隱哈歌利的專案，請於「備註欄」或「轉帳附言」務必填寫：<b>為隱哈歌利奉獻</b>。</p>
+<!-- ============================ §2 · 合作公告 ============================ -->
+<!-- 擺在奉獻入口之前：先說明收款單位會是另一個名字，
+     使用者到了付款頁才不會愣住。 -->
+<section class="section" data-surface="dark"
+         data-flow-palette="#16273A | #101D29 | rgba(60,145,173,.18) | 82% 28%">
+  <div class="wrap">
+    <div class="section-head section-head--on-dark reveal">
+      <div class="section-num">NOTICE</div>
+      <div class="section-eyebrow">合作公告</div>
+      <h2>隱哈歌利 × 台灣好地方社區發展協會</h2>
+    </div>
+
+    <div class="give-body reveal">
+      <p>為了讓財務流程更完善、提供支持者更放心的奉獻管道，隱哈歌利目前與「社團法人台灣好地方社區發展協會」展開正式的專案合作。</p>
+      <p>這代表：你在匯款或刷卡頁面上看到的收款單位會是「台灣好地方社區發展協會」，這是正常的。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 轉場：流 -->
+<div data-flow-divider="contour"></div>
+
+<!-- ============================ §3 · 奉獻入口 ============================ -->
+<section class="section" data-surface="dark"
+         data-flow-palette="#1A2E40 | #294354 | rgba(255,186,73,.20) | 46% 66%">
+  <div class="wrap">
+    <div class="section-head section-head--on-dark reveal">
+      <div class="section-num">GIVE</div>
+      <div class="section-eyebrow">奉獻方式</div>
+      <h2>匯款與奉獻資訊</h2>
+      <p class="lead">您可以單次奉獻，或在您的網路銀行設定每月固定轉帳（定期定額），成為我們長期的關顧夥伴。</p>
+    </div>
+
+    <!-- 兩個入口是「編輯式的列」：上緣線 + 序號 + 大留白。
+         原本的 A / B 圓圈 badge 是選單的視覺符號，這裡不用。 -->
+    <div class="give-ways">
+
+      <article class="give-way reveal">
+        <div class="give-way__num" aria-hidden="true">01</div>
+        <div class="give-way__body">
+          <h3 class="give-way__name">銀行匯款</h3>
+          <!-- 備註是全頁風險最高的一步（填錯＝款項無法辨識），
+               所以它是這頁唯一有視覺重量的區塊：一道 amber 直線 + 極淡底，
+               無圓角、無陰影，不是卡片。 -->
+          <div class="give-note">
+            <p>為了確保您的款項順利進入隱哈歌利的專案，請於「備註欄」或「轉帳附言」務必填寫：<b>為隱哈歌利奉獻</b>。</p>
+          </div>
           <a class="btn btn-text pay-cta" href="https://gooodplace.dobtor.com/donate" target="_blank" rel="noopener">
             前往匯款
             <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg>
           </a>
         </div>
+      </article>
 
-        <div class="give-option">
-          <h4 class="give-option-name">
-            <span class="give-option-tag">B</span>信用卡付款
-          </h4>
-          <p>透過信用卡連結，也能快速完成單次或定期奉獻。</p>
+      <article class="give-way reveal">
+        <div class="give-way__num" aria-hidden="true">02</div>
+        <div class="give-way__body">
+          <h3 class="give-way__name">信用卡付款</h3>
+          <p class="give-way__desc">透過信用卡連結，也能快速完成單次或定期奉獻。</p>
+          <!-- TODO：拿到專屬刷卡頁後，確認該表單上備註欄位的實際名稱
+               （可能叫「留言」或「指定用途」）再把欄位名改成對的。 -->
+          <div class="give-note">
+            <p>同樣請於「備註欄」務必填寫：<b>為隱哈歌利奉獻</b>。</p>
+          </div>
           <!-- 刷卡暫時與匯款導向同一個好地方奉獻頁，日後有專屬金流頁再換掉 -->
           <a class="btn btn-text pay-cta" href="https://gooodplace.dobtor.com/donate" target="_blank" rel="noopener">
             前往刷卡頁面
             <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg>
           </a>
         </div>
-      </div>
+      </article>
 
     </div>
   </div>
