@@ -624,7 +624,10 @@
      刻意不做 tabs：三種方式是三條不同的 journey，而且目前完整度不一樣，
      tabs 會讓人以為三邊內容等量，也容易讓人漏看其他兩種。
      沒有宣告 data-flow-palette —— 讓色場從 hero 一路延續到「湧」的轉場，
-     中間不換色，這一層才會讀起來像 hero 的延伸。 -->
+     中間不換色，這一層才會讀起來像 hero 的延伸。
+     header 膠囊的底（site.js 的 initHeaderState）在沒有 palette 時退回
+     var(--ink-900)，那正好就是 hero palette 的第一段 #1A2E40，所以膠囊
+     從 hero 滑進這一段時不會換色。 -->
 <section class="section section-ways" id="ways" data-surface="dark" aria-labelledby="ways-title">
   <div class="wrap">
     <div class="ways-head reveal">
