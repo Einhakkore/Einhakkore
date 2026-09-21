@@ -1924,7 +1924,11 @@ body[data-page="give"] .section-head--center .cta-label { margin-bottom: 18px; }
 }
 .give-body > p:last-child { margin-bottom: 0; }
 
-/* 奉獻用途條列：amber 短線，與 serve #give-support 的 .give-list 同形 */
+/* 奉獻用途條列：amber 短線，與 serve #give-support 的 .give-list 同形。
+   ⚠️ 目前 give.html 沒有用到 —— 站上有據可查的用途只有 serve 的
+   「專案推動」一條，同工補齊文案之前刻意不放，不自行增列。
+   文案到位時在 §1 的 .give-body 裡掛上 <ul class="give-use__list">，
+   並且要與 serve #give-support 的同一段保持一致。 */
 .give-use__list {
   list-style: none; margin: 22px 0 0; padding: 0;
   display: flex; flex-direction: column; gap: 12px;
