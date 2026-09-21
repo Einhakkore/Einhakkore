@@ -89,11 +89,29 @@
 
   function initInteractivity() {
 
+    // ---------- Header：捲動後才給膠囊底 ----------
+    // 導覽列在頁面頂端是全透明的（只剩 logo 與連結浮在背景上）。一往下捲，
+    // 內容就會從連結後面經過，這時才把 .is-scrolled 加上去讓膠囊淡出玻璃底。
+    const syncHeaderScrolled = () => {
+      document.body.classList.toggle("is-scrolled", window.scrollY > 12);
+    };
+    syncHeaderScrolled();
+    window.addEventListener("scroll", syncHeaderScrolled, { passive: true });
+
     // ---------- Mobile menu ----------
     const menuBtn = document.getElementById("menuToggle");
     const nav = document.getElementById("nav");
     if (menuBtn && nav) {
       menuBtn.addEventListener("click", () => nav.classList.toggle("open"));
+      // 浮卡式的選單不再是滿版，點到外面應該要收起來
+      document.addEventListener("click", (e) => {
+        if (!nav.classList.contains("open")) return;
+        if (nav.contains(e.target) || menuBtn.contains(e.target)) return;
+        nav.classList.remove("open");
+      });
+      nav.addEventListener("click", (e) => {
+        if (e.target.closest("a")) nav.classList.remove("open");
+      });
     }
 
     // ---------- Highlight current page ----------

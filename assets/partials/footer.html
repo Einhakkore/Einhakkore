@@ -1,4 +1,22 @@
 <footer class="site-footer">
+  <!-- 水流感的上緣：三層錯位的水面剪影，從 footer 的深藍往上長進頁面背景。
+       它只畫在 main 底下預留的那段空白裡（--footer-wave-h），不會壓到內容 ——
+       改高度請連同 styles.css 的 `main { padding-bottom }` 一起改，兩邊是同一支變數。
+       viewBox 寬 2880 是版面寬的兩倍，波形週期整除 1440，平移 -50% 時無縫接回原點。 -->
+  <div class="footer-wave" aria-hidden="true">
+    <!-- 後：週期 1440（一個畫面一道），振幅最大、最淡，當遠處的水面 -->
+    <svg class="footer-wave__layer footer-wave__back" viewBox="0 0 2880 160" preserveAspectRatio="none" focusable="false">
+      <path d="M0 20 C180 20 540 60 720 60 C900 60 1260 20 1440 20 C1620 20 1980 60 2160 60 C2340 60 2700 20 2880 20 L2880 160 L0 160 Z"/>
+    </svg>
+    <!-- 中：週期 720、反向漂移。跟前後兩層走不同方向，交疊處才會有水在流的錯覺 -->
+    <svg class="footer-wave__layer footer-wave__mid" viewBox="0 0 2880 160" preserveAspectRatio="none" focusable="false">
+      <path d="M0 96 C90 96 270 58 360 58 C450 58 630 96 720 96 C810 96 990 58 1080 58 C1170 58 1350 96 1440 96 C1530 96 1710 58 1800 58 C1890 58 2070 96 2160 96 C2250 96 2430 58 2520 58 C2610 58 2790 96 2880 96 L2880 160 L0 160 Z"/>
+    </svg>
+    <!-- 前：實心，下緣填到 160 與 footer 的底色接成同一片，看不出接縫 -->
+    <svg class="footer-wave__layer footer-wave__front" viewBox="0 0 2880 160" preserveAspectRatio="none" focusable="false">
+      <path d="M0 104 C90 104 270 132 360 132 C450 132 630 104 720 104 C810 104 990 132 1080 132 C1170 132 1350 104 1440 104 C1530 104 1710 132 1800 132 C1890 132 2070 104 2160 104 C2250 104 2430 132 2520 132 C2610 132 2790 104 2880 104 L2880 160 L0 160 Z"/>
+    </svg>
+  </div>
   <div class="footer-inner">
     <div class="footer-brand">
       <a class="logo" href="index.html">
