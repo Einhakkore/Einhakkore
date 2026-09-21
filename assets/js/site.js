@@ -88,9 +88,16 @@
   }
 
   /* ---------- Header 的捲動狀態與明暗 ----------
-     膠囊下緣（--header-h）碰到的那一段說了算。section 在版面上不重疊、
-     又照 DOM 順序排，所以線性掃過去就夠了（每頁最多十來段）。
-     footer 永遠是深底，一起放進來當最後一段，捲到底時膠囊才跟著翻深。 */
+     膠囊下緣（--header-h）壓在哪一段上，那一段說了算。
+     footer 永遠是深底，一起放進來當最後一段，捲到底時膠囊才跟著翻深。
+
+     取法是「最後一個上緣已經越過膠囊下緣的區塊」，而不是「剛好包住那個
+     點的區塊」—— 因為 section 之間還夾著不帶 data-surface 的東西
+     （data-flow-divider 的裂／湧／流三種線稿轉場就是 section 的兄弟節點）。
+     要求剛好包住的話，膠囊滑過 divider 的那段空檔會一個區塊都掃不到，
+     於是掉回淺色預設，深藍底上突然冒出一顆白膠囊。
+     色場在空檔裡本來就還是前一段的顏色（下一段要等上緣過視窗中線才換），
+     所以沿用前一段才是對的。 */
   function initHeaderState() {
     const body = document.body;
     const zones = [...document.querySelectorAll("main [data-surface]")]
@@ -125,10 +132,10 @@
 
       let hit = null;
       for (const zone of zones) {
-        const r = zone.el.getBoundingClientRect();
-        if (r.top <= probe && r.bottom > probe) { hit = zone; break; }
+        if (zone.el.getBoundingClientRect().top > probe) break;
+        hit = zone;
       }
-      // 掃不到（頁面比視窗短、或還在第一段之上）就回到淺色預設
+      // 掃不到（還在第一段之上，或整頁都沒宣告 data-surface）才回到淺色預設
       const theme = hit ? hit.surface : "light";
       const tint = hit ? tintOf(hit) : "var(--paper)";
 
