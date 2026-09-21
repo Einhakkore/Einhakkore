@@ -249,14 +249,20 @@
    home / give 兩頁再覆寫成深色版本。
    --------------------------------------------------------- */
 :root {
-  --header-bg:     rgba(250, 246, 239, .78);
+  /* 膠囊的底不寫死顏色，而是吃 --header-tint —— 那支由 site.js 依
+     此刻在膠囊底下的那一段寫進來（見下面 data-header-theme 那一節）。
+     沒有 JS 時就是這裡的預設值，也就是原本的奶紙白。
+     由它算出來的 --header-bg / --header-panel-bg 宣告在 body 上，不在這裡。 */
+  --header-tint:   var(--paper);
   --header-fg:     var(--ink-800);
   --header-border: var(--line-dim);
+  /* 淺底承載不了金色（最深的 Amber 600 壓白底也只有 2.31:1），
+     active 連結在淺底改用 Mineral 700 —— 跟 --surface-accent 同一套邏輯。 */
+  --nav-accent:    var(--mineral-700);
   /* 透明浮列專用：膠囊捲動後的陰影，與 nav 連結 hover 的色塊 */
   --header-shadow: 0 10px 30px rgba(26, 46, 64, .10);
   /* 手機下拉選單的底。膠囊只是一條細列，半透明配 blur 還讀得動；
      下拉是一整張蓋在內文上的卡，.78 會讓底下的大標糊成一團灰斑透上來。 */
-  --header-panel-bg: rgba(250, 246, 239, .97);
   /* 膠囊 60 + 上下 margin 10。header 用它把自己的高度從版面收掉，
      第一個區塊再用它把 padding-top 補回來 —— 兩邊一定要同一支變數。 */
   --header-h:      80px;
@@ -298,15 +304,14 @@ body[data-page="serve"] {
   --fg:   var(--stop-0-fg);
   --accent: var(--amber-400);
 
-  /* 深色頁的 header 浮在會變色的色場上。78% 的時候，捲到「深轉亮」
-     的中間調，底下的淺色會透上來把整條 bar 提亮到 rgb(83,99,110)，
-     金色的 active 連結掉到 4.0:1。92% 讓 bar 在整段轉場都維持深色。 */
-  --header-bg:     color-mix(in oklab, var(--stop-0-bg1) 92%, transparent);
+  /* 這幾支只是 JS 還沒接手前的起手式（第一段都是深色），
+     之後由 body[data-header-theme] 依實際捲到哪一段接管。 */
+  --header-tint:   var(--stop-0-bg1);
   --header-fg:     var(--stop-0-fg);
   --header-border: rgba(255, 255, 255, .12);
   --header-shadow: 0 10px 30px rgba(0, 0, 0, .28);
   --nav-hover-bg:  rgba(255, 255, 255, .13);
-  --header-panel-bg: color-mix(in oklab, var(--stop-0-bg1) 98%, transparent);
+  --nav-accent:    var(--amber-400);
 
   --card-bg:       var(--surface-4);
   --card-border:   var(--hairline-3);
@@ -319,6 +324,54 @@ body[data-page="serve"] {
   --surface-accent:      var(--amber-500);
   --surface-line:        rgba(255, 255, 255, .18);
   --surface-line-strong: rgba(255, 255, 255, .40);
+}
+
+/* ---------------------------------------------------------
+   Header 的明暗跟著「此刻壓在膠囊底下的那一段」走
+   ----------------------------------------------------------
+   flow 頁面的背景會從深藍一路轉到奶紙白。色票若綁死在 body[data-page]，
+   捲到底就會變成一顆深色膠囊壓在淺底上 —— 那正是這一節要解決的突兀。
+
+   site.js 讀膠囊下緣（--header-h）碰到的那一段的 data-surface，寫成
+   body[data-header-theme]；同時把該段 data-flow-palette 的第一個顏色
+   寫進 --header-tint，膠囊的底因此永遠是「當下背景再壓深一點」，
+   而不是一塊外來的色塊。contact / terms 沒有 data-surface，
+   整頁都是淺底，維持預設的 light。
+
+   這兩塊要排在 body[data-page] 的深色區塊「之後」：選擇器權重一樣，
+   靠順序決勝。JS 還沒接手前由 data-page 撐住起手式，接手後換這裡說了算。
+   --------------------------------------------------------- */
+@property --header-tint {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #FAF6EF;
+}
+body {
+  /* 註冊過的自訂屬性才能補間；少了 @property（舊瀏覽器）會直接跳色，
+     其餘顏色照樣靠 color / border-color / box-shadow 自己的 transition。 */
+  transition: --header-tint .45s cubic-bezier(.16, 1, .3, 1);
+
+  /* 這兩支一定要在 body 上算，不能放 :root ——
+     自訂屬性是在「宣告它的那個元素」上就把 var() 代換掉的。掛在 :root
+     等於在 html 上用 --header-tint 的初始值算完，body 之後再怎麼改 tint
+     都進不去，膠囊就會一直是奶紙白。 */
+  --header-bg:       color-mix(in oklab, var(--header-tint) 86%, transparent);
+  /* 手機下拉是一整張蓋在內文上的卡，要比膠囊更實，否則底下的大標會糊成灰斑透上來 */
+  --header-panel-bg: color-mix(in oklab, var(--header-tint) 97%, transparent);
+}
+body[data-header-theme="light"] {
+  --header-fg:       var(--ink-800);
+  --header-border:   var(--line-dim);
+  --header-shadow:   0 10px 30px rgba(26, 46, 64, .10);
+  --nav-hover-bg:    rgba(26, 46, 64, .09);
+  --nav-accent:      var(--mineral-700);
+}
+body[data-header-theme="dark"] {
+  --header-fg:       var(--white);
+  --header-border:   rgba(255, 255, 255, .14);
+  --header-shadow:   0 10px 30px rgba(0, 0, 0, .28);
+  --nav-hover-bg:    rgba(255, 255, 255, .13);
+  --nav-accent:      var(--amber-400);
 }
 
 /* -----------------------------------------------------------
@@ -470,8 +523,8 @@ body[data-page="give"] .aurora {
   border-radius: var(--radius-pill);
   transition:
     background .35s cubic-bezier(.16, 1, .3, 1),
-    border-color .35s cubic-bezier(.16, 1, .3, 1),
-    box-shadow .35s cubic-bezier(.16, 1, .3, 1);
+    border-color .45s cubic-bezier(.16, 1, .3, 1),
+    box-shadow .45s cubic-bezier(.16, 1, .3, 1);
 }
 /* 透明的列不該在第一個區塊上方切出一條橫帶：把 header 的高度從版面收掉，
    讓 hero 的照片／色場一路長到頁面最頂端，膠囊直接浮在上面（參考圖三）。
@@ -487,19 +540,29 @@ body.is-scrolled .header-inner {
   -webkit-backdrop-filter: saturate(180%) blur(20px);
   box-shadow: var(--header-shadow);
 }
-.logo { display: flex; align-items: center; cursor: pointer; }
-.logo img { height: 40px; width: auto; display: block; }
-/* 兩支 logo 依 header 色主題切換：預設淺色 header → 用深字 logo；
-   home / give 深色 header → 換成亮字 logo。 */
-.logo .logo-dark { display: none; }
+.logo { display: grid; align-items: center; cursor: pointer; }
+/* 兩支 logo 疊在同一格用 opacity 交叉淡入 —— 明暗會跟著捲動翻，
+   display 硬切會在轉場中間閃一下。 */
+.logo img {
+  grid-area: 1 / 1;
+  height: 40px; width: auto; display: block;
+  transition: opacity .45s cubic-bezier(.16, 1, .3, 1);
+}
+.logo .logo-dark { opacity: 0; }
+/* JS 接手前的起手式：深色頁的第一段是深底，先用亮字 logo */
 body[data-page="home"] .logo .logo-light,
 body[data-page="give"] .logo .logo-light,
 body[data-page="about"] .logo .logo-light,
-body[data-page="serve"] .logo .logo-light { display: none; }
+body[data-page="serve"] .logo .logo-light { opacity: 0; }
 body[data-page="home"] .logo .logo-dark,
 body[data-page="give"] .logo .logo-dark,
 body[data-page="about"] .logo .logo-dark,
-body[data-page="serve"] .logo .logo-dark { display: block; }
+body[data-page="serve"] .logo .logo-dark { opacity: 1; }
+/* 接手後一律由主題決定（權重相同，靠順序贏過上面的起手式） */
+body[data-header-theme="light"] .logo .logo-light,
+body[data-header-theme="dark"]  .logo .logo-dark  { opacity: 1; }
+body[data-header-theme="light"] .logo .logo-dark,
+body[data-header-theme="dark"]  .logo .logo-light { opacity: 0; }
 
 .nav { display: flex; align-items: center; gap: 2px; }
 .nav a {
@@ -509,7 +572,9 @@ body[data-page="serve"] .logo .logo-dark { display: block; }
   font-size: var(--fs-md); padding: 8px 16px;
   color: var(--header-fg);
   opacity: .78;
-  transition: color .2s ease, opacity .2s ease; font-weight: var(--fw-regular);
+  /* 色彩跟著主題翻，要跟 --header-tint 同速；opacity 是 hover 的微互動，維持短 */
+  transition: color .45s cubic-bezier(.16, 1, .3, 1), opacity .2s ease;
+  font-weight: var(--fw-regular);
   border-radius: var(--radius-pill);
 }
 /* 透明列上只換文字顏色看不出來，hover 要有一個實際的落點：
@@ -525,7 +590,7 @@ body[data-page="serve"] .logo .logo-dark { display: block; }
 .nav a:hover::before,
 .nav a:focus-visible::before { opacity: 1; transform: scale(1); }
 
-.nav a.active { color: var(--accent); opacity: 1; }
+.nav a.active { color: var(--nav-accent); opacity: 1; }
 /* 目前頁面不靠 hover 也要認得出來 —— 一道細的 flow line，不跟 hover 色塊搶 */
 .nav a.active::after {
   content: ''; position: absolute;
@@ -558,7 +623,11 @@ body[data-page="serve"] .logo .logo-dark { display: block; }
   box-shadow: 0 8px 20px rgba(26, 46, 64, .22);
 }
 
-.menu-toggle { display: none; background: transparent; border: 0; padding: 8px; color: var(--header-fg); }
+.menu-toggle {
+  display: none; background: transparent; border: 0; padding: 8px;
+  color: var(--header-fg);
+  transition: color .45s cubic-bezier(.16, 1, .3, 1);
+}
 @media (max-width: 900px) {
   .header-inner { height: 56px; margin: 8px auto; }
   :root { --header-h: 72px; }
