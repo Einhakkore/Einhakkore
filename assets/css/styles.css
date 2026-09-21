@@ -249,9 +249,28 @@
    home / give 兩頁再覆寫成深色版本。
    --------------------------------------------------------- */
 :root {
-  --header-bg:     rgba(250, 246, 239, .78);
+  /* 膠囊的底不寫死顏色，而是吃 --header-tint —— 那支由 site.js 依
+     此刻在膠囊底下的那一段寫進來（見下面 data-header-theme 那一節）。
+     沒有 JS 時就是這裡的預設值，也就是原本的奶紙白。
+     由它算出來的 --header-bg / --header-panel-bg 宣告在 body 上，不在這裡。 */
+  --header-tint:   var(--paper);
   --header-fg:     var(--ink-800);
   --header-border: var(--line-dim);
+  /* 淺底承載不了金色（最深的 Amber 600 壓白底也只有 2.31:1），
+     active 連結在淺底改用 Mineral 700 —— 跟 --surface-accent 同一套邏輯。 */
+  --nav-accent:    var(--mineral-700);
+  /* 透明浮列專用：膠囊捲動後的陰影，與 nav 連結 hover 的色塊 */
+  --header-shadow: 0 10px 30px rgba(26, 46, 64, .10);
+  /* 手機下拉選單的底。膠囊只是一條細列，半透明配 blur 還讀得動；
+     下拉是一整張蓋在內文上的卡，.78 會讓底下的大標糊成一團灰斑透上來。 */
+  /* 膠囊 60 + 上下 margin 10。header 用它把自己的高度從版面收掉，
+     第一個區塊再用它把 padding-top 補回來 —— 兩邊一定要同一支變數。 */
+  --header-h:      80px;
+  --nav-hover-bg:  rgba(26, 46, 64, .09);
+
+  /* Footer 上緣水面的高度。main 會在底部留一段等高的透明空白給它，
+     波浪只畫在那段空白裡，所以永遠不會壓到內容。兩邊共用這一支。 */
+  --footer-wave-h: clamp(72px, 9vw, 132px);
 
   --card-bg:       rgba(237, 227, 211, .70);
   --card-border:   var(--line-dim);
@@ -285,12 +304,14 @@ body[data-page="serve"] {
   --fg:   var(--stop-0-fg);
   --accent: var(--amber-400);
 
-  /* 深色頁的 header 浮在會變色的色場上。78% 的時候，捲到「深轉亮」
-     的中間調，底下的淺色會透上來把整條 bar 提亮到 rgb(83,99,110)，
-     金色的 active 連結掉到 4.0:1。92% 讓 bar 在整段轉場都維持深色。 */
-  --header-bg:     color-mix(in oklab, var(--stop-0-bg1) 92%, transparent);
+  /* 這幾支只是 JS 還沒接手前的起手式（第一段都是深色），
+     之後由 body[data-header-theme] 依實際捲到哪一段接管。 */
+  --header-tint:   var(--stop-0-bg1);
   --header-fg:     var(--stop-0-fg);
-  --header-border: rgba(255, 255, 255, .08);
+  --header-border: rgba(255, 255, 255, .12);
+  --header-shadow: 0 10px 30px rgba(0, 0, 0, .28);
+  --nav-hover-bg:  rgba(255, 255, 255, .13);
+  --nav-accent:    var(--amber-400);
 
   --card-bg:       var(--surface-4);
   --card-border:   var(--hairline-3);
@@ -305,6 +326,54 @@ body[data-page="serve"] {
   --surface-line-strong: rgba(255, 255, 255, .40);
 }
 
+/* ---------------------------------------------------------
+   Header 的明暗跟著「此刻壓在膠囊底下的那一段」走
+   ----------------------------------------------------------
+   flow 頁面的背景會從深藍一路轉到奶紙白。色票若綁死在 body[data-page]，
+   捲到底就會變成一顆深色膠囊壓在淺底上 —— 那正是這一節要解決的突兀。
+
+   site.js 讀膠囊下緣（--header-h）碰到的那一段的 data-surface，寫成
+   body[data-header-theme]；同時把該段 data-flow-palette 的第一個顏色
+   寫進 --header-tint，膠囊的底因此永遠是「當下背景再壓深一點」，
+   而不是一塊外來的色塊。contact / terms 沒有 data-surface，
+   整頁都是淺底，維持預設的 light。
+
+   這兩塊要排在 body[data-page] 的深色區塊「之後」：選擇器權重一樣，
+   靠順序決勝。JS 還沒接手前由 data-page 撐住起手式，接手後換這裡說了算。
+   --------------------------------------------------------- */
+@property --header-tint {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #FAF6EF;
+}
+body {
+  /* 註冊過的自訂屬性才能補間；少了 @property（舊瀏覽器）會直接跳色，
+     其餘顏色照樣靠 color / border-color / box-shadow 自己的 transition。 */
+  transition: --header-tint .45s cubic-bezier(.16, 1, .3, 1);
+
+  /* 這兩支一定要在 body 上算，不能放 :root ——
+     自訂屬性是在「宣告它的那個元素」上就把 var() 代換掉的。掛在 :root
+     等於在 html 上用 --header-tint 的初始值算完，body 之後再怎麼改 tint
+     都進不去，膠囊就會一直是奶紙白。 */
+  --header-bg:       color-mix(in oklab, var(--header-tint) 86%, transparent);
+  /* 手機下拉是一整張蓋在內文上的卡，要比膠囊更實，否則底下的大標會糊成灰斑透上來 */
+  --header-panel-bg: color-mix(in oklab, var(--header-tint) 97%, transparent);
+}
+body[data-header-theme="light"] {
+  --header-fg:       var(--ink-800);
+  --header-border:   var(--line-dim);
+  --header-shadow:   0 10px 30px rgba(26, 46, 64, .10);
+  --nav-hover-bg:    rgba(26, 46, 64, .09);
+  --nav-accent:      var(--mineral-700);
+}
+body[data-header-theme="dark"] {
+  --header-fg:       var(--white);
+  --header-border:   rgba(255, 255, 255, .14);
+  --header-shadow:   0 10px 30px rgba(0, 0, 0, .28);
+  --nav-hover-bg:    rgba(255, 255, 255, .13);
+  --nav-accent:      var(--amber-400);
+}
+
 /* -----------------------------------------------------------
    RESET
    ----------------------------------------------------------- */
@@ -313,7 +382,11 @@ body[data-page="serve"] {
    element.hidden 切換的，沒有這條，.admin-auth 的 display:flex 會把
    已登入使用者的登入卡片一起顯示出來。 */
 [hidden] { display: none !important; }
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  /* 錨點（例如首頁 #mission-bnb）不要停在浮列膠囊底下 */
+  scroll-padding-top: 92px;
+}
 body {
   margin: 0; padding: 0;
   background: var(--bg1);
@@ -339,7 +412,9 @@ body {
   min-height: 100dvh;
 }
 /* main 吃掉 header 與 footer 以外的剩餘高度，把 footer 推到最底 */
-main { flex: 1 0 auto; }
+/* 底部那一段是留給 footer 上緣水面的：波浪疊在這片空白上，
+   而不是疊在內容上 —— 每一頁最後一個 section 的文字因此不會被切到。 */
+main { flex: 1 0 auto; padding-bottom: var(--footer-wave-h); }
 h1, h2, h3 { font-weight: var(--fw-semibold); }
 p { margin: 0 0 1.4em; }
 p:last-child { margin-bottom: 0; }
@@ -423,45 +498,107 @@ body[data-page="give"] .aurora {
 .site-header, main, footer { position: relative; z-index: 1; }
 
 /* -----------------------------------------------------------
-   HEADER — 玻璃感；依 --header-bg / --header-fg / --header-border 換色
+   HEADER — 透明浮列：不畫整條 bar，.header-inner 收成一顆膠囊浮在內容上
+   ------------------------------------------------------------
+   頁面最頂端時膠囊完全隱形（只剩 logo 與連結浮在背景上）；
+   一往下捲 body 會拿到 .is-scrolled（site.js），膠囊才淡出玻璃底 ——
+   透明列的代價是內容會從連結後面捲過去，這層底就是拿來擋的，不要拿掉。
+   --header-bg / --header-fg / --header-border 依頁面深淺主題換色。
    ----------------------------------------------------------- */
 .site-header {
   position: sticky; top: 0; z-index: 100;
-  background: var(--header-bg);
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border-bottom: 1px solid var(--header-border);
+  background: transparent;
+  border-bottom: 0;
 }
 .header-inner {
-  max-width: 1280px; margin: 0 auto;
-  padding: 0 40px; height: 64px;
+  /* 不滿版：寬度收在 1280 內，且左右各留 gutter，膠囊兩側看得到背景 */
+  width: min(1280px, calc(100% - 2 * clamp(16px, 4vw, 40px)));
+  margin: 10px auto;
+  padding: 0 clamp(14px, 2vw, 22px);
+  height: 60px;
+  /* 手機下拉選單靠它定位，才會跟膠囊切齊而不是又變回滿版 */
+  position: relative;
   display: flex; align-items: center; justify-content: space-between;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  transition:
+    background .35s cubic-bezier(.16, 1, .3, 1),
+    border-color .45s cubic-bezier(.16, 1, .3, 1),
+    box-shadow .45s cubic-bezier(.16, 1, .3, 1);
 }
-.logo { display: flex; align-items: center; cursor: pointer; }
-.logo img { height: 44px; width: auto; display: block; }
-/* 兩支 logo 依 header 色主題切換：預設淺色 header → 用深字 logo；
-   home / give 深色 header → 換成亮字 logo。 */
-.logo .logo-dark { display: none; }
+/* 透明的列不該在第一個區塊上方切出一條橫帶：把 header 的高度從版面收掉，
+   讓 hero 的照片／色場一路長到頁面最頂端，膠囊直接浮在上面（參考圖三）。
+   收掉多少，下面每一種 hero 就要在 padding-top 補回多少。
+   admin 沒有 hero，第一個區塊會直接頂到膠囊下，所以排除掉。 */
+body:not([data-page="admin"]) .site-header {
+  margin-bottom: calc(-1 * var(--header-h));
+}
+body.is-scrolled .header-inner {
+  background: var(--header-bg);
+  border-color: var(--header-border);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  box-shadow: var(--header-shadow);
+}
+.logo { display: grid; align-items: center; cursor: pointer; }
+/* 兩支 logo 疊在同一格用 opacity 交叉淡入 —— 明暗會跟著捲動翻，
+   display 硬切會在轉場中間閃一下。 */
+.logo img {
+  grid-area: 1 / 1;
+  height: 40px; width: auto; display: block;
+  transition: opacity .45s cubic-bezier(.16, 1, .3, 1);
+}
+.logo .logo-dark { opacity: 0; }
+/* JS 接手前的起手式：深色頁的第一段是深底，先用亮字 logo */
 body[data-page="home"] .logo .logo-light,
 body[data-page="give"] .logo .logo-light,
 body[data-page="about"] .logo .logo-light,
-body[data-page="serve"] .logo .logo-light { display: none; }
+body[data-page="serve"] .logo .logo-light { opacity: 0; }
 body[data-page="home"] .logo .logo-dark,
 body[data-page="give"] .logo .logo-dark,
 body[data-page="about"] .logo .logo-dark,
-body[data-page="serve"] .logo .logo-dark { display: block; }
+body[data-page="serve"] .logo .logo-dark { opacity: 1; }
+/* 接手後一律由主題決定（權重相同，靠順序贏過上面的起手式） */
+body[data-header-theme="light"] .logo .logo-light,
+body[data-header-theme="dark"]  .logo .logo-dark  { opacity: 1; }
+body[data-header-theme="light"] .logo .logo-dark,
+body[data-header-theme="dark"]  .logo .logo-light { opacity: 0; }
 
-.nav { display: flex; align-items: center; gap: 4px; }
+.nav { display: flex; align-items: center; gap: 2px; }
 .nav a {
+  /* isolation 讓下面那顆 ::before 的 z-index: -1 停在連結自己的堆疊脈絡裡。
+     少了它會掉到 .site-header 的底部，被膠囊的底色蓋掉、整個看不見。 */
+  position: relative; isolation: isolate;
   font-size: var(--fs-md); padding: 8px 16px;
   color: var(--header-fg);
-  opacity: .85;
-  transition: color .2s ease, opacity .2s ease; font-weight: var(--fw-regular);
+  opacity: .78;
+  /* 色彩跟著主題翻，要跟 --header-tint 同速；opacity 是 hover 的微互動，維持短 */
+  transition: color .45s cubic-bezier(.16, 1, .3, 1), opacity .2s ease;
+  font-weight: var(--fw-regular);
   border-radius: var(--radius-pill);
 }
-.nav a:hover { opacity: 1; color: var(--header-fg); }
-.nav a.active { color: var(--accent); opacity: 1; }
+/* 透明列上只換文字顏色看不出來，hover 要有一個實際的落點：
+   一顆膠囊色塊從 88% 展開，同時文字提到滿強度。 */
+.nav a::before {
+  content: ''; position: absolute; inset: 0; z-index: -1;
+  border-radius: inherit;
+  background: var(--nav-hover-bg);
+  opacity: 0; transform: scale(.88);
+  transition: opacity .2s ease, transform .3s cubic-bezier(.16, 1, .3, 1);
+}
+.nav a:hover, .nav a:focus-visible { opacity: 1; color: var(--header-fg); }
+.nav a:hover::before,
+.nav a:focus-visible::before { opacity: 1; transform: scale(1); }
+
+.nav a.active { color: var(--nav-accent); opacity: 1; }
+/* 目前頁面不靠 hover 也要認得出來 —— 一道細的 flow line，不跟 hover 色塊搶 */
+.nav a.active::after {
+  content: ''; position: absolute;
+  left: 16px; right: 16px; bottom: 3px; height: 1px;
+  background: currentColor; opacity: .55;
+}
 .nav a.donate-btn.active { color: var(--ink-900); }
+.nav a.donate-btn.active::after { display: none; }
 .nav .donate-btn {
   margin-left: 12px;
   background: var(--amber-500);
@@ -470,30 +607,51 @@ body[data-page="serve"] .logo .logo-dark { display: block; }
   padding: 9px 20px;
   font-size: var(--fs-sm);
   font-weight: var(--fw-medium);
-  transition: all .2s ease;
+  transition: background .2s ease, border-color .2s ease,
+              transform .3s cubic-bezier(.16, 1, .3, 1), box-shadow .3s ease;
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  opacity: 1;
 }
+/* 實心鍵自己就是底，不需要 hover 色塊 */
+.nav .donate-btn::before { display: none; }
 .nav .donate-btn:hover {
   background: var(--amber-400);
   border-color: var(--amber-400);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(26, 46, 64, .22);
 }
 
-.menu-toggle { display: none; background: transparent; border: 0; padding: 8px; color: var(--header-fg); }
+.menu-toggle {
+  display: none; background: transparent; border: 0; padding: 8px;
+  color: var(--header-fg);
+  transition: color .45s cubic-bezier(.16, 1, .3, 1);
+}
 @media (max-width: 900px) {
+  .header-inner { height: 56px; margin: 8px auto; }
+  :root { --header-h: 72px; }
   .menu-toggle { display: block; }
   .nav {
     display: none;
-    position: absolute; top: 60px; left: 0; right: 0;
-    background: var(--header-bg);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--header-border);
+    /* 對齊膠囊（父層是 .header-inner），不要再回到滿版下拉 */
+    position: absolute; top: calc(100% + 8px); left: 0; right: 0;
+    background: var(--header-panel-bg);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border: 1px solid var(--header-border);
+    border-radius: 16px;
+    box-shadow: var(--header-shadow);
     flex-direction: column; align-items: stretch;
-    padding: 16px; gap: 4px;
+    padding: 12px; gap: 2px;
   }
   .nav.open { display: flex; }
-  .nav .donate-btn { margin: 8px 0 0; justify-content: center; }
+  .nav a { border-radius: 10px; }
+  .nav a.active::after { display: none; }
+  .nav .donate-btn {
+    margin: 8px 0 0; justify-content: center;
+    border-radius: var(--radius-pill);
+  }
 }
 
 /* -----------------------------------------------------------
@@ -511,7 +669,7 @@ body[data-page="serve"] .logo .logo-dark { display: block; }
    ----------------------------------------------------------- */
 .hero {
   position: relative;
-  padding: 220px 32px 140px;
+  padding: calc(140px + var(--header-h)) 32px 140px;
   text-align: center;
   overflow: hidden;
   min-height: clamp(640px, 90vh, 900px);
@@ -549,7 +707,7 @@ body[data-page="serve"] .logo .logo-dark { display: block; }
 }
 @media (max-width: 700px) {
   .hero {
-    padding: 160px 24px 100px;
+    padding: calc(88px + var(--header-h)) 24px 100px;
     min-height: clamp(560px, 85vh, 720px);
   }
 }
@@ -679,7 +837,7 @@ body[data-page="serve"] .logo .logo-dark { display: block; }
   position: relative;
   /* 左右用 max() 把內容收在 1280 的量測裡，但 section 本身滿版 ——
      在 section 上設 max-width 會讓它的背景變成一塊浮在頁面上的矩形。 */
-  padding-block: clamp(96px, 16vh, 168px) clamp(64px, 10vh, 96px);
+  padding-block: calc(clamp(96px, 16vh, 168px) + var(--header-h)) clamp(64px, 10vh, 96px);
   padding-inline: max(clamp(20px, 5vw, 64px), calc((100% - 1280px) / 2));
   text-align: left;
 }
@@ -1274,6 +1432,49 @@ body[data-page="home"] .hero .btn-ghost:hover {
   z-index: 2;
 }
 
+/* ---- 上緣水面 ----
+   bottom: 100% 讓它整塊坐在 footer 正上方，也就是 main 那段 padding 裡。
+   三層各自是一張 200% 寬的 svg（viewBox 2880 = 版面寬的兩倍），
+   平移 -50% 剛好走完一個波形週期，接回原點時看不出接縫。 */
+.footer-wave {
+  position: absolute; left: 0; right: 0; bottom: 100%;
+  /* --footer-wave-h 是 9vw，會算出小數高度；往下壓 1px 把
+     浮點捨入在 footer 上緣留下的那條亮縫補掉。 */
+  margin-bottom: -1px;
+  height: calc(var(--footer-wave-h) + 1px);
+  overflow: hidden;
+  pointer-events: none;
+}
+.footer-wave__layer {
+  position: absolute; left: 0; top: 0;
+  width: 200%; height: 100%;
+  display: block;
+  fill: var(--ink-900);
+}
+/* 三層的速度與方向都不一樣，交疊處才會讀成「水在流」而不是一張靜止的剪影。
+   §8：ambient 動效 8–40s。 */
+/* 最遠那一層的上緣用 mask 化掉 —— 跟 flow.css 的 rift / well 同一條規矩：
+   不要在畫面邊緣留硬切口，否則整片會讀成一條色帶而不是水面。 */
+.footer-wave__back {
+  opacity: .24;
+  animation: footer-wave-drift 38s linear infinite;
+  mask-image: linear-gradient(to bottom, transparent 0, #000 42%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 42%);
+}
+.footer-wave__mid   { opacity: .55; animation: footer-wave-drift-rev 27s linear infinite; }
+.footer-wave__front { opacity: 1;   animation: footer-wave-drift 19s linear infinite; }
+@keyframes footer-wave-drift {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+@keyframes footer-wave-drift-rev {
+  from { transform: translate3d(-50%, 0, 0); }
+  to   { transform: translate3d(0, 0, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .footer-wave__layer { animation: none; }
+}
+
 .footer-inner {
   max-width: 1180px; margin: 0 auto;
   display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr;
@@ -1648,8 +1849,8 @@ body[data-page="home"] .hero .btn-ghost:hover {
    DONATE PAGE  — 深色 ink-800 底 + 左固定右滾動版型
    ============================================================ */
 
-/* ---- 頁面級變數：header 高度供左欄 sticky 定位使用 ---- */
-:root { --header-h: 64px; }
+/* 左欄的 sticky 定位吃 --header-h（宣告在最上面的 :root）。
+   浮列改版後 header 是 60 的膠囊 + 上下各 10，整支變數已由 64 改成 80。 */
 
 body[data-page="give"] main > .section {
   position: relative;
@@ -1663,7 +1864,7 @@ body[data-page="give"] main > .section {
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  padding-block: 140px 110px;
+  padding-block: calc(140px + var(--header-h)) 110px;
 }
 .page-hero.donate-hero::before {
   content: "";
@@ -2225,8 +2426,8 @@ body[data-page="home"] .feature-text .link:hover {
   .section-verse    { padding: 88px 24px; }
   .section-cta      { padding: 104px 24px; }
   .newsletter       { padding: 72px 24px; }
-  .page-hero        { padding: 88px 24px 56px; }
-  .page-hero.donate-hero { padding: 96px 24px 72px; }
+  .page-hero        { padding: calc(16px + var(--header-h)) 24px 56px; }
+  .page-hero.donate-hero { padding: calc(24px + var(--header-h)) 24px 72px; }
 
   /* --- Footer --- */
   /* 水平 32→24、底 32→24 */

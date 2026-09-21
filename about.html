@@ -82,7 +82,8 @@
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      padding: 140px 32px;
+      /* header 的高度被收掉了（見 styles.css），在這裡補回來 */
+      padding: calc(140px + var(--header-h)) 32px 140px;
     }
     .scr-hero__bg {
       position: absolute; inset: 0;
@@ -964,7 +965,7 @@
 
     /* ---------- Mobile ---------- */
     @media (max-width: 720px) {
-      .scr-hero { padding: 120px 24px; }
+      .scr-hero { padding: calc(120px + var(--header-h)) 24px 120px; }
       /* 英文大標在窄螢幕會折成兩行，縮小並補上行距與間距 */
       .section-head .section-num {
         font-size: var(--fs-5xl); line-height: var(--lh-tight); margin-bottom: 14px;
