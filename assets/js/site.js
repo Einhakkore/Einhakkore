@@ -87,13 +87,103 @@
     select.addEventListener('change', () => syncTo(select.value));
   }
 
+  /* ---------- Header 的捲動狀態與明暗 ----------
+     膠囊下緣（--header-h）壓在哪一段上，那一段說了算。
+     footer 永遠是深底，一起放進來當最後一段，捲到底時膠囊才跟著翻深。
+
+     取法是「最後一個上緣已經越過膠囊下緣的區塊」，而不是「剛好包住那個
+     點的區塊」—— 因為 section 之間還夾著不帶 data-surface 的東西
+     （data-flow-divider 的裂／湧／流三種線稿轉場就是 section 的兄弟節點）。
+     要求剛好包住的話，膠囊滑過 divider 的那段空檔會一個區塊都掃不到，
+     於是掉回淺色預設，深藍底上突然冒出一顆白膠囊。
+     色場在空檔裡本來就還是前一段的顏色（下一段要等上緣過視窗中線才換），
+     所以沿用前一段才是對的。 */
+  function initHeaderState() {
+    const body = document.body;
+    const zones = [...document.querySelectorAll("main [data-surface]")]
+      .map(el => ({ el, surface: el.dataset.surface === "light" ? "light" : "dark" }));
+
+    const footer = document.querySelector(".site-footer");
+    if (footer) zones.push({ el: footer, surface: "dark" });
+
+    // palette 的第一段就是該區塊漸層的上緣色，而膠囊正好浮在區塊上緣
+    const tintOf = zone => {
+      if (zone.el.classList.contains("site-footer")) return "var(--ink-900)";
+      const pal = zone.el.dataset.flowPalette;
+      if (pal) {
+        const bg1 = String(pal).split("|")[0].trim();
+        if (bg1) return bg1;
+      }
+      // 沒宣告色場的頁面（contact / terms）沿用主題自己的底色
+      return zone.surface === "light" ? "var(--paper)" : "var(--ink-900)";
+    };
+
+    let lastTheme = null;
+    let lastTint = null;
+
+    function sync() {
+      body.classList.toggle("is-scrolled", window.scrollY > 12);
+
+      const line = parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue("--header-h")
+      ) || 80;
+      // 取膠囊下緣再往上 1px：正好是「還壓在膠囊底下」的最後一列像素
+      const probe = line - 1;
+
+      let hit = null;
+      for (const zone of zones) {
+        if (zone.el.getBoundingClientRect().top > probe) break;
+        hit = zone;
+      }
+      // 掃不到（還在第一段之上，或整頁都沒宣告 data-surface）才回到淺色預設
+      const theme = hit ? hit.surface : "light";
+      const tint = hit ? tintOf(hit) : "var(--paper)";
+
+      if (theme !== lastTheme) { body.dataset.headerTheme = theme; lastTheme = theme; }
+      if (tint !== lastTint) { body.style.setProperty("--header-tint", tint); lastTint = tint; }
+    }
+
+    let queued = false;
+    const onScroll = () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(() => { queued = false; sync(); });
+    };
+
+    sync();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+  }
+
   function initInteractivity() {
+
+    // ---------- Header：捲動後才給膠囊底 ----------
+    // 導覽列在頁面頂端是全透明的（只剩 logo 與連結浮在背景上）。一往下捲，
+    // 內容就會從連結後面經過，這時才把 .is-scrolled 加上去讓膠囊淡出玻璃底。
+    //
+    // 同時還要決定膠囊自己的明暗：flow 頁面的背景會從深藍一路轉到奶紙白，
+    // 色票綁死在 body[data-page] 的話，捲到底就是一顆深色膠囊壓在淺底上。
+    // 這裡改成看「此刻壓在膠囊底下的是哪一段」——
+    //   data-surface  → body[data-header-theme]，翻文字、邊框、active 色
+    //   palette 的第一個顏色 → --header-tint，膠囊的底因此永遠是
+    //                          「當下的背景再壓深一點」，不是外來的色塊
+    // 兩者都在同一個判斷裡算完，才不會出現文字翻了、底還沒翻的半拍。
+    initHeaderState();
 
     // ---------- Mobile menu ----------
     const menuBtn = document.getElementById("menuToggle");
     const nav = document.getElementById("nav");
     if (menuBtn && nav) {
       menuBtn.addEventListener("click", () => nav.classList.toggle("open"));
+      // 浮卡式的選單不再是滿版，點到外面應該要收起來
+      document.addEventListener("click", (e) => {
+        if (!nav.classList.contains("open")) return;
+        if (nav.contains(e.target) || menuBtn.contains(e.target)) return;
+        nav.classList.remove("open");
+      });
+      nav.addEventListener("click", (e) => {
+        if (e.target.closest("a")) nav.classList.remove("open");
+      });
     }
 
     // ---------- Highlight current page ----------
