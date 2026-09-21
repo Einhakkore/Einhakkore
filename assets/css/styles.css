@@ -2546,7 +2546,9 @@ body[data-page="home"] .feature-text .link:hover {
      400px 以下最後一行就會只剩一兩個字（serve 的「…的網絡」）。
      讓它在窄螢幕跟著視窗縮，句子才留得住。 */
   .page-hero h1           { font-size: clamp(22px, 6.9vw, 28px); }
-  .section-head h2        { font-size: var(--fs-4xl); }
+  /* 區塊主標同理（見上）：28px 在 390px 寬放不下 12 個字，只差一兩個
+     像素，整句就被切成兩半。讓它跟著視窗縮，句子才留得住。 */
+  .section-head h2        { font-size: clamp(22px, 6.9vw, 28px); }
   .feature-text h2        { font-size: var(--fs-4xl); }
   .cta-poem               { font-size: var(--fs-4xl); }
   .verse-quote            { font-size: var(--fs-3xl); }
