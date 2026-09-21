@@ -844,18 +844,26 @@
       color: var(--text-2);
       margin: 0 0 32px;
     }
-    .cta-ways {
-      list-style: none; padding: 0;
-      margin: 0 auto 40px;
-      display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;
-      max-width: 620px;
+    /* 這裡不是「選一個入口」，所以四種參與不做成卡片、標籤或按鈕：
+       只留一行輕聲的並列，讓「一個禱告」和「一份專業」看起來一樣重。
+       行距與上下留白刻意放寬，整段讀起來像邀請，而不是任務清單。 */
+    .about-cta .cta-lede {
+      margin: 0 auto 44px;
     }
-    .cta-ways li {
-      padding: 9px 20px;
-      border-radius: var(--radius-pill);
-      border: 1px solid var(--line-mid);
-      background: var(--surface-3);
-      font-size: var(--fs-sm); letter-spacing: var(--ls-wide);
+    .about-cta .cta-ways {
+      margin: 0 auto 40px;
+      font-size: var(--fs-sm);
+      line-height: var(--lh-loose);
+      letter-spacing: var(--ls-wide);
+      color: var(--text-3);
+    }
+    /* 前三項一行、「一個禱告」自己一行——分行寫死，才不會在不同寬度
+       下折成「三個並排的選項」。 */
+    .cta-ways__row { display: block; }
+    .cta-ways__dot { margin: 0 .9em; color: var(--text-3); opacity: .5; }
+    .cta-ways__dot--solo { display: block; margin: 0; }
+    .about-cta .cta-close {
+      margin: 0 auto 56px;
       color: var(--text-2);
     }
 
@@ -982,6 +990,7 @@
       .parallax-deco { opacity: .28; filter: blur(24px); }
       /* 上緣要留給轉亮的漸層，只收窄左右與下緣 */
       .about-cta { padding-inline: 24px; padding-bottom: 96px; }
+      .cta-ways__dot { margin: 0 .6em; }
     }
   </style>
 </head>
@@ -1310,7 +1319,7 @@
                   <img src="assets/img/HandsWater.webp" alt="" loading="lazy" decoding="async">
                 </div>
               </figure>
-              <span class="field-card__name">諮商／心理</span>
+              <span class="field-card__name">心理諮商師</span>
               <span class="field-card__count"><b data-fact="counseling">—</b>位</span>
             </div>
             <div class="field-card">
@@ -1319,7 +1328,7 @@
                   <img src="assets/img/Water.webp" alt="" loading="lazy" decoding="async">
                 </div>
               </figure>
-              <span class="field-card__name">網站</span>
+              <span class="field-card__name">網頁設計師</span>
               <span class="field-card__count"><b data-fact="web">—</b>位</span>
             </div>
             <div class="field-card">
@@ -1328,7 +1337,7 @@
                   <img src="assets/img/donate_bg.webp" alt="" loading="lazy" decoding="async">
                 </div>
               </figure>
-              <span class="field-card__name">財務</span>
+              <span class="field-card__name">財務顧問</span>
               <span class="field-card__count"><b data-fact="finance">—</b>位</span>
             </div>
             <div class="field-card">
@@ -1337,7 +1346,7 @@
                   <img src="assets/img/HandsWater.webp" alt="" loading="lazy" decoding="async">
                 </div>
               </figure>
-              <span class="field-card__name">法律</span>
+              <span class="field-card__name">律師</span>
               <span class="field-card__count"><b data-fact="legal">—</b>位</span>
             </div>
             <div class="field-card">
@@ -1346,13 +1355,13 @@
                   <img src="assets/img/Water.webp" alt="" loading="lazy" decoding="async">
                 </div>
               </figure>
-              <span class="field-card__name">教育</span>
+              <span class="field-card__name">教師</span>
               <span class="field-card__count"><b data-fact="education">—</b>位</span>
             </div>
           </div>
 
           <div class="net-actions">
-            <a class="net-link" href="serve.html">我願意專業服事 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg></a>
+            <a class="net-link" href="serve.html">我想加入關顧網絡 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg></a>
           </div>
         </section>
 
@@ -1374,7 +1383,7 @@
               </figure>
               <div class="host-card__body">
                 <div class="host-card__row">
-                  <h4 class="host-card__name">Mission BnB</h4>
+                  <h4 class="host-card__name">住宿資源</h4>
                   <div class="host-card__num"><span data-fact="bnb">—</span><span class="unit">處</span></div>
                 </div>
                 <p class="host-card__desc">為宣教士預備的中長期住宿空間，讓身心有地方安穩下來。</p>
@@ -1457,15 +1466,15 @@
     <div class="about-cta__wrap">
       <div class="section-num" data-scr-fade>JOIN US</div>
       <h2 data-split-lines>一起成為宣教路上的<em>同行者</em></h2>
-      <p data-scr-fade>不論你想從哪一種方式開始，都歡迎與我們聯繫。</p>
-      <ul class="cta-ways" data-scr-fade>
-        <li>想參與服事</li>
-        <li>提供專業資源</li>
-        <li>成為接待家庭</li>
-        <li>與我們建立合作</li>
-      </ul>
+      <p class="cta-lede" data-scr-fade>不一定要遠行，也不一定要做很多事。</p>
+      <p class="cta-ways" data-scr-fade>
+        <span class="cta-ways__row">一段時間<span class="cta-ways__dot" aria-hidden="true">·</span>一份專業<span class="cta-ways__dot" aria-hidden="true">·</span>一個空間</span>
+        <span class="cta-ways__dot cta-ways__dot--solo" aria-hidden="true">·</span>
+        <span class="cta-ways__row">一個禱告</span>
+      </p>
+      <p class="cta-close" data-scr-fade>每一份心意，都能成為前線的支持。</p>
       <div class="cta-actions">
-        <a class="btn btn-primary" href="serve.html">參與服事 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg></a>
+        <a class="btn btn-primary" href="serve.html">了解參與方式 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg></a>
       </div>
     </div>
   </section>
@@ -1488,12 +1497,12 @@
     proPartners:  12,      // 專業夥伴總數（位）＝ 下面五個領域相加
     churches:     8,       // 合作教會（間）
     hosting:      7,       // 接待資源（組）＝ bnb + hostFamilies
-    counseling:   4,       // 諮商／心理（位）
-    web:          3,       // 網站（位）
-    finance:      2,       // 財務（位）
-    legal:        1,       // 法律（位）
-    education:    2,       // 教育（位）
-    bnb:          2,       // Mission BnB（處）
+    counseling:   4,       // 心理諮商師（位）
+    web:          3,       // 網頁設計師（位）
+    finance:      2,       // 財務顧問（位）
+    legal:        1,       // 律師（位）
+    education:    2,       // 教師（位）
+    bnb:          2,       // 住宿資源（處）
     hostFamilies: 5,       // 短期接待家庭（戶）
     founded:      '2025 年' // 成立時間
   };
