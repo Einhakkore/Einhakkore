@@ -228,6 +228,37 @@
       align-items: start;
     }
 
+    /* ---------- 捲動換章的行程 ----------
+       .vision-track 比 .vision-sticky 的內容多出 (章數-1) × --vision-dwell，
+       多出來的那一段就是換章用的行程：sticky 把整個 vision 釘在畫面上，
+       每捲過一個 dwell 就換下一章，捲完最後一章才把版面放開往下走。
+       目錄點擊則是捲到對應的行程位置 —— 捲動與點擊共用同一個狀態，
+       不會互相打架（見頁尾的 OUR VISION 腳本）。
+
+       只在「雙欄版面 + 視窗夠高 + 使用者沒有要求減弱動態」時才釘；
+       其餘情況（窄螢幕的橫向頁籤、矮視窗、reduce motion）維持點擊切換，
+       .vision-track 就只是一個普通的 div。
+
+       行程是用一個實體的空 div（.vision-runway）撐出來的，不是 padding：
+       sticky 能移動的範圍是「containing block 的內容區」，padding 不算在內，
+       用 padding-bottom 撐高的話 sticky 會完全不作用。 */
+    .vision-runway { display: none; }
+    @media (min-width: 901px) and (min-height: 700px) and (prefers-reduced-motion: no-preference) {
+      .vision-track { --vision-dwell: 62vh; }
+      .vision-runway {
+        display: block;
+        height: calc(var(--vision-dwell) * 2);   /* (章數 - 1) × dwell */
+      }
+      .vision-sticky {
+        position: sticky;
+        top: calc(var(--header-h) + clamp(16px, 4vh, 48px));
+      }
+      /* 內容比視窗還高時由腳本掛上：釘住會讓段落的尾巴永遠露不出來，
+         這種情況就不要釘，退回點擊切換。 */
+      .vision-track.is-unpinned .vision-sticky { position: static; }
+      .vision-track.is-unpinned .vision-runway { display: none; }
+    }
+
     /* ---------- 左：章節目錄 ---------- */
     .vision__nav {
       display: flex;
@@ -1131,7 +1162,11 @@
         <span class="section-title-line" data-team-line aria-hidden="true"></span>
       </hgroup>
 
-      <div class="vision" data-vision>
+      <!-- .vision-track 比它裡面 sticky 的內容高出 (章數-1) × dwell，
+           多出來的高度就是「捲動換章」的行程（見 CSS 與頁尾腳本）。 -->
+      <div class="vision-track" data-vision-track>
+       <div class="vision-sticky">
+        <div class="vision" data-vision>
         <!-- 左：章節導覽。桌機是直式目錄，窄螢幕收成可橫向捲的頁籤 -->
         <div class="vision__nav" role="tablist" aria-label="三個關鍵承諾" data-vision-nav>
           <button type="button" class="vision__chapter is-active" role="tab"
@@ -1259,6 +1294,9 @@
             </div>
           </article>
         </div>
+        </div>
+       </div>
+       <div class="vision-runway" aria-hidden="true"></div>
       </div>
     </div>
   </section>
@@ -1586,6 +1624,9 @@
     gsap.ticker.add((time) => lenis.raf(time * 1000));
     gsap.ticker.lagSmoothing(0);
     document.documentElement.classList.add('lenis');
+    // OUR VISION 的目錄點擊要捲動頁面，需要交給 Lenis 代捲，
+    // 否則原生 scrollTo 會跟 Lenis 的補間互相拉扯。
+    window.__lenis = lenis;
   }
 
   /* ---------- 逐行分割 helper ---------- */
@@ -1789,9 +1830,12 @@
 
   let index = 0;
   let switching = false;   // 補間途中不接受新的切換，避免兩章疊在一起閃
+  let queued   = null;     // 補間途中收到的目標（捲很快時會發生），補完再補上
 
   function select(next) {
-    if (switching || next === index || !panels[next]) return;
+    if (!panels[next]) return;
+    if (switching) { queued = next; return; }
+    if (next === index) return;
     switching = true;
 
     const from = panels[index];
@@ -1822,12 +1866,90 @@
 
       index = next;
       switching = false;
+
+      if (queued !== null) {
+        const q = queued;
+        queued = null;
+        select(q);
+      }
     }, EXIT_MS);
   }
 
-  /* ---------- 目錄：點擊 + 鍵盤 ---------- */
+  /* ---------- 捲動換章 ----------
+     行程長度 = track 的高度 - sticky 內容的高度（也就是 .vision-runway
+     那一段）。把「已經捲過多少行程」換算成 0–1 的進度，
+     再切成章數等分，就是目前該顯示第幾章。
+     sticky 沒生效時（窄螢幕／矮視窗／reduce motion）這一段整個不運作，
+     目錄仍然可以點。 */
+  const track  = root.closest('[data-vision-track]');
+  const sticky = root.closest('.vision-sticky');
+
+  // sticky 是否生效、釘在哪個高度，只有版面改變時才會變，
+  // 所以量一次快取起來，捲動時只讀 rect（不再每次 getComputedStyle）。
+  let pinned = false, stickTop = 0;
+  function measure() {
+    if (!track || !sticky) return;
+    track.classList.remove('is-unpinned');   // 先還原，才量得到 CSS 原本想要的狀態
+    const cs = getComputedStyle(sticky);
+    pinned = cs.position === 'sticky';
+    stickTop = parseFloat(cs.top) || 0;
+
+    // 釘住的前提是整章看得完。內容比視窗高（放大、視窗被壓扁、內容變長）
+    // 就不要釘，退回點擊切換，不然段落尾巴會永遠在畫面外。
+    if (pinned && sticky.offsetHeight > window.innerHeight - stickTop - 24) {
+      track.classList.add('is-unpinned');
+      pinned = false;
+      stickTop = 0;
+    }
+  }
+
+  function travel() {
+    if (!pinned) return null;
+    const total = track.offsetHeight - sticky.offsetHeight;
+    if (total <= 0) return null;
+    return { total, stickTop };
+  }
+
+  function syncFromScroll() {
+    const t = travel();
+    if (!t) return;
+    const done = t.stickTop - track.getBoundingClientRect().top;   // 已捲過的行程
+    const p = Math.min(0.999, Math.max(0, done / t.total));
+    select(Math.floor(p * panels.length));
+  }
+
+  // 捲到第 i 章的行程中點。回傳 false 代表現在沒有行程（不需要捲）。
+  function scrollToChapter(i) {
+    const t = travel();
+    if (!t) return false;
+    const seg = t.total / panels.length;
+    const y = window.scrollY + track.getBoundingClientRect().top - t.stickTop
+            + Math.min(t.total - 1, seg * i + seg * 0.5);
+    if (window.__lenis) window.__lenis.scrollTo(y);
+    else window.scrollTo({ top: y, behavior: 'smooth' });
+    return true;
+  }
+
+  // 直接在 scroll 事件裡算：只讀一個 rect 與兩個 offsetHeight，
+  // 沒有寫入，不會造成 layout thrash，也不必等 rAF（省掉一格的延遲）。
+  window.addEventListener('scroll', syncFromScroll, { passive: true });
+  window.addEventListener('resize', () => { measure(); syncFromScroll(); });
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => { measure(); syncFromScroll(); });
+  }
+  measure();
+  syncFromScroll();
+
+  /* ---------- 目錄：點擊 + 鍵盤 ----------
+     有行程時，點目錄＝捲到那一章的位置（捲動與點擊共用同一個狀態）；
+     沒有行程時就是單純切換。 */
+  function goTo(i) {
+    scrollToChapter(i);
+    select(i);
+  }
+
   tabs.forEach((tab, i) => {
-    tab.addEventListener('click', () => select(i));
+    tab.addEventListener('click', () => goTo(i));
   });
 
   root.querySelector('[data-vision-nav]').addEventListener('keydown', e => {
@@ -1839,7 +1961,7 @@
     if (!(e.key in map)) return;
     e.preventDefault();
     const next = Math.min(tabs.length - 1, Math.max(0, map[e.key]));
-    select(next);
+    goTo(next);
     tabs[next].focus();
   });
 
