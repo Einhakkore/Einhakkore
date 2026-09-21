@@ -102,21 +102,14 @@
 <section class="section" data-surface="dark"
          data-flow-palette="#101D29 | #16273A | rgba(49,87,213,.22) | 14% 78%">
   <div class="wrap">
-    <div class="section-head section-head--on-dark reveal">
+    <!-- 整段置中：這裡是全頁的 statement，不是要逐條讀的資訊
+         （V3 §5「置中留給刻意的 statement」）。
+         內容就是原本頁面上的四個元素，沒有增減。 -->
+    <div class="section-head section-head--on-dark section-head--center reveal">
       <div class="section-num">WHY</div>
-      <div class="section-eyebrow">支持的理由</div>
+      <div class="cta-label">您的奉獻，將轉化為第一線宣教士生命中具體可行的資源與陪伴。</div>
       <h2>為什麼我們需要您的支持？</h2>
-      <p class="lead">宣教士在跨文化的環境中前行，常需面對複雜與不易。隱哈歌利相信，真誠的關懷會先接住情緒，再帶出方向與實際步驟。我們尊重每個生命的節奏，不給標準答案，但在關鍵時刻，我們希望具體、務實地陪著他們一起走過。</p>
-    </div>
-
-    <!-- 奉獻用途。文案沿用 serve.html #give-support 的同一段，兩頁必須一致。
-         TODO：目前站上有據可查的只有「專案推動」一條。待同工確認後再補
-         其餘項目（行政營運、關顧專案…），在那之前不自行增列。 -->
-    <div class="give-body reveal">
-      <p>您的奉獻，將轉化為第一線宣教士生命中具體可行的資源與陪伴。隱哈歌利的運作仰賴主內肢體的愛心支持，您的每一筆奉獻，將直接用於推動具體關顧專案與維持平台的日常行政營運：</p>
-      <ul class="give-use__list">
-        <li><b>專案推動：</b>MissionBnB 空間營運、關顧資源媒合。</li>
-      </ul>
+      <p>宣教士在跨文化的環境中前行，常需面對複雜與不易。隱哈歌利相信，真誠的關懷會先接住情緒，再帶出方向與實際步驟。我們尊重每個生命的節奏，不給標準答案，但在關鍵時刻，我們希望具體、務實地陪著他們一起走過。</p>
     </div>
   </div>
 </section>
@@ -130,15 +123,29 @@
 <section class="section" data-surface="dark"
          data-flow-palette="#16273A | #101D29 | rgba(60,145,173,.18) | 82% 28%">
   <div class="wrap">
-    <div class="section-head section-head--on-dark reveal">
-      <div class="section-num">NOTICE</div>
-      <div class="section-eyebrow">合作公告</div>
-      <h2>隱哈歌利 × 台灣好地方社區發展協會</h2>
-    </div>
+    <div class="give-notice">
+      <!-- 形狀用 --spring（泉眼）：V3 §7.1 允許的 Abstract Organic 一類，
+           不是禁止的水滴；全頁只有這一個有機輪廓（§7.2 第 3 條）。
+           TODO：這是站上現有的暫用圖，拿到合作相關的正式照片再換掉，
+           換圖時把 alt 從空字串改成實際描述。 -->
+      <figure class="flow-figure flow-figure--spring give-notice__figure reveal" data-flow-parallax>
+        <div class="flow-figure__frame">
+          <img src="assets/img/HandsWater.webp" alt="" loading="lazy" decoding="async">
+        </div>
+      </figure>
 
-    <div class="give-body reveal">
-      <p>為了讓財務流程更完善、提供支持者更放心的奉獻管道，隱哈歌利目前與「社團法人台灣好地方社區發展協會」展開正式的專案合作。</p>
-      <p>這代表：你在匯款或刷卡頁面上看到的收款單位會是「台灣好地方社區發展協會」，這是正常的。</p>
+      <div class="give-notice__body reveal">
+        <div class="section-head section-head--on-dark">
+          <div class="section-num">NOTICE</div>
+          <div class="section-eyebrow">合作公告</div>
+          <h2>隱哈歌利 × 台灣好地方社區發展協會</h2>
+        </div>
+
+        <div class="give-body">
+          <p>為了讓財務流程更完善、提供支持者更放心的奉獻管道，隱哈歌利目前與「社團法人台灣好地方社區發展協會」展開正式的專案合作。</p>
+          <p>這代表：你在匯款或刷卡頁面上看到的收款單位會是「台灣好地方社區發展協會」，這是正常的。</p>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -169,7 +176,7 @@
                所以它是這頁唯一有視覺重量的區塊：一道 amber 直線 + 極淡底，
                無圓角、無陰影，不是卡片。 -->
           <div class="give-note">
-            <p>為了確保您的款項順利進入隱哈歌利的專案，請於「備註欄」或「轉帳附言」務必填寫：<b>為隱哈歌利奉獻</b>。</p>
+            <p>請於「備註欄」或「轉帳附言」務必填寫：<b>為隱哈歌利奉獻</b>，款項才會進入隱哈歌利的專案。</p>
           </div>
           <a class="btn btn-text pay-cta" href="https://gooodplace.dobtor.com/donate" target="_blank" rel="noopener">
             前往匯款
