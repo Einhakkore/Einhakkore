@@ -1953,12 +1953,12 @@ body[data-page="give"] .section-head--center .cta-label { margin-bottom: 18px; }
 .give-notice__figure { width: 100%; }
 /* 比 3:4 再修長一點，讓圖的高度跟右欄的文字塊對得上 */
 .give-notice--tall .give-notice__figure .flow-figure__frame { aspect-ratio: 3 / 4; }
-.give-notice__body .section-head { max-width: 46ch; margin-bottom: clamp(18px, 2.4vh, 28px); }
+.give-notice__body .section-head { max-width: 46ch; margin-bottom: clamp(16px, 2.2vh, 26px); }
 /* 右欄的量測仍然要收 —— 讓它撐滿欄寬會變成 50 字一行 */
 .give-notice__body .give-body { max-width: 46ch; }
 
 @media (max-width: 860px) {
-  .give-notice { grid-template-columns: 1fr; gap: clamp(20px, 3vw, 32px); }
+  .give-notice { grid-template-columns: 1fr; gap: clamp(16px, 2.4vw, 26px); }
   /* ≤860 圖移到文字上方並縮小：直立 3:4 在窄欄會吃掉大半個畫面。
      200px 是 §7.2「有機輪廓只用在 ≥200px」的下限，不再更小。 */
   .give-notice__figure { max-width: 200px; }
