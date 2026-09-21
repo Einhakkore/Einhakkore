@@ -911,6 +911,7 @@
        空元素沒有內容就沒有高度，作者要的那一行空白會消失。補一個
        不斷行空白把行高撐回來。 */
     .spring-figure__quote .scr-line:empty::after { content: "\00a0"; }
+    /* 經文的字級收斂寫在下面的 720px 區塊裡（見 .spring-figure__quote）。 */
 
     .spring-figure__note {
       font-size: var(--fs-md);
@@ -927,10 +928,81 @@
         grid-template-columns: 1fr;
         row-gap: 40px;
         margin-left: 0;
-        padding: 0 32px;
+        padding: 0 clamp(24px, 6vw, 32px);
       }
       /* 窄螢幕只留一點點出血，圖還是要看得完整 */
       .spring-figure .flow-figure { margin-left: -32px; margin-right: 12%; }
+    }
+
+    /* ============================================================
+       文案斷行規則（本頁共用）
+       ------------------------------------------------------------
+       中文沒有空格，瀏覽器可以在任何兩個字之間換行，所以「行尾落在
+       哪裡」預設是由 max-width 決定的，而不是由語意決定的。這一段把
+       規則集中寫在一起，讓全頁的斷行有一致的判準：
+
+       1. 語意優先：標題／短句用 text-wrap: balance，讓行長自己平均，
+          最後一行不會只剩一兩個字；長段落用 text-wrap: pretty，
+          只修掉孤行，段落內仍保持自然的閱讀節奏。
+       2. 專有名詞、關鍵詞（隱哈歌利、「屬靈英雄」）包 .kw，
+          不讓品牌名被切在兩行。
+       3. 只有 hero、section 標題、引言、CTA 這種「刻意的句子」才用
+          <br> 主動控制節奏，而且桌機與手機分開：.br-desktop 只在
+          寬螢幕定義節奏，.br-mobile 只在窄螢幕接手；一般內文不用 <br>。
+       4. 寬度不夠才是真正的問題時，先改 max-width / padding，
+          不動文案。
+       ============================================================ */
+
+    /* 短標題／短句：讓行長自己平均，避免「同行者」這種孤字尾行。
+       balance 只看寬度、不看語意，所以句子一長就可能切在詞中間
+       （「我／們」「不夠／努力」）。因此只給「一兩行就結束、且沒有
+       明確句讀節奏」的短文字用；長句一律改用下面的 <br> 控制。 */
+    .scr-hero__title,
+    .section-head h2,
+    .about-cta h2,
+    .host-card__desc,
+    .cta-lede,
+    .cta-close {
+      text-wrap: balance;
+    }
+
+    /* 長段落：不平均行長（中文段落不該每行一樣長），只避免孤行尾巴 */
+    .section-head .lead,
+    .vision__title,
+    .vision__body,
+    .vision__list li,
+    .person-card__quote p,
+    .net-block__note,
+    .org-note {
+      text-wrap: pretty;
+    }
+
+    /* 專有名詞／關鍵詞不被切斷 */
+    .kw { white-space: nowrap; }
+
+    /* 語意斷行。兩個方向各自獨立：
+       .br-desktop 只在寬螢幕定義節奏（窄螢幕讓文字自然 reflow），
+       .br-mobile  只在窄螢幕接手（寬螢幕維持一行）。 */
+    br.br-mobile  { display: none; }
+    br.br-desktop { display: inline; }
+    @media (max-width: 560px) {
+      br.br-mobile  { display: inline; }
+      br.br-desktop { display: none; }
+    }
+
+    /* TEAM 的導言是兩個完整句子（中間已有 <br>），
+       46ch 的量測會讓第一句剛好多出兩個字掉到下一行（「…一起服／事。」）。
+       這裡把這一段的量測放寬到放得下一整句，句子就不會被切開。 */
+    .section-team .section-head { max-width: 54ch; }
+
+    /* 窄螢幕的 vision panel：56px 的左右內距會把可讀寬度吃到只剩
+       ~9 個字一行，段落因此頻繁跳行。把內距收掉一半換回閱讀寬度。 */
+    @media (max-width: 560px) {
+      .vision__panel { padding: 28px 20px 32px; }
+      /* 28px 在窄 panel 裡一行只排得下 10 個字，句尾必定剩下碎字；
+         降一階到 22px（與其他區塊的手機 h3 同級）後一行 13 字，
+         三個標題都能以句讀收尾。 */
+      .vision__title { font-size: var(--fs-3xl); }
     }
 
     /* ---------- 無動畫保底 ----------
@@ -979,7 +1051,10 @@
         font-size: var(--fs-5xl); line-height: var(--lh-tight); margin-bottom: 14px;
       }
       /* 字級降階：流體 clamp() 已移除，窄螢幕在此統一收斂 */
-      .spring-figure__quote { font-size: var(--fs-4xl); }
+      /* 經文每一行都是一個完整句讀（由 <br> 定義）。字級若固定在 28px，
+         最長的那一句在 400px 以下會多出一兩個字掉到下一行，把「裂開」
+         切成兩半；讓字級跟著視窗縮，整句就留得住。 */
+      .spring-figure__quote { font-size: clamp(22px, 6.6vw, 28px); }
       .net-block h3      { font-size: var(--fs-3xl); }
       .about-cta h2      { font-size: var(--fs-4xl); }
       .person-card__name { font-size: var(--fs-3xl); }
@@ -1051,8 +1126,8 @@
 
     <div class="scr-hero__content">
       <div class="scr-hero__eyebrow" data-hero-fade>ABOUT US · 關於我們</div>
-      <h1 class="scr-hero__title" data-split-lines>我們是誰，為什麼在這裡</h1>
-      <p class="scr-hero__sub" data-hero-fade>從陪伴、資源連結到接待，我們留在後方，成為關顧網絡。</p>
+      <h1 class="scr-hero__title" data-split-lines>我們是誰，<br class="br-mobile">為什麼在這裡</h1>
+      <p class="scr-hero__sub" data-hero-fade>從陪伴、資源連結到接待，<br class="br-mobile">我們留在後方，成為關顧網絡。</p>
     </div>
 
     <div class="scr-hero__scroll-hint">SCROLL</div>
@@ -1073,8 +1148,8 @@
       </figure>
       <div class="spring-figure__aside">
         <div class="spring-figure__eyebrow" data-scr-fade>起源與異象</div>
-        <p class="spring-figure__quote" data-split-lines>神就使利希的窪處裂開，有水從其中湧出來。<br>參孫喝了精神復原。<br>因此那泉名叫隱哈歌利。<br><br>—士師記15:19</p>
-        <p class="spring-figure__note" data-scr-fade>我們相信宣教路上使工人枯竭的不是不夠努力，而是無人懂他們的心聲和處境。</p>
+        <p class="spring-figure__quote" data-split-lines>神就使利希的窪處裂開，<br>有水從其中湧出來。<br>參孫喝了精神復原。<br>因此那泉名叫隱哈歌利。<br><br>—士師記15:19</p>
+        <p class="spring-figure__note" data-scr-fade>我們相信宣教路上使工人枯竭的不是不夠努力，<br class="br-desktop">而是無人懂他們的心聲和處境。</p>
       </div>
     </div>
   </section>
@@ -1127,8 +1202,8 @@
                    id="vision-panel-0" aria-labelledby="vision-tab-0"
                    data-vision-panel="0">
             <div class="vision__num" aria-hidden="true">01</div>
-            <h3 class="vision__title">看見跨文化工人的真實處境，打破「屬靈英雄」的迷思，幫助後方更了解關顧的內涵。</h3>
-            <p class="vision__body">宣教士長期在前線承擔跨文化的挑戰，然而在後方支持的我們鮮少體會誇文化的處境，因此宣教士的需要很難被理解。隱哈歌利致力於倡議一個更健康、具同理心的宣教生態系。我們透過真實經驗的訪談、議題倡導與文字傳播，引導後方教會與支持者理解宣教士在身心靈、雙向文化衝擊與生活過渡期的真實需要，推動以後方支持為後盾的健康關顧文化。</p>
+            <h3 class="vision__title">看見跨文化工人的真實處境，<br class="br-desktop">打破<span class="kw">「屬靈英雄」</span>的迷思，<br class="br-desktop">幫助後方更了解關顧的內涵。</h3>
+            <p class="vision__body">宣教士長期在前線承擔跨文化的挑戰，然而在後方支持的我們鮮少體會誇文化的處境，因此宣教士的需要很難被理解。<span class="kw">隱哈歌利</span>致力於倡議一個更健康、具同理心的宣教生態系。我們透過真實經驗的訪談、議題倡導與文字傳播，引導後方教會與支持者理解宣教士在身心靈、雙向文化衝擊與生活過渡期的真實需要，推動以後方支持為後盾的健康關顧文化。</p>
 
             <div class="vision__expand" data-vision-expand>
               <button type="button" class="vision__expand-trigger"
@@ -1159,8 +1234,8 @@
                    id="vision-panel-1" aria-labelledby="vision-tab-1"
                    data-vision-panel="1" aria-hidden="true" inert>
             <div class="vision__num" aria-hidden="true">02</div>
-            <h3 class="vision__title">連結跨界專業，讓資源不再零散，成為一站式的關顧資源平台。</h3>
-            <p class="vision__body">當前跨文化工人的關顧生態，資源分配不均、分散且不易取得，往往只有具備深厚歷史與充足量能的大型差派單位，才有能力提供相對完善的支持系統。隱哈歌利扮演「整合/合一」的角色，拉近專業資源與宣教士之間的距離和門檻，將散落在各處的專業資源進行系統化整合。讓每位跨文化工人在不同階段——無論身處前線、返國過渡或生涯轉換都能獲得適切協助與支持。</p>
+            <h3 class="vision__title">連結跨界專業，<br class="br-desktop">讓資源不再零散，<br class="br-desktop">成為一站式的關顧資源平台。</h3>
+            <p class="vision__body">當前跨文化工人的關顧生態，資源分配不均、分散且不易取得，往往只有具備深厚歷史與充足量能的大型差派單位，才有能力提供相對完善的支持系統。<span class="kw">隱哈歌利</span>扮演「整合/合一」的角色，拉近專業資源與宣教士之間的距離和門檻，將散落在各處的專業資源進行系統化整合。讓每位跨文化工人在不同階段——無論身處前線、返國過渡或生涯轉換都能獲得適切協助與支持。</p>
 
             <div class="vision__expand" data-vision-expand>
               <button type="button" class="vision__expand-trigger"
@@ -1190,8 +1265,8 @@
                    id="vision-panel-2" aria-labelledby="vision-tab-2"
                    data-vision-panel="2" aria-hidden="true" inert>
             <div class="vision__num" aria-hidden="true">03</div>
-            <h3 class="vision__title">化繁為簡的一站式樞紐，讓每一位尋求支持的工人，都能被理解並找到適切資源。</h3>
-            <p class="vision__body">面對散落各處且申請門檻各異的關顧資源，跨文化工人往往難以逐一辨識適合自己的項目，更常在與多個單位繁複接洽的過程中耗盡心力。隱哈歌利扮演一站式服務平台與資源經紀人的角色，透過單一窗口，協助工人釐清自身需求與對應資格，免去四處奔波與重複申請的負擔，提供清晰、便捷且具溫度的資源連結。</p>
+            <h3 class="vision__title">化繁為簡的一站式樞紐，<br class="br-desktop">讓每一位尋求支持的工人，<br class="br-desktop">都能被理解並找到適切資源。</h3>
+            <p class="vision__body">面對散落各處且申請門檻各異的關顧資源，跨文化工人往往難以逐一辨識適合自己的項目，更常在與多個單位繁複接洽的過程中耗盡心力。<span class="kw">隱哈歌利</span>扮演一站式服務平台與資源經紀人的角色，透過單一窗口，協助工人釐清自身需求與對應資格，免去四處奔波與重複申請的負擔，提供清晰、便捷且具溫度的資源連結。</p>
 
             <div class="vision__expand" data-vision-expand>
               <button type="button" class="vision__expand-trigger"
@@ -1233,7 +1308,7 @@
         <div class="section-num" data-scr-fade>TEAM &amp; NETWORK</div>
         <h2 data-split-lines>我們的服事</h2>
         <span class="section-title-line" aria-hidden="true" data-team-line></span>
-        <p class="lead" data-split-lines>隱哈歌利目前由兩位核心同工推動，並與各領域的專業夥伴一起服事。<br>我們人不多，但盡量把每一次陪伴做得踏實、可被信任。</p>
+        <p class="lead" data-split-lines><span class="kw">隱哈歌利</span>目前由兩位核心同工推動，並與各領域的專業夥伴一起服事。<br class="br-desktop">我們人不多，但盡量把每一次陪伴做得踏實、可被信任。</p>
       </hgroup>
 
       <!-- 團隊規模 —— 數字由頁面底部的 ABOUT_FACTS 統一渲染 -->
@@ -1465,8 +1540,8 @@
   <section class="about-cta" data-scene="cta" data-surface="light" data-flow-palette="#FFFFFF | #DCECEF | rgba(255,186,73,.30) | 50% 88%">
     <div class="about-cta__wrap">
       <div class="section-num" data-scr-fade>JOIN US</div>
-      <h2 data-split-lines>一起成為宣教路上的<em>同行者</em></h2>
-      <p class="cta-lede" data-scr-fade>不一定要遠行，也不一定要做很多事。</p>
+      <h2 data-split-lines>一起成為<br class="br-mobile">宣教路上的<em>同行者</em></h2>
+      <p class="cta-lede" data-scr-fade>不一定要遠行，<br class="br-mobile">也不一定要做很多事。</p>
       <p class="cta-ways" data-scr-fade>
         <span class="cta-ways__row">一段時間<span class="cta-ways__dot" aria-hidden="true">·</span>一份專業<span class="cta-ways__dot" aria-hidden="true">·</span>一個空間</span>
         <span class="cta-ways__dot cta-ways__dot--solo" aria-hidden="true">·</span>
