@@ -376,8 +376,8 @@
       font-weight: var(--fw-semibold);
       font-size: var(--fs-2xl);
       letter-spacing: var(--ls-cjk);
-      color: var(--surface-fg);
-      opacity: 1;
+      /* 顏色不另外指定：跟著序號吃 --surface-accent，
+         「02 資源整合平台」整行是同一個顏色。 */
       margin-left: .45em;
     }
     .vision__title {
@@ -876,27 +876,24 @@
       font-size: var(--fs-5xl);
       line-height: var(--lh-title); letter-spacing: var(--ls-cjk);
       color: var(--text-1);
-      margin: 0 0 24px;
-    }
-    .about-cta h2 em {
-      font-family: var(--font-brand); font-style: italic; font-weight: var(--fw-regular);
-      color: var(--mineral-700); letter-spacing: var(--ls-none);
+      margin: 0 0 20px;
     }
     .about-cta p {
-      font-size: var(--fs-md); line-height: var(--lh-loose);
+      font-size: var(--fs-md); line-height: var(--lh-body);
       color: var(--text-2);
       margin: 0 0 32px;
     }
     /* 這裡不是「選一個入口」，所以四種參與不做成卡片、標籤或按鈕：
        只留一行輕聲的並列，讓「一個禱告」和「一份專業」看起來一樣重。
-       行距與上下留白刻意放寬，整段讀起來像邀請，而不是任務清單。 */
+       整段的留白留在區塊的上下緣（section padding），中間這幾句彼此
+       靠近一點，才讀得出「一句接一句」的關係，而不是四個分開的區塊。 */
     .about-cta .cta-lede {
-      margin: 0 auto 44px;
+      margin: 0 auto 24px;
     }
     .about-cta .cta-ways {
-      margin: 0 auto 40px;
+      margin: 0 auto 24px;
       font-size: var(--fs-sm);
-      line-height: var(--lh-loose);
+      line-height: 1.75;
       letter-spacing: var(--ls-wide);
       color: var(--text-3);
     }
@@ -906,7 +903,7 @@
     .cta-ways__dot { margin: 0 .9em; color: var(--text-3); opacity: .5; }
     .cta-ways__dot--solo { display: block; margin: 0; }
     .about-cta .cta-close {
-      margin: 0 auto 56px;
+      margin: 0 auto 40px;
       color: var(--text-2);
     }
 
@@ -1561,7 +1558,7 @@
   <section class="about-cta" data-scene="cta" data-surface="light" data-flow-palette="#FFFFFF | #DCECEF | rgba(255,186,73,.30) | 50% 88%">
     <div class="about-cta__wrap">
       <div class="section-num" data-scr-fade>JOIN US</div>
-      <h2 data-split-lines>一起成為<br class="br-mobile">宣教路上的<em>同行者</em></h2>
+      <h2 data-split-lines>一起成為<br class="br-mobile">宣教路上的同行者</h2>
       <p class="cta-lede" data-scr-fade>不一定要遠行，<br class="br-mobile">也不一定要做很多事。</p>
       <p class="cta-ways" data-scr-fade>
         <span class="cta-ways__row">一段時間<span class="cta-ways__dot" aria-hidden="true">·</span>一份專業<span class="cta-ways__dot" aria-hidden="true">·</span>一個空間</span>
