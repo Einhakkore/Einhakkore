@@ -368,6 +368,18 @@
       opacity: .9;
       margin-bottom: 18px;
     }
+    /* 序號後面接章節名（與左側目錄同一組字）。
+       數字維持斜體大字當裝飾，名稱用正體、降一階，兩者共用基線：
+       讀起來是「01 倡議」一行，而不是兩個並排的標題。 */
+    .vision__num-name {
+      font-style: normal;
+      font-weight: var(--fw-semibold);
+      font-size: var(--fs-2xl);
+      letter-spacing: var(--ls-cjk);
+      color: var(--surface-fg);
+      opacity: 1;
+      margin-left: .45em;
+    }
     .vision__title {
       font-family: var(--font-brand);
       font-weight: var(--fw-semibold);
@@ -995,10 +1007,16 @@
        ~9 個字一行，段落因此頻繁跳行。把內距收掉一半換回閱讀寬度。 */
     @media (max-width: 560px) {
       .vision__panel { padding: 28px 20px 32px; }
-      /* 28px 在窄 panel 裡一行只排得下 10 個字，句尾必定剩下碎字；
-         降一階到 22px（與其他區塊的手機 h3 同級）後一行 13 字，
-         三個標題都能以句讀收尾。 */
-      .vision__title { font-size: var(--fs-3xl); }
+      /* 28px 在窄 panel 裡一行只排得下 10 個字，句尾必定剩下碎字。
+         三個標題都是三個子句、最長的子句 13 個字，字級必須讓一行
+         放得下 13 個字，子句才不會折行、把詞切成兩半：
+         22px 在 390px 寬剛好，但 375／360 就差幾個像素，所以用流體。 */
+      .vision__title { font-size: clamp(16px, 5.5vw, 22px); }
+    }
+    /* 360px 以下再從內距讓出一點寬度，13 個字的子句才放得下
+       （字級這時已經被 5.5vw 壓到 18px 上下，不能再靠縮字解決）。 */
+    @media (max-width: 360px) {
+      .vision__panel { padding-inline: 16px; }
     }
 
     /* ---------- 無動畫保底 ----------
@@ -1201,8 +1219,8 @@
           <article class="vision__panel is-active" role="tabpanel"
                    id="vision-panel-0" aria-labelledby="vision-tab-0"
                    data-vision-panel="0">
-            <div class="vision__num" aria-hidden="true">01</div>
-            <h3 class="vision__title">看見跨文化工人的真實處境，<br class="br-desktop">打破<span class="kw">「屬靈英雄」</span>的迷思，<br class="br-desktop">幫助後方更了解關顧的內涵。</h3>
+            <div class="vision__num" aria-hidden="true">01<span class="vision__num-name">倡議</span></div>
+            <h3 class="vision__title">看見跨文化工人的真實處境，<br>打破<span class="kw">「屬靈英雄」</span>的迷思，<br>幫助後方更了解關顧的內涵。</h3>
             <p class="vision__body">宣教士長期在前線承擔跨文化的挑戰，然而在後方支持的我們鮮少體會誇文化的處境，因此宣教士的需要很難被理解。<span class="kw">隱哈歌利</span>致力於倡議一個更健康、具同理心的宣教生態系。我們透過真實經驗的訪談、議題倡導與文字傳播，引導後方教會與支持者理解宣教士在身心靈、雙向文化衝擊與生活過渡期的真實需要，推動以後方支持為後盾的健康關顧文化。</p>
 
             <div class="vision__expand" data-vision-expand>
@@ -1233,8 +1251,8 @@
           <article class="vision__panel" role="tabpanel"
                    id="vision-panel-1" aria-labelledby="vision-tab-1"
                    data-vision-panel="1" aria-hidden="true" inert>
-            <div class="vision__num" aria-hidden="true">02</div>
-            <h3 class="vision__title">連結跨界專業，<br class="br-desktop">讓資源不再零散，<br class="br-desktop">成為一站式的關顧資源平台。</h3>
+            <div class="vision__num" aria-hidden="true">02<span class="vision__num-name">資源整合平台</span></div>
+            <h3 class="vision__title">連結跨界專業，<br>讓資源不再零散，<br>成為一站式的關顧資源平台。</h3>
             <p class="vision__body">當前跨文化工人的關顧生態，資源分配不均、分散且不易取得，往往只有具備深厚歷史與充足量能的大型差派單位，才有能力提供相對完善的支持系統。<span class="kw">隱哈歌利</span>扮演「整合/合一」的角色，拉近專業資源與宣教士之間的距離和門檻，將散落在各處的專業資源進行系統化整合。讓每位跨文化工人在不同階段——無論身處前線、返國過渡或生涯轉換都能獲得適切協助與支持。</p>
 
             <div class="vision__expand" data-vision-expand>
@@ -1264,8 +1282,8 @@
           <article class="vision__panel" role="tabpanel"
                    id="vision-panel-2" aria-labelledby="vision-tab-2"
                    data-vision-panel="2" aria-hidden="true" inert>
-            <div class="vision__num" aria-hidden="true">03</div>
-            <h3 class="vision__title">化繁為簡的一站式樞紐，<br class="br-desktop">讓每一位尋求支持的工人，<br class="br-desktop">都能被理解並找到適切資源。</h3>
+            <div class="vision__num" aria-hidden="true">03<span class="vision__num-name">關顧網絡</span></div>
+            <h3 class="vision__title">化繁為簡的一站式樞紐，<br>讓每一位尋求支持的工人，<br>都能被理解並找到適切資源。</h3>
             <p class="vision__body">面對散落各處且申請門檻各異的關顧資源，跨文化工人往往難以逐一辨識適合自己的項目，更常在與多個單位繁複接洽的過程中耗盡心力。<span class="kw">隱哈歌利</span>扮演一站式服務平台與資源經紀人的角色，透過單一窗口，協助工人釐清自身需求與對應資格，免去四處奔波與重複申請的負擔，提供清晰、便捷且具溫度的資源連結。</p>
 
             <div class="vision__expand" data-vision-expand>
