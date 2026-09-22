@@ -897,11 +897,9 @@
       letter-spacing: var(--ls-wide);
       color: var(--text-3);
     }
-    /* 前三項一行、「一個禱告」自己一行——分行寫死，才不會在不同寬度
-       下折成「三個並排的選項」。 */
-    .cta-ways__row { display: block; }
+    /* 四項同一行。每一項包 .kw，窄螢幕真的放不下時只會斷在「·」上，
+       不會把「一個空／間」切成兩半。 */
     .cta-ways__dot { margin: 0 .9em; color: var(--text-3); opacity: .5; }
-    .cta-ways__dot--solo { display: block; margin: 0; }
     .about-cta .cta-close {
       margin: 0 auto 40px;
       color: var(--text-2);
@@ -1559,12 +1557,8 @@
     <div class="about-cta__wrap">
       <div class="section-num" data-scr-fade>JOIN US</div>
       <h2 data-split-lines>一起成為<br class="br-mobile">宣教路上的同行者</h2>
-      <p class="cta-lede" data-scr-fade>不一定要遠行，<br class="br-mobile">也不一定要做很多事。</p>
-      <p class="cta-ways" data-scr-fade>
-        <span class="cta-ways__row">一段時間<span class="cta-ways__dot" aria-hidden="true">·</span>一份專業<span class="cta-ways__dot" aria-hidden="true">·</span>一個空間</span>
-        <span class="cta-ways__dot cta-ways__dot--solo" aria-hidden="true">·</span>
-        <span class="cta-ways__row">一個禱告</span>
-      </p>
+      <p class="cta-ways" data-scr-fade><span class="kw">一段時間</span><span class="cta-ways__dot" aria-hidden="true">·</span><span class="kw">一份專業</span><span class="cta-ways__dot" aria-hidden="true">·</span><span class="kw">一個空間</span><span class="cta-ways__dot" aria-hidden="true">·</span><span class="kw">一個禱告</span></p>
+      <p class="cta-lede" data-scr-fade>不一定要遠行，也不一定要做很多事。</p>
       <p class="cta-close" data-scr-fade>每一份心意，都能成為前線的支持。</p>
       <div class="cta-actions">
         <a class="btn btn-primary" href="serve.html">了解參與方式 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg></a>
