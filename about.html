@@ -728,7 +728,7 @@
       font-variant-numeric: tabular-nums;
     }
 
-    /* 接待資源 */
+    /* 住宿資源 */
     .host-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -767,6 +767,16 @@
       font-family: var(--font-zh); font-style: normal;
       font-size: var(--fs-sm); color: var(--surface-fg-2);
       margin-left: 6px;
+    }
+    /* 只剩一張時收一個量測寬度，圖才不會撐滿整列
+       （寬度與原本兩張並排時相同，視覺重量不變）。 */
+    .host-card:only-child { max-width: 490px; }
+    /* 名稱與數字都收掉之後，這句話就是這一塊唯一的內容，
+       字級跟著提到內文級，不要再當圖說。 */
+    .host-card:only-child .host-card__desc {
+      margin: 0;
+      font-size: var(--fs-md);
+      line-height: var(--lh-body);
     }
     .host-card__desc {
       margin: 10px 0 0;
@@ -883,13 +893,14 @@
       color: var(--text-2);
       margin: 0 0 32px;
     }
-    /* 這裡不是「選一個入口」，所以四種參與不做成卡片、標籤或按鈕：
-       只留一行輕聲的並列，讓「一個禱告」和「一份專業」看起來一樣重。
-       整段的留白留在區塊的上下緣（section padding），中間這幾句彼此
-       靠近一點，才讀得出「一句接一句」的關係，而不是四個分開的區塊。 */
+    /* 兩句是同一段、用 <br> 分行：拆成兩個 <p> 的話，段落之間的 margin
+       會在中間開一個大空格，兩句就散成兩塊；同段換行才讀得出是連著的。
+       整段的留白留在區塊的上下緣（section padding）。 */
     .about-cta .cta-lede {
-      margin: 0 auto 24px;
+      margin: 0 auto 40px;
     }
+    /* 這裡不是「選一個入口」，所以四種參與不做成卡片、標籤或按鈕：
+       只留一行輕聲的並列，讓「一個禱告」和「一份專業」看起來一樣重。 */
     .about-cta .cta-ways {
       margin: 0 auto 24px;
       font-size: var(--fs-sm);
@@ -900,10 +911,6 @@
     /* 四項同一行。每一項包 .kw，窄螢幕真的放不下時只會斷在「·」上，
        不會把「一個空／間」切成兩半。 */
     .cta-ways__dot { margin: 0 .9em; color: var(--text-3); opacity: .5; }
-    .about-cta .cta-close {
-      margin: 0 auto 40px;
-      color: var(--text-2);
-    }
 
     /* ============================================================
        泉 · 遮罩圖（經文之後的那一格畫面）
@@ -981,12 +988,9 @@
        這裡只寫 about 這一頁跟預設不一樣的地方。
        ============================================================ */
 
-    /* 這幾句是短句，交給 balance 比自然斷行好看（預設 p 是 pretty） */
-    .host-card__desc,
-    .cta-lede,
-    .cta-close {
-      text-wrap: balance;
-    }
+    /* 本頁的句子都自己用 <br> 定義過節奏（JOIN US 的兩句、住宿資源的說明），
+       所以不套 balance —— 再讓 balance 重新分配行長，反而會把詞切開
+       （全站規則第 1 點）。 */
 
     /* vision 標題有明確的句讀節奏，桌機用 <br class="br-desktop"> 分行，
        窄螢幕則要自然 reflow —— balance 會為了行長平均把詞切開，
@@ -1342,8 +1346,8 @@
           <div class="stat-cell__label">合作教會</div>
         </div>
         <div class="stat-cell">
-          <div class="stat-cell__num"><span data-fact="hosting">—</span><span class="unit">組</span></div>
-          <div class="stat-cell__label">接待資源</div>
+          <div class="stat-cell__num"><span data-fact="hosting">—</span><span class="unit">戶</span></div>
+          <div class="stat-cell__label">住宿資源</div>
         </div>
       </div>
 
@@ -1353,7 +1357,7 @@
           <div class="person-card__role">CO-FOUNDER · 核心同工</div>
           <blockquote class="person-card__quote">
             <span class="quote-mark quote-mark--open" aria-hidden="true">“</span>
-            <p>2013年領受全職呼召，2023 赴以色列國際志工服事中深刻看見宣教士真實需求。因著對宣教士關顧的負擔，赴以色列希伯來大學攻讀非營利組織管理碩士，被呼召建構一個跨宗派、跨差會、資源整合的第三方關顧平台，讓每位跨文化宣教士都能富有熱忱且身心靈健康的走在服事神的道路上。</p>
+            <p>2013年領受全職呼召，2023 赴以色列國際志工服事中深刻看見宣教士真實需求。因著對宣教士關顧的負擔，赴以色列希伯來大學攻讀非營利組織管理碩士，讓每位跨文化宣教士都能富有熱忱且身心靈健康的走在服事神的道路上。</p>
             <span class="quote-mark quote-mark--close" aria-hidden="true">”</span>
           </blockquote>
         </article>
@@ -1456,30 +1460,16 @@
           </div>
         </section>
 
-        <!-- C · 接待資源 -->
+        <!-- C · 住宿資源 -->
         <section class="net-block" data-scr-fade>
           <div class="net-block__head">
-            <h3>接待資源</h3>
-            <span class="net-block__en">Mission BnB</span>
+            <h3>住宿資源</h3>
+            <span class="net-block__en">HOSTING RESOURCES</span>
           </div>
           <p class="net-block__note">回國述職、轉換期或短期停留時，有一處可以安心落腳的地方，往往比什麼都實際。</p>
 
-          <!-- TODO：以下兩張為佔位圖，待同工提供實際空間照片後替換，並補上 alt。 -->
+          <!-- TODO：以下為佔位圖，待同工提供實際空間照片後替換，並補上 alt。 -->
           <div class="host-grid">
-            <div class="host-card">
-              <figure class="flow-figure flow-figure--wave host-card__figure" data-flow-parallax>
-                <div class="flow-figure__frame">
-                  <img src="assets/img/donate_bg.webp" alt="" loading="lazy" decoding="async">
-                </div>
-              </figure>
-              <div class="host-card__body">
-                <div class="host-card__row">
-                  <h4 class="host-card__name">住宿資源</h4>
-                  <div class="host-card__num"><span data-fact="bnb">—</span><span class="unit">處</span></div>
-                </div>
-                <p class="host-card__desc">為宣教士預備的中長期住宿空間，讓身心有地方安穩下來。</p>
-              </div>
-            </div>
             <div class="host-card">
               <figure class="flow-figure flow-figure--wave host-card__figure" data-flow-parallax>
                 <div class="flow-figure__frame">
@@ -1487,11 +1477,7 @@
                 </div>
               </figure>
               <div class="host-card__body">
-                <div class="host-card__row">
-                  <h4 class="host-card__name">短期接待家庭</h4>
-                  <div class="host-card__num"><span data-fact="hostFamilies">—</span><span class="unit">戶</span></div>
-                </div>
-                <p class="host-card__desc">願意開放家中空房、以家庭的方式短期接待宣教士與其家人。</p>
+                <p class="host-card__desc">願意開放家中空房、<br class="br-mobile">以家庭的方式短期接待宣教士與其家人。</p>
               </div>
             </div>
           </div>
@@ -1558,8 +1544,7 @@
       <div class="section-num" data-scr-fade>JOIN US</div>
       <h2 data-split-lines>一起成為<br class="br-mobile">宣教路上的同行者</h2>
       <p class="cta-ways" data-scr-fade><span class="kw">一段時間</span><span class="cta-ways__dot" aria-hidden="true">·</span><span class="kw">一份專業</span><span class="cta-ways__dot" aria-hidden="true">·</span><span class="kw">一個空間</span><span class="cta-ways__dot" aria-hidden="true">·</span><span class="kw">一個禱告</span></p>
-      <p class="cta-lede" data-scr-fade>不一定要遠行，也不一定要做很多事。</p>
-      <p class="cta-close" data-scr-fade>每一份心意，都能成為前線的支持。</p>
+      <p class="cta-lede" data-scr-fade>不一定要遠行，也不一定要做很多事。<br>每一份心意，都能成為前線的支持。</p>
       <div class="cta-actions">
         <a class="btn btn-primary" href="serve.html">了解參與方式 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg></a>
       </div>
@@ -1583,14 +1568,12 @@
     coreTeam:     2,       // 核心同工（位）
     proPartners:  12,      // 專業夥伴總數（位）＝ 下面五個領域相加
     churches:     8,       // 合作教會（間）
-    hosting:      7,       // 接待資源（組）＝ bnb + hostFamilies
+    hosting:      5,       // 住宿資源（戶）＝ 願意開放空房的接待家庭
     counseling:   4,       // 心理諮商師（位）
     web:          3,       // 網頁設計師（位）
     finance:      2,       // 財務顧問（位）
     legal:        1,       // 律師（位）
     education:    2,       // 教師（位）
-    bnb:          2,       // 住宿資源（處）
-    hostFamilies: 5,       // 短期接待家庭（戶）
     founded:      '2025 年' // 成立時間
   };
 
