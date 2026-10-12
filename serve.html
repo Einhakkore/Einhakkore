@@ -272,6 +272,23 @@
     }
     @media (max-width: 900px) { .watch-grid { grid-template-columns: 1fr; max-width: 520px; margin-inline: auto; } }
 
+    /* 只有一組宣教士時：單張置中，寬螢幕改成照片在左、文字在右 */
+    .watch-grid--single {
+      grid-template-columns: 1fr;
+      max-width: 880px;
+      margin-inline: auto;
+    }
+    @media (min-width: 761px) {
+      .watch-grid--single .watch-card {
+        display: grid;
+        grid-template-columns: 200px minmax(0, 1fr);
+        gap: clamp(32px, 4vw, 56px);
+        align-items: start;
+      }
+      .watch-grid--single .watch-card__figure { max-width: none; }
+    }
+    .watch-card__intro + .watch-card__intro { margin-top: -8px; }
+
     /* 一樣不做成圓角卡片：靠水滴形的照片與一道細線分段 */
     .watch-card { display: flex; flex-direction: column; gap: 20px; }
     .watch-card__figure {
@@ -973,65 +990,27 @@
       <p class="lead">事工的推展與宣教士的挑戰，最需要的是持續不斷的禱告遮蓋。</p>
     </div>
 
-    <!-- TODO：以下三張為版面佔位。待同工提供可公開的宣教士簡介與代禱事項後，
-         把姓名、地區、內容與照片一併替換，並把 alt 從空字串改成實際描述。
-         在取得當事人同意之前，這裡不放任何真實姓名或可辨識資訊。 -->
-    <div class="watch-grid">
+    <!-- 目前只有一組宣教士，用單張橫式卡片；之後增加時，複製 <article> 並拿掉 watch-grid--single 即回到三欄。
+         照片為 Unsplash 的肯亞風景（Evan Jones），待取得本人照片後再替換。 -->
+    <div class="watch-grid watch-grid--single">
       <article class="watch-card reveal">
         <figure class="flow-figure flow-figure--oval watch-card__figure" data-flow-parallax>
           <div class="flow-figure__frame">
-            <img src="assets/img/Water.webp" alt="" loading="lazy" decoding="async">
+            <img src="https://images.unsplash.com/photo-1728042107033-76b13feac547?w=480&q=80&auto=format&fit=crop" alt="肯亞草原上的夕陽與金合歡樹" loading="lazy" decoding="async">
           </div>
         </figure>
         <div class="watch-card__body">
-          <div class="watch-card__region">服事地區 · 待補</div>
-          <h3 class="watch-card__name">宣教士簡介 01</h3>
-          <p class="watch-card__intro">待補：一段簡短的服事介紹。</p>
+          <div class="watch-card__region">KENYA · 肯亞</div>
+          <h3 class="watch-card__name">兆逸與嘉敏</h3>
+          <p class="watch-card__intro">兆逸與嘉敏2023年共同前往 Radius Asia 宣教訓練中心受裝備，並在2024年畢業後加入舊鞋救命 Move 差會，領受異象：本地教會差派宣教、進入未得之民群體並以建立當地獨立成熟教會為最終目標。</p>
+          <p class="watch-card__intro">兆逸嘉敏已於2026年8月抵達肯亞，展開第一個任期宣教，盼望持續實踐異象：精熟當地語言、傳遞完整福音、門訓信徒、建立當地長老直到當地教會扎根福音，獨立成熟牧養與傳承福音使命。</p>
           <div class="watch-card__pray">
             <span class="watch-card__pray-label">代禱事項</span>
             <ul>
-              <li>待補</li>
-              <li>待補</li>
-            </ul>
-          </div>
-        </div>
-      </article>
-
-      <article class="watch-card reveal">
-        <figure class="flow-figure flow-figure--oval watch-card__figure" data-flow-parallax>
-          <div class="flow-figure__frame">
-            <img src="assets/img/HandsWater.webp" alt="" loading="lazy" decoding="async">
-          </div>
-        </figure>
-        <div class="watch-card__body">
-          <div class="watch-card__region">服事地區 · 待補</div>
-          <h3 class="watch-card__name">宣教士簡介 02</h3>
-          <p class="watch-card__intro">待補：一段簡短的服事介紹。</p>
-          <div class="watch-card__pray">
-            <span class="watch-card__pray-label">代禱事項</span>
-            <ul>
-              <li>待補</li>
-              <li>待補</li>
-            </ul>
-          </div>
-        </div>
-      </article>
-
-      <article class="watch-card reveal">
-        <figure class="flow-figure flow-figure--oval watch-card__figure" data-flow-parallax>
-          <div class="flow-figure__frame">
-            <img src="assets/img/donate_bg.webp" alt="" loading="lazy" decoding="async">
-          </div>
-        </figure>
-        <div class="watch-card__body">
-          <div class="watch-card__region">服事地區 · 待補</div>
-          <h3 class="watch-card__name">宣教士簡介 03</h3>
-          <p class="watch-card__intro">待補：一段簡短的服事介紹。</p>
-          <div class="watch-card__pray">
-            <span class="watch-card__pray-label">代禱事項</span>
-            <ul>
-              <li>待補</li>
-              <li>待補</li>
+              <li>感謝神使我們與隊友的關係有美好的開始，我們將在接下來的時間裡分別時間進行團隊建造，為的是更多地彼此認識，願神持續帶領團隊在基督裡有安全感與信任感的彼此分享，為將來團隊更緊密的同工奠定美好的基礎。</li>
+              <li>感謝神使現階段語言學習的時間漸漸穩定，而相對不穩定的便是參與社區了，求主加添機會、智慧與忠心，盼望融入社區能一步步從參與進入委身，同時擴展我們認識當地文化的眼光與心志。</li>
+              <li>感謝神帶領我們決定委身一間當地教會，在與牧者的對話以及講台的信息中我們聽見福音與門訓的堅持，願神持續帶領我們與教會建立關係，投入服事以及更多地認識當地教會的世界觀。</li>
+              <li>感謝神兆逸嘉敏已經不止一次感受到夫妻在工場時的張力，夫妻身兼隊友的關係使我們相較以往有許多溝通，求主帶領我們的關係在福音的根基上彼此認罪、悔改與相愛。</li>
             </ul>
           </div>
         </div>

@@ -1405,53 +1405,53 @@
           </div>
           <p class="net-block__note">來自不同領域的基督徒工作者，願意在需要出現時提供專業協助。我們負責接住需求、進行媒合，並在過程中保護當事人的隱私。</p>
 
-          <!-- TODO：以下五張為佔位圖（沿用 assets/img/ 既有照片），待同工提供各領域的照片後替換，
-               並把 alt 從空字串改成實際描述。 -->
+          <!-- 照片取自 Unsplash，以物件與情境呈現各領域，不放可辨識的夥伴本人。
+               人數改頁面底部的 ABOUT_FACTS。 -->
           <div class="field-grid">
             <div class="field-card">
               <figure class="flow-figure flow-figure--oval field-card__figure" data-flow-parallax>
                 <div class="flow-figure__frame">
-                  <img src="assets/img/HandsWater.webp" alt="" loading="lazy" decoding="async">
+                  <img src="https://images.unsplash.com/photo-1604881990409-b9f246db39da?w=300&q=80&auto=format&fit=crop" alt="兩個人隔著桌子對坐談話" loading="lazy" decoding="async">
                 </div>
               </figure>
-              <span class="field-card__name">心理諮商師</span>
+              <span class="field-card__name"><span class="kw">心理諮商／</span><span class="kw">心理評估</span></span>
               <span class="field-card__count"><b data-fact="counseling">—</b>位</span>
             </div>
             <div class="field-card">
               <figure class="flow-figure flow-figure--oval field-card__figure" data-flow-parallax>
                 <div class="flow-figure__frame">
-                  <img src="assets/img/Water.webp" alt="" loading="lazy" decoding="async">
+                  <img src="https://images.unsplash.com/photo-1700832082200-af7deeb63d9b?w=300&q=80&auto=format&fit=crop" alt="聽診器與血壓計" loading="lazy" decoding="async">
                 </div>
               </figure>
-              <span class="field-card__name">網頁設計師</span>
-              <span class="field-card__count"><b data-fact="web">—</b>位</span>
+              <span class="field-card__name">醫療諮詢</span>
+              <span class="field-card__count"><b data-fact="medical">—</b>位</span>
             </div>
             <div class="field-card">
               <figure class="flow-figure flow-figure--oval field-card__figure" data-flow-parallax>
                 <div class="flow-figure__frame">
-                  <img src="assets/img/donate_bg.webp" alt="" loading="lazy" decoding="async">
+                  <img src="https://images.unsplash.com/photo-1709534486708-fb8f94150d0a?w=300&q=80&auto=format&fit=crop" alt="財務報表上的計算機" loading="lazy" decoding="async">
                 </div>
               </figure>
-              <span class="field-card__name">財務顧問</span>
+              <span class="field-card__name"><span class="kw">財務／</span><span class="kw">保險規劃</span></span>
               <span class="field-card__count"><b data-fact="finance">—</b>位</span>
             </div>
             <div class="field-card">
               <figure class="flow-figure flow-figure--oval field-card__figure" data-flow-parallax>
                 <div class="flow-figure__frame">
-                  <img src="assets/img/HandsWater.webp" alt="" loading="lazy" decoding="async">
+                  <img src="https://images.unsplash.com/photo-1587740896339-96a76170508d?w=300&q=80&auto=format&fit=crop" alt="木桌上的小天秤" loading="lazy" decoding="async">
                 </div>
               </figure>
-              <span class="field-card__name">律師</span>
+              <span class="field-card__name">法律協助</span>
               <span class="field-card__count"><b data-fact="legal">—</b>位</span>
             </div>
             <div class="field-card">
               <figure class="flow-figure flow-figure--oval field-card__figure" data-flow-parallax>
                 <div class="flow-figure__frame">
-                  <img src="assets/img/Water.webp" alt="" loading="lazy" decoding="async">
+                  <img src="https://images.unsplash.com/photo-1654124803535-1b4bc3563871?w=300&q=80&auto=format&fit=crop" alt="手中托著一顆小地球儀" loading="lazy" decoding="async">
                 </div>
               </figure>
-              <span class="field-card__name">教師</span>
-              <span class="field-card__count"><b data-fact="education">—</b>位</span>
+              <span class="field-card__name"><span class="kw">TCKs／</span><span class="kw">ATCK</span></span>
+              <span class="field-card__count"><b data-fact="tck">—</b>位</span>
             </div>
           </div>
 
@@ -1566,14 +1566,14 @@
      頁面上所有帶 data-fact="key" 的元素都會自動同步這裡的數字。 */
   const ABOUT_FACTS = {
     coreTeam:     2,       // 核心同工（位）
-    proPartners:  12,      // 專業夥伴總數（位）＝ 下面五個領域相加
+    proPartners:  18,      // 專業夥伴總數（位）＝ 下面五個領域相加
     churches:     8,       // 合作教會（間）
     hosting:      5,       // 住宿資源（戶）＝ 願意開放空房的接待家庭
-    counseling:   4,       // 心理諮商師（位）
-    web:          3,       // 網頁設計師（位）
-    finance:      2,       // 財務顧問（位）
-    legal:        1,       // 律師（位）
-    education:    2,       // 教師（位）
+    counseling:   10,      // 心理諮商／心理評估（位）
+    medical:      2,       // 醫療諮詢（位）
+    finance:      2,       // 財務／保險規劃（位）
+    legal:        2,       // 法律協助（位）
+    tck:          2,       // TCKs／ATCK（位）
     founded:      '2025 年' // 成立時間
   };
 
