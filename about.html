@@ -656,13 +656,10 @@
       grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 12px;
     }
+    /* 不做卡片：logo 直接去背放在深色底上，格子只負責排版 */
     .logo-wall__item {
       position: relative;
       aspect-ratio: 4 / 3;
-      border: 1px solid var(--hairline-1);
-      border-radius: var(--radius-input);
-      background: rgba(255, 255, 255, .04);
-      transition: background-color .3s ease, border-color .3s ease;
     }
     /* 每個 logo 比例不同（方形徽章 vs 橫幅字標），用 --pad-y / --pad-x
        個別留白，讓五個 logo 的視覺份量接近 */
@@ -676,16 +673,14 @@
       object-fit: contain;
       transition: opacity .3s ease;
     }
-    /* 平常顯示白色版（不搶主敘事），hover 時卡片轉成淺底、換回原本配色 */
+    /* 平常顯示白色版（不搶主敘事），hover 時換回原本配色；
+       沒有原色版的（FortuneLink）只是亮起來 */
     .logo-wall__mono  { opacity: .72; }
     .logo-wall__color { opacity: 0; }
     @media (hover: hover) {
-      .logo-wall__item:hover {
-        background: #fff;
-        border-color: #fff;
-      }
-      .logo-wall__item:hover .logo-wall__mono  { opacity: 0; }
-      .logo-wall__item:hover .logo-wall__color { opacity: 1; }
+      .logo-wall__item:hover .logo-wall__mono              { opacity: 0; }
+      .logo-wall__item:hover .logo-wall__mono:only-child   { opacity: 1; }
+      .logo-wall__item:hover .logo-wall__color             { opacity: 1; }
     }
 
     /* 專業夥伴：直式卡片（icon 在上、名稱在中、數字在下），寬螢幕一排 5 個 */
@@ -1406,12 +1401,12 @@
           </div>
 
           <!-- 依英文名稱排序。每個 logo 兩張圖、裁切框相同：
-               <name>.png 白色透明底（平常顯示）、<name>-color.png 原本配色（hover 顯示）。 -->
+               <name>.png 白色透明底（平常顯示）、<name>-color.png 原本配色（hover 顯示）。
+               FortuneLink 原本就是白色，只有一張。 -->
           <ul class="logo-wall" aria-label="合作差會與教會">
             <li class="logo-wall__item" style="--pad-y: 26%; --pad-x: 12%;">
               <span class="logo-wall__media">
                 <img class="logo-wall__mono" src="assets/img/partners/fortunelink.png" alt="富達聯億 FortuneLink" width="720" height="341" loading="lazy" decoding="async">
-                <img class="logo-wall__color" src="assets/img/partners/fortunelink-color.png" alt="" aria-hidden="true" width="720" height="341" loading="lazy" decoding="async">
               </span>
             </li>
             <li class="logo-wall__item" style="--pad-y: 12%;">
@@ -1611,7 +1606,7 @@
   const ABOUT_FACTS = {
     coreTeam:     2,       // 核心同工（位）
     proPartners:  18,      // 專業夥伴總數（位）＝ 下面五個領域相加
-    churches:     8,       // 合作教會（間）
+    churches:     5,       // 合作教會（間）
     hosting:      5,       // 住宿資源（戶）＝ 願意開放空房的接待家庭
     counseling:   10,      // 心理諮商／心理評估（位）
     medical:      2,       // 醫療諮詢（位）
