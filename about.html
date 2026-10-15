@@ -745,9 +745,9 @@
       transition: transform .45s cubic-bezier(.16, 1, .3, 1);
     }
     .host-layout:hover .host-figure { transform: translateY(-4px); }
-    /* 深底上的照片壓一層暖色調，跟專業夥伴的照片同一套處理 */
+    /* 這張要讀起來明亮、溫暖，只留一點點暖色調，不再壓暗 */
     .host-figure .flow-figure__frame { background: rgba(255, 255, 255, .05); }
-    .host-figure img { filter: sepia(.12) saturate(.86) brightness(.92); }
+    .host-figure img { filter: sepia(.06) saturate(.95); }
 
     .host-copy { min-width: 0; }
     .host-copy__lede {
@@ -757,20 +757,23 @@
       color: var(--surface-fg);
       margin: 0 0 24px;
     }
+    /* 數字在左、說明在右：「5 戶」直接當這段話的主詞，兩者讀成一句 */
+    .host-detail {
+      display: flex; align-items: center;
+      gap: clamp(20px, 3vw, 36px);
+    }
     .host-copy__desc {
       font-size: var(--fs-md); line-height: var(--lh-loose);
       color: var(--surface-fg-2);
       max-width: 36ch;
       margin: 0;
+      min-width: 0;
     }
-    /* 數字用專業夥伴那一套（英文字體、金色、大字），上下用細線框起來，
-       讓它讀成一筆資料，而不是另一段文字。 */
+    /* 數字用專業夥伴那一套（英文字體、金色、大字），單位小字收在數字下方 */
     .host-stat {
-      display: flex; align-items: baseline; gap: 10px;
-      margin: 32px 0 0;
-      padding: 20px 0;
-      border-top: 1px solid var(--surface-line);
-      border-bottom: 1px solid var(--surface-line);
+      flex: none;
+      display: flex; flex-direction: column; align-items: flex-start; gap: 8px;
+      margin: 0;
     }
     .host-stat b {
       font-family: var(--font-en); font-weight: var(--fw-regular);
@@ -781,6 +784,7 @@
     .host-stat span {
       font-size: var(--fs-sm); letter-spacing: var(--ls-wide);
       color: var(--surface-fg-2);
+      white-space: nowrap;
     }
     /* CTA 跟著右欄靠左，不再孤零零地置中在整個區塊底下 */
     .host-copy .net-actions {
@@ -1516,19 +1520,21 @@
             <h3>住宿資源</h3>
             <span class="net-block__en">HOSTING RESOURCES</span>
           </div>
-          <!-- 照片取自 Unsplash（Clay Banks, "Guest bedroom"）：鋪好的床、疊好的毛巾，
-               一間等人入住的客房。待同工提供實際空間照片後可替換。戶數改頁面底部的 ABOUT_FACTS。 -->
+          <!-- 照片取自 Unsplash（Raelle Cameron）：明亮的客房，鋪好的床、床尾疊好的毯子與托盤，
+               一間等人入住的房間。待同工提供實際空間照片後可替換。戶數改頁面底部的 ABOUT_FACTS。 -->
           <div class="host-layout">
             <figure class="flow-figure flow-figure--oval host-figure" data-flow-parallax>
               <div class="flow-figure__frame">
-                <img src="https://images.unsplash.com/photo-1713184372857-7099b09d940a?w=800&q=80&auto=format&fit=crop" alt="客房裡鋪好的床，床尾放著一疊乾淨的毛巾，窗外透進光" loading="lazy" decoding="async">
+                <img src="https://images.unsplash.com/photo-1771466883546-a988d001f5ba?w=800&q=80&auto=format&fit=crop" alt="明亮的客房裡鋪好的床，床尾放著疊好的毯子與木托盤，床頭亮著一盞檯燈" loading="lazy" decoding="async">
               </div>
             </figure>
 
             <div class="host-copy">
-              <p class="host-copy__lede"><span class="kw">回國述職、轉換期或短期停留時，</span><br class="br-desktop"><span class="kw">有一處可以安心落腳的地方，</span><br class="br-desktop"><span class="kw">往往比什麼都實際。</span></p>
-              <p class="host-copy__desc"><span class="kw">願意開放家中空房、</span><br class="br-desktop"><span class="kw">以家庭的方式短期接待</span><span class="kw">宣教士與其家人。</span></p>
-              <p class="host-stat"><b data-fact="hosting">—</b><span>戶接待家庭</span></p>
+              <p class="host-copy__lede"><span class="kw">有一處可以安心落腳的地方，</span><br class="br-desktop"><span class="kw">往往比什麼都實際。</span></p>
+              <div class="host-detail">
+                <p class="host-stat"><b data-fact="hosting">—</b><span>戶接待家庭</span></p>
+                <p class="host-copy__desc"><span class="kw">願意開放家中空房、</span><br class="br-desktop"><span class="kw">以家庭的方式短期接待</span><span class="kw">宣教士與其家人。</span></p>
+              </div>
               <div class="net-actions">
                 <a class="net-link" href="serve.html">我可以提供資源 <svg class="arr" width="16" height="14" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-arrow"></use></svg></a>
               </div>
